@@ -1,11 +1,24 @@
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
 @mixin dFlex {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
 
-
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+button {
+    cursor: pointer;
+}
