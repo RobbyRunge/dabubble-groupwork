@@ -83,8 +83,39 @@
       input {
         border: none;
         height: 35px;
-        background-color: rgba(236, 238, 254, 1);
         border-radius: 30px;
+        padding-left: 80px;
+        border: 1px solid rgba(236, 238, 254, 1);
+        font-size: 16px;
+        color: rgba(0, 0, 0, 1);
+
+        &::placeholder {
+          font-size: 16px;
+        }
+
+        &:hover {
+          border: 1px solid rgba(104, 104, 104, 1);
+        }
+      }
+
+      .email-input {
+        background: rgba(236, 238, 254, 1) url(../assets/login/mail.png) no-repeat 32px 11px;
+
+        &:focus {
+          background: rgba(236, 238, 254, 1) url(../assets/login/mail-active.png) no-repeat 32px 11px;
+          border: 1px solid rgba(83, 90, 241, 1);
+          outline: none;
+        }
+      }
+
+      .password-input {
+        background: rgba(236, 238, 254, 1) url(../assets/login/lock.png) no-repeat 32px 8px;
+
+        &:focus {
+          background: rgba(236, 238, 254, 1) url(../assets/login/lock-active.png) no-repeat 32px 8px;
+          border: 1px solid rgba(83, 90, 241, 1);
+          outline: none;
+        }
       }
     }
   }
