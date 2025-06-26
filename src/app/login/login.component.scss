@@ -4,6 +4,7 @@
   width: 100%;
   height: 100vh;
   background: linear-gradient(1.46deg, #313AE6 1.22%, #797EF3 98.76%);
+  animation: remove-intro 1.8s 4s forwards;
 
   .logo-and-text {
     @include dFlex;
