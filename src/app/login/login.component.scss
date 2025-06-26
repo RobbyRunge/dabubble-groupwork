@@ -42,6 +42,47 @@
     }
   }
 
+  .login {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 24px 0 24px;
+    z-index: 5;
+
+    .logo-with-text {
+      display: flex;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      gap: 8px;
+
+      img {
+        width: 70px;
+        height: 70px;
+      }
+    }
+
+    .signup-link {
+      text-align: end;
+
+      p {
+        margin-top: 0;
+      }
+
+      a {
+        padding: 0;
+      }
+    }
+  }
+
   .form-position {
     position: absolute;
     width: 25vw;
