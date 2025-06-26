@@ -28,11 +28,12 @@
 
     p {
       font-size: 7vw;
-      max-inline-size: 72px;
-      min-inline-size: 32px;
       color: rgba(255, 255, 255, 1);
-      opacity: 0;
-      animation: text-fade-in 0.8s 2.8s ease-out forwards;
+      opacity: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 0;
+      animation: text-typewriter 0.5s steps(20, end) 2.7s forwards, infinite;
       position: absolute;
       left: 43%;
     }
@@ -49,16 +50,25 @@
   }
 }
 
-@keyframes text-fade-in {
-  // not fade in -> slide in from left ( behind the img ) 
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
+@keyframes text-typewriter {
+  from {
+    width: 0;
   }
 
-  100% {
+  to {
+    width: 30%;
+  }
+}
+
+@keyframes remove-intro {
+  from {
     opacity: 1;
-    transform: translateY(0);
+    z-index: 10;
+  }
+
+  to {
+    opacity: 0;
+    z-index: 0;
   }
 }
 
