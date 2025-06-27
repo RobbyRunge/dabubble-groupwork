@@ -154,10 +154,10 @@
       }
 
       .password-input {
-        background: rgba(236, 238, 254, 1) url(../assets/login/lock.png) no-repeat 32px 7px;
+        background: rgba(236, 238, 254, 1) url(../assets/login/lock.png) no-repeat 34px 7px;
 
         &:focus {
-          background: rgba(236, 238, 254, 1) url(../assets/login/lock-active.png) no-repeat 32px 7px;
+          background: rgba(236, 238, 254, 1) url(../assets/login/lock-active.png) no-repeat 34px 7px;
           border: 1px solid rgba(83, 90, 241, 1);
           outline: none;
         }
