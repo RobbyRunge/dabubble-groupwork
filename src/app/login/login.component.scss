@@ -71,14 +71,20 @@
     }
 
     .signup-link {
-      text-align: end;
+      text-align: center;
 
       p {
         margin-top: 0;
       }
 
       a {
-        padding: 0;
+        border: 1px solid rgba(236, 238, 254, 1);
+        border-radius: 30px;
+
+        &:hover {
+          border: 1px solid rgba(173, 176, 217, 1);
+          border-radius: 30px;
+        }
       }
     }
   }
