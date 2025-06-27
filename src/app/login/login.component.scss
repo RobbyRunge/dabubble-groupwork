@@ -42,14 +42,6 @@
     }
   }
 
-  .login {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100%;
-  }
-
   header {
     display: flex;
     align-items: center;
@@ -80,6 +72,8 @@
       a {
         border: 1px solid rgba(236, 238, 254, 1);
         border-radius: 30px;
+        color: rgba(121, 126, 243, 1);
+        padding: 8px;
 
         &:hover {
           border: 1px solid rgba(173, 176, 217, 1);
@@ -87,6 +81,14 @@
         }
       }
     }
+  }
+
+  .login {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%;
   }
 
   .form-position {
