@@ -86,6 +86,7 @@
 
     display: flex;
     align-items: center;
+    justify-content: space-between;
     flex-direction: column;
 
     .arrow-back {
@@ -179,6 +180,26 @@
 
       .policy {
         color: rgba(121, 126, 243, 1) !important;
+      }
+    }
+
+    .go-forward {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+
+      .forward-button {
+        width: 107px;
+        height: 40px;
+        border-radius: 30px;
+        border: none;
+        font-weight: bold;
+        background-color: rgb(68, 77, 242);
+        color: rgb(255, 255, 255);
+
+        &:hover {
+          background-color: rgba(121, 126, 243, 1);
+        }
       }
     }
   }
