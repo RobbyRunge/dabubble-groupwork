@@ -88,6 +88,25 @@
     align-items: center;
     flex-direction: column;
 
+    .arrow-back {
+      position: absolute;
+      left: 6%;
+      top: 7%;
+      width: 24px;
+      height: 24px;
+      border-radius: 100%;
+      padding: 8px;
+
+      &:hover {
+        content: url(../assets/signup/arrow-back-hover.png);
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        background-color: rgba(236, 238, 254, 1);
+        border-radius: 100%;
+      }
+    }
+
     h1 {
       font-size: 46px;
       font-weight: 700;
@@ -141,6 +160,15 @@
           border: 1px solid rgba(83, 90, 241, 1);
           outline: none;
         }
+      }
+    }
+
+    .policy-text {
+      text-align: start;
+      width: 100%;
+
+      .policy {
+        color: rgba(121, 126, 243, 1) !important;
       }
     }
   }
