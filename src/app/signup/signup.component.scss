@@ -175,8 +175,14 @@
     }
 
     .policy-text {
-      text-align: start;
+      display: flex;
+      align-items: center;
       width: 100%;
+      gap: 8px;
+
+      p {
+        margin: 0;
+      }
 
       .policy {
         color: rgba(121, 126, 243, 1) !important;
