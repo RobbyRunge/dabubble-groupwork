@@ -180,19 +180,45 @@
       width: 100%;
       gap: 8px;
 
-      p {
-        margin: 0;
+      .checkbox-container {
+        cursor: pointer;
+        transition: all 125ms ease-in-out;
+
+        .checkbox-img {
+          width: 24px;
+          height: 24px;
+          transition: all 125ms ease-in-out;
+
+          &:hover {
+            background-color: rgba(236, 238, 254, 1);
+            border-radius: 100%;
+          }
+        }
       }
 
-      .policy {
-        color: rgba(121, 126, 243, 1) !important;
+      p {
+        margin: 0;
+        font-size: 16px;
+        cursor: pointer;
+
+        .policy {
+          color: rgba(121, 126, 243, 1);
+          cursor: pointer;
+          transition: color 125ms ease-in-out;
+
+          &:hover {
+            color: rgba(68, 77, 242, 1);
+            text-decoration: underline;
+          }
+        }
       }
     }
 
-    .go-forward {
+    .forward-button-postition {
       display: flex;
       justify-content: flex-end;
       width: 100%;
+    }
 
       .forward-button {
         width: 107px;
@@ -203,9 +229,14 @@
         background-color: rgb(68, 77, 242);
         color: rgb(255, 255, 255);
 
-        &:hover {
-          background-color: rgba(121, 126, 243, 1);
-        }
+      &:hover:not(:disabled) {
+        background-color: rgba(121, 126, 243, 1);
+      }
+
+      &:disabled {
+        background-color: rgba(173, 176, 217, 1);
+        cursor: not-allowed;
+        opacity: 0.6;
       }
     }
   }

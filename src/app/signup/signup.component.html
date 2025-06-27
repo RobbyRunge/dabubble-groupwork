@@ -15,12 +15,14 @@
       </form>
 
       <div class="policy-text">
-        <img src="signup/box.png" alt="box">
+        <div class="checkbox-container" (click)="togglePolicy()">
+          <img class="checkbox-img" [src]="getCheckboxImage()" alt="checkbox">
+        </div>
         <p>Ich stimme der <span class="policy">Datenschutzerklärung</span> zu.</p>
       </div>
 
-      <div class="go-forward">
-        <button class="forward-button standard-transition">Weiter</button>
+      <div class="forward-button-postition">
+        <button class="forward-button standard-transition" [disabled]="!isPolicyAccepted">Weiter</button>
       </div>
     </div>
   </div>
