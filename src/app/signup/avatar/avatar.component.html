@@ -7,7 +7,7 @@
       <h1>Wähle deinen Avatar</h1>
 
       <div class="img-and-name">
-        <img src="/avatar/empty-avatar.png" alt="avatar empty">
+        <img class="standard-transition" src="/avatar/empty-avatar.png" alt="avatar empty">
         <h2>Firstname Lastname</h2>
       </div>
 
@@ -15,7 +15,7 @@
         <p>Aus der Liste wählen:</p>
         <div class="avatar-list-imgs">
           @for (item of items; track $index) {
-          <img src="{{ item }}" alt="avatar">
+          <img class="standard-transition" src="{{ item }}" alt="avatar">
           }
         </div>
 

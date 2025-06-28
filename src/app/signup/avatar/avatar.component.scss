@@ -63,6 +63,13 @@
         img {
           width: 140px;
           height: 140px;
+          cursor: pointer;
+          border: 8px solid transparent;
+          border-radius: 100%;
+
+          &:hover {
+            border: 8px solid rgba(230, 230, 230, 1);
+          }
         }
       }
 
@@ -73,6 +80,16 @@
         .avatar-list-imgs {
           display: flex;
           gap: 16px;
+
+          img {
+            cursor: pointer;
+            border: 4px solid transparent;
+            border-radius: 100%;
+
+            &:hover {
+              border: 4px solid rgba(230, 230, 230, 1);
+            }
+          }
         }
       }
 
