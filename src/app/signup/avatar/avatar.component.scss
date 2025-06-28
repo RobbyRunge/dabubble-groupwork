@@ -111,7 +111,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 9999;
   opacity: 0;
   pointer-events: none;
@@ -131,6 +131,7 @@
   width: 344px;
   height: 100px;
   border-radius: 16px;
+  filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.5));
 
   display: flex;
   align-items: center;
