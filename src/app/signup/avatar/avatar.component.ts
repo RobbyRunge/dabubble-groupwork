@@ -10,5 +10,13 @@ import { RouterLink } from '@angular/router';
   styleUrl: './avatar.component.scss'
 })
 export class AvatarComponent {
+  items = [
+    '/avatar/woman1.png',
+    '/avatar/men1.png',
+    '/avatar/men2.png',
+    '/avatar/men3.png',
+    '/avatar/woman2.png',
+    '/avatar/men4.png',
+  ];
 
 }

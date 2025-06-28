@@ -4,8 +4,19 @@
 
     <div class="chosse-avatar">
       <img class="arrow-back standard-transition" routerLink="/signup" src="signup/arrow-back.png" alt="arrow back">
-
       <h1>Wähle deinen Avatar</h1>
+
+      <div>
+        <img src="/avatar/empty-avatar.png" alt="">
+        <h2>Firstname Lastname</h2>
+      </div>
+
+      <div>
+        <p>Aus der Liste wählen</p>
+        @for (item of items; track $index) {
+        <img src="{{ item }}" alt="avatar">
+        }
+      </div>
     </div>
 
     <app-footer-start></app-footer-start>
