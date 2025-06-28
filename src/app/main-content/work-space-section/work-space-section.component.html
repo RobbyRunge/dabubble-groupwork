@@ -1,1 +1,14 @@
-<p>work-space-section works!</p>
+<div class="sidenav-wrapper">
+  <button class="sidenav-toggle-btn" mat-icon-button (click)="toggleDrawer(drawer)">
+    <span>
+      {{ isDrawerOpen ? 'Workspace-Menü schließen' : 'Workspace-Menü öffnen' }}
+    </span>
+    <img class="open-close-img" [src]="isDrawerOpen ? 'Hide-menu.png' : 'Show-menu.png'" alt=""/>
+  </button>
+
+  <mat-drawer-container class="example-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side">
+      <p>Workspace</p>
+    </mat-drawer>
+  </mat-drawer-container>
+</div>

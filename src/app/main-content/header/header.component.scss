@@ -1,0 +1,58 @@
+@import './../../../styles.scss';
+
+header {
+    width: 100%;
+    @include dFlex(space-between);
+
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+    --mdc-filled-text-field-container-color: white;
+}
+
+::ng-deep .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
+    border-radius: 42px;
+}
+
+.logo-container {
+    padding-left: 45px
+}
+
+.user-container {
+    @include dFlex();
+    gap: 20px;
+    padding-right: 35px;
+    min-width: 342px;
+
+    >div {
+        >span {
+            font-size: 32px;
+            color: black;
+        }
+    }
+}
+
+mat-form-field {
+    width: 100%;
+    padding-left: 114px;
+    padding-right: 149px;
+}
+
+::ng-deep .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
+    padding-right: 45px !important;
+    padding-left: 45px;
+}
+
+mat-icon {
+    width: 35px;
+    height: 35px;
+    color: #686868;
+}
+
+.avatar-container {
+    >img {
+        height: 70px;
+        width: 70px;
+        border-radius: 42px;
+    }
+}

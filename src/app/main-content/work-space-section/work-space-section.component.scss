@@ -1,0 +1,38 @@
+@import './../../../styles.scss';
+
+.example-container {
+    min-height: 940px;
+    border-radius: 30px;
+    background-color: white;
+    position: relative;
+}
+
+.sidenav-toggle-btn {
+    position: absolute;
+    top: 50%;
+    left: -140px;
+    height: 56px;
+    width: 339px;
+    z-index: 1000;
+    font-size: 20px;
+    @include dFlex();
+    gap: 8px;
+    border-bottom-left-radius: 30px !important;
+    border-bottom-right-radius: 30px !important;
+    background-color: white;
+    color: black;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transform: rotate(270deg);
+}
+
+.mat-mdc-icon-button{
+    border-radius: 0;
+}
+
+.open-close-img{
+    rotate: 90deg;
+}
+
+.mat-drawer{
+    background-color: white;
+}
