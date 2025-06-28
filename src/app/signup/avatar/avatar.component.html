@@ -22,10 +22,17 @@
       </div>
 
       <div class="forward-button-postition">
-        <button routerLink="" class="forward-button standard-transition" [disabled]="">Weiter</button>
+        <button (click)="showSuccessfullyCreateContactOverlay()" class="forward-button standard-transition"
+          [disabled]="">Weiter</button>
       </div>
     </div>
 
     <app-footer-start></app-footer-start>
+  </div>
+
+  <div id="background-overlay" class="standard-transition">
+    <div class="successfully-overlay">
+      <p>Konto erfolgreich erstellt!</p>
+    </div>
   </div>
 </div>

@@ -19,4 +19,13 @@ export class AvatarComponent {
     '/avatar/men4.png',
   ];
 
+  showSuccessfullyCreateContactOverlay() {
+    const backgroundOverlay = document.getElementById('background-overlay');
+    if (backgroundOverlay) {
+      backgroundOverlay.classList.add('active');
+      setTimeout(() => {
+        backgroundOverlay.classList.remove('active');
+      }, 2000);
+    }
+  }
 }
