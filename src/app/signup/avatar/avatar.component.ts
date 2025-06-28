@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HeaderStartComponent } from "../../shared/header-start/header-start.component";
 import { FooterStartComponent } from "../../shared/footer-start/footer-start.component";
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-avatar',
@@ -10,6 +10,8 @@ import { RouterLink } from '@angular/router';
   styleUrl: './avatar.component.scss'
 })
 export class AvatarComponent {
+  private router = inject(Router);
+
   items = [
     '/avatar/woman1.png',
     '/avatar/men1.png',
@@ -25,6 +27,7 @@ export class AvatarComponent {
       backgroundOverlay.classList.add('active');
       setTimeout(() => {
         backgroundOverlay.classList.remove('active');
+        this.router.navigate(['/']);
       }, 2000);
     }
   }
