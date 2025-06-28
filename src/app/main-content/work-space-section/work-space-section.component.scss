@@ -36,3 +36,24 @@
 .mat-drawer{
     background-color: white;
 }
+
+.channel-container{
+    @include dFlex(space-between);
+    gap: 16px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 32px
+}
+
+.channel-logo-name{
+    @include dFlex();
+    gap: 15px;
+    >h3{
+        font-size: 24px;
+        color: black;
+    }
+}
+
+mat-icon{
+    color: black;
+}

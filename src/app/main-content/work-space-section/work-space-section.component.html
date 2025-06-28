@@ -1,14 +1,40 @@
 <div class="sidenav-wrapper">
-  <button class="sidenav-toggle-btn" mat-icon-button (click)="toggleDrawer(drawer)">
-    <span>
-      {{ isDrawerOpen ? 'Workspace-Menü schließen' : 'Workspace-Menü öffnen' }}
-    </span>
-    <img class="open-close-img" [src]="isDrawerOpen ? 'Hide-menu.png' : 'Show-menu.png'" alt=""/>
-  </button>
+    <button class="sidenav-toggle-btn" mat-icon-button (click)="toggleDrawer(drawer)">
+        <span>
+            {{ isDrawerOpen ? 'Workspace-Menü schließen' : 'Workspace-Menü öffnen' }}
+        </span>
+        <img class="open-close-img" [src]="isDrawerOpen ? 'Hide-menu.png' : 'Show-menu.png'" alt="" />
+    </button>
 
-  <mat-drawer-container class="example-container" autosize>
-    <mat-drawer #drawer class="example-sidenav" mode="side">
-      <p>Workspace</p>
-    </mat-drawer>
-  </mat-drawer-container>
+    <mat-drawer-container class="example-container" autosize>
+        <mat-drawer #drawer class="example-sidenav" mode="side">
+            <div class="channel-container">
+                <div class="channel-logo-name">
+                    <img src="devspace-logo.png" alt="">
+                    <h3>Devspace</h3>
+                </div>
+                <div>
+                    <mat-icon>edit_square</mat-icon>
+                </div>
+            </div>
+            <div class="add-channels-container">
+                <div>
+<!--                     <mat-form-field>
+                        <mat-label>Choose one</mat-label>
+                        <mat-select>
+                            <mat-option>Clear</mat-option>
+                            <mat-option value="valid">Valid option</mat-option>
+                            <mat-option value="invalid">Invalid option</mat-option>
+                        </mat-select>
+                        <mat-hint>Errors appear instantly!</mat-hint>
+                    </mat-form-field> -->
+
+                </div>
+                <div></div>
+            </div>
+            <div class="useres-list-container">
+
+            </div>
+        </mat-drawer>
+    </mat-drawer-container>
 </div>
