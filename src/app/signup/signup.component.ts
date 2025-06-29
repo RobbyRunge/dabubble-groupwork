@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FooterStartComponent } from "../shared/footer-start/footer-start.component";
 import { User } from '../../models/user.class';
 import { FormsModule } from '@angular/forms';
-import { UserService } from '../services/add-user.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-signup',
