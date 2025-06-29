@@ -1,17 +1,7 @@
-html,
-body {
-    height: 100%;
-}
-
-body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-@mixin dFlex {
+@mixin dFlex($jc: center, $ai: center) {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: $jc;
+    align-items: $ai;
 }
 
 a {
@@ -25,4 +15,16 @@ button {
 
 .standard-transition {
     transition: all 125ms ease-in-out;
+}
+
+
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 }
