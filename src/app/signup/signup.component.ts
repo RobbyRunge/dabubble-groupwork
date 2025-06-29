@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FooterStartComponent } from "../shared/footer-start/footer-start.component";
 import { User } from '../../models/user.class';
 import { FormsModule } from '@angular/forms';
-import { Firestore, collection, addDoc } from '@angular/fire/firestore';
+import { UserService } from '../services/add-user.service';
 
 @Component({
   selector: 'app-signup',
@@ -16,7 +16,7 @@ export class SignupComponent {
   isPolicyAccepted = false;
   isHovering = false;
   user = new User();
-  firestore = inject(Firestore);
+  private userService = inject(UserService);
 
   togglePolicy() {
     this.isPolicyAccepted = !this.isPolicyAccepted;
@@ -32,15 +32,7 @@ export class SignupComponent {
 
   async saveUser() {
     try {
-      const usersCollection = collection(this.firestore, 'users');
-      const userRef = await addDoc(usersCollection, { ...this.user });
-
-      const channelsCollection = collection(this.firestore, `users/${userRef.id}/channels`);
-      await addDoc(channelsCollection, {});
-
-      const chatsCollection = collection(this.firestore, `users/${userRef.id}/chats`);
-      await addDoc(chatsCollection, {});
-      
+      await this.userService.createUserWithSubcollections(this.user);
       console.log('User saved:', this.user);
     } catch (error) {
       console.error('Error saving user:', error);
