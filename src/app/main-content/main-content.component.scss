@@ -1,0 +1,10 @@
+@import './../../styles.scss';
+
+.chat-section{
+    @include dFlex(flex-start);
+    flex-direction: column;
+    max-width: 1920px;
+    gap: 20px;
+    height: 100%;
+    background-color: #ECEEFE;
+}

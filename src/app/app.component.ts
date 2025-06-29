@@ -15,7 +15,9 @@ interface Item {
   selector: 'app-root',
   imports: [
     //LoginComponent,
-    ChatSectionComponent,
+    RouterOutlet,
+    //ChatSectionComponent,
+    
 ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
