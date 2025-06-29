@@ -7,33 +7,59 @@
     </button>
 
     <mat-drawer-container class="example-container" autosize>
-        <mat-drawer #drawer class="example-sidenav" mode="side">
+        <mat-drawer #drawer class="example-sidenav" mode="side" opened>
             <div class="channel-container">
                 <div class="channel-logo-name">
                     <img src="devspace-logo.png" alt="">
                     <h3>Devspace</h3>
                 </div>
                 <div>
-                    <mat-icon>edit_square</mat-icon>
+                    <mat-icon style="fill: none;">edit_square</mat-icon>
                 </div>
             </div>
             <div class="add-channels-container">
                 <div>
-<!--                     <mat-form-field>
-                        <mat-label>Choose one</mat-label>
-                        <mat-select>
-                            <mat-option>Clear</mat-option>
-                            <mat-option value="valid">Valid option</mat-option>
-                            <mat-option value="invalid">Invalid option</mat-option>
-                        </mat-select>
-                        <mat-hint>Errors appear instantly!</mat-hint>
-                    </mat-form-field> -->
-
+                    <mat-accordion class="example-headers-align" multi>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-description>
+                                    <mat-icon>workspaces</mat-icon>
+                                    Channels
+                                </mat-panel-description>
+                                <div>
+                                    <mat-icon>add</mat-icon>
+                                </div>
+                            </mat-expansion-panel-header>
+                            <div>
+                                <h2>#Entwicklerteam</h2>
+                            </div>
+                            <div>
+                                <button>
+                                    <mat-icon>add_circle</mat-icon>
+                                    <span>Channel hinzufügen</span>
+                                </button>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
                 </div>
                 <div></div>
             </div>
             <div class="useres-list-container">
-
+                <mat-accordion class="example-headers-align" multi>
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-description>
+                                <mat-icon>account_circle</mat-icon>
+                                Direktnachrichten
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div>
+                            @for (item of item$ | async; track item) {
+                            <h2>{{ item['name'] }} {{item['lastname']}}</h2>
+                            }
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
             </div>
         </mat-drawer>
     </mat-drawer-container>
