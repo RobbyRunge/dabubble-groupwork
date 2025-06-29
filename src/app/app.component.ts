@@ -4,6 +4,9 @@ import { AsyncPipe } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
 import { LoginComponent } from "./login/login.component";
+import { ChatSectionComponent } from "./main-content/chat-section/chat-section.component";
+import {MatButtonModule} from '@angular/material/button';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 interface Item {
   name: string;
@@ -12,7 +15,8 @@ interface Item {
 @Component({
   selector: 'app-root',
   imports: [
-    LoginComponent
+    //LoginComponent,
+    ChatSectionComponent,
 ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

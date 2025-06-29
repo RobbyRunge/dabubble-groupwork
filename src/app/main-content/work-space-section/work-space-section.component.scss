@@ -1,0 +1,96 @@
+@import './../../../styles.scss';
+
+.example-container {
+    min-height: 940px;
+    border-radius: 30px;
+    background-color: white;
+    position: relative;
+}
+
+.sidenav-toggle-btn {
+    position: absolute;
+    top: 50%;
+    left: -140px;
+    height: 56px;
+    width: 339px;
+    z-index: 1000;
+    font-size: 20px;
+    @include dFlex();
+    gap: 8px;
+    border-bottom-left-radius: 30px !important;
+    border-bottom-right-radius: 30px !important;
+    background-color: white;
+    color: black;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transform: rotate(270deg);
+}
+
+.mat-mdc-icon-button {
+    border-radius: 0;
+}
+
+.open-close-img {
+    rotate: 90deg;
+}
+
+.mat-drawer {
+    background-color: white;
+}
+
+.channel-container {
+    @include dFlex(space-between);
+    gap: 16px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 32px
+}
+
+.channel-logo-name {
+    @include dFlex();
+    gap: 15px;
+
+    >h3 {
+        font-size: 24px;
+        color: black;
+    }
+}
+
+mat-icon {
+    color: black;
+}
+
+mat-panel-description{
+    >mat-icon{
+        padding-right: 10px;
+    }
+}
+
+.mat-expansion-panel {
+    background-color: transparent;
+    border: none;
+}
+
+.mat-expansion-panel-header{
+    flex-direction: row-reverse;
+    gap: 15px;
+}
+
+.mat-expansion-panel-header-description {
+    color: black;
+}
+
+.mat-accordion .mat-expansion-panel:last-of-type {
+    border: none;
+    box-shadow: none;
+}
+
+::ng-deep.mat-expansion-indicator svg {
+    fill: black !important;
+}
+
+button{
+    background-color: transparent;
+    border: none;
+    @include dFlex();
+    gap: 10px;
+}

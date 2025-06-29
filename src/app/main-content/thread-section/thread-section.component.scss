@@ -1,0 +1,20 @@
+@import './../../../styles.scss';
+
+.example-container {
+    min-height: 940px;
+    border-radius: 30px;
+    background-color: white;
+    position: relative;
+}
+
+.mat-mdc-icon-button{
+    border-radius: 0;
+}
+
+.open-close-img{
+    rotate: 90deg;
+}
+
+.mat-drawer{
+    background-color: white;
+}

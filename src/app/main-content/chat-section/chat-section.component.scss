@@ -1,0 +1,30 @@
+@import "./../../../styles.scss";
+
+.header{
+    width: 100%;
+    padding-top: 25px;
+    @include dFlex();
+}
+
+.main-content {
+    width: 100%;
+    gap: 20px;
+    position: relative;
+    @include dFlex();
+}
+
+.chat-section{
+    padding: 0 20px;
+    width: 100%;
+    height: 940px;
+    background-color: white;
+    border-radius: 30px;
+}
+
+.work-space-section{
+    padding-left: 20px;
+}
+
+.thread-section{
+    padding-right: 20px;
+}

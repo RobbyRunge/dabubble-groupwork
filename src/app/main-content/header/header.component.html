@@ -1,1 +1,24 @@
-<p>header works!</p>
+<header>
+    <div class="logo-container">
+        <img src="logo.png" alt="">
+    </div>
+    <mat-form-field class="sreach-container">
+        <input matInput type="text" [(ngModel)]="value">
+        @if (value) {
+        <button matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+            <mat-icon>search</mat-icon>
+        </button>
+        }
+    </mat-form-field>
+    <div class="user-container">
+        <div>
+            <span>Frederik Beck</span>
+        </div>
+        <div class="avatar-container">
+            <img src="avatar.png" alt="">
+        </div>
+        <div>
+            <mat-icon>keyboard_arrow_down</mat-icon>
+        </div>
+    </div>
+</header>
