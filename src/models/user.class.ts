@@ -2,5 +2,6 @@ export class User {
   name!: string;
   email!: string;
   password!: number;
-  avatarImg!: string;
+  // mit avatar komponente erste erstellen?? Als leeres Array?
+  // avatarImg?: string;
 }
