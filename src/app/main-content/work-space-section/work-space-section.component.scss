@@ -59,8 +59,8 @@ mat-icon {
     color: black;
 }
 
-mat-panel-description{
-    >mat-icon{
+mat-panel-description {
+    >mat-icon {
         padding-right: 10px;
     }
 }
@@ -70,7 +70,7 @@ mat-panel-description{
     border: none;
 }
 
-.mat-expansion-panel-header{
+.mat-expansion-panel-header {
     flex-direction: row-reverse;
     gap: 15px;
 }
@@ -88,9 +88,45 @@ mat-panel-description{
     fill: black !important;
 }
 
-button{
+button {
     background-color: transparent;
     border: none;
     @include dFlex();
     gap: 10px;
+}
+
+.add-channels-container {
+    padding-left: 30px;
+}
+
+.list-channels-container {
+    padding-bottom: 25px;
+
+    >h2 {
+        font-family: 'Nunito';
+        font-weight: 700;
+        color: black;
+        font-size: 18px
+    }
+}
+
+.useres-list-container {
+    padding-left: 30px;
+}
+
+.users-message-container {
+    @include dFlex(center, flex-start);
+    flex-direction: column;
+    gap: 15px;
+}
+
+.users-container {
+    @include dFlex();
+    gap: 15px;
+    >h2 {
+        font-size: 18px;
+        color: black;
+        font-weight: 400;
+        font-family: 'Nunito';
+    }
 }

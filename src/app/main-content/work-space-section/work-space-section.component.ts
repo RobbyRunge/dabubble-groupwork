@@ -43,4 +43,8 @@ export class WorkSpaceSectionComponent {
   firestore = inject(Firestore);
   itemCollection = collection(this.firestore, 'users');
   item$ = collectionData(this.itemCollection);
+
+  onUserClick(index: number, user: any) {
+  console.log('Index:', index, 'User:', user);
+}
 }
