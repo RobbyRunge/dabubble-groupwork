@@ -42,12 +42,26 @@
     }
   }
 
-  header {
+  .login-wrapper {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 24px 24px 0 24px;
+    justify-content: center;
+  }
+
+  .login {
+    width: 100%;
+    max-width: 1920px !important;
+    height: 100%;
+  }
+
+  header {
+    position: absolute;
+    top: 24px;
     z-index: 5;
+    width: 100vw;
+    max-width: 1920px;
+    display: flex;
+    justify-content: space-between;
 
     .logo-with-text {
       display: flex;
@@ -55,6 +69,7 @@
       font-size: 24px;
       font-weight: bold;
       gap: 8px;
+      margin-left: 24px;
 
       img {
         width: 70px;
@@ -64,6 +79,7 @@
 
     .signup-link {
       text-align: center;
+      margin-right: 24px;
 
       p {
         margin-top: 0;
@@ -81,18 +97,6 @@
         }
       }
     }
-  }
-
-  .login-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .login {
-    width: 100%;
-    max-width: 1920px;
-    height: 100%;
   }
 
   .form-position {
