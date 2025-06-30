@@ -83,11 +83,15 @@
     }
   }
 
+  .login-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .login {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
+    width: 100%;
+    max-width: 1920px;
     height: 100%;
   }
 

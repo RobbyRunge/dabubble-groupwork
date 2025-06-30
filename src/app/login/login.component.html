@@ -6,45 +6,48 @@
   </div>
   } -->
 
-  <div class="login">
-    <header>
-      <div class="logo-with-text">
-        <img src="logo/logo.png" alt="">
-        <p>DABubble</p>
+  <div class="login-wrapper">
+    <div class="login">
+      <header>
+        <div class="logo-with-text">
+          <img src="logo/logo.png" alt="">
+          <p>DABubble</p>
+        </div>
+        <div class="signup-link">
+          <p>Neu bei DABubble?</p>
+          <a class="standard-transition" routerLink="/signup">Konto erstellen</a>
+        </div>
+      </header>
+
+      <div class="form-position">
+        <h1>Anmeldung</h1>
+        <p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
+
+        <form class="form">
+          <input [(ngModel)]="email" name="email" class="email-input standard-transition" type="email"
+            placeholder="beispielname@email.com">
+          <input [(ngModel)]="password" name="password" class="password-input standard-transition" type="password"
+            placeholder="Passwort">
+        </form>
+
+        <a class="standard-transition" routerLink="/reset-password">Passwort vergessen?</a>
+
+        <div class="or-with-border">
+          <div class="border"></div>
+          <p>Oder</p>
+          <div class="border"></div>
+        </div>
+
+        <button class="google-button standard-transition"><img src="login/google.png" alt="">Anmelden mit
+          Google</button>
+
+        <div class="login-and-guest-login">
+          <button class="login-button standard-transition" (click)="login()">Anmelden</button>
+          <button class="guest-login-button standard-transition" routerLink="/mainpage">Gäste-Login</button>
+        </div>
       </div>
-      <div class="signup-link">
-        <p>Neu bei DABubble?</p>
-        <a class="standard-transition" routerLink="/signup">Konto erstellen</a>
-      </div>
-    </header>
 
-    <div class="form-position">
-      <h1>Anmeldung</h1>
-      <p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
-
-      <form class="form">
-        <input [(ngModel)]="email" name="email" class="email-input standard-transition" type="email"
-          placeholder="beispielname@email.com">
-        <input [(ngModel)]="password" name="password" class="password-input standard-transition" type="password"
-          placeholder="Passwort">
-      </form>
-
-      <a class="standard-transition" routerLink="/reset-password">Passwort vergessen?</a>
-
-      <div class="or-with-border">
-        <div class="border"></div>
-        <p>Oder</p>
-        <div class="border"></div>
-      </div>
-
-      <button class="google-button standard-transition"><img src="login/google.png" alt="">Anmelden mit Google</button>
-
-      <div class="login-and-guest-login">
-        <button class="login-button standard-transition" (click)="login()">Anmelden</button>
-        <button class="guest-login-button standard-transition" routerLink="/mainpage">Gäste-Login</button>
-      </div>
+      <app-footer-start></app-footer-start>
     </div>
-
-    <app-footer-start></app-footer-start>
   </div>
 </div>
