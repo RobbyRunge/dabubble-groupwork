@@ -7,7 +7,7 @@ export class User {
   // avatarImg?: string;
   id!: string;
   chats! : string;
-  channels: { data: any; id: string }[] = [];
+  channels: { data: { channel: string }; id: string }[] = [];
 
    constructor(obj?: any) {
         

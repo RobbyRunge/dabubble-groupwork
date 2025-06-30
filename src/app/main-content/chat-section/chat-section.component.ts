@@ -28,7 +28,7 @@ export class ChatSectionComponent implements OnInit {
   private unsubscribeUserData!: () => void;
 
    ngOnInit(): void {
-    this.dataUser.showUserData(); 
+    this.unsubscribeUserData = this.dataUser.showUserData();
   }
 
   ngOnDestroy(): void {
