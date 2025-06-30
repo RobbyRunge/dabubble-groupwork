@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { WorkSpaceSectionComponent } from "../work-space-section/work-space-section.component";
 import { ThreadSectionComponent } from "../thread-section/thread-section.component";
 import { HeaderComponent } from "../header/header.component";
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-chat-section',
@@ -19,6 +20,21 @@ import { MatInputModule } from '@angular/material/input';
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
 })
-export class ChatSectionComponent {
 
+export class ChatSectionComponent implements OnInit {
+
+  dataUser = inject(UserService);
+
+  private unsubscribeUserData!: () => void;
+
+   ngOnInit(): void {
+    this.dataUser.showUserData(); 
+  }
+
+  ngOnDestroy(): void {
+    if (this.unsubscribeUserData) {
+      this.unsubscribeUserData();
+    }
+  }
+  
 }

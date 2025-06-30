@@ -2,9 +2,13 @@
 <div class="main-content">
     <app-work-space-section class="work-space-section"></app-work-space-section>
     <div class="chat-section">
-        <div>
-            <div></div>
-            <div></div>
+        <div class="channel-user-content">
+            @for (channel of this.dataUser.userData; track $index) {
+                @for (channelData of channel.channels; track $index) {
+                    <div class="user-channel">#{{channelData.data.channel}}</div>
+                }
+            }
+            <div>Placeholder User Avatar</div>
         </div>
         <div></div>
         <div class="write-message-container">

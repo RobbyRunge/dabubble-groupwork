@@ -21,6 +21,11 @@
     border-radius: 30px;
 }
 
+.channel-user-content {
+    @include dFlex(space-between);
+    flex-direction: row;
+}
+
 .work-space-section{
     padding-left: 20px;
 }

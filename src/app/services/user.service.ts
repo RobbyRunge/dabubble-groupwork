@@ -1,16 +1,27 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, addDoc } from '@angular/fire/firestore';
+import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
+import { Channels } from '../../models/channels.class';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private firestore = inject(Firestore);
 
+  userData: User[] = [];
+
+  channels: Channels[] = [];
+
+  usersCollection = collection(this.firestore, 'users');
+
+  channelCollection = collection(this.firestore, 'channnels');
+
+  chatCollection = collection(this.firestore, 'chats');
+  
+
   async login(email: string, password: string) {
-    const usersCollection = collection(this.firestore, 'users');
 
     const userQuery = query(
-      usersCollection,
+      this.usersCollection,
       where('email', '==', email),
       where('password', '==', password)
     );
@@ -21,8 +32,8 @@ export class UserService {
   }
 
   async createUserWithSubcollections(user: User) {
-    const usersCollection = collection(this.firestore, 'users');
-    const userRef = await addDoc(usersCollection, { ...user });
+    
+    const userRef = await addDoc(this.usersCollection, { ...user });
 
     const channelsCollection = collection(this.firestore, `users/${userRef.id}/channels`);
     await addDoc(channelsCollection, {});
@@ -32,4 +43,26 @@ export class UserService {
 
     return userRef;
   }
+
+  showUserData() {
+    onSnapshot(this.usersCollection, (element) => {
+      this.userData = [];
+      element.forEach((doc) => {
+         this.userData.push(new User({...doc.data(), id: doc.id   }));
+        const collChannel = collection(this.usersCollection, doc.id, 'channel');
+        onSnapshot(collChannel, (dataChannel) => {
+            const userIndex = this.userData.findIndex(u => u.id === doc.id);
+            const channels: { data: any; id: string }[] = []; 
+            dataChannel.forEach((channelDoc) => {
+              channels.push({data: channelDoc.data(), id: channelDoc.id })
+          });
+          if (userIndex !== -1) {
+          this.userData[userIndex].channels = channels;
+          }
+        });
+      });
+      console.log(this.userData);
+    });
+  }
+
 }
