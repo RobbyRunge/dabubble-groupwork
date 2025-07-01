@@ -36,9 +36,9 @@ export class ChatSectionComponent implements OnInit {
 
   currentUser?: User;
 
-  channels?:  any;
+  channels: any[] = [];
 
-  channelId!: string;
+  channelId: [] = [];
 
   unsubscribeUserData!: Subscription;
   private routeSub?: Subscription;
@@ -50,10 +50,9 @@ export class ChatSectionComponent implements OnInit {
      this.showUserChannel();
     });
     setTimeout(() => {
-      console.log(this.channelId);
       console.log(this.channels);
       
-    }, 1000);
+    }, 2000);
   }
 
   showCurrentUserData() {
@@ -66,12 +65,13 @@ export class ChatSectionComponent implements OnInit {
   }
 
   showUserChannel() {    
-   const channelsRef = this.dataUser.getChanbelRef(this.currentUserId);
-  this.unsubscribeUserData = collectionData(channelsRef, { idField: 'id' }).subscribe(data => {
-    this.channels = data;
-    this.channelId = data[0].id;
-    console.log(this.channels);
-  });
+    const channelsRef = this.dataUser.getChanbelRef(this.currentUserId);
+    this.channels = [];
+    onSnapshot(channelsRef, (element) => {
+    element.forEach(doc => {
+      this.channels.push({ ...doc.data(), id: doc.id });
+      });
+    });
   }
 
   ngOnDestroy(): void {

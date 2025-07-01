@@ -5,7 +5,7 @@
         <div class="channel-user-content">
             @if (channels) {
                  @for (item of channels; track $index) {
-                <div class="user-channel">#{{item}}</div>
+                <div class="user-channel">#{{item.channel}}</div>
             }
         }
             <div>Placeholder User Avatar</div>
