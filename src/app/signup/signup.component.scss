@@ -42,11 +42,15 @@
     }
   }
 
+  .signup-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .signup {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
+    width: 100%;
+    max-width: 1920px !important;
     height: 100%;
   }
 
