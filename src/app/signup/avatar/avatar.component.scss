@@ -3,17 +3,20 @@
   height: 100vh;
   background-color: rgba(236, 238, 254, 1);
 
+  .avatar-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .avatar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
+    width: 100%;
+    max-width: 1920px !important;
     height: 100%;
 
     .choose-avatar {
       position: absolute;
       width: 25vw;
-      height: 60vh;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -53,6 +56,7 @@
         color: rgba(68, 77, 242, 1);
         margin-top: 0;
         text-align: center;
+        width: 80%;
       }
 
       .img-and-name {
@@ -82,6 +86,7 @@
         display: flex;
         flex-direction: column;
         width: 100%;
+        margin-bottom: 24px !important;
 
         .avatar-list-imgs {
           display: flex;
@@ -183,7 +188,7 @@
     padding: 20px;
 
     h1 {
-      font-size: 36px;
+      font-size: 36px !important;
     }
   }
 }
@@ -211,12 +216,12 @@
   }
 }
 
+
 @media (max-width: 500px) {
   .avatar .choose-avatar {
     width: calc(100vw - 64px) !important;
-    // min-width: auto;
     border-radius: 16px;
-    padding: 12px;
+    padding: 12px !important;
 
     h1 {
       font-size: 22px;
@@ -228,8 +233,8 @@
     }
 
     .avatar-list-imgs img {
-      width: 36px;
-      height: 36px;
+      width: 40px;
+      height: 40px;
     }
   }
 }
@@ -249,8 +254,8 @@
     }
 
     .avatar-list-imgs img {
-      width: 24px;
-      height: 24px;
+      width: 32px;
+      height: 32px;
     }
   }
 }
