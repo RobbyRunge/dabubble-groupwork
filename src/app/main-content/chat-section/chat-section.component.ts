@@ -6,6 +6,10 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { UserService } from '../../services/user.service';
+import { ActivatedRoute } from '@angular/router';
+import { onSnapshot } from '@angular/fire/firestore';
+import { User } from '../../../models/user.class';
+
 
 @Component({
   selector: 'app-chat-section',
@@ -25,10 +29,26 @@ export class ChatSectionComponent implements OnInit {
 
   dataUser = inject(UserService);
 
+  route = inject(ActivatedRoute);
+
+  currentUserId!: string;
+
+  currentUser!: User;
+
   private unsubscribeUserData!: () => void;
 
    ngOnInit(): void {
-    this.unsubscribeUserData = this.dataUser.showUserData();
+    this.route.params.subscribe(params => {
+    this.currentUserId = params['id'];
+    });
+    this.unsubscribeUserData = this.showCurrentUserData();
+  }
+
+  showCurrentUserData() {
+    return onSnapshot(this.dataUser.getSingleUserRef(this.currentUserId), (element) => {
+      this.currentUser = new User({ ...element.data(), id: element.id });
+      console.log(this.currentUser);
+    });
   }
 
   ngOnDestroy(): void {

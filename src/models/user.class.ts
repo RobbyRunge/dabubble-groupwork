@@ -5,8 +5,8 @@ export class User {
   password!: number;
   // mit avatar komponente erste erstellen?? Als leeres Array?
   // avatarImg?: string;
-  id!: string;
-  chats! : string;
+  userId!: string;
+  chats : { data: { channel: string }; id: string }[] = [];
   channels: { data: { channel: string }; id: string }[] = [];
 
    constructor(obj?: any) {
@@ -15,9 +15,21 @@ export class User {
         this.lastname = obj ? obj.lastname : '';
         this.email = obj ? obj.email : '';
         this.password = obj ? obj.password : '';
-        this.id = obj ? obj.id : '';
-        this.chats = obj ? obj.chats : '';
+        this.userId! = obj ? obj.id : '';
+        this.chats = obj?.chats || [];
         this.channels = obj?.channels || [];
+    }
+
+     public toJSON() {
+        return {
+            name: this.name,
+            lastname: this.lastname,
+            email: this.email,
+            password: this.password,
+            userId: this.userId,
+            chats: this.chats,
+            channels: this.channels
+        }
     }
 
 }
