@@ -362,7 +362,6 @@
 @media (max-width: 700px) {
   .container {
     .form-position {
-      width: 85vw;
       min-width: 300px;
       border-radius: 20px;
 
@@ -371,23 +370,23 @@
         margin: 16px 0;
 
         input {
-          height: 30px;
           font-size: 16px;
+        }
 
-          .email-input {
-            background-position: 10px 7px !important;
+        .email-input {
+          background-position: 32px 10px !important;
+          margin-bottom: 16px;
 
-            &:focus {
-              background-position: 10px 7px !important;
-            }
+          &:focus {
+            background-position: 32px 10px !important;
           }
+        }
 
-          .password-input {
-            background-position: 10px 4px !important;
+        .password-input {
+          background-position: 34px 7px !important;
 
-            &:focus {
-              background-position: 10px 4px !important;
-            }
+          &:focus {
+            background-position: 34px 7px !important;
           }
         }
       }
@@ -410,11 +409,7 @@
       width: calc(100vw - 64px);
       min-width: auto;
       border-radius: 16px;
-
-      h1 {
-        font-size: 24px;
-        margin-bottom: 8px;
-      }
+      padding: 12px;
 
       p {
         font-size: 14px;
@@ -430,18 +425,18 @@
         }
 
         .email-input {
-          background-position: 15px 8px !important;
+          background-position: 15px 10px !important;
 
           &:focus {
-            background-position: 15px 8px !important;
+            background-position: 15px 10px !important;
           }
         }
 
         .password-input {
-          background-position: 17px 5px !important;
+          background-position: 17px 7px !important;
 
           &:focus {
-            background-position: 17px 5px !important;
+            background-position: 17px 7px !important;
           }
         }
       }
@@ -498,7 +493,7 @@
       border-radius: 12px;
 
       h1 {
-        font-size: 20px;
+        font-size: 24px;
       }
 
       p {
