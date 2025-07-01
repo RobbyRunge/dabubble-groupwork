@@ -7,8 +7,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute } from '@angular/router';
-import { onSnapshot } from '@angular/fire/firestore';
+import { collectionData, docData, onSnapshot } from '@angular/fire/firestore';
 import { User } from '../../../models/user.class';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -33,28 +34,49 @@ export class ChatSectionComponent implements OnInit {
 
   currentUserId!: string;
 
-  currentUser!: User;
+  currentUser?: User;
 
-  private unsubscribeUserData!: () => void;
+  channels?:  any;
+
+  channelId!: string;
+
+  unsubscribeUserData!: Subscription;
+  private routeSub?: Subscription;
 
    ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.routeSub = this.route.params.subscribe(params => {
     this.currentUserId = params['id'];
+     this.showCurrentUserData();
+     this.showUserChannel();
     });
-    this.unsubscribeUserData = this.showCurrentUserData();
+    setTimeout(() => {
+      console.log(this.channelId);
+      console.log(this.channels);
+      
+    }, 1000);
   }
 
   showCurrentUserData() {
-    return onSnapshot(this.dataUser.getSingleUserRef(this.currentUserId), (element) => {
-      this.currentUser = new User({ ...element.data(), id: element.id });
-      console.log(this.currentUser);
+    const userRef = this.dataUser.getSingleUserRef(this.currentUserId);
+    this.unsubscribeUserData = docData(userRef).subscribe(data => {
+    this.currentUser = new User(data);
+    console.log(this.currentUser);
+    
     });
   }
 
-  ngOnDestroy(): void {
-    if (this.unsubscribeUserData) {
-      this.unsubscribeUserData();
-    }
+  showUserChannel() {    
+   const channelsRef = this.dataUser.getChanbelRef(this.currentUserId);
+  this.unsubscribeUserData = collectionData(channelsRef, { idField: 'id' }).subscribe(data => {
+    this.channels = data;
+    this.channelId = data[0].id;
+    console.log(this.channels);
+  });
   }
+
+  ngOnDestroy(): void {
+    this.unsubscribeUserData.unsubscribe();
+    this.routeSub?.unsubscribe();
+}
   
 }

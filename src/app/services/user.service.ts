@@ -5,6 +5,7 @@ import { User } from '../../models/user.class';
 @Injectable({ providedIn: 'root' })
 export class UserService {
   
+
   private firestore = inject(Firestore);
   
   userData: User[] = [];
@@ -53,30 +54,12 @@ export class UserService {
     return doc((this.getUsersCollection()), docId);
   }
 
-  // showSingleUserData() {
-  //   return onSnapshot(this.getSingleUserRef(this.userId), (element) => {
-  //     this.currentUser = new User({ ...element.data(), id: element.id });
-  //   });
-  // }
+  getChanbelRef(docId: string) {
+    return collection(this.getSingleUserRef(docId), 'channels');
+  }
 
-  // showUserData() {
-  //   return onSnapshot(this.getUsersCollection(), (element) => {
-  //     this.userData = [];
-  //     element.forEach((docSnap) => {
-  //        this.userData.push(new User({...docSnap.data(), id: docSnap.id   }));
-  //       const collChannel = collection(this.getUsersCollection(), docSnap.id, 'channel');
-  //       onSnapshot(collChannel, (dataChannel) => {
-  //           const userIndex = this.userData.findIndex(u => u.userId! === docSnap.id);
-  //           const channels: { data: any; id: string }[] = []; 
-  //           dataChannel.forEach((channelDoc) => {
-  //             channels.push({data: channelDoc.data(), id: channelDoc.id })
-  //         });
-  //         if (userIndex !== -1) {
-  //         this.userData[userIndex].channels = channels;
-  //         }
-  //       });
-  //     });
-  //   });
-  // }
+   getChatRef(docId: string) {
+    return collection(this.getSingleUserRef(docId), 'chats');
+  }
 
 }

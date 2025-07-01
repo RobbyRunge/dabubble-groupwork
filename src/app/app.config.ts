@@ -5,6 +5,9 @@ import { routes } from './app.routes';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { setLogLevel, LogLevel } from "@angular/fire";
+setLogLevel(LogLevel.VERBOSE);
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
