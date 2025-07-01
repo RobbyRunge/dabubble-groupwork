@@ -361,7 +361,7 @@
       width: 70vw;
       min-width: 400px;
       height: auto;
-      padding: 20px;
+      padding: 32px;
 
       h1 {
         font-size: 36px;
@@ -398,9 +398,7 @@
 @media (max-width: 700px) {
   .container {
     .form-position {
-      width: 85vw;
       min-width: 300px;
-      padding: 16px;
       border-radius: 20px;
 
       .form {
@@ -408,42 +406,42 @@
         margin: 16px 0;
 
         input {
-          height: 30px;
           font-size: 16px;
+          margin-bottom: 16px;
         }
 
         .name-input {
-          background-position: 32px 8px !important;
+          background-position: 32px 10px !important;
 
           &:focus {
-            background-position: 32px 8px !important;
+            background-position: 32px 10px !important;
           }
         }
 
         .email-input {
-          background-position: 29px 8px !important;
+          background-position: 29px 10px !important;
 
           &:focus {
-            background-position: 29px 8px !important;
+            background-position: 29px 10px !important;
           }
         }
 
         .password-input {
-          background-position: 31px 5px !important;
+          background-position: 31px 7px !important;
 
           &:focus {
-            background-position: 31px 5px !important;
+            background-position: 31px 7px !important;
           }
         }
-      }
-
-      h1 {
-        font-size: 28px;
       }
 
       .arrow-back {
         top: 5%;
         left: 5%;
+      }
+
+      .policy-text {
+        margin-bottom: 24px;
       }
     }
   }
@@ -455,11 +453,7 @@
       width: calc(100vw - 64px);
       min-width: auto;
       border-radius: 16px;
-
-      h1 {
-        font-size: 24px;
-        margin-bottom: 8px;
-      }
+      padding: 12px;
 
       p {
         font-size: 14px;
@@ -481,26 +475,26 @@
         }
 
         .name-input {
-          background-position: 15px 8px !important;
+          background-position: 15px 10px !important;
 
           &:focus {
-            background-position: 15px 8px !important;
+            background-position: 15px 10px !important;
           }
         }
 
         .email-input {
-          background-position: 13px 8px !important;
+          background-position: 13px 10px !important;
 
           &:focus {
-            background-position: 15px 8px !important;
+            background-position: 15px 10px !important;
           }
         }
 
         .password-input {
-          background-position: 15px 5px !important;
+          background-position: 15px 7px !important;
 
           &:focus {
-            background-position: 15px 5px !important;
+            background-position: 15px 7px !important;
           }
         }
       }
@@ -516,7 +510,7 @@
         }
 
         .policy {
-          font-size: 14px;
+          font-size: 14px !important;
         }
       }
 
@@ -538,11 +532,11 @@
       padding: 12px;
 
       h1 {
-        font-size: 20px;
+        font-size: 24px;
       }
 
       p {
-        font-size: 12px;
+        font-size: 14px;
       }
 
       .form input {
@@ -552,18 +546,18 @@
 
       .form {
         .name-input {
-          background-position: 10px 6px !important;
+          background-position: 10px 7px !important;
 
           &:focus {
-            background-position: 10px 6px !important;
+            background-position: 10px 7px !important;
           }
         }
 
         .email-input {
-          background-position: 10px 6px !important;
+          background-position: 10px 7px !important;
 
           &:focus {
-            background-position: 10px 6px !important;
+            background-position: 10px 7px !important;
           }
         }
 
@@ -578,7 +572,7 @@
 
       .policy-text {
         p {
-          font-size: 10px;
+          font-size: 12px;
         }
 
         .checkbox-img {
@@ -587,7 +581,7 @@
         }
 
         .policy {
-          font-size: 12px !important;
+          font-size: 14px !important;
         }
       }
     }

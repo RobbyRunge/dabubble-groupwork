@@ -205,8 +205,8 @@
     }
 
     .img-and-name img {
-      width: 100px;
-      height: 100px;
+      width: 120px !important;
+      height: 120px !important;
     }
 
     .avatar-list-imgs img {
@@ -227,11 +227,6 @@
       font-size: 22px;
     }
 
-    .img-and-name img {
-      width: 70px;
-      height: 70px;
-    }
-
     .avatar-list-imgs img {
       width: 40px;
       height: 40px;
@@ -245,7 +240,15 @@
     padding: 8px;
 
     h1 {
-      font-size: 18px;
+      font-size: 24px !important;
+    }
+
+    h2 {
+      font-size: 16px;
+    }
+
+    p {
+      font-size: 14px;
     }
 
     .img-and-name img {
