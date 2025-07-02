@@ -9,14 +9,15 @@
 .main-content {
     width: 100%;
     gap: 20px;
+    padding-bottom: 25px;
     position: relative;
-    @include dFlex();
+    @include dFlex(center, flex-start);
 }
 
 .chat-section{
     padding: 0 20px;
     width: 100%;
-    height: 940px;
+    height: calc(100vh - 146px);
     background-color: white;
     border-radius: 30px;
 }

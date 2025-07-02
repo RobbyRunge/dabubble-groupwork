@@ -1,7 +1,7 @@
 @import './../../../styles.scss';
 
 .example-container {
-    min-height: 940px;
+    min-height: calc(100vh - 146px);
     border-radius: 30px;
     background-color: white;
     position: relative;
