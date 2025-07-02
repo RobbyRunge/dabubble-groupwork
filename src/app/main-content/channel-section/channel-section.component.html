@@ -3,8 +3,25 @@
         <span># Erstelltes Channel</span>
         <mat-icon (click)="dialogRef.close()">close</mat-icon>
     </div>
-    <mat-card class="channel-headline"></mat-card>
-    <mat-card class="channel-description"></mat-card>
+    <mat-card class="channel-headline mat-card-class">
+        <div class="channel-name-description-edit">
+            <span class="channel-name">Channel - Name</span>
+            <span class="channel-edit">Bearbeiten</span>
+        </div>
+        <div># Erstelltes Channel</div>
+    </mat-card>
+    <mat-card class="channel-description mat-card-class">
+        <div class="channel-name-description-edit">
+            <span class="channel-name">Beschreibung</span>
+            <span class="channel-edit">Bearbeiten</span>
+        </div>
+        <div class="channel-description-by-user">
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, magni nesciunt ducimus, ad aut hic voluptates placeat magnam neque, animi amet tempora qui sed! Facere minus amet porro quia nam!
+        </div>
+        <mat-divider></mat-divider>
+            <span class="channel-name">Erstellt von</span>
+            <span class="channel-user-name">User name</span>
+    </mat-card>
     <div class="leave-channel-btn">
         <button mat-flat-button primary>Channel verlassen</button>
     </div>

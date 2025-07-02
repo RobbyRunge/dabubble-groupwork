@@ -4,10 +4,11 @@ import {MatCardModule} from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { MatDialogActions, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import {MatDividerModule} from '@angular/material/divider';
 
 @Component({
   selector: 'app-channel-section',
-  imports: [MatCardModule, MatIcon, MatButtonModule],
+  imports: [MatCardModule, MatIcon, MatButtonModule, MatDividerModule],
   templateUrl: './channel-section.component.html',
   styleUrl: './channel-section.component.scss'
 })

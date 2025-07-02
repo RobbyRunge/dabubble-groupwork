@@ -45,4 +45,9 @@
     background-color: transparent;
     @include dFlex();
     gap: 10px;
+    &:hover {
+        background-color: #ECEEFE; 
+        color: #535AF1;   
+        border-radius: 100px;
+    } 
 }

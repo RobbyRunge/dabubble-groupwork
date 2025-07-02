@@ -4,31 +4,75 @@
     height: 100%;
     @include dFlex(space-between, unset);
     flex-direction: column;
+    font-family: 'nunito';
 }
 
 .channel-header {
     @include dFlex(space-between,center);
-    font-family: 'nunito';
     font-size: 24px;
     font-weight: 700;
+    cursor: default;
 }
 
 mat-icon {
     cursor: pointer;
 }
 
-mat-card {
+.mat-card-class {
     background-color: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 20px;
+    @include dFlex(space-between, flex-start);
+    padding: 20px 20px 20px 20px;
 }
 
 .channel-headline {
     height: 114px;
 }
 
+.channel-name {
+    font-size: 18px;
+    font-weight: 700;
+    cursor: default;
+}
+
+.channel-edit {
+    font-size: 16px;
+    font-weight: 400;
+    color: #535AF1;    
+    cursor: pointer;
+    &:hover {
+        color: #444DF2;;   
+        font-weight: 600;
+        transform: scale(1.05);
+    }
+}
+
 .channel-description {
     height: 273px;
+    @include dFlex(space-between, unset);
+    flex-direction: column;
+}
+
+.channel-name-description-edit {
+    width: 100%;
+    @include dFlex(space-between, flex-start);
+    flex-direction: row;
+}
+
+.channel-description-by-user {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.mat-divider {
+    border: 1px solid #ADB0D9;    
+}
+
+.channel-user-name {
+    font-size: 24px;
+    font-weight: 400;
+    color: #535AF1; 
 }
 
 .mat-mdc-unelevated-button {
@@ -36,7 +80,6 @@ mat-card {
     height: 49px;
     background-color: #444DF2 !important; 
     color: #FFFFFF !important;
-     font-family: 'nunito';
     font-size: 18px;
     font-weight: 700;
 }
