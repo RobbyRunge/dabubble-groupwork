@@ -10,16 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { docData, onSnapshot } from '@angular/fire/firestore';
 import { User } from '../../../models/user.class';
 import { Subscription } from 'rxjs';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 
 
@@ -42,40 +33,37 @@ export class ChatSectionComponent implements OnInit {
   dataUser = inject(UserService);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
-  currentUserId!: string;
-  currentUser?: User;
-  channels: any[] = [];
 
   unsubscribeUserData!: Subscription;
   private routeSub?: Subscription;
 
    ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
-    this.currentUserId = params['id'];
+    this.dataUser.currentUserId = params['id'];
      this.showCurrentUserData();
      this.showUserChannel();
     });
     setTimeout(() => {
-      console.log(this.channels);
+      console.log(this.dataUser.channels);
       
     }, 2000);
   }
 
   showCurrentUserData() {
-    const userRef = this.dataUser.getSingleUserRef(this.currentUserId);
+    const userRef = this.dataUser.getSingleUserRef(this.dataUser.currentUserId);
     this.unsubscribeUserData = docData(userRef).subscribe(data => {
-    this.currentUser = new User(data);
-    console.log(this.currentUserId);
+    this.dataUser.currentUser = new User(data);
+    console.log(this.dataUser.currentUserId);
     
     });
   }
 
   showUserChannel() {    
-    const channelsRef = this.dataUser.getChanbelRef(this.currentUserId);
-    this.channels = [];
+    const channelsRef = this.dataUser.getChanbelRef(this.dataUser.currentUserId);
+    this.dataUser.channels = [];
     onSnapshot(channelsRef, (element) => {
     element.forEach(doc => {
-      this.channels.push({ ...doc.data(), channelId: doc.id });
+      this.dataUser.channels.push({ ...doc.data(), channelId: doc.id });
       });
     });
   }
@@ -93,9 +81,9 @@ openDialog() {
     maxHeight: '616px',
     panelClass: 'channel-dialog-container'
   });
-  dialog.componentInstance.currentUser = new User(this.currentUser); 
-  dialog.componentInstance.currentUserId = this.currentUserId;
-  dialog.componentInstance.channels = this.channels;
+  dialog.componentInstance.currentUser = new User(this.dataUser.currentUser); 
+  dialog.componentInstance.currentUserId = this.dataUser.currentUserId;
+  dialog.componentInstance.channels = this.dataUser.channels;
 }
   
 }

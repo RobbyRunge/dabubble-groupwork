@@ -48,6 +48,11 @@ mat-icon {
     }
 }
 
+.created-channel {
+    font-size: 18px;
+    font-weight: 400;
+}
+
 .channel-description {
     height: 273px;
     @include dFlex(space-between, unset);

@@ -9,7 +9,8 @@ export class UserService {
   private firestore = inject(Firestore);
   
   userData: User[] = [];
-
+  currentUser?: User;
+  channels: any[] = [];
   currentUserId!: string;
 
   loginIsSucess = false;

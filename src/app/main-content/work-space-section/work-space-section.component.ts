@@ -8,6 +8,8 @@ import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { collection, collectionData, Firestore } from '@angular/fire/firestore';
 import { AsyncPipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateChannelSectionComponent } from '../create-channel-section/create-channel-section.component';
 
 
 interface Item {
@@ -33,6 +35,8 @@ interface Item {
 export class WorkSpaceSectionComponent {
   isDrawerOpen = false;
 
+  dialog = inject(MatDialog);
+
   toggleDrawer(drawer: MatDrawer) {
     this.isDrawerOpen = !this.isDrawerOpen;
     drawer.toggle();
@@ -43,4 +47,14 @@ export class WorkSpaceSectionComponent {
   firestore = inject(Firestore);
   itemCollection = collection(this.firestore, 'users');
   item$ = collectionData(this.itemCollection);
+
+  createChannel() {
+    this.dialog.open(CreateChannelSectionComponent, {
+      width: '872px',
+      height: '539px',
+      maxWidth: '872px',     
+      maxHeight: '539px',
+      panelClass: 'channel-dialog-container'
+    });
+  }
 }
