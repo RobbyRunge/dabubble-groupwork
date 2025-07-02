@@ -19,6 +19,15 @@ export class SignupComponent {
   public userService = inject(UserService);
   private router = inject(Router);
 
+  get isFormValid(): boolean {
+    return (
+      this.isPolicyAccepted &&
+      !!this.user.name &&
+      !!this.user.email &&
+      !!this.user.password
+    );
+  }
+
   togglePolicy() {
     this.isPolicyAccepted = !this.isPolicyAccepted;
   }
