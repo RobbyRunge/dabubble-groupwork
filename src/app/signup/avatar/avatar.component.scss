@@ -171,6 +171,12 @@
   font-weight: 600;
 }
 
+.avatar-list-imgs {
+  img.selected {
+    transform: scale(1.1);
+  }
+}
+
 @media (max-width: 1200px) {
   .avatar .choose-avatar {
     width: 50vw;

@@ -11,6 +11,7 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class AvatarComponent {
   private router = inject(Router);
+  selectedAvatar = '/avatar/empty-avatar.png';
 
   items = [
     '/avatar/woman1.png',
@@ -20,6 +21,10 @@ export class AvatarComponent {
     '/avatar/woman2.png',
     '/avatar/men4.png',
   ];
+
+  selectAvatar(avatarSrc: string) {
+    this.selectedAvatar = avatarSrc;
+  }
 
   showSuccessfullyCreateContactOverlay() {
     const backgroundOverlay = document.getElementById('background-overlay');
