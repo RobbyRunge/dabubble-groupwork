@@ -6,9 +6,10 @@
   .imprint-wrapper {
     display: flex;
     align-items: center;
+    justify-content: center;
   }
 
-  .card {
+  .imprint-content-width {
     width: 100%;
     max-width: 1920px !important;
     height: 100%;
