@@ -1,16 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HeaderStartComponent } from "../header-start/header-start.component";
-import { RouterLink } from '@angular/router';
+import { NavigationService } from '../../shared/navigation.service';
 
 @Component({
   selector: 'app-imprint',
   imports: [
     HeaderStartComponent,
-    RouterLink,
   ],
   templateUrl: './imprint.component.html',
   styleUrl: './imprint.component.scss'
 })
 export class ImprintComponent {
-
+  public navigation = inject(NavigationService);
 }

@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HeaderStartComponent } from "../header-start/header-start.component";
-import { RouterLink } from '@angular/router';
+import { NavigationService } from '../../shared/navigation.service';
+
 
 @Component({
   selector: 'app-privacy-policy',
   imports: [
     HeaderStartComponent,
-    RouterLink,
   ],
   templateUrl: './privacy-policy.component.html',
   styleUrl: './privacy-policy.component.scss'
 })
 export class PrivacyPolicyComponent {
-
+  public navigation = inject(NavigationService);
 }
