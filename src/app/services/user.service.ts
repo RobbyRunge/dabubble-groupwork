@@ -1,10 +1,12 @@
-import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, addDoc } from '@angular/fire/firestore';
+import { Injectable } from '@angular/core';
+import { Firestore, collection, addDoc, doc, setDoc, query, where, getDocs } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class UserService {
-  private firestore = inject(Firestore);
+  constructor(private firestore: Firestore) { }
 
   async login(email: string, password: string) {
     const usersCollection = collection(this.firestore, 'users');
@@ -20,16 +22,49 @@ export class UserService {
     return !result.empty;
   }
 
-  async createUserWithSubcollections(user: User) {
-    const usersCollection = collection(this.firestore, 'users');
-    const userRef = await addDoc(usersCollection, { ...user });
+  async createUserWithSubcollections(user: User): Promise<string> {
+    try {
+      const userRef = await addDoc(collection(this.firestore, 'users'), {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        avatar: user.avatar
+      });
+      const userId = userRef.id;
+      const channelsCollection = collection(this.firestore, `users/${userRef.id}/channels`);
+      await addDoc(channelsCollection, {});
+      const chatsCollection = collection(this.firestore, `users/${userRef.id}/chats`);
+      await addDoc(chatsCollection, {});
+      return userId;
+    } catch (error) {
+      throw error;
+    }
+  }
 
-    const channelsCollection = collection(this.firestore, `users/${userRef.id}/channels`);
-    await addDoc(channelsCollection, {});
+  saveUserToLocalStorage(user: User): void {
+    localStorage.setItem('pendingUser', JSON.stringify(user));
+  }
 
-    const chatsCollection = collection(this.firestore, `users/${userRef.id}/chats`);
-    await addDoc(chatsCollection, {});
+  getUserFromLocalStorage(): User | null {
+    const userData = localStorage.getItem('pendingUser');
+    if (userData) {
+      return JSON.parse(userData);
+    }
+    return null;
+  }
 
-    return userRef;
+  clearUserFromLocalStorage(): void {
+    localStorage.removeItem('pendingUser');
+  }
+
+  async completeUserRegistration(user: User): Promise<boolean> {
+    try {
+      await this.createUserWithSubcollections(user);
+      this.clearUserFromLocalStorage();
+      return true;
+    } catch (error) {
+      console.error('Error completing registration:', error);
+      return false;
+    }
   }
 }

@@ -26,11 +26,9 @@
         </div>
 
         <div class="forward-button-postition">
-          <button routerLink="/avatar" class="forward-button standard-transition"
+          <button (click)="navigateToAvatar()" class="forward-button standard-transition"
             [disabled]="!isPolicyAccepted">Weiter</button>
         </div>
-
-        <!-- <button (click)="saveUser()">X</button> -->
       </div>
 
       <app-footer-start></app-footer-start>
