@@ -7,9 +7,20 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute } from '@angular/router';
-import { collectionData, docData, onSnapshot } from '@angular/fire/firestore';
+import { docData, onSnapshot } from '@angular/fire/firestore';
 import { User } from '../../../models/user.class';
 import { Subscription } from 'rxjs';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 
 
 @Component({
@@ -21,7 +32,7 @@ import { Subscription } from 'rxjs';
     FormsModule,
     MatFormFieldModule,
     MatInputModule
-  ],
+],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
 })
@@ -29,16 +40,11 @@ import { Subscription } from 'rxjs';
 export class ChatSectionComponent implements OnInit {
 
   dataUser = inject(UserService);
-
   route = inject(ActivatedRoute);
-
+  dialog = inject(MatDialog);
   currentUserId!: string;
-
   currentUser?: User;
-
   channels: any[] = [];
-
-  channelId: [] = [];
 
   unsubscribeUserData!: Subscription;
   private routeSub?: Subscription;
@@ -59,7 +65,7 @@ export class ChatSectionComponent implements OnInit {
     const userRef = this.dataUser.getSingleUserRef(this.currentUserId);
     this.unsubscribeUserData = docData(userRef).subscribe(data => {
     this.currentUser = new User(data);
-    console.log(this.currentUser);
+    console.log(this.currentUserId);
     
     });
   }
@@ -69,7 +75,7 @@ export class ChatSectionComponent implements OnInit {
     this.channels = [];
     onSnapshot(channelsRef, (element) => {
     element.forEach(doc => {
-      this.channels.push({ ...doc.data(), id: doc.id });
+      this.channels.push({ ...doc.data(), channelId: doc.id });
       });
     });
   }
@@ -77,6 +83,19 @@ export class ChatSectionComponent implements OnInit {
   ngOnDestroy(): void {
     this.unsubscribeUserData.unsubscribe();
     this.routeSub?.unsubscribe();
+}
+
+openDialog() {
+  const dialog = this.dialog.open(ChannelSectionComponent, {
+    width: '872px',
+    height: '616px',
+    maxWidth: '872px',     
+    maxHeight: '616px',
+    panelClass: 'channel-dialog-container'
+  });
+  dialog.componentInstance.currentUser = new User(this.currentUser); 
+  dialog.componentInstance.currentUserId = this.currentUserId;
+  dialog.componentInstance.channels = this.channels;
 }
   
 }

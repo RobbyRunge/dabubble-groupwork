@@ -4,6 +4,11 @@
     align-items: $ai;
 }
 
+@font-face {
+    font-family: 'nunito';
+    src: url('/fonts/Nunito-Regular.ttf');   
+}
+
 a {
     text-decoration: none;
     cursor: pointer;
@@ -17,8 +22,6 @@ button {
     transition: all 125ms ease-in-out;
 }
 
-
-
 html,
 body {
     height: 100%;
@@ -27,4 +30,10 @@ body {
 body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+.channel-dialog-container .mat-mdc-dialog-surface {
+  background-color: #FFFFFF;
+  padding: 40px;
 }

@@ -3,11 +3,12 @@
     <app-work-space-section class="work-space-section"></app-work-space-section>
     <div class="chat-section">
         <div class="channel-user-content">
-            @if (channels) {
-                 @for (item of channels; track $index) {
-                <div class="user-channel">#{{item.channel}}</div>
-            }
-        }
+            <button class="channel-btn" (click)="openDialog()">
+                <span>#</span>
+                <p>Erstelles Channel</p>
+                <img src="/img/arrow_down.png">  
+            </button>
+                <!-- <div class="user-channel">#{{item.channel}}</div> -->
             <div>Placeholder User Avatar</div>
         </div>
         <div></div>
