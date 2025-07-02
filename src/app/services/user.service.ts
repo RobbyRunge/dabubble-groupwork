@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
+import { Channel } from '../../models/channel.class';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -12,6 +13,7 @@ export class UserService {
   currentUser?: User;
   channels: any[] = [];
   currentUserId!: string;
+  createChannel!: Channel;
 
   loginIsSucess = false;
 
@@ -29,7 +31,6 @@ export class UserService {
 
     const result = await getDocs(userQuery);
 
-    // return !result.empty;
     if(!result.empty) {
       const userDoc = result.docs[0];
       this.currentUserId = userDoc.id;
@@ -40,7 +41,6 @@ export class UserService {
   async createUserWithSubcollections(user: User) {
     
     const userRef = await addDoc(this.getUsersCollection(), { ...user });
-
 
     const channelsCollection = collection(this.firestore, `users/${userRef.id}/channels`);
     await addDoc(channelsCollection, {});
@@ -55,7 +55,7 @@ export class UserService {
     return doc((this.getUsersCollection()), docId);
   }
 
-  getChanbelRef(docId: string) {
+  getChannelRef(docId: string) {
     return collection(this.getSingleUserRef(docId), 'channels');
   }
 
@@ -63,4 +63,8 @@ export class UserService {
     return collection(this.getSingleUserRef(docId), 'chats');
   }
 
+  async addChannel(userData: {}) {
+    await addDoc(this.getChannelRef(this.currentUserId), userData)
+  }
+              
 }

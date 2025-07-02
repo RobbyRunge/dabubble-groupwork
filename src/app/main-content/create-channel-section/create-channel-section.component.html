@@ -6,9 +6,11 @@
     <p>
         Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein <br> #marketing zum Beispiel.
     </p>
-    <p>Channel Name</p>
-    <input class="input-channel-name" matInput placeholder="# z.B Kooperationsprojekte"/>
+    <p class="margin-24">Channel Name</p>
+        <input class="input-channel-name" [(ngModel)]="createNewChannel.channelname" placeholder="# z.B Kooperationsprojekte" required/>
     <p>Beschreibung<span class="text-optional"> (optional)</span></p>
-    <input class="input-channel-name" matInput placeholder="Dein Text hier"/>
-    <div class="create-channel-btn"><button mat-flat-button primary>Erstellen</button></div>
+        <input class="input-channel-name" [(ngModel)]="createNewChannel.description" placeholder="Dein Text hier"/>
+    <mat-dialog-actions>
+        <div class="create-channel-btn"><button (click)="createChannel()" mat-flat-button>Erstellen</button></div>
+    </mat-dialog-actions>
 </div>

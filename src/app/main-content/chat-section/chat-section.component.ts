@@ -45,7 +45,6 @@ export class ChatSectionComponent implements OnInit {
     });
     setTimeout(() => {
       console.log(this.dataUser.channels);
-      
     }, 2000);
   }
 
@@ -54,12 +53,13 @@ export class ChatSectionComponent implements OnInit {
     this.unsubscribeUserData = docData(userRef).subscribe(data => {
     this.dataUser.currentUser = new User(data);
     console.log(this.dataUser.currentUserId);
+    console.log(this.dataUser.currentUser);
     
     });
   }
 
   showUserChannel() {    
-    const channelsRef = this.dataUser.getChanbelRef(this.dataUser.currentUserId);
+    const channelsRef = this.dataUser.getChannelRef(this.dataUser.currentUserId);
     this.dataUser.channels = [];
     onSnapshot(channelsRef, (element) => {
     element.forEach(doc => {

@@ -33,6 +33,7 @@ interface Item {
   styleUrl: './work-space-section.component.scss'
 })
 export class WorkSpaceSectionComponent {
+  
   isDrawerOpen = false;
 
   dialog = inject(MatDialog);
