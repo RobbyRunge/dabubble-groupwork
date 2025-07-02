@@ -13,7 +13,7 @@ import { User } from '../../../models/user.class';
 })
 export class AvatarComponent implements OnInit {
   private router = inject(Router);
-  private userService = inject(UserService);
+  public userService = inject(UserService);
   
   selectedAvatar = '/avatar/empty-avatar.png';
   user: User = new User();

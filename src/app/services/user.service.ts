@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Firestore, collection, addDoc, doc, setDoc, query, where, getDocs } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 
@@ -6,7 +6,7 @@ import { User } from '../../models/user.class';
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private firestore: Firestore) { }
+  private firestore = inject(Firestore);
 
   async login(email: string, password: string) {
     const usersCollection = collection(this.firestore, 'users');

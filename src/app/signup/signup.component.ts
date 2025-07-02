@@ -16,7 +16,7 @@ export class SignupComponent {
   isPolicyAccepted = false;
   isHovering = false;
   user = new User();
-  private userService = inject(UserService);
+  public userService = inject(UserService);
   private router = inject(Router);
 
   togglePolicy() {
