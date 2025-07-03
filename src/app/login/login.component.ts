@@ -22,6 +22,13 @@ export class LoginComponent implements OnInit {
   private userService = inject(UserService);
   private router = inject(Router);
 
+  get isFormValid(): boolean {
+    return (
+      !!this.email &&
+      !!this.password
+    );
+  }
+
   ngOnInit() {
     if (!this.introService.hasIntroBeenShown()) {
       this.showIntroLogo = true;
