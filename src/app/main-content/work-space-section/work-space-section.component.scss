@@ -123,10 +123,15 @@ button {
 .users-container {
     @include dFlex();
     gap: 15px;
+
     >h2 {
         font-size: 18px;
         color: black;
         font-weight: 400;
         font-family: 'Nunito';
+    }
+
+    >:hover {
+        cursor: pointer;
     }
 }

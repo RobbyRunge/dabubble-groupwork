@@ -7,12 +7,12 @@ import { MatIcon } from '@angular/material/icon';
 import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { collection, collectionData, Firestore } from '@angular/fire/firestore';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { UserCardComponent } from './user-card/user-card.component';
+import { User } from '../../../models/user.class';
 
 
-interface Item {
-  name: string;
-}
 @Component({
   selector: 'app-work-space-section',
   imports: [
@@ -24,7 +24,7 @@ interface Item {
     MatExpansionModule,
     MatAccordion,
     MatInputModule,
-    AsyncPipe
+    AsyncPipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './work-space-section.component.html',
@@ -32,6 +32,8 @@ interface Item {
 })
 export class WorkSpaceSectionComponent {
   isDrawerOpen = false;
+  selectedUser: any;
+  currentItem = 'Television';
 
   toggleDrawer(drawer: MatDrawer) {
     this.isDrawerOpen = !this.isDrawerOpen;
@@ -45,6 +47,16 @@ export class WorkSpaceSectionComponent {
   item$ = collectionData(this.itemCollection);
 
   onUserClick(index: number, user: any) {
-  console.log('Index:', index, 'User:', user);
-}
+    this.selectedUser = user;
+    /* console.log(user); */
+
+  }
+
+  readonly dialog = inject(MatDialog);
+
+  openDialog(index: number, user: any) {
+    this.dialog.open(UserCardComponent, {
+      data: { user },
+    });
+  }
 }
