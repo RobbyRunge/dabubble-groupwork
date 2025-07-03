@@ -8,7 +8,7 @@ import { User } from '../../models/user.class';
 export class UserService {
   private firestore = inject(Firestore);
 
-  async login(email: string, password: string) {
+  async loginService(email: string, password: string) {
     const usersCollection = collection(this.firestore, 'users');
 
     const userQuery = query(

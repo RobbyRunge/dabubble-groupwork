@@ -26,6 +26,7 @@
         <form class="form">
           <input [(ngModel)]="email" name="email" class="email-input standard-transition" type="email"
             placeholder="beispielname@email.com">
+          <small class="error-message">{{ loginError }}</small>
           <input [(ngModel)]="password" name="password" class="password-input standard-transition" type="password"
             placeholder="Passwort">
         </form>

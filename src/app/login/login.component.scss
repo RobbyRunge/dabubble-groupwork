@@ -172,6 +172,17 @@
           outline: none;
         }
       }
+
+      .error-message {
+        color: red;
+        text-align: center;
+        width: 100%;
+        margin: -16px 0 -16px 0;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
 
