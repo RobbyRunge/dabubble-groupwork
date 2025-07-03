@@ -3,7 +3,7 @@ export class User {
   lastname!: string;
   email!: string;
   password!: number;
-  avatarImg!: string;
+  avatar!: string;
   userId!: string;
   chats : { data: { channel: string }; id: string }[] = [];
   channels: { data: { channel: string }; id: string }[] = [];
@@ -14,7 +14,7 @@ export class User {
         this.lastname = obj ? obj.lastname : '';
         this.email = obj ? obj.email : '';
         this.password = obj ? obj.password : '';
-        this.avatarImg = obj? obj.avatar : '';
+        this.avatar = obj? obj.avatar : '';
         this.userId! = obj ? obj.id : '';
         this.chats = obj?.chats || [];
         this.channels = obj?.channels || [];
@@ -26,7 +26,7 @@ export class User {
             lastname: this.lastname,
             email: this.email,
             password: this.password,
-            avatarImg: this.avatarImg,
+            avatar: this.avatar,
             userId: this.userId,
             chats: this.chats,
             channels: this.channels

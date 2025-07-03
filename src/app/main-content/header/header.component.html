@@ -15,7 +15,7 @@
             <span> {{dataUser.currentUser?.name}} {{dataUser.currentUser?.lastname}} </span>
         </div>
         <div class="avatar-container">
-            <!-- <img *ngIf="dataUser?.currentUser?.avatarImg" [src]="dataUser.currentUser?.avatarImg"> -->
+            <img *ngIf="dataUser?.currentUser?.avatar" [src]="'/avatar/' + dataUser.currentUser?.avatar">
         </div>
         <div>
             <mat-icon>keyboard_arrow_down</mat-icon>
