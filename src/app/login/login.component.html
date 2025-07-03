@@ -24,11 +24,11 @@
         <p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
 
         <form class="form">
-          <input [(ngModel)]="email" name="email" class="email-input standard-transition" type="email"
+          <input [(ngModel)]="email" [ngClass]="{'input-error': loginError}" name="email" class="email-input standard-transition" type="email"
             placeholder="beispielname@email.com">
-          <small class="error-message">{{ loginError }}</small>
-          <input [(ngModel)]="password" name="password" class="password-input standard-transition" type="password"
+          <input [(ngModel)]="password" [ngClass]="{'input-error': loginError}" name="password" class="password-input standard-transition" type="password"
             placeholder="Passwort">
+          <small class="error-message">{{ loginError }}</small>
         </form>
 
         <a class="standard-transition" routerLink="/password-send-mail">Passwort vergessen?</a>

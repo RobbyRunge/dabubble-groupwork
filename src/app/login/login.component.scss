@@ -173,11 +173,16 @@
         }
       }
 
+      .input-error {
+        border: 1px solid rgba(240, 59, 59, 1);
+      }
+
       .error-message {
-        color: red;
+        color: rgba(240, 59, 59, 1);
         text-align: center;
         width: 100%;
-        margin: -16px 0 -16px 0;
+        min-height: 16px;
+        margin: -18px 0;
         font-size: 12px;
         display: flex;
         align-items: center;
