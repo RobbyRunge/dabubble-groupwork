@@ -36,7 +36,7 @@ export class WorkSpaceSectionComponent {
   isDrawerOpen = false;
   selectedUser: any;
 
-  dialog = inject(MatDialog);
+  /* dialog = inject(MatDialog); */
 
   toggleDrawer(drawer: MatDrawer) {
     this.isDrawerOpen = !this.isDrawerOpen;
@@ -61,8 +61,6 @@ export class WorkSpaceSectionComponent {
       data: { user },
     });
   }
-}
-
 
   createChannel() {
     this.dialog.open(CreateChannelSectionComponent, {
