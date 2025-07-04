@@ -32,6 +32,11 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+@font-face {
+    font-family: 'Nunito';
+    src: url('./app/assets/fonts/Nunito-Regular.ttf');
+}
+
 
 .channel-dialog-container .mat-mdc-dialog-surface {
   background-color: #FFFFFF;
