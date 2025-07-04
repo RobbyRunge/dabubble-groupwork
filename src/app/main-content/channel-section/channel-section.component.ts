@@ -6,6 +6,8 @@ import { MatDialogActions, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import {MatDividerModule} from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
+import { UserService } from '../../services/user.service';
+import { getDoc, onSnapshot } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-channel-section',
@@ -16,18 +18,14 @@ import { CommonModule } from '@angular/common';
 export class ChannelSectionComponent implements OnInit {
 
   dialogRef = inject(MatDialogRef<ChannelSectionComponent>);
+  dataUser = inject(UserService);
 
   showEditChannelName = false;
   showEditChannelDescription = false;
 
-  currentUser!: User;
-  currentUserId!: string; 
-  channels: any[] = [];
 
    ngOnInit(): void {
-    console.log('current user is', this.currentUser);
-    console.log('current user id is', this.currentUserId);
-    console.log('channels is' , this.channels);
+   this.loadChannelCreatorData();
   }
 
   editChannelName() {
@@ -45,5 +43,11 @@ export class ChannelSectionComponent implements OnInit {
   saveEditedChannelDescription() {
     this.showEditChannelDescription = false;
   }
+
+  async loadChannelCreatorData() {
+  this.dataUser.getChannelUserId();
+  await this.dataUser.getChannelUserName();
+
+}
 
 }

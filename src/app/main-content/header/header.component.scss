@@ -28,6 +28,7 @@ header {
         >span {
             font-size: 32px;
             color: black;
+            cursor: default;
         }
     }
 }
@@ -54,4 +55,8 @@ mat-icon {
         width: 70px;
         border-radius: 42px;
     }
+}
+
+.arrow-down {
+    cursor: pointer;
 }

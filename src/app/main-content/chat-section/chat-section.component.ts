@@ -36,6 +36,7 @@ export class ChatSectionComponent implements OnInit {
 
   unsubscribeUserData!: Subscription;
   private routeSub?: Subscription;
+  unsubscribeUserChannels?: () => void;    
 
    ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
@@ -44,7 +45,9 @@ export class ChatSectionComponent implements OnInit {
      this.showUserChannel();
     });
     setTimeout(() => {
-      console.log(this.dataUser.channels);
+      this.checkChannel();
+      console.log('Channels by user',this.dataUser.showChannelByUser);
+      
     }, 2000);
   }
 
@@ -52,38 +55,48 @@ export class ChatSectionComponent implements OnInit {
     const userRef = this.dataUser.getSingleUserRef(this.dataUser.currentUserId);
     this.unsubscribeUserData = docData(userRef).subscribe(data => {
     this.dataUser.currentUser = new User(data);
-    console.log(this.dataUser.currentUserId);
-    console.log(this.dataUser.currentUser);
-    
+    console.log('current user id',this.dataUser.currentUserId);
+    console.log('current detail',this.dataUser.currentUser);
     });
   }
 
   showUserChannel() {    
-    const channelsRef = this.dataUser.getChannelRef(this.dataUser.currentUserId);
-    this.dataUser.channels = [];
-    onSnapshot(channelsRef, (element) => {
-    element.forEach(doc => {
-      this.dataUser.channels.push({ ...doc.data(), channelId: doc.id });
-      });
+    const channelRef = this.dataUser.getChannelRef();
+    this.unsubscribeUserChannels = onSnapshot(channelRef, (element) => {
+      this.dataUser.channels = [];
+      element.forEach(doc => {
+        this.dataUser.channels.push({ ...doc.data(), channelId: doc.id });
+      })
     });
   }
 
   ngOnDestroy(): void {
     this.unsubscribeUserData.unsubscribe();
     this.routeSub?.unsubscribe();
+    if (this.unsubscribeUserChannels) {
+    this.unsubscribeUserChannels();
+  }
 }
 
-openDialog() {
-  const dialog = this.dialog.open(ChannelSectionComponent, {
-    width: '872px',
-    height: '616px',
-    maxWidth: '872px',     
-    maxHeight: '616px',
-    panelClass: 'channel-dialog-container'
+checkChannel() {
+  this.dataUser.showChannelByUser = [];
+  this.dataUser.channels.forEach((channel) => {
+      if (Array.isArray(channel.userId) && channel.userId.includes(this.dataUser.currentUserId)) {
+      this.dataUser.showChannelByUser.push({
+        ...channel
+      });
+    }
   });
-  dialog.componentInstance.currentUser = new User(this.dataUser.currentUser); 
-  dialog.componentInstance.currentUserId = this.dataUser.currentUserId;
-  dialog.componentInstance.channels = this.dataUser.channels;
+}
+
+  openDialog() {
+    const dialog = this.dialog.open(ChannelSectionComponent, {
+      width: '872px',
+      height: '616px',
+      maxWidth: '872px',     
+      maxHeight: '616px',
+      panelClass: 'channel-dialog-container'
+    });
 }
   
 }

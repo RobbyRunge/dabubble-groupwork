@@ -8,6 +8,7 @@ import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Channel } from '../../../models/channel.class';
+import { Allchannels } from '../../../models/allchannels.class';
 
 @Component({
   selector: 'app-create-channel-section',
@@ -23,14 +24,16 @@ export class CreateChannelSectionComponent {
 
   createNewChannel = new Channel();
 
+  newChannel = new Allchannels();
+
+  currentUserId = this.dataUser.currentUserId;
+
   createChannel() {
     this.userCreateChannel();  
   }
 
-
   userCreateChannel() {
-    this.dataUser.addChannel(this.createNewChannel.toJSON()).then(() => {
-      console.log('user created channel');
+     this.dataUser.addNewChannel(this.newChannel.toJSON(),this.currentUserId,this.currentUserId).then(() => {
       this.dialogRef.close();
     });
   }

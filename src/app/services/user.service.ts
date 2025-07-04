@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData } from '@angular/fire/firestore';
+import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData, getDoc } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
 
@@ -14,6 +14,11 @@ export class UserService {
   channels: any[] = [];
   currentUserId!: string;
   createChannel!: Channel;
+  showChannelByUser: any[] = [];
+  channelCreaterId!: string;
+  channelCreaterName: string = '';
+  channelCreaterLastname: string = '';
+
 
   loginIsSucess = false;
 
@@ -55,16 +60,39 @@ export class UserService {
     return doc((this.getUsersCollection()), docId);
   }
 
-  getChannelRef(docId: string) {
-    return collection(this.getSingleUserRef(docId), 'channels');
+  getChannelRef() {
+    return collection(this.firestore, 'channels');
   }
 
-   getChatRef(docId: string) {
+  getChatRef(docId: string) {
     return collection(this.getSingleUserRef(docId), 'chats');
   }
 
-  async addChannel(userData: {}) {
-    await addDoc(this.getChannelRef(this.currentUserId), userData)
+  async addNewChannel(allChannels: {}, userId: string, user:string) {
+    const dateNow = new Date();
+    dateNow.setHours(0, 0, 0, 0);
+    const channelWithUser = {
+    ...allChannels,
+    userId: [userId],
+    createdBy: user,
+    createdAt: dateNow
+  };
+      await addDoc(collection(this.firestore, 'channels'),channelWithUser);
   }
+
+    getChannelUserId() {
+       const firstChannel = this.showChannelByUser[0];
+      this.channelCreaterId = firstChannel.createdBy;
+    }
+  
+    async getChannelUserName() {
+      const channelRef = this.getSingleUserRef(this.channelCreaterId);
+      const snapshot = await getDoc(channelRef);
+      const data = snapshot.data();
+      if(data) {
+        this.channelCreaterName = data['name'];
+        this.channelCreaterLastname = data['lastname'];
+      }
+    }
               
 }
