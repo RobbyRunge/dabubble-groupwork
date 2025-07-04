@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { HeaderStartComponent } from "../shared/header-start/header-start.component";
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FooterStartComponent } from "../shared/footer-start/footer-start.component";
 import { User } from '../../models/user.class';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +16,17 @@ export class SignupComponent {
   isPolicyAccepted = false;
   isHovering = false;
   user = new User();
-  private userService = inject(UserService);
+  public userService = inject(UserService);
+  private router = inject(Router);
+
+  get isFormValid(): boolean {
+    return (
+      this.isPolicyAccepted &&
+      !!this.user.name &&
+      !!this.user.email &&
+      !!this.user.password
+    );
+  }
 
   togglePolicy() {
     this.isPolicyAccepted = !this.isPolicyAccepted;
@@ -30,12 +40,8 @@ export class SignupComponent {
     }
   }
 
-  async saveUser() {
-    try {
-      await this.userService.createUserWithSubcollections(this.user);
-      console.log('User saved:', this.user);
-    } catch (error) {
-      console.error('Error saving user:', error);
-    }
+  navigateToAvatar() {
+    this.userService.saveUserToLocalStorage(this.user);
+    this.router.navigate(['/avatar']);
   }
 }

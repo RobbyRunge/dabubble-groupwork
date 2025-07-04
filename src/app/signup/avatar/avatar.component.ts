@@ -1,7 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { HeaderStartComponent } from "../../shared/header-start/header-start.component";
 import { FooterStartComponent } from "../../shared/footer-start/footer-start.component";
 import { Router, RouterLink } from '@angular/router';
+import { UserService } from '../../services/user.service';
+import { User } from '../../../models/user.class';
 
 @Component({
   selector: 'app-avatar',
@@ -9,9 +11,13 @@ import { Router, RouterLink } from '@angular/router';
   templateUrl: './avatar.component.html',
   styleUrl: './avatar.component.scss'
 })
-export class AvatarComponent {
+export class AvatarComponent implements OnInit {
   private router = inject(Router);
-
+  public userService = inject(UserService);
+  
+  selectedAvatar = '/avatar/empty-avatar.png';
+  user: User = new User();
+  
   items = [
     '/avatar/woman1.png',
     '/avatar/men1.png',
@@ -21,9 +27,23 @@ export class AvatarComponent {
     '/avatar/men4.png',
   ];
 
-  showSuccessfullyCreateContactOverlay() {
+  ngOnInit() {
+    const userData = this.userService.getUserFromLocalStorage();
+    if (userData) {
+      this.user = userData;
+    }
+  }
+
+  selectAvatar(avatarSrc: string) {
+    this.selectedAvatar = avatarSrc;
+    this.user.avatar = avatarSrc;
+  }
+
+  async showSuccessfullyCreateContactOverlay() {
     const backgroundOverlay = document.getElementById('background-overlay');
-    if (backgroundOverlay) {
+    this.user.avatar = this.selectedAvatar;
+    const saveSuccessful = await this.userService.completeUserRegistration(this.user);
+    if (saveSuccessful && backgroundOverlay) {
       backgroundOverlay.classList.add('active');
       setTimeout(() => {
         backgroundOverlay.classList.remove('active');
