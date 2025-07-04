@@ -25,7 +25,7 @@ import { User } from '../../../models/user.class';
     MatAccordion,
     MatInputModule,
     AsyncPipe,
-  ],
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './work-space-section.component.html',
   styleUrl: './work-space-section.component.scss'
@@ -33,7 +33,6 @@ import { User } from '../../../models/user.class';
 export class WorkSpaceSectionComponent {
   isDrawerOpen = false;
   selectedUser: any;
-  currentItem = 'Television';
 
   toggleDrawer(drawer: MatDrawer) {
     this.isDrawerOpen = !this.isDrawerOpen;
@@ -48,7 +47,6 @@ export class WorkSpaceSectionComponent {
 
   onUserClick(index: number, user: any) {
     this.selectedUser = user;
-    /* console.log(user); */
 
   }
 

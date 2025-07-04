@@ -1,2 +1,28 @@
-<p>{{data.user.name}}</p>
-<p>{{data.user.email}}</p>
+<div class="header-container">
+    <p>Profil</p>
+    <button (click)="closeDialog()"><mat-icon>close_small</mat-icon></button>
+</div>
+<div class="user-avatar">
+    <img src="{{data.user.avatar}}" alt="">
+</div>
+<div class="user-name-aktiv-container">
+    <div>
+        <h3>{{data.user.name}} {{data.user.lastname}}</h3>
+    </div>
+    <div [ngClass]="data.user.aktiv ? 'aktiv' : 'inaktiv'">
+        <mat-icon>fiber_manual_record</mat-icon>
+        <p>{{data.user.aktiv ? 'Aktiv' : 'Abwesend'}}</p>
+    </div>
+</div>
+<div class="email-container">
+    <div>
+        <mat-icon>mail_outline</mat-icon>
+        <p>E-Mail-Adresse</p>
+    </div>
+    <div class="email-adress">
+        <a href="mailto:{{data.user.email}}">{{data.user.email}}</a>
+    </div>
+</div>
+<div class="button-container">
+    <button><mat-icon>chat_bubble_outline</mat-icon>Nachricht</button>
+</div>

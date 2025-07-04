@@ -1,3 +1,130 @@
-p{
-    color: white;
+@import './../../../../styles.scss';
+
+p {
+    color: black;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    font-family: 'Nunito';
+}
+
+::ng-deep.mat-mdc-dialog-surface {
+    background-color: white !important;
+    width: 500px;
+}
+
+::ng-deep.cdk-global-overlay-wrapper {
+    max-width: 1920px;
+}
+
+.header-container {
+    @include dFlex(space-between);
+    padding: 40px;
+
+    >p {
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    >button {
+        background-color: unset;
+        border: none;
+    }
+}
+
+.user-avatar {
+    @include dFlex();
+
+    >img {
+        height: 200px;
+        width: 200px;
+    }
+}
+
+.user-name-aktiv-container {
+    @include dFlex(center, flex-start);
+    flex-direction: column;
+    padding-left: 40px;
+    padding-bottom: 45px;
+    padding-top: 45px;
+
+    >div {
+        @include dFlex();
+
+        >h3 {
+            font-size: 32px;
+            font-weight: 700;
+            font-family: 'Nunito';
+            margin-block-start: 0;
+            margin-block-end: 0;
+        }
+    }
+
+}
+
+.email-container {
+    @include dFlex(center, flex-start);
+    flex-direction: column;
+    padding-left: 40px;
+    padding-bottom: 45px;
+
+    >div {
+        @include dFlex();
+        flex-direction: row;
+
+        >mat-icon {
+            padding-right: 15px;
+        }
+    }
+}
+
+.email-adress {
+    >a {
+        padding-top: 15px;
+        padding-left: 50px;
+    }
+}
+
+.button-container {
+    @include dFlex();
+    padding-bottom: 40px;
+
+    >button {
+        @include dFlex();
+        gap: 10px;
+        background-color: #444DF2;
+        border: none;
+        border-radius: 30px;
+        color: white;
+        padding: 12px 25px;
+    }
+}
+
+.aktiv {
+    >p {
+        color: #92C83E;
+        font-size: 20px;
+        padding-left: 15px;
+    }
+
+    >mat-icon {
+        color: #92C83E;
+        font-size: 16px;
+        height: 16px;
+        width: 16px;
+    }
+}
+
+.inaktiv {
+    >p {
+        color: #686868;
+        font-size: 20px;
+        padding-left: 15px;
+    }
+
+    >mat-icon {
+        color: #686868;
+        font-size: 16px;
+        height: 16px;
+        width: 16px;
+    }
 }
