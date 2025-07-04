@@ -7,10 +7,8 @@ import { Channel } from '../../models/channel.class';
   providedIn: 'root'
 })
 export class UserService {
-  
-
   private firestore = inject(Firestore);
-  
+
   userData: User[] = [];
   currentUser?: User;
   channels: any[] = [];
@@ -27,7 +25,7 @@ export class UserService {
   getUsersCollection(): CollectionReference {
     return collection(this.firestore, 'users');
   }
-  
+
   async loginService(email: string, password: string) {
 
     const userQuery = query(
@@ -38,11 +36,11 @@ export class UserService {
 
     const result = await getDocs(userQuery);
 
-    if(!result.empty) {
+    if (!result.empty) {
       const userDoc = result.docs[0];
       this.currentUserId = userDoc.id;
       this.loginIsSucess = true;
-    } 
+    }
   }
 
   async createUserWithSubcollections(user: User): Promise<string> {
@@ -103,31 +101,30 @@ export class UserService {
     return collection(this.getSingleUserRef(docId), 'chats');
   }
 
-  async addNewChannel(allChannels: {}, userId: string, user:string) {
+  async addNewChannel(allChannels: {}, userId: string, user: string) {
     const dateNow = new Date();
     dateNow.setHours(0, 0, 0, 0);
     const channelWithUser = {
-    ...allChannels,
-    userId: [userId],
-    createdBy: user,
-    createdAt: dateNow
-  };
-      await addDoc(collection(this.firestore, 'channels'),channelWithUser);
+      ...allChannels,
+      userId: [userId],
+      createdBy: user,
+      createdAt: dateNow
+    };
+    await addDoc(collection(this.firestore, 'channels'), channelWithUser);
   }
 
-    getChannelUserId() {
-       const firstChannel = this.showChannelByUser[0];
-      this.channelCreaterId = firstChannel.createdBy;
+  getChannelUserId() {
+    const firstChannel = this.showChannelByUser[0];
+    this.channelCreaterId = firstChannel.createdBy;
+  }
+
+  async getChannelUserName() {
+    const channelRef = this.getSingleUserRef(this.channelCreaterId);
+    const snapshot = await getDoc(channelRef);
+    const data = snapshot.data();
+    if (data) {
+      this.channelCreaterName = data['name'];
+      this.channelCreaterLastname = data['lastname'];
     }
-  
-    async getChannelUserName() {
-      const channelRef = this.getSingleUserRef(this.channelCreaterId);
-      const snapshot = await getDoc(channelRef);
-      const data = snapshot.data();
-      if(data) {
-        this.channelCreaterName = data['name'];
-        this.channelCreaterLastname = data['lastname'];
-      }
-    }
-              
+  }
 }
