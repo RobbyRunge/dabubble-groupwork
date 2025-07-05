@@ -3,6 +3,7 @@ export class User {
   lastname!: string;
   email!: string;
   password!: number;
+  aktiv!: boolean;
   avatar!: string;
   userId!: string;
   chats : { data: { channel: string }; id: string }[] = [];
@@ -32,5 +33,6 @@ export class User {
             channels: this.channels
         }
     }
-
+  // mit avatar komponente erste erstellen?? Als leeres Array?
+  // avatarImg?: string;
 }

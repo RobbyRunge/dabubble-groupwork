@@ -42,11 +42,15 @@
     }
   }
 
+  .signup-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .signup {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
+    width: 100%;
+    max-width: 1920px !important;
     height: 100%;
   }
 
@@ -113,6 +117,7 @@
       font-weight: 700;
       color: rgba(68, 77, 242, 1);
       margin-top: 0;
+      text-align: center;
     }
 
     p {
@@ -330,6 +335,254 @@
       &:hover {
         background-color: rgba(68, 77, 242, 1);
         color: rgba(255, 255, 255, 1);
+      }
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .container {
+    .form-position {
+      width: 50vw;
+      min-width: 500px;
+      height: auto;
+      padding: 24px;
+    }
+
+    .signup {
+      width: 100vw;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .container {
+    .form-position {
+      width: 70vw;
+      min-width: 400px;
+      height: auto;
+      padding: 32px;
+
+      h1 {
+        font-size: 36px;
+      }
+
+      p {
+        font-size: 18px;
+      }
+    }
+
+    .signup {
+      position: static;
+      width: 100vw;
+      height: auto;
+    }
+
+    header {
+      padding: 16px 16px 0 16px;
+
+      .logo-with-text {
+        img {
+          width: 56px;
+          height: 56px;
+        }
+
+        p {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .container {
+    .form-position {
+      min-width: 300px;
+      border-radius: 20px;
+
+      .form {
+        gap: 16px;
+        margin: 16px 0;
+
+        input {
+          font-size: 16px;
+          margin-bottom: 16px;
+        }
+
+        .name-input {
+          background-position: 32px 10px !important;
+
+          &:focus {
+            background-position: 32px 10px !important;
+          }
+        }
+
+        .email-input {
+          background-position: 29px 10px !important;
+
+          &:focus {
+            background-position: 29px 10px !important;
+          }
+        }
+
+        .password-input {
+          background-position: 31px 7px !important;
+
+          &:focus {
+            background-position: 31px 7px !important;
+          }
+        }
+      }
+
+      .arrow-back {
+        top: 5%;
+        left: 5%;
+      }
+
+      .policy-text {
+        margin-bottom: 24px;
+      }
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  .container {
+    .form-position {
+      width: calc(100vw - 64px);
+      min-width: auto;
+      border-radius: 16px;
+      padding: 12px;
+
+      p {
+        font-size: 14px;
+      }
+
+      .arrow-back {
+        width: 20px;
+        height: 20px;
+        padding: 6px;
+      }
+
+      .form {
+        gap: 12px;
+        margin: 12px 0;
+
+        input {
+          padding-left: 50px;
+          font-size: 14px;
+        }
+
+        .name-input {
+          background-position: 15px 10px !important;
+
+          &:focus {
+            background-position: 15px 10px !important;
+          }
+        }
+
+        .email-input {
+          background-position: 13px 10px !important;
+
+          &:focus {
+            background-position: 15px 10px !important;
+          }
+        }
+
+        .password-input {
+          background-position: 15px 7px !important;
+
+          &:focus {
+            background-position: 15px 7px !important;
+          }
+        }
+      }
+
+      .policy-text {
+        p {
+          font-size: 12px;
+        }
+
+        .checkbox-img {
+          width: 20px;
+          height: 20px;
+        }
+
+        .policy {
+          font-size: 14px !important;
+        }
+      }
+
+      .forward-button-postition {
+        .forward-button {
+          width: 90px;
+          height: 36px;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 370px) {
+  .container {
+    .form-position {
+      border-radius: 12px;
+      padding: 12px;
+
+      h1 {
+        font-size: 24px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+
+      .form input {
+        height: 28px;
+        padding-left: 40px;
+      }
+
+      .form {
+        .name-input {
+          background-position: 10px 7px !important;
+
+          &:focus {
+            background-position: 10px 7px !important;
+          }
+        }
+
+        .email-input {
+          background-position: 10px 7px !important;
+
+          &:focus {
+            background-position: 10px 7px !important;
+          }
+        }
+
+        .password-input {
+          background-position: 10px 4px !important;
+
+          &:focus {
+            background-position: 10px 4px !important;
+          }
+        }
+      }
+
+      .policy-text {
+        p {
+          font-size: 12px;
+        }
+
+        .checkbox-img {
+          width: 16px;
+          height: 16px;
+        }
+
+        .policy {
+          font-size: 14px !important;
+        }
       }
     }
   }

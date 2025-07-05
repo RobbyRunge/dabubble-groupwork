@@ -13,8 +13,9 @@ app-chat-section {
 .main-content {
     width: 100%;
     gap: 20px;
+    padding-bottom: 25px;
     position: relative;
-    @include dFlex();
+    @include dFlex(center, flex-start);
 }
 
 .chat-section{

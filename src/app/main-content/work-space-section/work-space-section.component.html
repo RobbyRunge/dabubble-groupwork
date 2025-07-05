@@ -14,7 +14,7 @@
                     <h3>Devspace</h3>
                 </div>
                 <div>
-                    <mat-icon style="fill: none;">edit_square</mat-icon>
+                    <mat-icon>edit_square_outline</mat-icon>
                 </div>
             </div>
             <div class="add-channels-container">
@@ -23,19 +23,19 @@
                         <mat-expansion-panel>
                             <mat-expansion-panel-header>
                                 <mat-panel-description>
-                                    <mat-icon>workspaces</mat-icon>
+                                    <mat-icon>workspaces_outline</mat-icon>
                                     Channels
                                 </mat-panel-description>
                                 <div>
                                     <mat-icon (click)="createChannel()">add</mat-icon>
                                 </div>
                             </mat-expansion-panel-header>
-                            <div>
+                            <div class="list-channels-container">
                                 <h2>#Entwicklerteam</h2>
                             </div>
                             <div>
                                 <button>
-                                    <mat-icon>add_circle</mat-icon>
+                                    <mat-icon>add_circle_outline</mat-icon>
                                     <span>Channel hinzufügen</span>
                                 </button>
                             </div>
@@ -49,13 +49,16 @@
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
                             <mat-panel-description>
-                                <mat-icon>account_circle</mat-icon>
+                                <mat-icon>account_circle_</mat-icon>
                                 Direktnachrichten
                             </mat-panel-description>
                         </mat-expansion-panel-header>
-                        <div>
-                            @for (item of item$ | async; track item) {
-                            <h2>{{ item['name'] }} {{item['lastname']}}</h2>
+                        <div class="users-message-container">
+                            @for (user of item$ | async; track user; let index = $index ) {
+                            <div class="users-container" (click)="openDialog(index, user)">
+                                    <img src="{{user['avatar']}}" alt="">
+                                    <h2>{{ user['name'] }} {{user['lastname']}}</h2>
+                            </div>
                             }
                         </div>
                     </mat-expansion-panel>

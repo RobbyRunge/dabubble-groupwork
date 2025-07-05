@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FooterStartComponent } from "../shared/footer-start/footer-start.component";
 import { CommonModule } from '@angular/common';
 import { IntroService } from '../services/intro.service';
@@ -15,12 +15,19 @@ import { UserService } from '../services/user.service';
 export class LoginComponent implements OnInit {
   email = '';
   password = '';
+  loginError = '';
   showIntroLogo = false;
 
   private introService = inject(IntroService);
   private userService = inject(UserService);
+  private router = inject(Router);
 
-  router = inject(Router);
+  get isFormValid(): boolean {
+    return (
+      !!this.email &&
+      !!this.password
+    );
+  }
 
   userId!: string;
 
@@ -38,18 +45,22 @@ export class LoginComponent implements OnInit {
 
   async login() {
     try {
-      const success = await this.userService.login(this.email, this.password);
+      // Don't assign the result if loginService returns void
+      await this.userService.loginService(this.email, this.password);
+
       if (this.userService.loginIsSucess) {
         alert('Login erfolgreich!');
         this.userId = this.userService.currentUserId;
-        this.router.navigate(['mainpage',this.userId]);
         this.email = '';
         this.password = '';
-        } else {
-        alert('E-Mail oder Passwort falsch!');
+        this.loginError = '';
+        this.router.navigate(['mainpage', this.userId]);
+      } else {
+        this.loginError = 'Ungültige Email oder Passwort';
       }
     } catch (error) {
       console.error('Login-Fehler:', error);
+      this.loginError = 'Ein Fehler ist aufgetreten';
     }
   }
 }
