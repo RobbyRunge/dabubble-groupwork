@@ -81,7 +81,7 @@ export class UserService {
   }
 
     getChannelUserId() {
-       const firstChannel = this.showChannelByUser[0];
+      const firstChannel = this.showChannelByUser[1];
       this.channelCreaterId = firstChannel.createdBy;
     }
   
