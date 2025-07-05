@@ -12,6 +12,7 @@ import { User } from '../../../models/user.class';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
@@ -22,7 +23,8 @@ import { ChannelSectionComponent } from '../channel-section/channel-section.comp
     HeaderComponent,
     FormsModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    CommonModule
 ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
@@ -34,63 +36,18 @@ export class ChatSectionComponent implements OnInit {
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
 
-  unsubscribeUserData!: Subscription;
-  private routeSub?: Subscription;
-  unsubscribeUserChannels?: () => void;    
+  private routeSub?: Subscription;   
 
    ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
     this.dataUser.currentUserId = params['id'];
-     this.showCurrentUserData();
-     this.showUserChannel();
-    });
-    setTimeout(() => {
-      this.checkChannel();
-      console.log('Channels by user',this.dataUser.showChannelByUser);
-      
-    }, 2000);
-  }
-
-  showCurrentUserData() {
-    const userRef = this.dataUser.getSingleUserRef(this.dataUser.currentUserId);
-    this.unsubscribeUserData = docData(userRef).subscribe(data => {
-    this.dataUser.currentUser = new User(data);
-    console.log('current user id',this.dataUser.currentUserId);
-    console.log('current detail',this.dataUser.currentUser);
+     this.dataUser.showCurrentUserData();
+     this.dataUser.showUserChannel();
     });
   }
-
-  showUserChannel() {    
-    const channelRef = this.dataUser.getChannelRef();
-    this.unsubscribeUserChannels = onSnapshot(channelRef, (element) => {
-      this.dataUser.channels = [];
-      element.forEach(doc => {
-        this.dataUser.channels.push({ ...doc.data(), channelId: doc.id });
-      })
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribeUserData.unsubscribe();
-    this.routeSub?.unsubscribe();
-    if (this.unsubscribeUserChannels) {
-    this.unsubscribeUserChannels();
-  }
-}
-
-checkChannel() {
-  this.dataUser.showChannelByUser = [];
-  this.dataUser.channels.forEach((channel) => {
-      if (Array.isArray(channel.userId) && channel.userId.includes(this.dataUser.currentUserId)) {
-      this.dataUser.showChannelByUser.push({
-        ...channel
-      });
-    }
-  });
-}
 
   openDialog() {
-    const dialog = this.dialog.open(ChannelSectionComponent, {
+    this.dialog.open(ChannelSectionComponent, {
       width: '872px',
       height: '616px',
       maxWidth: '872px',     
@@ -98,5 +55,9 @@ checkChannel() {
       panelClass: 'channel-dialog-container'
     });
 }
+
+ ngOnDestroy(): void {
+    this.routeSub?.unsubscribe();
+   }
   
 }

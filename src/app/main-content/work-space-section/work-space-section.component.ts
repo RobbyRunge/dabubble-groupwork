@@ -12,6 +12,7 @@ import { User } from '../../../models/user.class';
 import { AsyncPipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateChannelSectionComponent } from '../create-channel-section/create-channel-section.component';
+import { UserService } from '../../services/user.service';
 
 
 @Component({
@@ -32,6 +33,8 @@ import { CreateChannelSectionComponent } from '../create-channel-section/create-
   styleUrl: './work-space-section.component.scss'
 })
 export class WorkSpaceSectionComponent {
+
+  dataUser = inject(UserService);
   
   isDrawerOpen = false;
   selectedUser: any;

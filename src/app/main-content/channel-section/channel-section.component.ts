@@ -22,6 +22,7 @@ export class ChannelSectionComponent implements OnInit {
 
   showEditChannelName = false;
   showEditChannelDescription = false;
+  showChannels = false;
 
 
    ngOnInit(): void {

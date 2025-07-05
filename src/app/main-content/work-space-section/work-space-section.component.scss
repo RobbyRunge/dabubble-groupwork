@@ -42,7 +42,7 @@
     gap: 16px;
     padding-left: 30px;
     padding-right: 30px;
-    padding-top: 32px
+    padding-top: 32px;
 }
 
 .channel-logo-name {
@@ -94,6 +94,9 @@ button {
     border: none;
     @include dFlex();
     gap: 10px;
+    > span {
+        font-size: 18px;
+    }
 }
 
 .add-channels-container {
@@ -105,9 +108,10 @@ button {
 
     >h2 {
         font-family: 'Nunito';
-        font-weight: 700;
+        font-weight: 400;
         color: black;
-        font-size: 18px
+        font-size: 18px;
+        cursor: default;
     }
 }
 

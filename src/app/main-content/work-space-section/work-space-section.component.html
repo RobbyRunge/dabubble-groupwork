@@ -31,12 +31,14 @@
                                 </div>
                             </mat-expansion-panel-header>
                             <div class="list-channels-container">
-                                <h2>#Entwicklerteam</h2>
+                                @for (channel of dataUser.showChannelByUser; track $index) {
+                                    <h2># {{channel.channelname}}</h2>
+                                }
                             </div>
                             <div>
-                                <button>
+                                <button (click)="createChannel()">
                                     <mat-icon>add_circle_outline</mat-icon>
-                                    <span>Channel hinzufügen</span>
+                                    <span class="add-user-channel">Channel hinzufügen</span>
                                 </button>
                             </div>
                         </mat-expansion-panel>

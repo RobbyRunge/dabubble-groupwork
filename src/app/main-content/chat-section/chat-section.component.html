@@ -5,7 +5,7 @@
         <div class="channel-user-content">
             <button class="channel-btn" (click)="openDialog()">
                 <span>#</span>
-                <p>Erstelles Channel</p>
+                <p  *ngIf="dataUser.showChannelByUser"> {{dataUser.showChannelByUser[0]?.channelname}} </p>
                 <img src="/img/arrow_down.png">  
             </button>
                 <!-- <div class="user-channel">#{{item.channel}}</div> -->
