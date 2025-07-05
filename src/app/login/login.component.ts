@@ -45,7 +45,6 @@ export class LoginComponent implements OnInit {
 
   async login() {
     try {
-      // Don't assign the result if loginService returns void
       await this.userService.loginService(this.email, this.password);
 
       if (this.userService.loginIsSucess) {
@@ -62,5 +61,13 @@ export class LoginComponent implements OnInit {
       console.error('Login-Fehler:', error);
       this.loginError = 'Ein Fehler ist aufgetreten';
     }
+  }
+
+  signInWithGoogle() {
+    this.userService.signInWithGoogle()
+      .catch(error => {
+        console.error('Google sign in error', error);
+        this.loginError = 'Failed to sign in with Google. Please try again.';
+      });
   }
 }

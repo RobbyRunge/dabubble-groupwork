@@ -2,12 +2,16 @@ import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData, getDoc } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
+import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   private firestore = inject(Firestore);
+  private router = inject(Router);
+  private auth = inject(Auth);
 
   userData: User[] = [];
   currentUser?: User;
@@ -40,6 +44,23 @@ export class UserService {
       const userDoc = result.docs[0];
       this.currentUserId = userDoc.id;
       this.loginIsSucess = true;
+    }
+  }
+
+  async signInWithGoogle() {
+    try {
+      const provider = new GoogleAuthProvider();
+      const credential = await signInWithPopup(this.auth, provider);
+
+      // Handle successful login
+      // console.log('Google auth successful', credential.user);
+
+      this.router.navigate(['/mainpage/:id']);
+
+      return credential.user;
+    } catch (error) {
+      console.error('Error during Google sign in', error);
+      throw error;
     }
   }
 
