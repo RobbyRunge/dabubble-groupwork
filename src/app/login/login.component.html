@@ -45,7 +45,7 @@
 
         <div class="login-and-guest-login">
           <button class="login-button standard-transition" (click)="login()" [disabled]="!isFormValid">Anmelden</button>
-          <button class="guest-login-button standard-transition" routerLink="/mainpage">Gäste-Login</button>
+          <button (click)="loginWithGuest()" class="guest-login-button standard-transition">Gäste-Login</button>
         </div>
       </div>
 

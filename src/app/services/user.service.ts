@@ -61,6 +61,24 @@ export class UserService {
     }
   }
 
+  async signInWithGuest() {
+    const guestEmail = 'guestemail@gmail.com';
+    const userQuery = query(
+      this.getUsersCollection(),
+      where('email', '==', guestEmail)
+    );
+
+    const result = await getDocs(userQuery);
+
+    if (!result.empty) {
+      const userDoc = result.docs[0];
+      this.currentUserId = userDoc.id;
+      this.loginIsSucess = true;
+    } else {
+      console.error('Guest user not found. Please create a guest user first.');
+    }
+  }
+
   async createUserWithSubcollections(user: User): Promise<string> {
     try {
       const userRef = await addDoc(collection(this.firestore, 'users'), {

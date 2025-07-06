@@ -91,4 +91,26 @@ export class LoginComponent implements OnInit {
       }, 2000);
     }
   }
+
+  loginWithGuest() {
+    const backgroundOverlay = document.getElementById('background-overlay');
+    if (backgroundOverlay) {
+      this.userService.signInWithGuest().then(() => {
+        if (this.userService.loginIsSucess) {
+          this.userId = this.userService.currentUserId;
+          backgroundOverlay.classList.add('active');
+          setTimeout(() => {
+            backgroundOverlay.classList.remove('active');
+            setTimeout(() => {
+              this.router.navigate(['mainpage', this.userId]);
+            }, 125);
+          }, 2000);
+        } else {
+          console.error('Guest login failed.');
+        }
+      }).catch(error => {
+        console.error('Error during guest login:', error);
+      });
+    }
+  }
 }
