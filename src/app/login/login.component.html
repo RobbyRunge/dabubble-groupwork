@@ -39,7 +39,7 @@
           <div class="border"></div>
         </div>
 
-        <button class="google-button standard-transition" (click)="signInWithGoogle()">
+        <button class="google-button standard-transition" (click)="loginWithGoogle()">
           <img src="login/google.png" alt="">Anmelden mit Google
         </button>
 
@@ -50,6 +50,10 @@
       </div>
 
       <app-footer-start></app-footer-start>
+    </div>
+
+    <div id="background-overlay" class="standard-transition">
+      <mat-dialog-content>Erfolgreich angemeldet</mat-dialog-content>
     </div>
   </div>
 </div>

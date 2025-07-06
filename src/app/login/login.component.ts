@@ -5,10 +5,17 @@ import { CommonModule } from '@angular/common';
 import { IntroService } from '../services/intro.service';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user.service';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, FooterStartComponent, CommonModule, FormsModule],
+  imports: [
+    RouterLink,
+    FooterStartComponent,
+    CommonModule,
+    FormsModule,
+    MatDialogModule
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -44,16 +51,23 @@ export class LoginComponent implements OnInit {
   }
 
   async login() {
+    const backgroundOverlay = document.getElementById('background-overlay');
     try {
       await this.userService.loginService(this.email, this.password);
-
       if (this.userService.loginIsSucess) {
-        alert('Login erfolgreich!');
-        this.userId = this.userService.currentUserId;
-        this.email = '';
-        this.password = '';
-        this.loginError = '';
-        this.router.navigate(['mainpage', this.userId]);
+        if (backgroundOverlay) {
+          backgroundOverlay.classList.add('active');
+          setTimeout(() => {
+            backgroundOverlay.classList.remove('active');
+            setTimeout(() => {
+              this.userId = this.userService.currentUserId;
+              this.email = '';
+              this.password = '';
+              this.loginError = '';
+              this.router.navigate(['mainpage', this.userId]);
+            }, 125);
+          }, 2000);
+        }
       } else {
         this.loginError = 'Ungültige Email oder Passwort';
       }
@@ -63,11 +77,18 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  signInWithGoogle() {
-    this.userService.signInWithGoogle()
-      .catch(error => {
-        console.error('Google sign in error', error);
-        this.loginError = 'Failed to sign in with Google. Please try again.';
-      });
+  loginWithGoogle() {
+    const backgroundOverlay = document.getElementById('background-overlay');
+    if (backgroundOverlay) {
+      this.userService.signInWithGoogle()
+        .catch(error => {
+          console.error('Google sign in error', error);
+          this.loginError = 'Anmeldung bei Google fehlgeschlagen. Bitte versuchen Sie es erneut.';
+        });
+      backgroundOverlay.classList.add('active');
+      setTimeout(() => {
+        backgroundOverlay.classList.remove('active');
+      }, 2000);
+    }
   }
 }

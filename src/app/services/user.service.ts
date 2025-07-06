@@ -52,10 +52,7 @@ export class UserService {
       const provider = new GoogleAuthProvider();
       const credential = await signInWithPopup(this.auth, provider);
 
-      // Handle successful login
-      // console.log('Google auth successful', credential.user);
-
-      this.router.navigate(['/mainpage/:id']);
+      this.router.navigate(['mainpage/:id']);
 
       return credential.user;
     } catch (error) {
