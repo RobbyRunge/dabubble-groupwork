@@ -44,7 +44,8 @@ mat-icon {
     &:hover {
         color: #444DF2;;   
         font-weight: 600;
-        transform: scale(1.05);
+        transform: scale(1.02);
+        transition: all 100ms ease-in;
     }
 }
 

@@ -140,3 +140,33 @@ button {
         cursor: pointer;
     }
 }
+
+.add-icon-container {
+    width: 24px;
+    height: 24px;
+    > mat-icon {
+        width: 100%;
+        height: 100%;
+        transition: all 100ms ease-in;
+        &:hover {
+            color: #535AF1; 
+            background-color: #ECEEFE;
+            border-radius: 50%;
+            transform: scale(1.02);
+        }
+    }
+}
+
+mat-panel-description {
+    transition: all 100ms ease-in;
+    &:hover {
+        color: #535AF1;
+        transform: scale(1.02);
+    mat-icon {
+        color: #535AF1;
+        }
+    }
+    > mat-icon {
+        transition: all 100ms ease-in;
+    }
+}
