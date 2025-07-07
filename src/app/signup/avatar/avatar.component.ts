@@ -4,7 +4,7 @@ import { FooterStartComponent } from "../../shared/footer-start/footer-start.com
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { User } from '../../../models/user.class';
-import { MatDialog, MatDialogContent } from '@angular/material/dialog';
+import { MatDialogContent } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-avatar',
@@ -47,8 +47,8 @@ export class AvatarComponent implements OnInit {
 
   async showSuccessfullyCreateContactOverlay() {
     const backgroundOverlay = document.getElementById('background-overlay');
-    // this.user.avatar = this.selectedAvatar;
-    // const saveSuccessful = await this.userService.completeUserRegistration(this.user);
+    this.user.avatar = this.selectedAvatar;
+    await this.userService.completeUserRegistration(this.user);
     if (backgroundOverlay) {
       backgroundOverlay.classList.add('active');
       setTimeout(() => {

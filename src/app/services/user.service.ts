@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData, getDoc } from '@angular/fire/firestore';
+import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData, getDoc, updateDoc } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
 import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
@@ -88,10 +88,10 @@ export class UserService {
         avatar: user.avatar
       });
       const userId = userRef.id;
-      const channelsCollection = collection(this.firestore, `users/${userRef.id}/channels`);
-      await addDoc(channelsCollection, {});
-      const chatsCollection = collection(this.firestore, `users/${userRef.id}/chats`);
-      await addDoc(chatsCollection, {});
+      // const channelsCollection = collection(this.firestore, `users/${userRef.id}/channels`);
+      // await addDoc(channelsCollection, {});
+      // const chatsCollection = collection(this.firestore, `users/${userRef.id}/chats`);
+      // await addDoc(chatsCollection, {});
       return userId;
     } catch (error) {
       throw error;
@@ -162,5 +162,9 @@ export class UserService {
       this.channelCreaterName = data['name'];
       this.channelCreaterLastname = data['lastname'];
     }
+  }
+
+  async updateUserDocument(userId: string, data: any) {
+    return updateDoc(doc(this.firestore, 'users', userId), data);
   }
 }
