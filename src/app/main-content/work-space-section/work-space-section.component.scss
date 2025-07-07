@@ -103,6 +103,22 @@ button {
     padding-left: 30px;
 }
 
+.add-user-channel {
+    transition: all 100ms ease-in;
+    @include dFlex();
+    gap: 10px;
+        &:hover {
+            color: #535AF1; 
+             mat-icon {
+            color: #535AF1;
+            }
+        }
+     > mat-icon {
+        transition: all 100ms ease-in;
+    }
+    
+}
+
 .list-channels-container {
     padding-bottom: 25px;
 
@@ -161,7 +177,7 @@ mat-panel-description {
     transition: all 100ms ease-in;
     &:hover {
         color: #535AF1;
-        transform: scale(1.02);
+        transform: scale(1.005);
     mat-icon {
         color: #535AF1;
         }
@@ -169,4 +185,16 @@ mat-panel-description {
     > mat-icon {
         transition: all 100ms ease-in;
     }
+}
+
+::ng-deep .mat-expansion-indicator {
+  display: none;
+}
+
+.custom-arrow {
+    margin-right: 15px;
+    @include dFlex();
+  &.rotated {
+    transform: rotate(90deg);
+  }
 }

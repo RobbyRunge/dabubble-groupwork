@@ -12,7 +12,7 @@
     </mat-form-field>
     <div class="user-container">
         <div>
-            <span> {{dataUser.currentUser?.name}} {{dataUser.currentUser?.lastname}} </span>
+            <span> {{dataUser.currentUser?.name}} </span>
         </div>
         <div class="avatar-container">
             <img *ngIf="dataUser?.currentUser?.avatar" [src]="'/avatar/' + dataUser.currentUser?.avatar">

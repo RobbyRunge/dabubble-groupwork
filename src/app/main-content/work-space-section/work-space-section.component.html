@@ -20,9 +20,12 @@
             <div class="add-channels-container">
                 <div>
                     <mat-accordion class="example-headers-align" multi>
-                        <mat-expansion-panel>
+                        <mat-expansion-panel #myPanel="matExpansionPanel">
                             <mat-expansion-panel-header>
                                 <mat-panel-description>
+                                    <span class="custom-arrow" [class.rotated]="myPanel.expanded">
+                                        <mat-icon>arrow_right</mat-icon>
+                                    </span>
                                     <mat-icon>workspaces_outline</mat-icon>
                                     Channels
                                 </mat-panel-description>
@@ -37,8 +40,12 @@
                             </div>
                             <div>
                                 <button (click)="createChannel()">
-                                    <mat-icon>add_circle_outline</mat-icon>
-                                    <span class="add-user-channel">Channel hinzufügen</span>
+                                    <span class="add-user-channel">
+                                        <mat-icon>add_circle_outline</mat-icon>
+                                        Channel hinzufügen
+                                    </span>
+                                    <!-- <mat-icon>add_circle_outline</mat-icon>
+                                    <span class="add-user-channel">Channel hinzufügen</span> -->
                                 </button>
                             </div>
                         </mat-expansion-panel>
@@ -48,9 +55,12 @@
             </div>
             <div class="useres-list-container">
                 <mat-accordion class="example-headers-align" multi>
-                    <mat-expansion-panel>
+                    <mat-expansion-panel #myPaneltwo="matExpansionPanel">
                         <mat-expansion-panel-header>
                             <mat-panel-description>
+                                <span class="custom-arrow" [class.rotated]="myPaneltwo.expanded">
+                                        <mat-icon>arrow_right</mat-icon>
+                                    </span>
                                 <mat-icon>account_circle_</mat-icon>
                                 Direktnachrichten
                             </mat-panel-description>

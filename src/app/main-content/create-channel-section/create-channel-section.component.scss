@@ -8,13 +8,24 @@
 }
 
 .create-channel-header {
-     @include dFlex(space-between, unset);
+     @include dFlex(space-between, center);
      font-size: 24px;
      font-weight: 700;
 }
 
-mat-icon {
+.close-icon {
+    padding: 5px;
+    height: 24px;
+    width: 24px;
     cursor: pointer;
+    transition: all 100ms ease-in;
+    @include dFlex();
+        &:hover {
+            padding: 5px;
+            color: #535AF1; 
+            background-color: #ECEEFE;
+            border-radius: 50%;
+        }
 }
 
 p {
