@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { HeaderStartComponent } from '../../shared/header-start/header-start.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FooterStartComponent } from "../../shared/footer-start/footer-start.component";
 import { UserService } from '../../services/user.service';
 import { FormsModule } from '@angular/forms';
@@ -15,6 +15,7 @@ import emailjs from '@emailjs/browser';
     FooterStartComponent,
     FormsModule,
     MatDialogModule,
+    RouterLink
   ],
   templateUrl: './password-send-email.component.html',
   styleUrl: './password-send-email.component.scss'
