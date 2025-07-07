@@ -49,15 +49,19 @@
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
                             <mat-panel-description>
-                                <mat-icon>account_circle_</mat-icon>
+                                <img class="account-img" src="account_circle.png" alt="">
                                 Direktnachrichten
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <div class="users-message-container">
-                            @for (user of item$ | async; track user; let index = $index ) {
+                            @for (user of item$ | async; track user.userId; let index = $index ) {
                             <div class="users-container" (click)="openDialog(index, user)">
-                                    <img src="{{user['avatar']}}" alt="">
-                                    <h2>{{ user['name'] }} {{user['lastname']}}</h2>
+                                <div>
+                                    <img class="avatar-small-img" src="avatar/{{user['avatar']}}" alt="">
+                                    <img class="status-img" src="Online.png" alt="">
+                                </div>
+                                <h2>{{ user['name'] }} {{user['lastname']}}</h2>
+                                <h2 *ngIf="user['userId'] === dataUser.currentUserId">(Du)</h2>
                             </div>
                             }
                         </div>

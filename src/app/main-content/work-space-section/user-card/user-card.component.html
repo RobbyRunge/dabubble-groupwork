@@ -5,24 +5,42 @@
 <div class="user-avatar">
     <img src="{{data.user.avatar}}" alt="">
 </div>
-<div class="user-name-aktiv-container">
-    <div>
-        <h3>{{data.user.name}} {{data.user.lastname}}</h3>
+<div [ngClass]="userUpdateNameAktiv ? 'active' : 'notactive'">
+    <div class="user-name-aktiv-container">
+        <div class="user-name">
+            <h3>{{data.user.name}} {{data.user.lastname}}</h3>
+            <span *ngIf="checkUserId()" (click)="changeName()">Bearbeiten</span>
+        </div>
+        <div [ngClass]="data.user.aktiv ? 'aktiv' : 'inaktiv'">
+            <mat-icon>fiber_manual_record</mat-icon>
+            <p>{{data.user.aktiv ? 'Aktiv' : 'Abwesend'}}</p>
+        </div>
     </div>
-    <div [ngClass]="data.user.aktiv ? 'aktiv' : 'inaktiv'">
-        <mat-icon>fiber_manual_record</mat-icon>
-        <p>{{data.user.aktiv ? 'Aktiv' : 'Abwesend'}}</p>
+    <div class="email-container">
+        <div>
+            <mat-icon>mail_outline</mat-icon>
+            <p>E-Mail-Adresse</p>
+        </div>
+        <div class="email-adress">
+            <a href="mailto:{{data.user.email}}">{{data.user.email}}</a>
+        </div>
+    </div>
+    <div class="button-container" *ngIf="!checkUserId()">
+        <button><mat-icon>chat_bubble_outline</mat-icon>Nachricht</button>
     </div>
 </div>
-<div class="email-container">
+<div [ngClass]="!userUpdateNameAktiv ? 'active' : 'user-change-name-container'">
     <div>
-        <mat-icon>mail_outline</mat-icon>
-        <p>E-Mail-Adresse</p>
+        <div class="input-title">
+            <img src="account_circle.png" alt="">
+            <h2>Vollständiger Name</h2>
+        </div>
+        <div>
+            <input [(ngModel)]="newName" placeholder={{data.user.name}}>
+        </div>
+        <div class="buttons-container">
+            <button class="discard-btn" (click)="discardChangeName()">Abbrechen</button>
+            <button (click)="updateName()">Speichern</button>
+        </div>
     </div>
-    <div class="email-adress">
-        <a href="mailto:{{data.user.email}}">{{data.user.email}}</a>
-    </div>
-</div>
-<div class="button-container">
-    <button><mat-icon>chat_bubble_outline</mat-icon>Nachricht</button>
 </div>

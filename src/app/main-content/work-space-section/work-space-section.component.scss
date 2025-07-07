@@ -1,4 +1,4 @@
-@import './../../../styles.scss';
+@use './../../../styles.scss' as *;
 
 .example-container {
     min-height: calc(100vh - 146px);
@@ -124,6 +124,7 @@ button {
 .users-container {
     @include dFlex();
     gap: 15px;
+    position: relative;
 
     >h2 {
         font-size: 18px;
@@ -135,4 +136,22 @@ button {
     >:hover {
         cursor: pointer;
     }
+}
+
+.account-img {
+    padding-right: 10px;
+    height: 22px;
+    width: 22px;
+}
+
+.avatar-small-img {
+    height: 50px;
+    width: 50px;
+    border-radius: 30px;
+}
+
+.status-img {
+    position: absolute;
+    top: 38px;
+    left: 35px;
 }

@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData, getDoc } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
+import { updateDoc } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,7 @@ export class UserService {
     if(!result.empty) {
       const userDoc = result.docs[0];
       this.currentUserId = userDoc.id;
+      this.currentUser = new User(userDoc.data());
       this.loginIsSucess = true;
     } 
   }
@@ -128,6 +130,17 @@ export class UserService {
         this.channelCreaterName = data['name'];
         this.channelCreaterLastname = data['lastname'];
       }
-    }
-              
+    }           
+
+async updateUserName(newName: string): Promise<void> {
+  if (!this.currentUserId) {
+    throw new Error('Kein eingeloggter Benutzer');
+  }
+
+  const userRef = this.getSingleUserRef(this.currentUserId);
+  await updateDoc(userRef, { name: newName });
+  if (this.currentUser) {
+    this.currentUser.name = newName;
+  }
+}
 }

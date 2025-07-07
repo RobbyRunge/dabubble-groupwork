@@ -1,4 +1,4 @@
-@import "./../../../styles.scss";
+@use "./../../../styles.scss" as *;
 
 app-chat-section {
     height: 100vh;

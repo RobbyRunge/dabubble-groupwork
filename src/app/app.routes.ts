@@ -16,5 +16,6 @@ export const routes: Routes = [
     { path: 'password-reset', component: PasswordResetComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'avatar', component: AvatarComponent },
-    { path: 'mainpage/:id', component: MainContentComponent }
+    { path: 'mainpage/:id', component: MainContentComponent },
+    { path: 'mainpage', component: MainContentComponent }
 ];
