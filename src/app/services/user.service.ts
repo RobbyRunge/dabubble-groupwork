@@ -79,7 +79,7 @@ export class UserService {
     }
   }
 
-  async createUserWithSubcollections(user: User): Promise<string> {
+  async createUser(user: User): Promise<string> {
     try {
       const userRef = await addDoc(collection(this.firestore, 'users'), {
         name: user.name,
@@ -88,10 +88,6 @@ export class UserService {
         avatar: user.avatar
       });
       const userId = userRef.id;
-      // const channelsCollection = collection(this.firestore, `users/${userRef.id}/channels`);
-      // await addDoc(channelsCollection, {});
-      // const chatsCollection = collection(this.firestore, `users/${userRef.id}/chats`);
-      // await addDoc(chatsCollection, {});
       return userId;
     } catch (error) {
       throw error;
@@ -116,7 +112,7 @@ export class UserService {
 
   async completeUserRegistration(user: User): Promise<boolean> {
     try {
-      await this.createUserWithSubcollections(user);
+      await this.createUser(user);
       this.clearUserFromLocalStorage();
       return true;
     } catch (error) {
