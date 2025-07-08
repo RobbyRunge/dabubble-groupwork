@@ -24,10 +24,8 @@
         <p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
 
         <form class="form">
-          <input [(ngModel)]="email" [ngClass]="{'input-error': loginError}" name="email"
-            class="email-input standard-transition" type="email" placeholder="beispielname@email.com">
-          <input [(ngModel)]="password" [ngClass]="{'input-error': loginError}" name="password"
-            class="password-input standard-transition" type="password" placeholder="Passwort">
+          <input [(ngModel)]="email" [ngClass]="{'input-error': loginError}" name="email" class="email-input standard-transition" type="email" placeholder="beispielname@email.com" autocomplete="on">
+          <input [(ngModel)]="password" [ngClass]="{'input-error': loginError}" name="password" class="password-input standard-transition" type="password" placeholder="Passwort" autocomplete="on">
           <small class="error-message">{{ loginError }}</small>
         </form>
 

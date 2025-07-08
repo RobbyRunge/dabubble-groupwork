@@ -11,12 +11,9 @@
         <p>Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues DABubble-Konto.</p>
 
         <form class="form">
-          <input [(ngModel)]="user.name" name="name" class="name-input standard-transition" type="text"
-            placeholder="Name und Nachname">
-          <input [(ngModel)]="user.email" name="email" class="email-input standard-transition" type="email"
-            placeholder="beispielname@email.com">
-          <input [(ngModel)]="user.password" name="password" class="password-input standard-transition" type="password"
-            placeholder="Passwort">
+          <input [(ngModel)]="user.name" name="name" class="name-input standard-transition" type="text" placeholder="Name und Nachname" autocomplete="on">
+          <input [(ngModel)]="user.email" name="email" class="email-input standard-transition" type="email" placeholder="beispielname@email.com" autocomplete="on">
+          <input [(ngModel)]="user.password" name="password" class="password-input standard-transition" type="password" placeholder="Passwort" autocomplete="on">
         </form>
 
         <div class="policy-text">
