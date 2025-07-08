@@ -26,9 +26,9 @@ export class PasswordSendEmailComponent {
   private router = inject(Router);
 
   private emailjsConfig = {
-    serviceId: 'service_mnrcyib', // Deine Service ID
-    templateId: 'template_h7uqtyb', // Deine Template ID  
-    publicKey: 'ckQdz_0ZFKfuDjXTf'  // Dein Public Key
+    serviceId: 'service_mnrcyib',
+    templateId: 'template_h7uqtyb',
+    publicKey: 'ckQdz_0ZFKfuDjXTf'
   };
 
   get isFormValid(): boolean {
@@ -36,10 +36,7 @@ export class PasswordSendEmailComponent {
   }
 
   async sendEmailForResetPassword() {
-    console.log('🚀 Versuche Passwort-Reset für:', this.user.email);
-
     try {
-      // 1. Benutzer in Firestore finden
       const userQuery = query(
         this.userService.getUsersCollection(),
         where('email', '==', this.user.email)
@@ -52,26 +49,22 @@ export class PasswordSendEmailComponent {
         const userId = userDoc.id;
         const userData = userDoc.data();
 
-        // 2. Reset-Token generieren
         const resetToken = this.generateResetToken();
-        const resetExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 Stunden
+        const resetExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-        // 3. Reset-Token in Firestore speichern
         await this.userService.updateUserDocument(userId, {
-          resetToken: resetToken,
+          resetToken,
           resetTokenExpiry: resetExpiry
         });
 
-        // 4. Reset-Link erstellen
         const resetLink = `http://localhost:4200/password-reset?token=${resetToken}&userId=${userId}`;
 
-        // 5. E-Mail-Parameter für Template
         const templateParams = {
           to_name: userData['name'] || 'Benutzer',
           user_email: this.user.email,
           reset_link: resetLink,
           company_name: 'DABubble',
-          logo: 'https://deine-domain.de/assets/logo.png' // noch aktualisieren beim veröffentlichen
+          logo: 'https://deine-domain.de/assets/logo.png'
         };
 
         await emailjs.send(
@@ -80,22 +73,24 @@ export class PasswordSendEmailComponent {
           templateParams,
           this.emailjsConfig.publicKey
         );
+
         await this.showSuccessfullyCreateContactOverlay();
       } else {
-        console.log('E-Mail-Adresse nicht gefunden');
-        alert('Diese E-Mail-Adresse ist nicht in unserem System registriert.');
+        this.showError('Diese E-Mail-Adresse ist nicht in unserem System registriert.');
       }
 
     } catch (error: any) {
       console.error('Fehler beim Passwort-Reset:', error);
-
-      if (error.text) {
-        // EmailJS-spezifischer Fehler
-        alert(`Fehler beim Senden der E-Mail: ${error.text}`);
-      } else {
-        alert('Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
-      }
+      const message = error.text
+        ? `Fehler beim Senden der E-Mail: ${error.text}`
+        : 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.';
+      alert(message);
     }
+  }
+
+  private showError(message: string) {
+    console.log('❌', message);
+    alert(message);
   }
 
   // Reset-Token generieren
