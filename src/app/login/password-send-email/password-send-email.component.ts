@@ -63,7 +63,7 @@ export class PasswordSendEmailComponent {
         });
 
         // 4. Reset-Link erstellen
-        const resetLink = `http://localhost:4200/reset-password?token=${resetToken}&userId=${userId}`;
+        const resetLink = `http://localhost:4200/password-reset?token=${resetToken}&userId=${userId}`;
 
         // 5. E-Mail-Parameter für Template
         const templateParams = {
