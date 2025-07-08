@@ -36,6 +36,7 @@ export class PasswordSendEmailComponent {
   }
 
   async sendEmailForResetPassword() {
+    this.showSuccessfullyCreateContactOverlay();
     try {
       const userQuery = query(
         this.userService.getUsersCollection(),
@@ -73,8 +74,6 @@ export class PasswordSendEmailComponent {
           templateParams,
           this.emailjsConfig.publicKey
         );
-
-        await this.showSuccessfullyCreateContactOverlay();
       } else {
         this.showError('Diese E-Mail-Adresse ist nicht in unserem System registriert.');
       }
