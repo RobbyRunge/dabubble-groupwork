@@ -126,15 +126,28 @@ button {
     gap: 15px;
     position: relative;
 
-    >h2 {
-        font-size: 18px;
-        color: black;
-        font-weight: 400;
-        font-family: 'Nunito';
+    >div {
+        @include dFlex();
+
+        >h2 {
+            font-size: 18px;
+            color: black;
+            font-weight: 400;
+            font-family: 'Nunito';
+        }
+
+        >span {
+            font-size: 18px;
+            color: black;
+            font-weight: 400;
+            font-family: 'Nunito';
+        }
     }
 
-    >:hover {
+    &:hover {
         cursor: pointer;
+        background-color: #ECEEFE;
+        border-radius: 30px;
     }
 }
 

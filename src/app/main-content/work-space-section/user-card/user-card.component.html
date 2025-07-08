@@ -3,7 +3,7 @@
     <button (click)="closeDialog()"><mat-icon>close_small</mat-icon></button>
 </div>
 <div class="user-avatar">
-    <img src="{{data.user.avatar}}" alt="">
+    <img class="avatar-img" src="avatar/{{data.user.avatar}}" alt="">
 </div>
 <div [ngClass]="userUpdateNameAktiv ? 'active' : 'notactive'">
     <div class="user-name-aktiv-container">

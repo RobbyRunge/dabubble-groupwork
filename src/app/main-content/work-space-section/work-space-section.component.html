@@ -14,12 +14,12 @@
                     <h3>Devspace</h3>
                 </div>
                 <div>
-                    <mat-icon>edit_square_outline</mat-icon>
+                    <img src="edit_square.png" alt="">
                 </div>
             </div>
             <div class="add-channels-container">
                 <div>
-                    <mat-accordion class="example-headers-align" multi>
+                    <mat-accordion class="example-headers-align" multi = "false">
                         <mat-expansion-panel>
                             <mat-expansion-panel-header>
                                 <mat-panel-description>
@@ -27,7 +27,7 @@
                                     Channels
                                 </mat-panel-description>
                                 <div>
-                                    <mat-icon (click)="createChannel()">add</mat-icon>
+                                    <mat-icon (click)="createChannel(); $event.stopPropagation()">add</mat-icon>
                                 </div>
                             </mat-expansion-panel-header>
                             <div class="list-channels-container">
@@ -60,8 +60,11 @@
                                     <img class="avatar-small-img" src="avatar/{{user['avatar']}}" alt="">
                                     <img class="status-img" src="Online.png" alt="">
                                 </div>
-                                <h2>{{ user['name'] }} {{user['lastname']}}</h2>
-                                <h2 *ngIf="user['userId'] === dataUser.currentUserId">(Du)</h2>
+                                <div>
+                                    <h2>{{ user['name'] }} {{user['lastname']}}
+                                        <span *ngIf="user['userId'] === dataUser.currentUserId">(Du)</span>
+                                    </h2>
+                                </div>
                             </div>
                             }
                         </div>
