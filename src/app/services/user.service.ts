@@ -51,10 +51,31 @@ export class UserService {
     try {
       const provider = new GoogleAuthProvider();
       const credential = await signInWithPopup(this.auth, provider);
+      const user = credential.user;
 
-      this.router.navigate(['mainpage/:id']);
+      const userQuery = query(
+        this.getUsersCollection(),
+        where('email', '==', user.email)
+      );
 
-      return credential.user;
+      const result = await getDocs(userQuery);
+
+      if (result.empty) {
+        const newUser = new User();
+        newUser.email = user.email || '';
+        newUser.name = user.displayName || user.email?.split('@')[0] || '';
+        newUser.avatar = "empty-avatar.png";
+
+        const userId = await this.createUser(newUser);
+        this.currentUserId = userId;
+      } else {
+        const userDoc = result.docs[0];
+        this.currentUserId = userDoc.id;
+      }
+
+      this.loginIsSucess = true;
+      this.router.navigate(['mainpage', this.currentUserId]);
+      return user;
     } catch (error) {
       console.error('Error during Google sign in', error);
       throw error;
