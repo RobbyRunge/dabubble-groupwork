@@ -9,10 +9,11 @@ import { MatInputModule } from '@angular/material/input';
 import { collection, collectionData, Firestore } from '@angular/fire/firestore';
 import { UserCardComponent } from './user-card/user-card.component';
 import { User } from '../../../models/user.class';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateChannelSectionComponent } from '../create-channel-section/create-channel-section.component';
 import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -27,6 +28,7 @@ import { UserService } from '../../services/user.service';
     MatAccordion,
     MatInputModule,
     AsyncPipe,
+    CommonModule
 ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './work-space-section.component.html',
@@ -35,11 +37,12 @@ import { UserService } from '../../services/user.service';
 export class WorkSpaceSectionComponent {
 
   dataUser = inject(UserService);
+  private router = inject(Router);
   
   isDrawerOpen = false;
   selectedUser: any;
+  activeChannelId: string | null = null;
 
-  /* dialog = inject(MatDialog); */
 
   toggleDrawer(drawer: MatDrawer) {
     this.isDrawerOpen = !this.isDrawerOpen;
@@ -73,5 +76,13 @@ export class WorkSpaceSectionComponent {
       maxHeight: '539px',
       panelClass: 'channel-dialog-container'
     });
+  }
+
+  openChannel(channelId: string, channelName: string) {
+    console.log('Aktiver Channel:', this.activeChannelId);
+    this.activeChannelId = channelId;
+    this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId]);
+    this.dataUser.currentChannelId = channelId;
+    this.dataUser.cuurrenChannelName = channelName;
   }
 }

@@ -37,3 +37,18 @@ body {
   background-color: #FFFFFF;
   padding: 40px;
 }
+
+.close-icon {
+    padding: 5px;
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
+    transition: all 100ms ease-in;
+    @include dFlex();
+        &:hover {
+            padding: 5px;
+            color: #535AF1; 
+            background-color: #ECEEFE;
+            border-radius: 50%;
+        }
+}

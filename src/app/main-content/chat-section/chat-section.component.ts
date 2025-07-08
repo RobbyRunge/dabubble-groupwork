@@ -6,12 +6,10 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { UserService } from '../../services/user.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 import { CommonModule } from '@angular/common';
-
 
 @Component({
   selector: 'app-chat-section',
@@ -22,7 +20,8 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    CommonModule
+    CommonModule,
+    RouterOutlet
 ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
@@ -44,18 +43,8 @@ export class ChatSectionComponent implements OnInit {
     });
   }
 
-  openDialog() {
-    this.dialog.open(ChannelSectionComponent, {
-      width: '872px',
-      height: '616px',
-      maxWidth: '872px',     
-      maxHeight: '616px',
-      panelClass: 'channel-dialog-container'
-    });
-}
-
  ngOnDestroy(): void {
     this.routeSub?.unsubscribe();
-   }
+  }
   
 }

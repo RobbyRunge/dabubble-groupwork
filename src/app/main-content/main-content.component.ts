@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { LoginComponent } from "../login/login.component";
 import { ChatSectionComponent } from "./chat-section/chat-section.component";
 
 @Component({

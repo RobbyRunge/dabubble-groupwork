@@ -35,7 +35,11 @@
                             </mat-expansion-panel-header>
                             <div class="list-channels-container">
                                 @for (channel of dataUser.showChannelByUser; track $index) {
-                                    <h2># {{channel.channelname}}</h2>
+                                    <div class="current-channel-name" (click)="openChannel(channel.channelId, channel.channelname)" 
+                                        [ngClass]="{'active-channel': activeChannelId === channel.channelId}">
+                                        <span>#</span> 
+                                        <h2>{{channel.channelname}}</h2>
+                                </div>
                                 }
                             </div>
                             <div>
@@ -44,8 +48,6 @@
                                         <mat-icon>add_circle_outline</mat-icon>
                                         Channel hinzufügen
                                     </span>
-                                    <!-- <mat-icon>add_circle_outline</mat-icon>
-                                    <span class="add-user-channel">Channel hinzufügen</span> -->
                                 </button>
                             </div>
                         </mat-expansion-panel>

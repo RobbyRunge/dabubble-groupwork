@@ -1,7 +1,9 @@
 <div class="channel-main-content">
     <div class="channel-header">
         <span># Erstelltes Channel</span>
-        <mat-icon (click)="dialogRef.close()">close</mat-icon>
+        <div class="close-icon">
+            <mat-icon (click)="dialogRef.close()">close</mat-icon>
+        </div>
     </div>
     <mat-card *ngIf="!showEditChannelName" class="channel-headline mat-card-class">
         <div class="channel-name-description-edit">

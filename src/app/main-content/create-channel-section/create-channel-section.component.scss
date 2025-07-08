@@ -13,21 +13,6 @@
      font-weight: 700;
 }
 
-.close-icon {
-    padding: 5px;
-    height: 24px;
-    width: 24px;
-    cursor: pointer;
-    transition: all 100ms ease-in;
-    @include dFlex();
-        &:hover {
-            padding: 5px;
-            color: #535AF1; 
-            background-color: #ECEEFE;
-            border-radius: 50%;
-        }
-}
-
 p {
     font-size: 18px;
     font-weight: 400;

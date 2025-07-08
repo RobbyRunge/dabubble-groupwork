@@ -7,6 +7,7 @@ import { ImprintComponent } from './shared/imprint/imprint.component';
 import { PrivacyPolicyComponent } from './shared/privacy-policy/privacy-policy.component';
 import { PasswordSendEmailComponent } from './login/password-send-email/password-send-email.component';
 import { PasswordResetComponent } from './login/password-send-email/password-reset/password-reset.component';
+import { UserChannelChatSectionComponent } from './main-content/user-channel-chat-section/user-channel-chat-section.component';
 
 export const routes: Routes = [
     { path: '', component: LoginComponent },
@@ -16,5 +17,9 @@ export const routes: Routes = [
     { path: 'password-reset', component: PasswordResetComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'avatar', component: AvatarComponent },
-    { path: 'mainpage/:id', component: MainContentComponent }
+    { path: 'mainpage/:id', component: MainContentComponent,
+        children: [
+      { path: 'channel/:channelId', component: UserChannelChatSectionComponent }
+    ]
+     },
 ];

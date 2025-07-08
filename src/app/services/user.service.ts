@@ -32,6 +32,8 @@ export class UserService {
   channelCreaterId!: string;
   channelCreaterName: string = '';
   channelCreaterLastname: string = '';
+  currentChannelId: string = '';
+  cuurrenChannelName: string = '';
 
   unsubscribeUserData!: Subscription;
   private routeSub?: Subscription;
