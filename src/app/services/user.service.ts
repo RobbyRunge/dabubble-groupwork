@@ -102,12 +102,15 @@ export class UserService {
 
   async createUser(user: User): Promise<string> {
     try {
-      const userRef = await addDoc(collection(this.firestore, 'users'), {
+      const userData: any = {
         name: user.name,
         email: user.email,
-        password: user.password,
         avatar: user.avatar
-      });
+      };
+      if (user.password) {
+        userData.password = user.password;
+      }
+      const userRef = await addDoc(collection(this.firestore, 'users'), userData);
       const userId = userRef.id;
       return userId;
     } catch (error) {
