@@ -78,19 +78,13 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithGoogle() {
-    const backgroundOverlay = document.getElementById('background-overlay');
-    if (backgroundOverlay) {
-      this.userService.signInWithGoogle()
-        .catch(error => {
-          console.error('Google sign in error', error);
-          this.loginError = 'Anmeldung bei Google fehlgeschlagen. Bitte versuchen Sie es erneut.';
-        });
-      backgroundOverlay.classList.add('active');
-      setTimeout(() => {
-        backgroundOverlay.classList.remove('active');
-      }, 2000);
-    }
+    this.userService.signInWithGoogle()
+      .catch(error => {
+        console.error('Google sign in error', error);
+        this.loginError = 'Anmeldung bei Google fehlgeschlagen. Bitte versuchen Sie es erneut.';
+      });
   }
+
 
   loginWithGuest() {
     const backgroundOverlay = document.getElementById('background-overlay');
