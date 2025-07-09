@@ -35,9 +35,9 @@ export class UserService {
   cuurrenChannelName: string = '';
 
   unsubscribeUserData!: Subscription;
+  unsubscribeUserChannels!: Subscription;
   unsubscribeChannelCreater!: () => void;
   unsubscribeChannelCreaterName!: () => void;
-  unsubscribeUserChannels!: Subscription;;
 
   loginIsSucess = false;
 
