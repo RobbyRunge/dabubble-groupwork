@@ -5,10 +5,17 @@ import { FooterStartComponent } from "../shared/footer-start/footer-start.compon
 import { User } from '../../models/user.class';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user.service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-signup',
-  imports: [HeaderStartComponent, RouterLink, FooterStartComponent, FormsModule],
+  imports: [
+    HeaderStartComponent, 
+    RouterLink, 
+    FooterStartComponent, 
+    FormsModule,
+    NgClass
+  ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
@@ -16,16 +23,31 @@ export class SignupComponent {
   isPolicyAccepted = false;
   isHovering = false;
   user = new User();
+  emailTouched = false;
   public userService = inject(UserService);
   private router = inject(Router);
+
+  private isValidEmail(email: string): boolean {
+    const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return emailPattern.test(email);
+  }
+
+  get showEmailError(): boolean {
+    return this.emailTouched && !!this.user.email && !this.isValidEmail(this.user.email);
+  }
 
   get isFormValid(): boolean {
     return (
       this.isPolicyAccepted &&
       !!this.user.name &&
       !!this.user.email &&
+      this.isValidEmail(this.user.email) &&
       !!this.user.password
     );
+  }
+
+  markEmailTouched() {
+    this.emailTouched = true;
   }
 
   togglePolicy() {
