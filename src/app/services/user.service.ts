@@ -31,12 +31,12 @@ export class UserService {
   showChannelByUser: any[] = [];
   channelCreaterId!: string;
   channelCreaterName: string = '';
-  channelCreaterLastname: string = '';
   currentChannelId: string = '';
   cuurrenChannelName: string = '';
 
   unsubscribeUserData!: Subscription;
-  private routeSub?: Subscription;
+  unsubscribeChannelCreater!: () => void;
+  unsubscribeChannelCreaterName!: () => void;
   unsubscribeUserChannels!: Subscription;;
 
   loginIsSucess = false;
@@ -51,6 +51,10 @@ export class UserService {
 
   getChannelRef() {
     return collection(this.firestore, 'channels');
+  }
+
+  getSingleChannelRef(docId: string) {
+    return doc(this.getChannelRef(), docId)
   }
 
   getChatRef(docId: string) {
@@ -137,19 +141,28 @@ export class UserService {
     await addDoc(collection(this.firestore, 'channels'), channelWithUser);
   }
 
-  getChannelUserId() {
-    const firstChannel = this.showChannelByUser[1];
-    this.channelCreaterId = firstChannel.createdBy;
+  async getChannelUserId(channelId: string) {
+    const channelRef = this.getSingleChannelRef(channelId);
+    this.unsubscribeChannelCreaterName = onSnapshot (channelRef, (element) => {
+      const data = element.data();
+      if (data) {
+      this.channelCreaterId = data['createdBy'];
+      this.getChannelUserName(this.channelCreaterId);
+      }
+    });
   }
 
-  async getChannelUserName() {
-    const channelRef = this.getSingleUserRef(this.channelCreaterId);
-    const snapshot = await getDoc(channelRef);
-    const data = snapshot.data();
-    if (data) {
+  getChannelUserName(userId: string) {
+    console.log('channel creater id ist', this.channelCreaterId);
+    const channelRef = this.getSingleUserRef(userId);
+    this.unsubscribeChannelCreater = onSnapshot(channelRef, (element) => {
+    const data = element.data();
+     console.log('das sind die channel user data', data);
+     if (data) {
       this.channelCreaterName = data['name'];
-      this.channelCreaterLastname = data['lastname'];
-    }
+      console.log('channel creater name', this.channelCreaterName);
+      }
+    });
   }
 
   showCurrentUserData() {
@@ -159,6 +172,7 @@ export class UserService {
       console.log('current user id', this.currentUserId);
       console.log('current detail', this.currentUser);
     });
+    this.showUserChannel();
   }
 
   showUserChannel() {
@@ -168,7 +182,7 @@ export class UserService {
       this.channels = [];
       this.channels = channels;
       this.checkChannel();
-      console.log(this.channels);
+      console.log('channel by user',this.showChannelByUser);
     });
   }
 
@@ -187,7 +201,13 @@ export class UserService {
   }
 
    ngOnDestroy(): void {
-    this.unsubscribeUserData?.unsubscribe();
+    this.unsubscribeUserData?.unsubscribe();        
     this.unsubscribeUserChannels?.unsubscribe();
+    if (this.unsubscribeChannelCreater) {
+      this.unsubscribeChannelCreater();
+    }
+    if (this.unsubscribeChannelCreaterName) {
+      this.unsubscribeChannelCreaterName();
+    }
    }
 }

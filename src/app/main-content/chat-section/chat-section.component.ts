@@ -36,10 +36,8 @@ export class ChatSectionComponent implements OnInit {
   private routeSub?: Subscription;   
 
    ngOnInit(): void {
-    this.routeSub = this.route.params.subscribe(params => {
-    this.dataUser.currentUserId = params['id'];
-     this.dataUser.showCurrentUserData();
-     this.dataUser.showUserChannel();
+      this.routeSub = this.route.params.subscribe(params => {
+      this.dataUser.currentUserId = params['id'];
     });
   }
 

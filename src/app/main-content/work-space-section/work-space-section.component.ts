@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  viewChild,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatSelectModule } from '@angular/material/select';
@@ -15,7 +21,6 @@ import { CreateChannelSectionComponent } from '../create-channel-section/create-
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-work-space-section',
   imports: [
@@ -28,21 +33,23 @@ import { Router } from '@angular/router';
     MatAccordion,
     MatInputModule,
     AsyncPipe,
-    CommonModule
-],
+    CommonModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './work-space-section.component.html',
-  styleUrl: './work-space-section.component.scss'
+  styleUrl: './work-space-section.component.scss',
 })
-export class WorkSpaceSectionComponent {
-
+export class WorkSpaceSectionComponent implements OnInit {
   dataUser = inject(UserService);
   private router = inject(Router);
-  
+
   isDrawerOpen = false;
   selectedUser: any;
-  activeChannelId: string | null = null;
+  activeChannelId!: string ;
 
+  ngOnInit(): void {
+    this.dataUser.showCurrentUserData();
+  }
 
   toggleDrawer(drawer: MatDrawer) {
     this.isDrawerOpen = !this.isDrawerOpen;
@@ -57,7 +64,6 @@ export class WorkSpaceSectionComponent {
 
   onUserClick(index: number, user: any) {
     this.selectedUser = user;
-
   }
 
   readonly dialog = inject(MatDialog);
@@ -72,17 +78,23 @@ export class WorkSpaceSectionComponent {
     this.dialog.open(CreateChannelSectionComponent, {
       width: '872px',
       height: '539px',
-      maxWidth: '872px',     
+      maxWidth: '872px',
       maxHeight: '539px',
-      panelClass: 'channel-dialog-container'
+      panelClass: 'channel-dialog-container',
     });
   }
 
   openChannel(channelId: string, channelName: string) {
-    console.log('Aktiver Channel:', this.activeChannelId);
     this.activeChannelId = channelId;
-    this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId]);
+    console.log('Aktiver Channel:', this.activeChannelId);
+    this.router.navigate([
+      'mainpage',
+      this.dataUser.currentUserId,
+      'channel',
+      channelId,
+    ]);
     this.dataUser.currentChannelId = channelId;
     this.dataUser.cuurrenChannelName = channelName;
+    this.dataUser.getChannelUserId(this.activeChannelId);
   }
 }

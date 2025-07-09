@@ -70,8 +70,8 @@
                         <div class="users-message-container">
                             @for (user of item$ | async; track user; let index = $index ) {
                             <div class="users-container" (click)="openDialog(index, user)">
-                                    <img src="{{user['avatar']}}" alt="">
-                                    <h2>{{ user['name'] }} {{user['lastname']}}</h2>
+                                    <!-- <img src="{{user['avatar']}}" alt=""> -->
+                                    <h2>{{ user['name'] }} </h2>
                             </div>
                             }
                         </div>

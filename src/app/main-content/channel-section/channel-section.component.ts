@@ -26,7 +26,7 @@ export class ChannelSectionComponent implements OnInit {
 
 
    ngOnInit(): void {
-   this.loadChannelCreatorData();
+   
   }
 
   editChannelName() {
@@ -44,11 +44,5 @@ export class ChannelSectionComponent implements OnInit {
   saveEditedChannelDescription() {
     this.showEditChannelDescription = false;
   }
-
-  async loadChannelCreatorData() {
-  this.dataUser.getChannelUserId();
-  await this.dataUser.getChannelUserName();
-
-}
 
 }

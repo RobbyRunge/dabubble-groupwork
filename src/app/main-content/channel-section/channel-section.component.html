@@ -29,7 +29,7 @@
         </div>
         <mat-divider></mat-divider>
             <span class="channel-name">Erstellt von</span>
-            <span class="channel-user-name" *ngIf="dataUser.channelCreaterName && dataUser.channelCreaterLastname"> {{dataUser.channelCreaterName}} {{dataUser.channelCreaterLastname}} </span>
+            <span class="channel-user-name" *ngIf="dataUser.channelCreaterName"> {{dataUser.channelCreaterName}} </span>
     </mat-card>
     <div *ngIf="showEditChannelDescription" class="edit-channel-description">
         <div class="channel-name-description-edit">
@@ -39,7 +39,7 @@
         <input class="input-edit" type="text" placeholder="Dein Text hier">
         <mat-divider></mat-divider>
             <span class="channel-name">Erstellt von</span>
-            <span class="channel-user-name" *ngIf="dataUser.channelCreaterName && dataUser.channelCreaterLastname"> {{dataUser.channelCreaterName}} {{dataUser.channelCreaterLastname}} </span>
+            <span class="channel-user-name" *ngIf="dataUser.channelCreaterName"> {{dataUser.channelCreaterName}} </span>
     </div>
     <div class="leave-channel-btn">
         <button mat-flat-button primary>Channel verlassen</button>
