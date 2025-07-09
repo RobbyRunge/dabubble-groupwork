@@ -179,7 +179,9 @@
         }
       }
 
-      .email-field {
+      .name-field,
+      .email-field,
+      .password-field {
         position: relative;
         width: 100%;
       }
@@ -453,6 +455,10 @@
             background-position: 31px 7px !important;
           }
         }
+
+        .error-message {
+          bottom: 0;
+        }
       }
 
       .arrow-back {
@@ -490,7 +496,6 @@
         margin: 12px 0;
 
         input {
-          padding-left: 50px;
           font-size: 14px;
         }
 
@@ -561,7 +566,6 @@
 
       .form input {
         height: 28px;
-        padding-left: 40px;
       }
 
       .form {
@@ -587,6 +591,10 @@
           &:focus {
             background-position: 10px 4px !important;
           }
+        }
+
+        .error-message {
+          font-size: 10px;
         }
       }
 

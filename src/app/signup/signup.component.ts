@@ -24,6 +24,8 @@ export class SignupComponent {
   isHovering = false;
   user = new User();
   emailTouched = false;
+  nameTouched = false;
+  passwordTouched = false;
   public userService = inject(UserService);
   private router = inject(Router);
 
@@ -32,22 +34,43 @@ export class SignupComponent {
     return emailPattern.test(email);
   }
 
+  private isValidPassword(password: string) {
+    return password && password.length >= 6;
+  }
+
   get showEmailError(): boolean {
     return this.emailTouched && !!this.user.email && !this.isValidEmail(this.user.email);
   }
 
-  get isFormValid(): boolean {
+  get showNameError(): boolean {
+    return this.nameTouched && !this.user.name;
+  }
+
+  get showPasswordError(): boolean {
+    return this.passwordTouched && !!this.user.password && !this.isValidPassword(this.user.password);
+  }
+
+  get isFormValid() {
     return (
       this.isPolicyAccepted &&
       !!this.user.name &&
       !!this.user.email &&
       this.isValidEmail(this.user.email) &&
-      !!this.user.password
+      !!this.user.password &&
+      this.isValidPassword(this.user.password)
     );
   }
 
   markEmailTouched() {
     this.emailTouched = true;
+  }
+
+  markNameTouched() {
+    this.nameTouched = true;
+  }
+
+  markPasswordTouched() {
+    this.passwordTouched = true;
   }
 
   togglePolicy() {

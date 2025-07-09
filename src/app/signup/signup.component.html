@@ -11,8 +11,22 @@
         <p>Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues DABubble-Konto.</p>
 
         <form class="form">
-          <input [(ngModel)]="user.name" name="name" class="name-input standard-transition" type="text"
-            placeholder="Name und Nachname" autocomplete="on">
+          <div class="name-field">
+            <input [(ngModel)]="user.name" 
+                   [ngClass]="{'input-error': showNameError}"
+                   name="name" 
+                   class="name-input standard-transition" 
+                   type="text"
+                   placeholder="Name und Nachname" 
+                   autocomplete="on"
+                   (blur)="markNameTouched()"
+                   (input)="markNameTouched()">
+            @if(showNameError) {
+            <div class="error-message">
+              Bitte geben Sie Ihren Namen ein
+            </div>
+            }
+          </div>
 
           <div class="email-field">
             <input [(ngModel)]="user.email" 
@@ -31,8 +45,22 @@
             }
           </div>
 
-          <input [(ngModel)]="user.password" name="password" class="password-input standard-transition" type="password"
-            placeholder="Passwort" autocomplete="on">
+          <div class="password-field">
+            <input [(ngModel)]="user.password" 
+                   [ngClass]="{'input-error': showPasswordError}"
+                   name="password" 
+                   class="password-input standard-transition" 
+                   type="password"
+                   placeholder="Passwort" 
+                   autocomplete="on"
+                   (blur)="markPasswordTouched()"
+                   (input)="markPasswordTouched()">
+            @if(showPasswordError) {
+            <div class="error-message">
+              Das Passwort muss mindestens 6 Zeichen lang sein
+            </div>
+            }
+          </div>
         </form>
 
         <div class="policy-text">
