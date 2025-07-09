@@ -25,6 +25,8 @@ export class UserChannelChatSectionComponent implements OnInit {
   ngOnInit(): void {
     this.routeSub = this.route.paramMap.subscribe((paramMap) => {
       const channelId = paramMap.get('channelId');
+      console.log();
+      
     });
   }
 
