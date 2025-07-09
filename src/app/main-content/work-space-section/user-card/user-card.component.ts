@@ -27,7 +27,11 @@ export class UserCardComponent {
   ) {
     this.urlUserId = data.urlUserId;
   }
-
+  ngOnInit() {
+    console.log('Übergebener User:', this.data.user);
+    console.log('User-ID im Dialog:', this.data.user.userId);
+    console.log('CurrentUserId im Service:', this.dataUser.currentUserId);
+  }
 
   closeDialog() {
     this.dialogRef.close();
@@ -50,7 +54,7 @@ export class UserCardComponent {
     this.userUpdateNameAktiv = true;
   }
 
-  discardChangeName(){
+  discardChangeName() {
     this.userUpdateNameAktiv = false;
   }
 }

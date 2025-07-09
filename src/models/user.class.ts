@@ -19,6 +19,7 @@ export class User {
         this.userId! = obj ? obj.id : '';
         this.chats = obj?.chats || [];
         this.channels = obj?.channels || [];
+        this.aktiv = obj?.aktiv
     }
 
      public toJSON() {
