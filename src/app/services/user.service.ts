@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, OnInit, inject } from '@angular/core';
 import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData, getDoc } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
@@ -104,43 +104,43 @@ export class UserService {
   getChatRef(docId: string) {
     return collection(this.getSingleUserRef(docId), 'chats');
   }
-
-  async addNewChannel(allChannels: {}, userId: string, user:string) {
+  
+  async addNewChannel(allChannels: {}, userId: string, user: string) {
     const dateNow = new Date();
     dateNow.setHours(0, 0, 0, 0);
     const channelWithUser = {
-    ...allChannels,
-    userId: [userId],
-    createdBy: user,
-    createdAt: dateNow
-  };
-      await addDoc(collection(this.firestore, 'channels'),channelWithUser);
+      ...allChannels,
+      userId: [userId],
+      createdBy: user,
+      createdAt: dateNow
+    };
+    await addDoc(collection(this.firestore, 'channels'), channelWithUser);
   }
 
-    getChannelUserId() {
-      const firstChannel = this.showChannelByUser[1];
-      this.channelCreaterId = firstChannel.createdBy;
+  getChannelUserId() {
+    const firstChannel = this.showChannelByUser[1];
+    this.channelCreaterId = firstChannel.createdBy;
+  }
+
+  async getChannelUserName() {
+    const channelRef = this.getSingleUserRef(this.channelCreaterId);
+    const snapshot = await getDoc(channelRef);
+    const data = snapshot.data();
+    if (data) {
+      this.channelCreaterName = data['name'];
+      this.channelCreaterLastname = data['lastname'];
     }
-  
-    async getChannelUserName() {
-      const channelRef = this.getSingleUserRef(this.channelCreaterId);
-      const snapshot = await getDoc(channelRef);
-      const data = snapshot.data();
-      if(data) {
-        this.channelCreaterName = data['name'];
-        this.channelCreaterLastname = data['lastname'];
-      }
-    }           
-
-async updateUserName(newName: string): Promise<void> {
-  if (!this.currentUserId) {
-    throw new Error('Kein eingeloggter Benutzer');
   }
 
-  const userRef = this.getSingleUserRef(this.currentUserId);
-  await updateDoc(userRef, { name: newName });
-  if (this.currentUser) {
-    this.currentUser.name = newName;
+  async updateUserName(newName: string): Promise<void> {
+    if (!this.currentUserId) {
+      throw new Error('Kein eingeloggter Benutzer');
+    }
+
+    const userRef = this.getSingleUserRef(this.currentUserId);
+    await updateDoc(userRef, { name: newName });
+    if (this.currentUser) {
+      this.currentUser.name = newName;
+    }
   }
-}
 }

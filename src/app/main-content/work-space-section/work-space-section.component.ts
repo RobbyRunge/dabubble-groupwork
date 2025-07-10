@@ -6,10 +6,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
-import { collection, collectionData, Firestore } from '@angular/fire/firestore';
-import { UserCardComponent } from './user-card/user-card.component';
-import { User } from '../../../models/user.class';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { UserCardComponent } from '../user-card/user-card.component';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateChannelSectionComponent } from '../create-channel-section/create-channel-section.component';
 import { ActivatedRoute } from '@angular/router';
@@ -27,7 +25,7 @@ import { UserService } from '../../services/user.service';
     MatExpansionModule,
     MatAccordion,
     MatInputModule,
-    AsyncPipe,
+    NgFor,
     NgIf
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,8 +33,6 @@ import { UserService } from '../../services/user.service';
   styleUrl: './work-space-section.component.scss'
 })
 export class WorkSpaceSectionComponent implements OnInit {
-
-  constructor(private route: ActivatedRoute) { }
 
   isDrawerOpen: boolean = false;
   selectedUser: any;
@@ -47,14 +43,10 @@ export class WorkSpaceSectionComponent implements OnInit {
 
   accordion = viewChild.required(MatAccordion);
 
-  firestore = inject(Firestore);
-  itemCollection = collection(this.firestore, 'users');
-  item$ = collectionData(this.itemCollection, { idField: 'userId' });
 
-  ngOnInit() {
-    this.getUserIdFromUrl();
-  }
-
+ngOnInit(){
+  console.log('test' + this.dataUser.userData);
+}
   toggleDrawer(drawer: MatDrawer) {
     this.isDrawerOpen = !this.isDrawerOpen;
     drawer.toggle();
@@ -82,15 +74,5 @@ export class WorkSpaceSectionComponent implements OnInit {
       maxHeight: '539px',
       panelClass: 'channel-dialog-container'
     });
-  }
-
-  getUserIdFromUrl() {
-    this.route.params.subscribe(parms => {
-      this.urlUserId = parms['id'];
-    })
-  }
-
-  isCurrentUser(): boolean {
-    return this.dataUser.currentUserId === this.urlUserId;
   }
 }

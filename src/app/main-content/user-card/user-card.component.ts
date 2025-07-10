@@ -1,9 +1,9 @@
 import { Component, EventEmitter, inject, Inject, Input, OnInit, Output, } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { User } from '../../../../models/user.class';
+import { User } from '../../../models/user.class';
 import { MatIcon } from '@angular/material/icon';
 import { NgClass, NgIf } from '@angular/common';
-import { UserService } from '../../../services/user.service';
+import { UserService } from './../../services/user.service'
 import { FormsModule, NgModel } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -16,7 +16,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './user-card.component.scss'
 })
 
-export class UserCardComponent {
+export class UserCardComponent implements OnInit {
   newName = '';
   urlUserId: string;
   dataUser = inject(UserService);
@@ -24,13 +24,12 @@ export class UserCardComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { user: User, urlUserId: string }, private dialogRef: MatDialogRef<UserCardComponent>,
     private userService: UserService,
+    private route: ActivatedRoute
   ) {
     this.urlUserId = data.urlUserId;
   }
   ngOnInit() {
-    console.log('Übergebener User:', this.data.user);
-    console.log('User-ID im Dialog:', this.data.user.userId);
-    console.log('CurrentUserId im Service:', this.dataUser.currentUserId);
+    this.checkUserId();
   }
 
   closeDialog() {
@@ -47,7 +46,7 @@ export class UserCardComponent {
   }
 
   checkUserId() {
-    return this.data.user.userId === this.dataUser.currentUserId;
+    return this.urlUserId === this.dataUser.currentUserId;
   }
 
   changeName() {
@@ -56,6 +55,16 @@ export class UserCardComponent {
 
   discardChangeName() {
     this.userUpdateNameAktiv = false;
+  }
+
+    getUserIdFromUrl() {
+    this.route.params.subscribe(parms => {
+      this.urlUserId = parms['id'];
+    })
+  }
+
+  isCurrentUser(): boolean {
+    return this.dataUser.currentUserId === this.urlUserId;
   }
 }
 
