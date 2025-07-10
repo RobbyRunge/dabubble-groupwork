@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 import { UserService } from '../../services/user.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 
@@ -16,17 +16,17 @@ import { Subscription } from 'rxjs';
   styleUrl: './user-channel-chat-section.component.scss',
 })
 export class UserChannelChatSectionComponent implements OnInit {
+  
   dataUser = inject(UserService);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
+  private router = inject(Router);
 
   private routeSub?: Subscription;
 
   ngOnInit(): void {
     this.routeSub = this.route.paramMap.subscribe((paramMap) => {
-      const channelId = paramMap.get('channelId');
-      console.log();
-      
+      const channelId = paramMap.get('channelId');   
     });
   }
 

@@ -1,6 +1,6 @@
 <div class="channel-main-content">
     <div class="channel-header">
-        <span># Erstelltes Channel</span>
+        <span *ngIf="dataUser.currentChannelName"># {{ dataUser.currentChannelName }}</span>
         <div class="close-icon">
             <mat-icon (click)="dialogRef.close()">close</mat-icon>
         </div>
@@ -10,7 +10,7 @@
             <span class="channel-name">Channel - Name</span>
             <span (click)="editChannelName()" class="channel-edit">Bearbeiten</span>
         </div>
-        <div class="created-channel"># Erstelltes Channel</div>
+        <div class="created-channel"># {{ dataUser.currentChannelName }}</div>
     </mat-card>
     <div *ngIf="showEditChannelName" class="edit-channel-name">
         <div class="channel-name-description-edit">
@@ -25,7 +25,7 @@
             <span (click)="editChannelDescription()" class="channel-edit">Bearbeiten</span>
         </div>
         <div class="channel-description-by-user">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, magni nesciunt ducimus, ad aut hic voluptates placeat magnam neque, animi amet tempora qui sed! Facere minus amet porro quia nam!
+            {{ dataUser.currentChannelDescription }}
         </div>
         <mat-divider></mat-divider>
             <span class="channel-name">Erstellt von</span>

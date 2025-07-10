@@ -16,6 +16,7 @@ import {
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +33,10 @@ export class UserService {
   channelCreaterId!: string;
   channelCreaterName: string = '';
   currentChannelId: string = '';
-  cuurrenChannelName: string = '';
+  currentChannelName: string = '';
+  currentChannelDescription: string = '';
+
+  public channelsLoaded$ = new BehaviorSubject<boolean>(false);
 
   unsubscribeUserData!: Subscription;
   unsubscribeUserChannels!: Subscription;
@@ -183,6 +187,7 @@ export class UserService {
       this.channels = channels;
       this.checkChannel();
       console.log('channel by user',this.showChannelByUser);
+      this.channelsLoaded$.next(true);
     });
   }
 

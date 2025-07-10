@@ -14,12 +14,12 @@ import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { collection, collectionData, Firestore } from '@angular/fire/firestore';
 import { UserCardComponent } from './user-card/user-card.component';
-import { User } from '../../../models/user.class';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateChannelSectionComponent } from '../create-channel-section/create-channel-section.component';
 import { UserService } from '../../services/user.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-work-space-section',
@@ -40,15 +40,23 @@ import { Router } from '@angular/router';
   styleUrl: './work-space-section.component.scss',
 })
 export class WorkSpaceSectionComponent implements OnInit {
+
   dataUser = inject(UserService);
   private router = inject(Router);
+  route = inject(ActivatedRoute);
+  unsubChannels!: Subscription;
 
   isDrawerOpen = false;
   selectedUser: any;
-  activeChannelId!: string ;
+  activeChannelId!: string;
 
   ngOnInit(): void {
     this.dataUser.showCurrentUserData();
+    this.unsubChannels = this.dataUser.channelsLoaded$.subscribe(loaded => {
+    if (loaded) {
+      this.loadSaveRoute();
+      }
+    });
   }
 
   toggleDrawer(drawer: MatDrawer) {
@@ -84,17 +92,54 @@ export class WorkSpaceSectionComponent implements OnInit {
     });
   }
 
-  openChannel(channelId: string, channelName: string) {
+  saveRoute(routePart: string[]): void {
+    localStorage.setItem('savedRoute', JSON.stringify(routePart));
+  }
+
+  saveUserChannel(channelName: string, channelId: string, channelDescription: string) {
+    localStorage.setItem('savedChannelName', JSON.stringify(channelName));
+    localStorage.setItem('savedChannelId', JSON.stringify(channelId));
+    localStorage.setItem('savedChannelDescription', JSON.stringify(channelDescription));
+  }
+
+  loadSaveRoute() {
+    const route = localStorage.getItem('savedRoute');
+    const nameOfChannel = localStorage.getItem('savedChannelName');
+    const idOfChannel = localStorage.getItem('savedChannelId');
+    const descriptionOfChannel = localStorage.getItem('savedChannelDescription');
+    if (route && nameOfChannel &&idOfChannel && descriptionOfChannel) {
+      const routePath: string[] = JSON.parse(route);
+      const getChannelName: string = JSON.parse(nameOfChannel);
+      const getChannelId: string = JSON.parse(idOfChannel);
+      const getChannelDescription: string = JSON.parse(descriptionOfChannel);
+      this.router.navigate(routePath);
+      this.getChannelNameandId(getChannelName, getChannelId,getChannelDescription);
+    } else {
+      const channelId = this.dataUser.showChannelByUser[0].channelId;
+      this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId,]);
+      this.getChannelNameandId(this.dataUser.showChannelByUser[0].channelname, this.dataUser.showChannelByUser[0].channelId, 
+        this.dataUser.showChannelByUser[0].description);
+    }
+  }
+
+
+  openChannel(channelName: string, channelId: string, channelDescription: string) {
+    this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId,]);
+    this.getChannelNameandId(channelName, channelId, channelDescription);
+    this.saveUserChannel(channelName, channelId, channelDescription);
+  }
+
+  getChannelNameandId(channelName: string, channelId: string, channelDescription: string) {
     this.activeChannelId = channelId;
     console.log('Aktiver Channel:', this.activeChannelId);
-    this.router.navigate([
-      'mainpage',
-      this.dataUser.currentUserId,
-      'channel',
-      channelId,
-    ]);
     this.dataUser.currentChannelId = channelId;
-    this.dataUser.cuurrenChannelName = channelName;
+    this.dataUser.currentChannelName = channelName;
+    this.dataUser.currentChannelDescription = channelDescription;
     this.dataUser.getChannelUserId(this.activeChannelId);
+    this.saveRoute(['mainpage', this.dataUser.currentUserId, 'channel', channelId]);
   }
+
+  ngOnDestroy(): void {
+    this.unsubChannels.unsubscribe();        
+   }
 }
