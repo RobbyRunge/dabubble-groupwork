@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { HeaderStartComponent } from "../header-start/header-start.component";
-import { NavigationService } from '../../shared/navigation.service';
+import { NavigationService } from '../../services/navigation.service';
 
 @Component({
   selector: 'app-imprint',

@@ -24,10 +24,8 @@
         <p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
 
         <form class="form">
-          <input [(ngModel)]="email" [ngClass]="{'input-error': loginError}" name="email" class="email-input standard-transition" type="email"
-            placeholder="beispielname@email.com">
-          <input [(ngModel)]="password" [ngClass]="{'input-error': loginError}" name="password" class="password-input standard-transition" type="password"
-            placeholder="Passwort">
+          <input [(ngModel)]="email" [ngClass]="{'input-error': loginError}" name="email" class="email-input standard-transition" type="email" placeholder="beispielname@email.com" autocomplete="on">
+          <input [(ngModel)]="password" [ngClass]="{'input-error': loginError}" name="password" class="password-input standard-transition" type="password" placeholder="Passwort" autocomplete="on">
           <small class="error-message">{{ loginError }}</small>
         </form>
 
@@ -39,16 +37,21 @@
           <div class="border"></div>
         </div>
 
-        <button class="google-button standard-transition"><img src="login/google.png" alt="">Anmelden mit
-          Google</button>
+        <button class="google-button standard-transition" (click)="loginWithGoogle()">
+          <img src="login/google.png" alt="">Anmelden mit Google
+        </button>
 
         <div class="login-and-guest-login">
           <button class="login-button standard-transition" (click)="login()" [disabled]="!isFormValid">Anmelden</button>
-          <button class="guest-login-button standard-transition" routerLink="/mainpage">Gäste-Login</button>
+          <button (click)="loginWithGuest()" class="guest-login-button standard-transition">Gäste-Login</button>
         </div>
       </div>
 
       <app-footer-start></app-footer-start>
+    </div>
+
+    <div id="background-overlay" class="standard-transition">
+      <mat-dialog-content>Erfolgreich angemeldet</mat-dialog-content>
     </div>
   </div>
 </div>

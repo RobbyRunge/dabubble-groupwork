@@ -29,18 +29,43 @@
     z-index: 5;
 
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     flex-direction: column;
 
+    .imprint-scroll-content {
+      overflow-y: auto;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+
+    h1 {
+      text-align: center;
+      width: 100%;
+      margin-top: 0;
+      font-size: 46px;
+      font-weight: 700;
+      color: rgba(68, 77, 242, 1);
+    }
+
+    p {
+      strong {
+        color: rgba(68, 77, 242, 1);
+      }
+    }
+
     .arrow-back {
-      position: absolute;
+      position: fixed;
       left: 6%;
       top: 7%;
       width: 24px;
       height: 24px;
       border-radius: 100%;
       padding: 8px;
+      background-color: rgba(255, 255, 255, 1);
 
       &:hover {
         content: url(../../assets/signup/arrow-back-hover.png);
@@ -51,5 +76,66 @@
         border-radius: 100%;
       }
     }
+  }
+}
+
+@media (max-width: 1200px) {
+  .imprint-card {
+    width: 50vw !important;
+    min-width: 500px;
+    height: auto;
+    padding: 24px;
+  }
+}
+
+@media (max-width: 900px) {
+  .imprint-card {
+    width: 70vw !important;
+    min-width: 400px;
+    height: auto;
+    padding: 20px;
+  }
+  .imprint-card h1 {
+    font-size: 36px;
+  }
+  .imprint-card p {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 700px) {
+  .imprint-card {
+    width: 55vw !important;
+    min-width: 300px;
+    padding: 16px;
+  }
+  .imprint-card h1 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 500px) {
+  .imprint-card {
+    width: calc(100vw - 64px) !important;
+    min-width: auto;
+    padding: 12px !important;
+  }
+  .imprint-card h1 {
+    font-size: 36px !important;
+  }
+  .imprint-card p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 370px) {
+  .imprint-card {
+    padding: 8px !important;
+  }
+  .imprint-card h1 {
+    font-size: 24px !important;
+  }
+  .imprint-card p {
+    font-size: 12px;
   }
 }
