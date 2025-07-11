@@ -10,11 +10,13 @@ import {
   doc,
   CollectionReference,
   collectionData,
-  getDoc,
+  getDoc, updateDoc,
   docData,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
+import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { BehaviorSubject } from 'rxjs';
 
@@ -23,6 +25,8 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class UserService {
   private firestore = inject(Firestore);
+  private router = inject(Router);
+  private auth = inject(Auth);
 
   userData: User[] = [];
   currentUser?: User;
@@ -81,29 +85,80 @@ export class UserService {
     }
   }
 
-  async createUserWithSubcollections(user: User): Promise<string> {
+  async signInWithGoogle() {
     try {
-      const userRef = await addDoc(collection(this.firestore, 'users'), {
+      const provider = new GoogleAuthProvider();
+      const credential = await signInWithPopup(this.auth, provider);
+      const user = credential.user;
+
+      const userQuery = query(
+        this.getUsersCollection(),
+        where('email', '==', user.email)
+      );
+
+      const result = await getDocs(userQuery);
+
+      if (result.empty) {
+        const newUser = new User();
+        newUser.email = user.email || '';
+        newUser.name = user.displayName || user.email?.split('@')[0] || '';
+        newUser.avatar = "empty-avatar.png";
+
+        const userId = await this.createUser(newUser);
+        this.currentUserId = userId;
+      } else {
+        const userDoc = result.docs[0];
+        this.currentUserId = userDoc.id;
+      }
+
+      this.loginIsSucess = true;
+      this.router.navigate(['mainpage', this.currentUserId]);
+      return user;
+    } catch (error) {
+      console.error('Error during Google sign in', error);
+      throw error;
+    }
+  }
+
+  async signInWithGuest() {
+    const guestEmail = 'guestemail@gmail.com';
+    const userQuery = query(
+      this.getUsersCollection(),
+      where('email', '==', guestEmail)
+    );
+
+    const result = await getDocs(userQuery);
+
+    if (!result.empty) {
+      const userDoc = result.docs[0];
+      this.currentUserId = userDoc.id;
+      this.loginIsSucess = true;
+    } else {
+      console.error('Guest user not found. Please create a guest user first.');
+    }
+  }
+
+  async createUser(user: User): Promise<string> {
+    try {
+      const userData: any = {
         name: user.name,
         email: user.email,
-        password: user.password,
-        avatar: user.avatar,
-      });
+        avatar: user.avatar
+      };
+      if (user.password) {
+        userData.password = user.password;
+      }
+      const userRef = await addDoc(collection(this.firestore, 'users'), userData);
       const userId = userRef.id;
-      const channelsCollection = collection(
-        this.firestore,
-        `users/${userRef.id}/channels`
-      );
-      await addDoc(channelsCollection, {});
-      const chatsCollection = collection(
-        this.firestore,
-        `users/${userRef.id}/chats`
-      );
-      await addDoc(chatsCollection, {});
       return userId;
     } catch (error) {
       throw error;
     }
+  }
+
+  async updateUserDocument(userId: string, data: any) {
+    const userDocRef = doc(this.firestore, 'users', userId);
+    return updateDoc(userDocRef, data);
   }
 
   saveUserToLocalStorage(user: User): void {
@@ -124,7 +179,7 @@ export class UserService {
 
   async completeUserRegistration(user: User): Promise<boolean> {
     try {
-      await this.createUserWithSubcollections(user);
+      await this.createUser(user);
       this.clearUserFromLocalStorage();
       return true;
     } catch (error) {
@@ -147,11 +202,11 @@ export class UserService {
 
   async getChannelUserId(channelId: string) {
     const channelRef = this.getSingleChannelRef(channelId);
-    this.unsubscribeChannelCreaterName = onSnapshot (channelRef, (element) => {
+    this.unsubscribeChannelCreaterName = onSnapshot(channelRef, (element) => {
       const data = element.data();
       if (data) {
-      this.channelCreaterId = data['createdBy'];
-      this.getChannelUserName(this.channelCreaterId);
+        this.channelCreaterId = data['createdBy'];
+        this.getChannelUserName(this.channelCreaterId);
       }
     });
   }
@@ -160,11 +215,11 @@ export class UserService {
     console.log('channel creater id ist', this.channelCreaterId);
     const channelRef = this.getSingleUserRef(userId);
     this.unsubscribeChannelCreater = onSnapshot(channelRef, (element) => {
-    const data = element.data();
-     console.log('das sind die channel user data', data);
-     if (data) {
-      this.channelCreaterName = data['name'];
-      console.log('channel creater name', this.channelCreaterName);
+      const data = element.data();
+      console.log('das sind die channel user data', data);
+      if (data) {
+        this.channelCreaterName = data['name'];
+        console.log('channel creater name', this.channelCreaterName);
       }
     });
   }
@@ -182,13 +237,13 @@ export class UserService {
   showUserChannel() {
     const channelRef = this.getChannelRef();
     this.unsubscribeUserChannels = collectionData(channelRef, { idField: 'channelId' })
-    .subscribe(channels => {
-      this.channels = [];
-      this.channels = channels;
-      this.checkChannel();
-      console.log('channel by user',this.showChannelByUser);
-      this.channelsLoaded$.next(true);
-    });
+      .subscribe(channels => {
+        this.channels = [];
+        this.channels = channels;
+        this.checkChannel();
+        console.log('channel by user', this.showChannelByUser);
+        this.channelsLoaded$.next(true);
+      });
   }
 
   checkChannel() {
@@ -205,8 +260,8 @@ export class UserService {
     });
   }
 
-   ngOnDestroy(): void {
-    this.unsubscribeUserData?.unsubscribe();        
+  ngOnDestroy(): void {
+    this.unsubscribeUserData?.unsubscribe();
     this.unsubscribeUserChannels?.unsubscribe();
     if (this.unsubscribeChannelCreater) {
       this.unsubscribeChannelCreater();
@@ -214,5 +269,5 @@ export class UserService {
     if (this.unsubscribeChannelCreaterName) {
       this.unsubscribeChannelCreaterName();
     }
-   }
+  }
 }

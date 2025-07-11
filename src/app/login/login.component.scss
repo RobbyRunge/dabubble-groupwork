@@ -287,6 +287,43 @@
   }
 }
 
+#background-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 125ms ease-in-out;
+}
+
+#background-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+mat-dialog-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 344px;
+  height: 100px;
+  border-radius: 16px;
+  filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.5));
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(68, 77, 242, 1);
+  color: rgba(255, 255, 255, 1);
+  font-size: 24px;
+  font-weight: 600;
+}
+
 @keyframes logo-move {
   0% {
     transform: translate(-50%, -50%);
