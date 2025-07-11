@@ -122,7 +122,6 @@ export class WorkSpaceSectionComponent implements OnInit {
     }
   }
 
-
   openChannel(channelName: string, channelId: string, channelDescription: string) {
     this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId,]);
     this.getChannelNameandId(channelName, channelId, channelDescription);
