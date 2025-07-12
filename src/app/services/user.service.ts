@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData, getDoc, updateDoc, deleteDoc } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
 import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,9 @@ export class UserService {
   private firestore = inject(Firestore);
   private router = inject(Router);
   private auth = inject(Auth);
+
+  private pendingRegistrationId = new BehaviorSubject<string | null>(null);
+  pendingRegistrationId$ = this.pendingRegistrationId.asObservable();
 
   userData: User[] = [];
   currentUser?: User;
@@ -118,30 +122,57 @@ export class UserService {
     }
   }
 
-  saveUserToLocalStorage(user: User): void {
-    localStorage.setItem('pendingUser', JSON.stringify(user));
-  }
-
-  getUserFromLocalStorage(): User | null {
-    const userData = localStorage.getItem('pendingUser');
-    if (userData) {
-      return JSON.parse(userData);
-    }
-    return null;
-  }
-
-  clearUserFromLocalStorage(): void {
-    localStorage.removeItem('pendingUser');
-  }
-
-  async completeUserRegistration(user: User): Promise<boolean> {
+  async createInitialUser(user: User): Promise<string> {
     try {
-      await this.createUser(user);
-      this.clearUserFromLocalStorage();
+      const userData: any = {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        avatar: 'empty-avatar.png',
+        registrationComplete: false
+      };
+
+      const userRef = await addDoc(collection(this.firestore, 'users'), userData);
+      const userId = userRef.id;
+
+      // Store ID in service for the next step
+      this.pendingRegistrationId.next(userId);
+
+      return userId;
+    } catch (error) {
+      console.error('Error creating initial user:', error);
+      throw error;
+    }
+  }
+
+  async completeUserRegistration(avatarPath: string): Promise<boolean> {
+    try {
+      const userId = this.pendingRegistrationId.getValue();
+
+      if (!userId) {
+        throw new Error('No pending registration found');
+      }
+
+      await this.updateUserDocument(userId, {
+        avatar: avatarPath,
+        registrationComplete: true
+      });
+
+      this.pendingRegistrationId.next(null);
+
       return true;
     } catch (error) {
       console.error('Error completing registration:', error);
       return false;
+    }
+  }
+
+  async cleanupIncompleteRegistration(): Promise<void> {
+    const userId = this.pendingRegistrationId.getValue();
+    if (userId) {
+      await deleteDoc(doc(this.firestore, 'users', userId));
+
+      this.pendingRegistrationId.next(null);
     }
   }
 

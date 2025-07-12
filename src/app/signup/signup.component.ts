@@ -86,7 +86,12 @@ export class SignupComponent {
   }
 
   navigateToAvatar() {
-    this.userService.saveUserToLocalStorage(this.user);
-    this.router.navigate(['/avatar']);
+    // Instead of saving to localStorage, create the user in Firestore
+    this.userService.createInitialUser(this.user).then(() => {
+      this.router.navigate(['/avatar']);
+    }).catch(error => {
+      console.error('Error during user creation:', error);
+      // Handle error (show message to user)
+    });
   }
 }

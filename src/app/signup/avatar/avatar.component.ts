@@ -34,10 +34,11 @@ export class AvatarComponent implements OnInit {
   ];
 
   ngOnInit() {
-    const userData = this.userService.getUserFromLocalStorage();
-    if (userData) {
-      this.user = userData;
-    }
+    this.userService.pendingRegistrationId$.subscribe(id => {
+      if (!id) {
+        this.router.navigate(['/signup']);
+      }
+    });
   }
 
   selectAvatar(avatarSrc: string) {
@@ -47,8 +48,8 @@ export class AvatarComponent implements OnInit {
 
   async showSuccessfullyCreateContactOverlay() {
     const backgroundOverlay = document.getElementById('background-overlay');
-    this.user.avatar = this.selectedAvatar;
-    await this.userService.completeUserRegistration(this.user);
+    await this.userService.completeUserRegistration(this.selectedAvatar);
+    
     if (backgroundOverlay) {
       backgroundOverlay.classList.add('active');
       setTimeout(() => {
@@ -58,5 +59,9 @@ export class AvatarComponent implements OnInit {
         }, 125);
       }, 2000);
     }
+  }
+
+  ngOnDestroy() {
+    this.userService.cleanupIncompleteRegistration();
   }
 }
