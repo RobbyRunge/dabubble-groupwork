@@ -34,11 +34,7 @@ export class AvatarComponent implements OnInit {
   ];
 
   ngOnInit() {
-    this.userService.pendingRegistrationId$.subscribe(id => {
-      if (!id) {
-        this.router.navigate(['/signup']);
-      }
-    });
+    this.userService.pendingRegistrationId$.subscribe;
   }
 
   selectAvatar(avatarSrc: string) {
@@ -49,7 +45,7 @@ export class AvatarComponent implements OnInit {
   async showSuccessfullyCreateContactOverlay() {
     const backgroundOverlay = document.getElementById('background-overlay');
     await this.userService.completeUserRegistration(this.selectedAvatar);
-    
+
     if (backgroundOverlay) {
       backgroundOverlay.classList.add('active');
       setTimeout(() => {
