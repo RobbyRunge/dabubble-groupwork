@@ -22,8 +22,8 @@ import { ChannelSectionComponent } from '../channel-section/channel-section.comp
     HeaderComponent,
     FormsModule,
     MatFormFieldModule,
-    MatInputModule
-],
+    MatInputModule,
+  ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
 })
@@ -36,31 +36,34 @@ export class ChatSectionComponent implements OnInit {
 
   unsubscribeUserData!: Subscription;
   private routeSub?: Subscription;
-  unsubscribeUserChannels?: () => void;    
+  unsubscribeUserChannels?: () => void;
+  imgSrcReaction: any = 'add reaction.png';
+  imgSrcMention: any = 'mention.png'
+imgSrcSend: any = 'send.png';
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
-    this.dataUser.currentUserId = params['id'];
-     this.showCurrentUserData();
-     this.showUserChannel();
+      this.dataUser.currentUserId = params['id'];
+      this.showCurrentUserData();
+      this.showUserChannel();
     });
     setTimeout(() => {
       this.checkChannel();
-      console.log('Channels by user',this.dataUser.showChannelByUser);
-      
+      console.log('Channels by user', this.dataUser.showChannelByUser);
+
     }, 2000);
   }
 
   showCurrentUserData() {
     const userRef = this.dataUser.getSingleUserRef(this.dataUser.currentUserId);
     this.unsubscribeUserData = docData(userRef).subscribe(data => {
-    this.dataUser.currentUser = new User(data);
-    console.log('current user id',this.dataUser.currentUserId);
-    console.log('current detail',this.dataUser.currentUser);
+      this.dataUser.currentUser = new User(data);
+      console.log('current user id', this.dataUser.currentUserId);
+      console.log('current detail', this.dataUser.currentUser);
     });
   }
 
-  showUserChannel() {    
+  showUserChannel() {
     const channelRef = this.dataUser.getChannelRef();
     this.unsubscribeUserChannels = onSnapshot(channelRef, (element) => {
       this.dataUser.channels = [];
@@ -74,29 +77,29 @@ export class ChatSectionComponent implements OnInit {
     this.unsubscribeUserData.unsubscribe();
     this.routeSub?.unsubscribe();
     if (this.unsubscribeUserChannels) {
-    this.unsubscribeUserChannels();
-  }
-}
-
-checkChannel() {
-  this.dataUser.showChannelByUser = [];
-  this.dataUser.channels.forEach((channel) => {
-      if (Array.isArray(channel.userId) && channel.userId.includes(this.dataUser.currentUserId)) {
-      this.dataUser.showChannelByUser.push({
-        ...channel
-      });
+      this.unsubscribeUserChannels();
     }
-  });
-}
+  }
+
+  checkChannel() {
+    this.dataUser.showChannelByUser = [];
+    this.dataUser.channels.forEach((channel) => {
+      if (Array.isArray(channel.userId) && channel.userId.includes(this.dataUser.currentUserId)) {
+        this.dataUser.showChannelByUser.push({
+          ...channel
+        });
+      }
+    });
+  }
 
   openDialog() {
     const dialog = this.dialog.open(ChannelSectionComponent, {
       width: '872px',
       height: '616px',
-      maxWidth: '872px',     
+      maxWidth: '872px',
       maxHeight: '616px',
       panelClass: 'channel-dialog-container'
     });
-}
-  
+  }
+
 }

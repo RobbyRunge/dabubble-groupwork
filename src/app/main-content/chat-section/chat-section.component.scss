@@ -4,7 +4,7 @@ app-chat-section {
     height: 100vh;
 }
 
-.header{
+.header {
     width: 100%;
     padding-top: 25px;
     @include dFlex();
@@ -18,25 +18,29 @@ app-chat-section {
     @include dFlex(center, flex-start);
 }
 
-.chat-section{
+.chat-section {
     padding: 0 20px;
     width: 100%;
     height: calc(100vh - 146px);
     background-color: white;
     border-radius: 30px;
+    @include dFlex(space-between);
+    flex-direction: column;
+    --mat-sys-primary: #686868;
 }
 
 .channel-user-content {
     @include dFlex(space-between);
     flex-direction: row;
     padding: 15px 10px 15px 10px;
+    width: 100%;
 }
 
-.work-space-section{
+.work-space-section {
     padding-left: 20px;
 }
 
-.thread-section{
+.thread-section {
     padding-right: 20px;
 }
 
@@ -50,9 +54,64 @@ app-chat-section {
     background-color: transparent;
     @include dFlex();
     gap: 10px;
+
     &:hover {
-        background-color: #ECEEFE; 
-        color: #535AF1;   
+        background-color: #ECEEFE;
+        color: #535AF1;
         border-radius: 100px;
-    } 
+    }
+}
+
+.write-message-container {
+    width: 100%;
+}
+
+.mat-mdc-form-field {
+    width: 100%;
+}
+
+input {
+    color: #686868 !important;
+}
+
+mat-label {
+    color: #686868;
+}
+
+
+::ng-deep .example-full-width .mat-mdc-text-field-wrapper {
+    height: 145px !important;
+    border: 1px solid #ADB0D9;
+    border-radius: 20px !important;
+}
+
+::ng-deep.mdc-line-ripple {
+    display: none !important;
+}
+
+::ng-deep.mat-mdc-form-field-infix {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+
+    >.icons-container {
+        @include dFlex(space-between);
+        padding-left: 4px;
+        padding-right: 4px;
+
+        >div {
+            @include dFlex();
+
+            >div {
+                @include dFlex();
+                height: 40px;
+                width: 40px;
+
+                &:hover {
+                    background-color: #ECEEFE;
+                    border-radius: 20px;
+                }
+            }
+        }
+    }
 }
