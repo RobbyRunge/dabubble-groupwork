@@ -2,10 +2,16 @@
   <div class="channel-user-content">
     <button class="channel-btn" (click)="openDialog()">
       <span>#</span>
-      <p *ngIf="dataUser.currentChannelName">
+      @if (dataUser.currentChannelName) {
+        <p>
         {{ dataUser.currentChannelName }}
       </p>
-      <img src="/img/arrow_down.png" />
+      } @else {
+         <p>
+        {{ dataUser.userSubcollectionChannelName }}
+      </p>
+      }
+      <span class="btn-img"></span>
     </button>
     <div>Placeholder User Avatar</div>
   </div>

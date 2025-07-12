@@ -5,8 +5,8 @@ export class User {
   aktiv!: boolean;
   avatar!: string;
   userId!: string;
-  chats: { data: { channel: string }; id: string }[] = [];
-  channels: { data: { channel: string }; id: string }[] = [];
+ 
+  userstorage!: string;;
 
   constructor(obj?: any) {
 
@@ -15,8 +15,7 @@ export class User {
     this.password = obj ? obj.password : '';
     this.avatar = obj ? obj.avatar : '';
     this.userId! = obj ? obj.id : '';
-    this.chats = obj?.chats || [];
-    this.channels = obj?.channels || [];
+    this.userstorage = obj ? obj.userstorage : '' ;
   }
 
   public toJSON() {
@@ -26,8 +25,7 @@ export class User {
       password: this.password,
       avatar: this.avatar,
       userId: this.userId,
-      chats: this.chats,
-      channels: this.channels
+      userstorage: this.userstorage
     }
   }
 }

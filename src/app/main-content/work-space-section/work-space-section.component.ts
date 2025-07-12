@@ -52,8 +52,11 @@ export class WorkSpaceSectionComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataUser.showCurrentUserData();
+    console.log('user storage id', this.dataUser.userSubcollectionId);
+    
     this.unsubChannels = this.dataUser.channelsLoaded$.subscribe(loaded => {
     if (loaded) {
+      console.log('channel route',this.dataUser.userSubcollectionChannel);
       this.loadSaveRoute();
       }
     });
@@ -92,40 +95,24 @@ export class WorkSpaceSectionComponent implements OnInit {
     });
   }
 
-  saveRoute(routePart: string[]): void {
-    localStorage.setItem('savedRoute', JSON.stringify(routePart));
-  }
-
-  saveUserChannel(channelName: string, channelId: string, channelDescription: string) {
-    localStorage.setItem('savedChannelName', JSON.stringify(channelName));
-    localStorage.setItem('savedChannelId', JSON.stringify(channelId));
-    localStorage.setItem('savedChannelDescription', JSON.stringify(channelDescription));
-  }
-
   loadSaveRoute() {
-    const route = localStorage.getItem('savedRoute');
-    const nameOfChannel = localStorage.getItem('savedChannelName');
-    const idOfChannel = localStorage.getItem('savedChannelId');
-    const descriptionOfChannel = localStorage.getItem('savedChannelDescription');
-    if (route && nameOfChannel &&idOfChannel && descriptionOfChannel) {
-      const routePath: string[] = JSON.parse(route);
-      const getChannelName: string = JSON.parse(nameOfChannel);
-      const getChannelId: string = JSON.parse(idOfChannel);
-      const getChannelDescription: string = JSON.parse(descriptionOfChannel);
-      this.router.navigate(routePath);
-      this.getChannelNameandId(getChannelName, getChannelId,getChannelDescription);
-    } else {
-      const channelId = this.dataUser.showChannelByUser[0].channelId;
+    const channelId = this.dataUser.userSubcollectionChannel;
+    if(channelId) {
       this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId,]);
-      this.getChannelNameandId(this.dataUser.showChannelByUser[0].channelname, this.dataUser.showChannelByUser[0].channelId, 
-        this.dataUser.showChannelByUser[0].description);
+    } else {
+      this.router.navigate(['mainpage', this.dataUser.currentUserId]);
     }
   }
 
   openChannel(channelName: string, channelId: string, channelDescription: string) {
+    const item = {
+      channel: channelId,
+      channelName: channelName,
+      channelDescription: channelDescription
+    };
     this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId,]);
     this.getChannelNameandId(channelName, channelId, channelDescription);
-    this.saveUserChannel(channelName, channelId, channelDescription);
+    this.dataUser.updateUserStorage(this.dataUser.currentUserId, this.dataUser.userSubcollectionId, item)
   }
 
   getChannelNameandId(channelName: string, channelId: string, channelDescription: string) {
@@ -135,7 +122,6 @@ export class WorkSpaceSectionComponent implements OnInit {
     this.dataUser.currentChannelName = channelName;
     this.dataUser.currentChannelDescription = channelDescription;
     this.dataUser.getChannelUserId(this.activeChannelId);
-    this.saveRoute(['mainpage', this.dataUser.currentUserId, 'channel', channelId]);
   }
 
   ngOnDestroy(): void {

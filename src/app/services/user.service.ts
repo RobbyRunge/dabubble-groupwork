@@ -10,7 +10,7 @@ import {
   doc,
   CollectionReference,
   collectionData,
-  getDoc, updateDoc,
+  updateDoc,
   docData,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
@@ -39,18 +39,26 @@ export class UserService {
   currentChannelId: string = '';
   currentChannelName: string = '';
   currentChannelDescription: string = '';
+  userSubcollectionId:string = '';
+  userSubcollectionChannel: string = '';
+  userSubcollectionChannelName: string = '';
+  userSubcollectionDescription: string = '';
 
   public channelsLoaded$ = new BehaviorSubject<boolean>(false);
 
   unsubscribeUserData!: Subscription;
   unsubscribeUserChannels!: Subscription;
   unsubscribeChannelCreater!: () => void;
-  unsubscribeChannelCreaterName!: () => void;
-
+  unsubscribeChannelCreaterName!: () => void;  
+  unsubscribeUserStorage!: Subscription;
   loginIsSucess = false;
 
   getUsersCollection(): CollectionReference {
     return collection(this.firestore, 'users');
+  }
+
+  getUserSubCol(docId: string) {
+    return collection(this.getSingleUserRef(docId), 'userstorage');
   }
 
   getSingleUserRef(docId: string) {
@@ -75,14 +83,17 @@ export class UserService {
       where('email', '==', email),
       where('password', '==', password)
     );
-
     const result = await getDocs(userQuery);
-
     if (!result.empty) {
       const userDoc = result.docs[0];
       this.currentUserId = userDoc.id;
-      this.loginIsSucess = true;
     }
+    const userStorageSnapshot = await getDocs(this.getUserSubCol(this.currentUserId));
+    if(!userStorageSnapshot.empty) {
+      const userStorage = userStorageSnapshot.docs[0];
+      this.userSubcollectionId = userStorage.id;
+    }
+    this.loginIsSucess = true;
   }
 
   async signInWithGoogle() {
@@ -103,9 +114,9 @@ export class UserService {
         newUser.email = user.email || '';
         newUser.name = user.displayName || user.email?.split('@')[0] || '';
         newUser.avatar = "empty-avatar.png";
-
-        const userId = await this.createUser(newUser);
+        const { userId, userStorageId } = await this.createUser(newUser);
         this.currentUserId = userId;
+        this.userSubcollectionId = userStorageId;
       } else {
         const userDoc = result.docs[0];
         this.currentUserId = userDoc.id;
@@ -138,7 +149,7 @@ export class UserService {
     }
   }
 
-  async createUser(user: User): Promise<string> {
+  async createUser(user: User): Promise<{ userId: string; userStorageId: string }> {
     try {
       const userData: any = {
         name: user.name,
@@ -150,7 +161,18 @@ export class UserService {
       }
       const userRef = await addDoc(collection(this.firestore, 'users'), userData);
       const userId = userRef.id;
-      return userId;
+      const userStorageColRef = collection(userRef, 'userstorage');
+      await addDoc(userStorageColRef, {
+        channel: user.userstorage,
+    });
+      const userStorageDocRef = await addDoc(userStorageColRef, {
+      channel: user.userstorage,
+    });
+    const userStorageId = userStorageDocRef.id;
+     return {
+      userId,
+      userStorageId
+    };
     } catch (error) {
       throw error;
     }
@@ -224,19 +246,28 @@ export class UserService {
     });
   }
 
-  showCurrentUserData() {
+  async showCurrentUserData() {
     const userRef = this.getSingleUserRef(this.currentUserId);
     this.unsubscribeUserData = docData(userRef).subscribe((data) => {
       this.currentUser = new User(data);
       console.log('current user id', this.currentUserId);
       console.log('current detail', this.currentUser);
     });
-    this.showUserChannel();
+    const storageRef = this.getUserSubCol(this.currentUserId);
+    const storageSnapshot = await getDocs(storageRef);
+    storageSnapshot.forEach((doc) => {
+      const data =doc.data();
+      this.userSubcollectionId = doc.id;
+      this.userSubcollectionChannel = data['channel'];
+      this.userSubcollectionChannelName = data['channelName'];
+      this.userSubcollectionDescription = data['channelDescription'];
+    });
+    this.showUserChannel()
   }
 
   showUserChannel() {
     const channelRef = this.getChannelRef();
-    this.unsubscribeUserChannels = collectionData(channelRef, { idField: 'channelId' })
+      this.unsubscribeUserChannels = collectionData(channelRef, { idField: 'channelId' })
       .subscribe(channels => {
         this.channels = [];
         this.channels = channels;
@@ -260,9 +291,15 @@ export class UserService {
     });
   }
 
+  async updateUserStorage(userId: string, storageId: string, item: {}) {
+    const storageDocRef = doc(this.getUserSubCol(userId), storageId);
+    await updateDoc(storageDocRef, item);
+  }
+
   ngOnDestroy(): void {
     this.unsubscribeUserData?.unsubscribe();
     this.unsubscribeUserChannels?.unsubscribe();
+    this.unsubscribeUserStorage?.unsubscribe();
     if (this.unsubscribeChannelCreater) {
       this.unsubscribeChannelCreater();
     }
