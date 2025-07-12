@@ -3,15 +3,16 @@ import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, 
 import { User } from '../../models/user.class';
 import { Channel } from '../../models/channel.class';
 import { updateDoc } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  
+
 
   private firestore = inject(Firestore);
-  
+
   userData: User[] = [];
   currentUser?: User;
   channels: any[] = [];
@@ -28,7 +29,7 @@ export class UserService {
   getUsersCollection(): CollectionReference {
     return collection(this.firestore, 'users');
   }
-  
+
   async loginService(email: string, password: string) {
 
     const userQuery = query(
@@ -39,12 +40,12 @@ export class UserService {
 
     const result = await getDocs(userQuery);
 
-    if(!result.empty) {
+    if (!result.empty) {
       const userDoc = result.docs[0];
       this.currentUserId = userDoc.id;
       this.currentUser = new User(userDoc.data());
       this.loginIsSucess = true;
-    } 
+    }
   }
 
   async createUserWithSubcollections(user: User): Promise<string> {
@@ -104,7 +105,7 @@ export class UserService {
   getChatRef(docId: string) {
     return collection(this.getSingleUserRef(docId), 'chats');
   }
-  
+
   async addNewChannel(allChannels: {}, userId: string, user: string) {
     const dateNow = new Date();
     dateNow.setHours(0, 0, 0, 0);
@@ -142,5 +143,9 @@ export class UserService {
     if (this.currentUser) {
       this.currentUser.name = newName;
     }
+  }
+
+  getAllUsers(): Observable<User[]> {
+    return collectionData(this.getUsersCollection(), { idField: 'userId' }) as Observable<User[]>;
   }
 }

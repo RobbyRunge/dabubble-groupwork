@@ -54,7 +54,7 @@
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <div class="users-message-container">
-                            <div *ngFor="let user of dataUser.userData; let index = index"  class="users-container" (click)="openDialog(index, user)">
+                            <div *ngFor="let user of users$ | async; let index = index"  class="users-container" (click)="openDialog(index, user)">
                                 <div>
                                     <img class="avatar-small-img" src="avatar/{{user.avatar}}" alt="">
                                     <img class="status-img" src="Online.png" alt="">

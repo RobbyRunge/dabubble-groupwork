@@ -10,8 +10,9 @@ import { UserCardComponent } from '../user-card/user-card.component';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateChannelSectionComponent } from '../create-channel-section/create-channel-section.component';
-import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
+import { Observable } from 'rxjs';
+import { User } from '../../../models/user.class';
 
 
 @Component({
@@ -26,6 +27,7 @@ import { UserService } from '../../services/user.service';
     MatAccordion,
     MatInputModule,
     NgFor,
+    AsyncPipe,
     NgIf
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,15 +40,17 @@ export class WorkSpaceSectionComponent implements OnInit {
   selectedUser: any;
   urlUserId!: string;
   dataUser = inject(UserService);
+  users$: Observable<User[]> | undefined;
 
+  constructor(private userService: UserService) { }
+
+  ngOnInit() :void {
+    this.users$ = this.userService.getAllUsers();
+  }
   /* dialog = inject(MatDialog); */
 
   accordion = viewChild.required(MatAccordion);
 
-
-ngOnInit(){
-  console.log('test' + this.dataUser.userData);
-}
   toggleDrawer(drawer: MatDrawer) {
     this.isDrawerOpen = !this.isDrawerOpen;
     drawer.toggle();
@@ -59,7 +63,7 @@ ngOnInit(){
 
   readonly dialog = inject(MatDialog);
 
-  openDialog(index: number, user: any) {
+  openDialog(index: number, user: User) {
     const urlUserId = this.urlUserId
     this.dialog.open(UserCardComponent, {
       data: { user, urlUserId },
