@@ -183,19 +183,19 @@ mat-dialog-content {
 
 @media (max-width: 1200px) {
   .avatar .choose-avatar {
-    width: 50vw;
-    min-width: 500px;
-    height: auto;
-    padding: 24px;
+    width: 50vw !important;
+    min-width: 500px !important;
+    height: auto !important;
+    padding: 24px !important;
   }
 }
 
 @media (max-width: 900px) {
   .avatar .choose-avatar {
-    width: 70vw;
-    min-width: 400px;
-    height: auto;
-    padding: 20px;
+    width: 70vw !important;
+    min-width: 400px !important;
+    height: auto !important;
+    padding: 20px !important;
 
     h1 {
       font-size: 36px !important;
@@ -206,11 +206,11 @@ mat-dialog-content {
 @media (max-width: 700px) {
   .avatar .choose-avatar {
     width: 55vw !important;
-    min-width: 300px;
-    padding: 16px;
+    min-width: 300px !important;
+    padding: 16px !important;
 
     h1 {
-      font-size: 28px;
+      font-size: 28px !important;
     }
 
     .img-and-name img {
@@ -229,16 +229,15 @@ mat-dialog-content {
 @media (max-width: 500px) {
   .avatar .choose-avatar {
     width: calc(100vw - 64px) !important;
-    border-radius: 16px;
     padding: 12px !important;
 
     h1 {
-      font-size: 22px;
+      font-size: 22px !important;
     }
 
     .avatar-list-imgs img {
-      width: 40px;
-      height: 40px;
+      width: 40px !important;
+      height: 40px !important;
     }
   }
 }
@@ -250,11 +249,11 @@ mat-dialog-content {
     }
 
     h2 {
-      font-size: 16px;
+      font-size: 16px !important;
     }
 
     p {
-      font-size: 14px;
+      font-size: 14px !important;
     }
 
     .avatar-list-imgs img {

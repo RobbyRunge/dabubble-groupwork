@@ -401,19 +401,6 @@ mat-dialog-content {
       position: static;
       width: 100vw;
       height: auto;
-
-      header {
-        .logo-with-text {
-          img {
-            width: 56px;
-            height: 56px;
-          }
-
-          p {
-            font-size: 20px;
-          }
-        }
-      }
     }
   }
 }
@@ -464,15 +451,6 @@ mat-dialog-content {
         }
       }
     }
-
-    .login header {
-      .logo-with-text {
-        img {
-          width: 40px;
-          height: 40px;
-        }
-      }
-    }
   }
 }
 
@@ -482,6 +460,7 @@ mat-dialog-content {
       width: calc(100vw - 64px);
       min-width: auto;
       padding: 12px;
+      margin-top: 12px;
 
       p {
         font-size: 14px;
@@ -534,17 +513,6 @@ mat-dialog-content {
     }
 
     .login header {
-      .logo-with-text {
-        img {
-          width: 32px;
-          height: 32px;
-        }
-
-        p {
-          font-size: 16px;
-        }
-      }
-
       .signup-link {
         p {
           font-size: 12px;
