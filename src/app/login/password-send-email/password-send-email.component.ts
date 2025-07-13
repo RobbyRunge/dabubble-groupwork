@@ -25,6 +25,9 @@ import { CommonModule } from '@angular/common';
 })
 export class PasswordSendEmailComponent {
   emailTouched = false;
+  emailExistsInDB = false;
+  isCheckingEmail = false;
+  emailNotFoundError = false;
 
   public userService = inject(UserService);
   public user = { email: '' };
@@ -38,7 +41,10 @@ export class PasswordSendEmailComponent {
 
   get isFormValid() {
     return (
-      !!this.user.email && this.isValidEmail(this.user.email)
+      !!this.user.email && 
+      this.isValidEmail(this.user.email) && 
+      this.emailExistsInDB &&
+      !this.isCheckingEmail
     );
   }
 
@@ -48,15 +54,25 @@ export class PasswordSendEmailComponent {
   }
 
   get showEmailError(): boolean {
-    return this.emailTouched && !!this.user.email && !this.isValidEmail(this.user.email);
+    return this.emailTouched && !!this.user.email && 
+           (!this.isValidEmail(this.user.email) || this.emailNotFoundError);
   }
 
-  markEmailTouched() {
+  async markEmailTouched() {
     this.emailTouched = true;
+    
+    if (this.user.email && this.isValidEmail(this.user.email)) {
+      await this.checkEmailExists();
+    } else {
+      this.emailExistsInDB = false;
+      this.emailNotFoundError = false;
+    }
   }
 
-  async sendEmailForResetPassword() {
-    this.showSuccessfullyCreateContactOverlay();
+  private async checkEmailExists(): Promise<void> {
+    this.isCheckingEmail = true;
+    this.emailNotFoundError = false;
+    
     try {
       const userQuery = query(
         this.userService.getUsersCollection(),
@@ -64,39 +80,61 @@ export class PasswordSendEmailComponent {
       );
 
       const result = await getDocs(userQuery);
-
-      if (!result.empty) {
-        const userDoc = result.docs[0];
-        const userId = userDoc.id;
-        const userData = userDoc.data();
-
-        const resetToken = this.generateResetToken();
-        const resetExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
-
-        await this.userService.updateUserDocument(userId, {
-          resetToken,
-          resetTokenExpiry: resetExpiry
-        });
-
-        const resetLink = `http://localhost:4200/password-reset?token=${resetToken}&userId=${userId}`;
-
-        const templateParams = {
-          to_name: userData['name'] || 'Benutzer',
-          user_email: this.user.email,
-          reset_link: resetLink,
-          company_name: 'DABubble',
-          logo: 'https://deine-domain.de/assets/logo.png'
-        };
-
-        await emailjs.send(
-          this.emailjsConfig.serviceId,
-          this.emailjsConfig.templateId,
-          templateParams,
-          this.emailjsConfig.publicKey
-        );
+      
+      if (result.empty) {
+        this.emailExistsInDB = false;
+        this.emailNotFoundError = true;
       } else {
-        this.showError('Diese E-Mail-Adresse ist nicht in unserem System registriert.');
+        this.emailExistsInDB = true;
+        this.emailNotFoundError = false;
       }
+    } finally {
+      this.isCheckingEmail = false;
+    }
+  }
+
+  async sendEmailForResetPassword() {
+    if (!this.isFormValid) {
+      return;
+    }
+
+    this.showSuccessfullyCreateContactOverlay();
+    
+    try {
+      const userQuery = query(
+        this.userService.getUsersCollection(),
+        where('email', '==', this.user.email)
+      );
+
+      const result = await getDocs(userQuery);
+      const userDoc = result.docs[0];
+      const userId = userDoc.id;
+      const userData = userDoc.data();
+
+      const resetToken = this.generateResetToken();
+      const resetExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+      await this.userService.updateUserDocument(userId, {
+        resetToken,
+        resetTokenExpiry: resetExpiry
+      });
+
+      const resetLink = `http://localhost:4200/password-reset?token=${resetToken}&userId=${userId}`;
+
+      const templateParams = {
+        to_name: userData['name'] || 'Benutzer',
+        user_email: this.user.email,
+        reset_link: resetLink,
+        company_name: 'DABubble',
+        logo: 'https://deine-domain.de/assets/logo.png'
+      };
+
+      await emailjs.send(
+        this.emailjsConfig.serviceId,
+        this.emailjsConfig.templateId,
+        templateParams,
+        this.emailjsConfig.publicKey
+      );
 
     } catch (error: any) {
       console.error('Fehler beim Passwort-Reset:', error);
@@ -107,12 +145,6 @@ export class PasswordSendEmailComponent {
     }
   }
 
-  private showError(message: string) {
-    console.log('❌', message);
-    alert(message);
-  }
-
-  // Reset-Token generieren
   generateResetToken(): string {
     return Math.random().toString(36).substring(2, 15) +
       Math.random().toString(36).substring(2, 15) +
