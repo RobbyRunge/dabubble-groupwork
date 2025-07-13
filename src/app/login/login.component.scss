@@ -422,7 +422,20 @@ mat-dialog-content {
   .container {
     .form-position {
       min-width: 300px;
-      border-radius: 20px;
+
+      a {
+        margin: 0 !important;
+      }
+
+      .or-with-border {
+        p {
+          margin: 0;
+        }
+
+        .border {
+          margin: 0;
+        }
+      }
 
       .form {
         gap: 16px;
@@ -434,7 +447,7 @@ mat-dialog-content {
 
         .email-input {
           background-position: 32px 10px !important;
-          margin-bottom: 16px;
+          margin-bottom: 8px;
 
           &:focus {
             background-position: 32px 10px !important;
@@ -443,6 +456,7 @@ mat-dialog-content {
 
         .password-input {
           background-position: 34px 7px !important;
+          margin-top: 8px;
 
           &:focus {
             background-position: 34px 7px !important;
@@ -467,7 +481,6 @@ mat-dialog-content {
     .form-position {
       width: calc(100vw - 64px);
       min-width: auto;
-      border-radius: 16px;
       padding: 12px;
 
       p {
@@ -501,12 +514,12 @@ mat-dialog-content {
       }
 
       .login-and-guest-login {
-        gap: 10px;
+        gap: 14px;
         margin-top: 16px;
 
         button {
-          width: 40%;
-          font-size: 16px;
+          width: 33%;
+          font-size: 14px;
         }
       }
 
@@ -549,8 +562,6 @@ mat-dialog-content {
 @media (max-width: 370px) {
   .container {
     .form-position {
-      border-radius: 12px;
-
       h1 {
         font-size: 24px;
       }
