@@ -9,9 +9,10 @@ import { UserService } from '../../services/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { docData, onSnapshot } from '@angular/fire/firestore';
 import { User } from '../../../models/user.class';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 
 
 @Component({
@@ -23,6 +24,9 @@ import { ChannelSectionComponent } from '../channel-section/channel-section.comp
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
+    NgIf,
+    NgFor,
+    AsyncPipe
   ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
@@ -33,19 +37,24 @@ export class ChatSectionComponent implements OnInit {
   dataUser = inject(UserService);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
-
+  messageText: string = '';
   unsubscribeUserData!: Subscription;
   private routeSub?: Subscription;
   unsubscribeUserChannels?: () => void;
   imgSrcReaction: any = 'add reaction.png';
   imgSrcMention: any = 'mention.png'
-imgSrcSend: any = 'send.png';
+  imgSrcSend: any = 'send.png';
+  users$: Observable<User[]> | undefined;
+  showUserList: boolean = false;
+
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
       this.dataUser.currentUserId = params['id'];
       this.showCurrentUserData();
       this.showUserChannel();
+      this.users$ = this.userService.getAllUsers();
     });
     setTimeout(() => {
       this.checkChannel();
@@ -102,4 +111,20 @@ imgSrcSend: any = 'send.png';
     });
   }
 
+  mention() {
+    this.messageText += '@';
+    this.onInputChange();
+  }
+
+  onInputChange() {
+    if (this.messageText.lastIndexOf('@') !== -1) {
+      this.showUserList = true;
+    } else {
+      this.showUserList = false;
+    }
+  }
+
+  selecetedUser(index: any){
+    console.log(index);
+  }
 }

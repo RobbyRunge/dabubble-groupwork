@@ -108,10 +108,17 @@ mat-label {
                 width: 40px;
 
                 &:hover {
+                    cursor: pointer;
                     background-color: #ECEEFE;
                     border-radius: 20px;
                 }
             }
         }
+    }
+}
+
+.send-icon-container{
+    &:hover{
+        cursor: pointer;
     }
 }

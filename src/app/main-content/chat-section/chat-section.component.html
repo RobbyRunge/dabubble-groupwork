@@ -15,22 +15,28 @@
 
         </div>
         <div class="write-message-container">
+            <ul *ngIf="showUserList">
+                <li *ngFor="let user of users$ | async; let index = index" (click)="selecetedUser(index)">
+                    {{user.name}}
+                </li>
+            </ul>
             <form class="example-form">
                 <mat-form-field class="example-full-width">
                     <mat-label>Starte eine neue Nachricht</mat-label>
-                    <input matInput #message maxlength="256">
+                    <input matInput [(ngModel)]="messageText" name="message" (input)="onInputChange()">
                     <div class="icons-container">
                         <div>
                             <div>
                                 <img [src]="imgSrcReaction" (mouseover)="imgSrcReaction = 'add_reaction_color.png'"
                                     (mouseout)="imgSrcReaction = 'add reaction.png'">
                             </div>
-                            <div>
-                                <img [src]="imgSrcMention" (mouseover)="imgSrcMention = 'mention_color.png'"
+                            <div (click)="mention()">
+                                <img [src]="imgSrcMention"
+                                    (mouseover)="imgSrcMention = 'mention_color.png'"
                                     (mouseout)="imgSrcMention = 'mention.png'">
                             </div>
                         </div>
-                        <div>
+                        <div class="send-icon-container">
                             <img [src]="imgSrcSend" (mouseover)="imgSrcSend = 'Send icon.png'"
                                 (mouseout)="imgSrcSend = 'send.png'">
                         </div>
