@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { query, where, getDocs } from '@angular/fire/firestore';
 import emailjs from '@emailjs/browser';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-password-send-email',
@@ -15,12 +16,16 @@ import emailjs from '@emailjs/browser';
     FooterStartComponent,
     FormsModule,
     MatDialogModule,
-    RouterLink
+    RouterLink,
+    FormsModule,
+    CommonModule
   ],
   templateUrl: './password-send-email.component.html',
   styleUrl: './password-send-email.component.scss'
 })
 export class PasswordSendEmailComponent {
+  emailTouched = false;
+
   public userService = inject(UserService);
   public user = { email: '' };
   private router = inject(Router);
@@ -31,8 +36,23 @@ export class PasswordSendEmailComponent {
     publicKey: 'ckQdz_0ZFKfuDjXTf'
   };
 
-  get isFormValid(): boolean {
-    return !!this.user.email;
+  get isFormValid() {
+    return (
+      !!this.user.email && this.isValidEmail(this.user.email)
+    );
+  }
+
+  private isValidEmail(email: string): boolean {
+    const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return emailPattern.test(email);
+  }
+
+  get showEmailError(): boolean {
+    return this.emailTouched && !!this.user.email && !this.isValidEmail(this.user.email);
+  }
+
+  markEmailTouched() {
+    this.emailTouched = true;
   }
 
   async sendEmailForResetPassword() {
