@@ -53,7 +53,6 @@ export class WorkSpaceSectionComponent implements OnInit {
   ngOnInit(): void {
     this.dataUser.showCurrentUserData();
     console.log('user storage id', this.dataUser.userSubcollectionId);
-    
     this.unsubChannels = this.dataUser.channelsLoaded$.subscribe(loaded => {
     if (loaded) {
       console.log('channel route',this.dataUser.userSubcollectionChannel);
