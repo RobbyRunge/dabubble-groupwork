@@ -35,9 +35,6 @@ export class PasswordResetComponent implements OnInit {
 
     if (this.token && this.userId) {
       await this.validateToken();
-    } else {
-      this.showError('Ungültiger Reset-Link.');
-      this.router.navigate(['/']);
     }
   }
 
