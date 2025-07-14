@@ -2,7 +2,8 @@
 
 .channel-main-content {
     height: 100%;
-    @include dFlex(space-between, unset);
+    @include dFlex(unset, unset);
+    gap: 12px;
     flex-direction: column;
     font-family: 'nunito';
 }

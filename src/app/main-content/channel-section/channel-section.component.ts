@@ -8,10 +8,12 @@ import {MatDividerModule} from '@angular/material/divider';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { getDoc, onSnapshot } from '@angular/fire/firestore';
+import { Allchannels } from '../../../models/allchannels.class';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-channel-section',
-  imports: [MatCardModule, MatIcon, MatButtonModule, MatDividerModule, CommonModule],
+  imports: [MatCardModule, MatIcon, MatButtonModule, MatDividerModule, CommonModule, FormsModule],
   templateUrl: './channel-section.component.html',
   styleUrl: './channel-section.component.scss'
 })
@@ -24,9 +26,9 @@ export class ChannelSectionComponent implements OnInit {
   showEditChannelDescription = false;
   showChannels = false;
 
+  newChannel = new Allchannels();
 
    ngOnInit(): void {
-
   }
 
   editChannelName() {
@@ -35,6 +37,7 @@ export class ChannelSectionComponent implements OnInit {
 
   saveEditedChannelName() {
     this.showEditChannelName = false;
+    this.dataUser.editChannel(this.dataUser.currentChannelId, this.newChannel.toJSON());
   }
 
   editChannelDescription() {

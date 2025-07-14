@@ -2,8 +2,8 @@
 
 header {
     width: 100%;
-    @include dFlex(space-between);
-
+    height: 70px;
+    @include dFlex(space-between, center);
 }
 
 ::ng-deep .mat-mdc-text-field-wrapper {
@@ -16,6 +16,11 @@ header {
 
 .logo-container {
     padding-left: 45px
+}
+
+.search-container {
+    height: 100%;
+    @include dFlex(unset, center);
 }
 
 .user-container {

@@ -14,7 +14,6 @@ import {
   docData,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
-import { Channel } from '../../models/channel.class';
 import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -32,7 +31,6 @@ export class UserService {
   currentUser?: User;
   channels: any[] = [];
   currentUserId!: string;
-  createChannel!: Channel;
   showChannelByUser: any[] = [];
   channelCreaterId!: string;
   channelCreaterName: string = '';
@@ -294,6 +292,11 @@ export class UserService {
   async updateUserStorage(userId: string, storageId: string, item: {}) {
     const storageDocRef = doc(this.getUserSubCol(userId), storageId);
     await updateDoc(storageDocRef, item);
+  }
+
+  async editChannel(docId: string, item: {}) {
+    const singleChannelRef = this.getSingleChannelRef(docId);
+    await updateDoc(singleChannelRef, item);
   }
 
   ngOnDestroy(): void {

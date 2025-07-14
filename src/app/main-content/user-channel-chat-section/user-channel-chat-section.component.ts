@@ -10,7 +10,6 @@ import { MatDialog, MatDialogActions } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { Channel } from '../../../models/channel.class';
 import { Allchannels } from '../../../models/allchannels.class';
 
 @Component({
@@ -24,24 +23,29 @@ export class UserChannelChatSectionComponent implements OnInit {
   dataUser = inject(UserService);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
-  createNewChannel = new Channel();
   newChannel = new Allchannels();
   currentUserId = this.dataUser.currentUserId;
 
   private routeSub?: Subscription;
 
   ngOnInit(): void {
-    // this.routeSub = this.route.paramMap.subscribe((paramMap) => {
-    //   const channelId = paramMap.get('channelId');   
-    // });
+    this.route.paramMap.subscribe((paramMap) => {
+    const channelId = paramMap.get('channelId')!;
+    this.dataUser.currentChannelId = channelId;
+  });
   }
 
-  openDialog() {
+  openDialog(button: HTMLElement) {
+    const rect = button.getBoundingClientRect();
     this.dialog.open(ChannelSectionComponent, {
-      width: '872px',
-      height: '616px',
-      maxWidth: '872px',
-      maxHeight: '616px',
+    position: {
+        top:  `${rect.bottom + window.scrollY}px`, 
+        left: `${rect.left   + window.scrollX}px`  
+      },
+      width: '750px',
+      height: '500px',
+      maxWidth: '750px',
+      maxHeight: '500px',
       panelClass: 'channel-dialog-container',
     });
   }
@@ -52,7 +56,6 @@ export class UserChannelChatSectionComponent implements OnInit {
 
   userCreateChannel() {
      this.dataUser.addNewChannel(this.newChannel.toJSON(),this.currentUserId,this.currentUserId).then(() => {
-      // this.dialogRef.close();
     });
   }
 

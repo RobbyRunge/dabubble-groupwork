@@ -29,7 +29,9 @@
             <span class="channel-name">Channel - Name</span>
             <span (click)="saveEditedChannelName()" class="channel-edit">Speichern</span>
         </div>
-        <input class="input-edit" type="text" placeholder="# Test">
+        <input class="input-edit" type="text" 
+            [value]=" '# ' + (dataUser.currentChannelName ? dataUser.currentChannelName : dataUser.userSubcollectionChannelName)"
+            [(ngModel)]="newChannel.channelname">
     </div>
     <mat-card *ngIf="!showEditChannelDescription" class="channel-description mat-card-class">
         <div class="channel-name-description-edit">
@@ -52,7 +54,7 @@
             <span class="channel-name">Beschreibung</span>
             <span (click)="saveEditedChannelDescription()" class="channel-edit">Speichern</span>
         </div>
-        <input class="input-edit" type="text" placeholder="Dein Text hier">
+        <input class="input-edit" type="text" [value]="dataUser.currentChannelDescription ? dataUser.currentChannelDescription : dataUser.userSubcollectionDescription">
         <mat-divider></mat-divider>
             <span class="channel-name">Erstellt von</span>
             <span class="channel-user-name" *ngIf="dataUser.channelCreaterName"> {{dataUser.channelCreaterName}} </span>

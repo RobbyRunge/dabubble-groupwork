@@ -1,28 +1,23 @@
 @import "./../../../styles.scss";
 
-app-chat-section {
-    height: 100vh;
-}
-
 .header{
     width: 100%;
-    padding-top: 25px;
+    padding-top: 12px;
     @include dFlex();
 }
 
 .chat-section {
     padding: 0 20px;
     width: 100%;
-    height: calc(100vh - 146px);
+    height: 100%;
     background-color: white;
     border-radius: 30px;
 }
 
 .main-content {
     width: 100%;
-    height: calc(100vh - 146px);
-    gap: 20px;
-    padding-bottom: 25px;
+    height: calc(100vh - 100px);
+    gap: 12px;
     position: relative;
     @include dFlex(center, flex-start);
 }

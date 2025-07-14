@@ -7,7 +7,6 @@ import { MatInputModule } from '@angular/material/input';
 import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Channel } from '../../../models/channel.class';
 import { Allchannels } from '../../../models/allchannels.class';
 
 @Component({
@@ -21,8 +20,6 @@ export class CreateChannelSectionComponent {
   dialogRef = inject(MatDialogRef<CreateChannelSectionComponent>);
 
   dataUser = inject(UserService);
-
-  createNewChannel = new Channel();
 
   newChannel = new Allchannels();
 
