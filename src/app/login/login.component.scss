@@ -511,19 +511,6 @@ mat-dialog-content {
         }
       }
     }
-
-    .login header {
-      .signup-link {
-        p {
-          font-size: 12px;
-        }
-
-        a {
-          font-size: 12px;
-          padding: 6px;
-        }
-      }
-    }
   }
 }
 
@@ -558,6 +545,19 @@ mat-dialog-content {
           &:focus {
             background-position: 12px 4px !important;
           }
+        }
+      }
+    }
+
+    .login header {
+      .signup-link {
+        p {
+          font-size: 13px;
+        }
+
+        a {
+          font-size: 13px;
+          padding: 6px;
         }
       }
     }
