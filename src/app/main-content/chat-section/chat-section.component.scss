@@ -62,7 +62,12 @@ app-chat-section {
     }
 }
 
+/* .example-form {
+    position: relative;
+} */
+
 .write-message-container {
+    position: relative;
     width: 100%;
 }
 
@@ -117,8 +122,48 @@ mat-label {
     }
 }
 
-.send-icon-container{
-    &:hover{
+.send-icon-container {
+    &:hover {
         cursor: pointer;
     }
+}
+
+.mention-container {
+    position: absolute;
+    bottom: 85%;
+    left: 15px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 100;
+    padding: 30px;
+    background-color: white;
+    border: 1px solid #ADB0D9;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 470px;
+
+    >div {
+        >.user-list-container {
+            @include dFlex(flex-start);
+            flex-direction: row;
+            gap: 10px;
+            padding: 5px 20px;
+            cursor: pointer;
+            border-radius: 100px;
+
+            &:hover {
+                background-color: #535bf183;
+            }
+        }
+    }
+}
+
+.user-logo {
+    height: 40px;
+    width: 40px;
+    border-radius: 30px;
 }

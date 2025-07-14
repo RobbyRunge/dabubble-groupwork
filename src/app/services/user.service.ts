@@ -98,7 +98,7 @@ export class UserService {
     return doc((this.getUsersCollection()), docId);
   }
 
-  getChannelRef() {
+  getChannelRef(): CollectionReference {
     return collection(this.firestore, 'channels');
   }
 

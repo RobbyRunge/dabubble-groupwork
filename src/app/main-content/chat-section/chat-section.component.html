@@ -15,12 +15,23 @@
 
         </div>
         <div class="write-message-container">
-            <ul *ngIf="showUserList">
-                <li *ngFor="let user of users$ | async; let index = index" (click)="selecetedUser(index)">
-                    {{user.name}}
-                </li>
-            </ul>
             <form class="example-form">
+                <div class="mention-container" *ngIf="showUserList || showChanelList">
+                    <div *ngIf="showUserList">
+                        <div class="user-list-container" *ngFor="let user of users$ | async; let index = index"
+                            (click)="selecetedUser(user, index)">
+                            <div>
+                                <img class="user-logo" src="avatar/{{user.avatar}}" alt="">
+                            </div>
+                            <div>{{user.name}}</div>
+                        </div>
+                    </div>
+                    <div *ngFor="let chanel of users$ | async; let index = index">
+                        <div *ngIf="showChanelList">
+                            {{chanel.name}}
+                        </div>
+                    </div>
+                </div>
                 <mat-form-field class="example-full-width">
                     <mat-label>Starte eine neue Nachricht</mat-label>
                     <input matInput [(ngModel)]="messageText" name="message" (input)="onInputChange()">
@@ -30,9 +41,8 @@
                                 <img [src]="imgSrcReaction" (mouseover)="imgSrcReaction = 'add_reaction_color.png'"
                                     (mouseout)="imgSrcReaction = 'add reaction.png'">
                             </div>
-                            <div (click)="mention()">
-                                <img [src]="imgSrcMention"
-                                    (mouseover)="imgSrcMention = 'mention_color.png'"
+                            <div (click)="userMention()">
+                                <img [src]="imgSrcMention" (mouseover)="imgSrcMention = 'mention_color.png'"
                                     (mouseout)="imgSrcMention = 'mention.png'">
                             </div>
                         </div>

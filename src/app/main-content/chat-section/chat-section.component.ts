@@ -46,6 +46,7 @@ export class ChatSectionComponent implements OnInit {
   imgSrcSend: any = 'send.png';
   users$: Observable<User[]> | undefined;
   showUserList: boolean = false;
+  showChanelList: boolean = false;
 
   constructor(private userService: UserService) { }
 
@@ -111,20 +112,54 @@ export class ChatSectionComponent implements OnInit {
     });
   }
 
-  mention() {
+  userMention() {
     this.messageText += '@';
     this.onInputChange();
   }
 
-  onInputChange() {
-    if (this.messageText.lastIndexOf('@') !== -1) {
+
+
+  onInputChange(): void {
+    this.checkInputFieldForUserMention();
+    this.checkInputFieldForChannelMention();
+  }
+
+
+
+  checkInputFieldForUserMention() {
+    const cursorPosition = this.messageText.lastIndexOf('@');
+    if (cursorPosition === -1) {
+      this.showUserList = false;
+      return;
+    }
+
+    const afterAt = this.messageText.substring(cursorPosition + 1);
+
+    if (afterAt.length === 0 || /^[a-zA-ZäöüÄÖÜß]*$/.test(afterAt)) {
       this.showUserList = true;
     } else {
       this.showUserList = false;
     }
   }
 
-  selecetedUser(index: any){
-    console.log(index);
+    checkInputFieldForChannelMention() {
+    const cursorPosition = this.messageText.lastIndexOf('#');
+    if (cursorPosition === -1) {
+      this.showChanelList = false;
+      return;
+    }
+
+    const afterAt = this.messageText.substring(cursorPosition + 1);
+
+    if (afterAt.length === 0 || /^[a-zA-ZäöüÄÖÜß]*$/.test(afterAt)) {
+      this.showChanelList = true;
+    } else {
+      this.showChanelList = false;
+    }
+  }
+
+  selecetedUser(user: User, index: number) {
+    this.messageText += user.name;
+    this.showUserList = false;
   }
 }
