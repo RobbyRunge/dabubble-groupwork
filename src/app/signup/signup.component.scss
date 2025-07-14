@@ -206,6 +206,19 @@
       align-items: center;
       width: 100%;
       gap: 8px;
+      position: relative;
+      width: 100%;
+
+      .error-message {
+        color: #ff3860;
+        font-size: 12px;
+        margin-top: 4px;
+        position: absolute;
+        bottom: -12px;
+        width: 100%;
+        text-align: start;
+        padding-left: 3px;
+      }
 
       .checkbox-container {
         cursor: pointer;

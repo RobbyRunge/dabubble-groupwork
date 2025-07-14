@@ -10,9 +10,9 @@ import { NgClass } from '@angular/common';
 @Component({
   selector: 'app-signup',
   imports: [
-    HeaderStartComponent, 
-    RouterLink, 
-    FooterStartComponent, 
+    HeaderStartComponent,
+    RouterLink,
+    FooterStartComponent,
     FormsModule,
     NgClass
   ],
@@ -26,6 +26,7 @@ export class SignupComponent {
   emailTouched = false;
   nameTouched = false;
   passwordTouched = false;
+  policyTouched = false;
   public userService = inject(UserService);
   private router = inject(Router);
 
@@ -48,6 +49,10 @@ export class SignupComponent {
 
   get showPasswordError(): boolean {
     return this.passwordTouched && !!this.user.password && !this.isValidPassword(this.user.password);
+  }
+
+  get showPolicyError(): boolean {
+    return this.policyTouched && !this.isPolicyAccepted;
   }
 
   get isFormValid() {
@@ -75,8 +80,9 @@ export class SignupComponent {
 
   togglePolicy() {
     this.isPolicyAccepted = !this.isPolicyAccepted;
+    this.policyTouched = true;
   }
-
+  
   getCheckboxImage(): string {
     if (this.isPolicyAccepted) {
       return this.isHovering ? 'signup/box-checked-hover.png' : 'signup/box-checked.png';
@@ -86,12 +92,10 @@ export class SignupComponent {
   }
 
   navigateToAvatar() {
-    // Instead of saving to localStorage, create the user in Firestore
     this.userService.createInitialUser(this.user).then(() => {
       this.router.navigate(['/avatar']);
     }).catch(error => {
       console.error('Error during user creation:', error);
-      // Handle error (show message to user)
     });
   }
 }
