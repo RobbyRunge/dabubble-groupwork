@@ -491,11 +491,13 @@
       }
 
       .form {
-        gap: 12px;
+        gap: 4px;
         margin: 12px 0;
 
         input {
+          padding-left: 50px;
           font-size: 14px;
+          width: calc(100% - 56px);
         }
 
         .name-input {

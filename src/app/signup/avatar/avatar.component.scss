@@ -209,10 +209,6 @@ mat-dialog-content {
     min-width: 300px !important;
     padding: 16px !important;
 
-    h1 {
-      font-size: 28px !important;
-    }
-
     .img-and-name img {
       width: 120px !important;
       height: 120px !important;
@@ -230,10 +226,6 @@ mat-dialog-content {
   .avatar .choose-avatar {
     width: calc(100vw - 64px) !important;
     padding: 12px !important;
-
-    h1 {
-      font-size: 22px !important;
-    }
 
     .avatar-list-imgs img {
       width: 40px !important;
