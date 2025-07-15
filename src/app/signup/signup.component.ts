@@ -36,7 +36,16 @@ export class SignupComponent {
   }
 
   private isValidPassword(password: string) {
-    return password && password.length >= 6;
+    if (!password || password.length < 8) {
+      return false;
+    }
+    
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    
+    return hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
   }
 
   get showEmailError(): boolean {
@@ -49,6 +58,26 @@ export class SignupComponent {
 
   get showPasswordError(): boolean {
     return this.passwordTouched && !!this.user.password && !this.isValidPassword(this.user.password);
+  }
+
+  get passwordErrorMessage(): string {
+    if (!this.user.password) return '';
+    
+    if (this.user.password.length < 8) {
+      return 'Das Passwort muss mindestens 8 Zeichen lang sein.';
+    }
+    
+    const missing = [];
+    if (!/[A-Z]/.test(this.user.password)) missing.push('Großbuchstabe');
+    if (!/[a-z]/.test(this.user.password)) missing.push('Kleinbuchstabe');
+    if (!/\d/.test(this.user.password)) missing.push('Zahl');
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(this.user.password)) missing.push('Sonderzeichen');
+    
+    if (missing.length > 0) {
+      return `Das Passwort benötigt: ${missing.join(', ')}`;
+    }
+    
+    return '';
   }
 
   get showPolicyError(): boolean {
