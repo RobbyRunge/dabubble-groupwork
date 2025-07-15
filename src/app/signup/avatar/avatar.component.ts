@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject, HostListener } from '@angular/core';
 import { HeaderStartComponent } from "../../shared/header-start/header-start.component";
 import { FooterStartComponent } from "../../shared/footer-start/footer-start.component";
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { User } from '../../../models/user.class';
 import { MatDialogContent } from '@angular/material/dialog';
@@ -11,7 +11,6 @@ import { MatDialogContent } from '@angular/material/dialog';
   imports: [
     HeaderStartComponent,
     FooterStartComponent,
-    RouterLink,
     MatDialogContent
   ],
   templateUrl: './avatar.component.html',
