@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, HostListener } from '@angular/core';
 import { HeaderStartComponent } from "../../shared/header-start/header-start.component";
 import { FooterStartComponent } from "../../shared/footer-start/footer-start.component";
 import { Router, RouterLink } from '@angular/router';
@@ -17,12 +17,13 @@ import { MatDialogContent } from '@angular/material/dialog';
   templateUrl: './avatar.component.html',
   styleUrl: './avatar.component.scss'
 })
-export class AvatarComponent implements OnInit {
+export class AvatarComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   public userService = inject(UserService);
 
   selectedAvatar = '/avatar/empty-avatar.png';
   user: User = new User();
+  private registrationCompleted = false;
 
   items = [
     '/avatar/woman1.png',
@@ -44,20 +45,52 @@ export class AvatarComponent implements OnInit {
 
   async showSuccessfullyCreateContactOverlay() {
     const backgroundOverlay = document.getElementById('background-overlay');
-    await this.userService.completeUserRegistration(this.selectedAvatar);
+    
+    try {
+      const success = await this.userService.completeUserRegistration(this.selectedAvatar);
+      
+      if (success) {
+        this.registrationCompleted = true;
+        
+        if (backgroundOverlay) {
+          backgroundOverlay.classList.add('active');
+          setTimeout(() => {
+            backgroundOverlay.classList.remove('active');
+            setTimeout(() => {
+              this.router.navigate(['/']);
+            }, 125);
+          }, 2000);
+        }
+      } else {
+        console.error('Registrierung konnte nicht abgeschlossen werden');
+      }
+    } catch (error) {
+      console.error('Fehler bei der Registrierung:', error);
+    }
+  }
 
-    if (backgroundOverlay) {
-      backgroundOverlay.classList.add('active');
-      setTimeout(() => {
-        backgroundOverlay.classList.remove('active');
-        setTimeout(() => {
-          this.router.navigate(['/']);
-        }, 125);
-      }, 2000);
+  navigateBack() {
+    this.userService.cleanupIncompleteRegistration();
+    this.router.navigate(['/signup']);
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadHandler(event: any) {
+    if (!this.registrationCompleted) {
+      this.userService.cleanupIncompleteRegistration();
+    }
+  }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event: any) {
+    if (!this.registrationCompleted) {
+      this.userService.cleanupIncompleteRegistration();
     }
   }
 
   ngOnDestroy() {
-    this.userService.cleanupIncompleteRegistration();
+    if (!this.registrationCompleted) {
+      this.userService.cleanupIncompleteRegistration();
+    }
   }
 }
