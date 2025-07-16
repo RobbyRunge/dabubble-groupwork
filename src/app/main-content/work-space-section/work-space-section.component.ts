@@ -13,13 +13,14 @@ import { MatIcon } from '@angular/material/icon';
 import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { collection, collectionData, Firestore } from '@angular/fire/firestore';
-import { UserCardComponent } from './user-card/user-card.component';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { UserCardComponent } from '../user-card/user-card.component';
+import { AsyncPipe, CommonModule, NgFor } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateChannelSectionComponent } from '../create-channel-section/create-channel-section.component';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { User } from '../../../models/user.class';
 
 @Component({
   selector: 'app-work-space-section',
@@ -32,6 +33,7 @@ import { Subscription } from 'rxjs';
     MatExpansionModule,
     MatAccordion,
     MatInputModule,
+    NgFor,
     AsyncPipe,
     CommonModule,
   ],
@@ -48,9 +50,19 @@ export class WorkSpaceSectionComponent implements OnInit {
 
   isDrawerOpen = false;
   selectedUser: any;
+  urlUserId!: string;
+  users$: Observable<User[]> | undefined;
+myPanel: any;
+
+  constructor(private userService: UserService) { }
+
+  /* dialog = inject(MatDialog); */
+
+  accordion = viewChild.required(MatAccordion);
   activeChannelId!: string;
 
   ngOnInit(): void {
+    this.users$ = this.userService.getAllUsers();
     this.dataUser.showCurrentUserData();
     console.log('user storage id', this.dataUser.userSubcollectionId);
     this.unsubChannels = this.dataUser.channelsLoaded$.subscribe(loaded => {
@@ -66,21 +78,16 @@ export class WorkSpaceSectionComponent implements OnInit {
     drawer.toggle();
   }
 
-  accordion = viewChild.required(MatAccordion);
-
-  firestore = inject(Firestore);
-  itemCollection = collection(this.firestore, 'users');
-  item$ = collectionData(this.itemCollection);
-
   onUserClick(index: number, user: any) {
     this.selectedUser = user;
   }
 
   readonly dialog = inject(MatDialog);
 
-  openDialog(index: number, user: any) {
+  openDialog(index: number, user: User) {
+    const urlUserId = this.urlUserId
     this.dialog.open(UserCardComponent, {
-      data: { user },
+      data: { user, urlUserId },
     });
   }
 
@@ -88,7 +95,7 @@ export class WorkSpaceSectionComponent implements OnInit {
     this.dialog.open(CreateChannelSectionComponent, {
       width: '872px',
       height: '539px',
-      maxWidth: '872px',
+      maxWidth: '872px',     
       maxHeight: '539px',
       panelClass: 'channel-dialog-container',
     });

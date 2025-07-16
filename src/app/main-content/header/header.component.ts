@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
@@ -6,6 +6,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
+import {  MatDialog } from '@angular/material/dialog';
+import { EditLogoutUserComponent } from './edit-logout-user/edit-logout-user.component';
 
 @Component({
   selector: 'app-header',
@@ -22,6 +24,14 @@ import { CommonModule } from '@angular/common';
 })
 export class HeaderComponent {
   value = 'Clear me';
-
+  readonly dialog = inject(MatDialog);
   dataUser = inject(UserService);
+
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(EditLogoutUserComponent, {
+      width: '250px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
 }

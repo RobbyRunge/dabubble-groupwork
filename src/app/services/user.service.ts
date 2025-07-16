@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, OnInit, inject } from '@angular/core';
 import {
   Firestore,
   collection,
@@ -14,6 +14,8 @@ import {
   docData,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
+import { Allchannels } from '../../models/allchannels.class';
+import { Observable } from 'rxjs';
 import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -23,7 +25,10 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class UserService {
+
+
   private firestore = inject(Firestore);
+
   private router = inject(Router);
   private auth = inject(Auth);
 
@@ -54,6 +59,7 @@ export class UserService {
   getUsersCollection(): CollectionReference {
     return collection(this.firestore, 'users');
   }
+
 
   getUserSubCol(docId: string) {
     return collection(this.getSingleUserRef(docId), 'userstorage');
@@ -139,9 +145,12 @@ export class UserService {
     const result = await getDocs(userQuery);
 
     if (!result.empty) {
+    if (!result.empty) {
       const userDoc = result.docs[0];
       this.currentUserId = userDoc.id;
+      this.currentUser = new User(userDoc.data());
       this.loginIsSucess = true;
+    }
     } else {
       console.error('Guest user not found. Please create a guest user first.');
     }
@@ -309,5 +318,9 @@ export class UserService {
     if (this.unsubscribeChannelCreaterName) {
       this.unsubscribeChannelCreaterName();
     }
+  }
+
+  getAllUsers(): Observable<User[]> {
+    return collectionData(this.getUsersCollection(), { idField: 'userId' }) as Observable<User[]>;
   }
 }
