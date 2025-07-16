@@ -39,14 +39,16 @@ export class AvatarComponent implements OnInit, OnDestroy {
 
   selectAvatar(avatarSrc: string) {
     this.selectedAvatar = avatarSrc;
-    this.user.avatar = avatarSrc;
+    const filename = avatarSrc.replace('/avatar/', '');
+    this.user.avatar = filename;
   }
 
   async showSuccessfullyCreateContactOverlay() {
     const backgroundOverlay = document.getElementById('background-overlay');
     
     try {
-      const success = await this.userService.completeUserRegistration(this.selectedAvatar);
+      const avatarFilename = this.selectedAvatar.replace('/avatar/', '');
+      const success = await this.userService.completeUserRegistration(avatarFilename);
       
       if (success) {
         this.registrationCompleted = true;
