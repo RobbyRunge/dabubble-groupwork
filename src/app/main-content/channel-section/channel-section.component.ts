@@ -29,10 +29,6 @@ export class ChannelSectionComponent implements OnInit {
   newChannel = new Allchannels();
 
    ngOnInit(): void {
-<<<<<<< HEAD
-=======
-   
->>>>>>> parent of e5534d7 (channel-section variables)
   }
 
   editChannelName() {

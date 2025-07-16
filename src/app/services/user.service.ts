@@ -1,5 +1,5 @@
 import { Injectable, inject, Injector, runInInjectionContext, OnInit } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData, getDoc, updateDoc, deleteDoc } from '@angular/fire/firestore';
+import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData, getDoc, updateDoc, deleteDoc, docData } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { Allchannels } from '../../models/allchannels.class';
 import { Observable } from 'rxjs';
@@ -53,46 +53,30 @@ export class UserService {
     );
   }
 
-
   getUserSubCol(docId: string) {
     return collection(this.getSingleUserRef(docId), 'userstorage');
-  }
-
-  getSingleUserRef(docId: string) {
-    return doc(this.getUsersCollection(), docId);
-  }
-
-  getChannelRef() {
-    return collection(this.firestore, 'channels');
   }
 
   getSingleChannelRef(docId: string) {
     return doc(this.getChannelRef(), docId)
   }
 
-  getChatRef(docId: string) {
-    return collection(this.getSingleUserRef(docId), 'chats');
-  }
-
-
-  getUserSubCol(docId: string) {
-    return collection(this.getSingleUserRef(docId), 'userstorage');
-  }
-
-  getSingleUserRef(docId: string) {
-    return doc(this.getUsersCollection(), docId);
+    getSingleUserRef(docId: string) {
+    return runInInjectionContext(this.injector, () =>
+      doc(this.getUsersCollection(), docId)
+    );
   }
 
   getChannelRef() {
-    return collection(this.firestore, 'channels');
-  }
-
-  getSingleChannelRef(docId: string) {
-    return doc(this.getChannelRef(), docId)
+    return runInInjectionContext(this.injector, () =>
+      collection(this.firestore, 'channels')
+    );
   }
 
   getChatRef(docId: string) {
-    return collection(this.getSingleUserRef(docId), 'chats');
+    return runInInjectionContext(this.injector, () =>
+      collection(this.getSingleUserRef(docId), 'chats')
+    );
   }
 
   async loginService(email: string, password: string) {
@@ -285,24 +269,6 @@ export class UserService {
 
       this.pendingRegistrationId.next(null);
     }
-  }
-
-  getSingleUserRef(docId: string) {
-    return runInInjectionContext(this.injector, () =>
-      doc(this.getUsersCollection(), docId)
-    );
-  }
-
-  getChannelRef() {
-    return runInInjectionContext(this.injector, () =>
-      collection(this.firestore, 'channels')
-    );
-  }
-
-  getChatRef(docId: string) {
-    return runInInjectionContext(this.injector, () =>
-      collection(this.getSingleUserRef(docId), 'chats')
-    );
   }
 
   async addNewChannel(allChannels: {}, userId: string, user: string) {
