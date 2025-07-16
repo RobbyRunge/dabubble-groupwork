@@ -57,11 +57,11 @@ export class ChatSectionComponent implements OnInit {
       this.showUserChannel();
       this.users$ = this.userService.getAllUsers();
     });
-    setTimeout(() => {
-      this.checkChannel();
-      console.log('Channels by user', this.dataUser.showChannelByUser);
+    // setTimeout(() => {
+    //   this.checkChannel();
+    //   console.log('Channels by user', this.dataUser.showChannelByUser);
 
-    }, 2000);
+    // }, 2000);
   }
 
   showCurrentUserData() {
@@ -90,16 +90,16 @@ export class ChatSectionComponent implements OnInit {
     }
   }
 
-  checkChannel() {
-    this.dataUser.showChannelByUser = [];
-    this.dataUser.channels.forEach((channel) => {
-      if (Array.isArray(channel.userId) && channel.userId.includes(this.dataUser.currentUserId)) {
-        this.dataUser.showChannelByUser.push({
-          ...channel
-        });
-      }
-    });
-  }
+  // checkChannel() {
+  //   this.dataUser.showChannelByUser = [];
+  //   this.dataUser.channels.forEach((channel) => {
+  //     if (Array.isArray(channel.userId) && channel.userId.includes(this.dataUser.currentUserId)) {
+  //       this.dataUser.showChannelByUser.push({
+  //         ...channel
+  //       });
+  //     }
+  //   });
+  // }
 
   openDialog() {
     const dialog = this.dialog.open(ChannelSectionComponent, {
