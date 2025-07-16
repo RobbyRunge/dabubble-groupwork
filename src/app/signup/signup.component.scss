@@ -206,6 +206,19 @@
       align-items: center;
       width: 100%;
       gap: 8px;
+      position: relative;
+      width: 100%;
+
+      .error-message {
+        color: #ff3860;
+        font-size: 12px;
+        margin-top: 4px;
+        position: absolute;
+        bottom: -12px;
+        width: 100%;
+        text-align: start;
+        padding-left: 3px;
+      }
 
       .checkbox-container {
         cursor: pointer;
@@ -421,7 +434,6 @@
   .container {
     .form-position {
       min-width: 300px;
-      border-radius: 20px;
 
       .form {
         gap: 16px;
@@ -478,8 +490,8 @@
     .form-position {
       width: calc(100vw - 64px);
       min-width: auto;
-      border-radius: 16px;
       padding: 12px;
+      margin-top: 12px;
 
       p {
         font-size: 14px;
@@ -492,11 +504,13 @@
       }
 
       .form {
-        gap: 12px;
+        gap: 4px;
         margin: 12px 0;
 
         input {
+          padding-left: 50px;
           font-size: 14px;
+          width: calc(100% - 56px);
         }
 
         .name-input {
@@ -553,7 +567,6 @@
 @media (max-width: 370px) {
   .container {
     .form-position {
-      border-radius: 12px;
       padding: 12px;
 
       h1 {

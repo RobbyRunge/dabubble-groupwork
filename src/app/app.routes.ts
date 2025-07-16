@@ -8,6 +8,7 @@ import { PrivacyPolicyComponent } from './shared/privacy-policy/privacy-policy.c
 import { PasswordSendEmailComponent } from './login/password-send-email/password-send-email.component';
 import { PasswordResetComponent } from './login/password-send-email/password-reset/password-reset.component';
 import { UserChannelChatSectionComponent } from './main-content/user-channel-chat-section/user-channel-chat-section.component';
+import { avatarGuard } from './guards/avatar.guard';
 
 export const routes: Routes = [
     { path: '', component: LoginComponent },
@@ -16,7 +17,7 @@ export const routes: Routes = [
     { path: 'password-send-mail', component: PasswordSendEmailComponent },
     { path: 'password-reset', component: PasswordResetComponent },
     { path: 'signup', component: SignupComponent },
-    { path: 'avatar', component: AvatarComponent },
+    { path: 'avatar', component: AvatarComponent, canActivate: [avatarGuard] },
     { path: 'mainpage/:id', component: MainContentComponent,
         children: [
       { path: 'channel/:channelId', component: UserChannelChatSectionComponent }

@@ -1,18 +1,5 @@
-import { Injectable, OnInit, inject } from '@angular/core';
-import {
-  Firestore,
-  collection,
-  query,
-  where,
-  getDocs,
-  addDoc,
-  onSnapshot,
-  doc,
-  CollectionReference,
-  collectionData,
-  updateDoc,
-  docData,
-} from '@angular/fire/firestore';
+import { Injectable, inject, Injector, runInInjectionContext, OnInit } from '@angular/core';
+import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData, getDoc, updateDoc, deleteDoc } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { Allchannels } from '../../models/allchannels.class';
 import { Observable } from 'rxjs';
@@ -31,6 +18,10 @@ export class UserService {
 
   private router = inject(Router);
   private auth = inject(Auth);
+  private injector = inject(Injector);
+
+  private pendingRegistrationId = new BehaviorSubject<string | null>(null);
+  pendingRegistrationId$ = this.pendingRegistrationId.asObservable();
 
   userData: User[] = [];
   currentUser?: User;
@@ -57,7 +48,30 @@ export class UserService {
   loginIsSucess = false;
 
   getUsersCollection(): CollectionReference {
-    return collection(this.firestore, 'users');
+    return runInInjectionContext(this.injector, () => 
+      collection(this.firestore, 'users')
+    );
+  }
+
+
+  getUserSubCol(docId: string) {
+    return collection(this.getSingleUserRef(docId), 'userstorage');
+  }
+
+  getSingleUserRef(docId: string) {
+    return doc(this.getUsersCollection(), docId);
+  }
+
+  getChannelRef() {
+    return collection(this.firestore, 'channels');
+  }
+
+  getSingleChannelRef(docId: string) {
+    return doc(this.getChannelRef(), docId)
+  }
+
+  getChatRef(docId: string) {
+    return collection(this.getSingleUserRef(docId), 'chats');
   }
 
 
@@ -82,12 +96,19 @@ export class UserService {
   }
 
   async loginService(email: string, password: string) {
-    const userQuery = query(
-      this.getUsersCollection(),
-      where('email', '==', email),
-      where('password', '==', password)
+
+    const userQuery = runInInjectionContext(this.injector, () =>
+      query(
+        this.getUsersCollection(),
+        where('email', '==', email),
+        where('password', '==', password)
+      )
     );
-    const result = await getDocs(userQuery);
+
+    const result = await runInInjectionContext(this.injector, () =>
+      getDocs(userQuery)
+    );
+
     if (!result.empty) {
       const userDoc = result.docs[0];
       this.currentUserId = userDoc.id;
@@ -106,12 +127,16 @@ export class UserService {
       const credential = await signInWithPopup(this.auth, provider);
       const user = credential.user;
 
-      const userQuery = query(
-        this.getUsersCollection(),
-        where('email', '==', user.email)
+      const userQuery = runInInjectionContext(this.injector, () =>
+        query(
+          this.getUsersCollection(),
+          where('email', '==', user.email)
+        )
       );
 
-      const result = await getDocs(userQuery);
+      const result = await runInInjectionContext(this.injector, () =>
+        getDocs(userQuery)
+      );
 
       if (result.empty) {
         const newUser = new User();
@@ -137,12 +162,16 @@ export class UserService {
 
   async signInWithGuest() {
     const guestEmail = 'guestemail@gmail.com';
-    const userQuery = query(
-      this.getUsersCollection(),
-      where('email', '==', guestEmail)
+    const userQuery = runInInjectionContext(this.injector, () =>
+      query(
+        this.getUsersCollection(),
+        where('email', '==', guestEmail)
+      )
     );
 
-    const result = await getDocs(userQuery);
+    const result = await runInInjectionContext(this.injector, () =>
+      getDocs(userQuery)
+    );
 
     if (!result.empty) {
       if (!result.empty) {
@@ -166,7 +195,10 @@ export class UserService {
       if (user.password) {
         userData.password = user.password;
       }
-      const userRef = await addDoc(collection(this.firestore, 'users'), userData);
+      
+      const userRef = await runInInjectionContext(this.injector, () => 
+        addDoc(collection(this.firestore, 'users'), userData)
+      );
       const userId = userRef.id;
       const userStorageColRef = collection(userRef, 'userstorage');
       await addDoc(userStorageColRef, {
@@ -190,31 +222,87 @@ export class UserService {
     return updateDoc(userDocRef, data);
   }
 
-  saveUserToLocalStorage(user: User): void {
-    localStorage.setItem('pendingUser', JSON.stringify(user));
-  }
-
-  getUserFromLocalStorage(): User | null {
-    const userData = localStorage.getItem('pendingUser');
-    if (userData) {
-      return JSON.parse(userData);
-    }
-    return null;
-  }
-
-  clearUserFromLocalStorage(): void {
-    localStorage.removeItem('pendingUser');
-  }
-
-  async completeUserRegistration(user: User): Promise<boolean> {
+  async createInitialUser(user: User): Promise<string> {
     try {
-      await this.createUser(user);
-      this.clearUserFromLocalStorage();
-      return true;
+      const userData: any = {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        avatar: 'empty-avatar.png',
+        registrationComplete: false
+      };
+
+      const userRef = await runInInjectionContext(this.injector, () => 
+        addDoc(collection(this.firestore, 'users'), userData)
+      );
+      const userId = userRef.id;
+
+      this.pendingRegistrationId.next(userId);
+      
+      console.log('Initial user created with ID:', userId);
+      return userId;
     } catch (error) {
-      console.error('Error completing registration:', error);
+      console.error('Error creating initial user:', error);
+      throw error;
+    }
+  }
+
+  getPendingRegistrationId(): string | null {
+    return this.pendingRegistrationId.getValue();
+  }
+
+  async completeUserRegistration(avatarPath: string): Promise<boolean> {
+    const userId = this.pendingRegistrationId.getValue();
+    if (!userId) {
+      console.error('No user ID for registration');
       return false;
     }
+
+    try {
+      await runInInjectionContext(this.injector, () =>
+        updateDoc(doc(this.firestore, 'users', userId), {
+          avatar: avatarPath,
+          registrationComplete: true
+        })
+      );
+      
+      this.pendingRegistrationId.next(null);
+      
+      console.log('User registration completed successfully');
+      return true;
+    } catch (error) {
+      console.error('Update failed:', error);
+      return false;
+    }
+  }
+
+  async cleanupIncompleteRegistration(): Promise<void> {
+    const userId = this.pendingRegistrationId.getValue();
+    if (userId) {
+      await runInInjectionContext(this.injector, () =>
+        deleteDoc(doc(this.firestore, 'users', userId))
+      );
+
+      this.pendingRegistrationId.next(null);
+    }
+  }
+
+  getSingleUserRef(docId: string) {
+    return runInInjectionContext(this.injector, () =>
+      doc(this.getUsersCollection(), docId)
+    );
+  }
+
+  getChannelRef() {
+    return runInInjectionContext(this.injector, () =>
+      collection(this.firestore, 'channels')
+    );
+  }
+
+  getChatRef(docId: string) {
+    return runInInjectionContext(this.injector, () =>
+      collection(this.getSingleUserRef(docId), 'chats')
+    );
   }
 
   async addNewChannel(allChannels: {}, userId: string, user: string) {
@@ -226,7 +314,9 @@ export class UserService {
       createdBy: user,
       createdAt: dateNow,
     };
-    await addDoc(collection(this.firestore, 'channels'), channelWithUser);
+    await runInInjectionContext(this.injector, () =>
+      addDoc(collection(this.firestore, 'channels'), channelWithUser)
+    );
   }
 
   async getChannelUserId(channelId: string) {

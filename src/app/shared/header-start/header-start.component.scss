@@ -17,4 +17,8 @@ header {
       height: 70px;
     }
   }
+
+  @media (max-width: 500px) {
+    justify-content: center !important;
+  }
 }

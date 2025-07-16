@@ -1,7 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, HostListener } from '@angular/core';
 import { HeaderStartComponent } from "../../shared/header-start/header-start.component";
 import { FooterStartComponent } from "../../shared/footer-start/footer-start.component";
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { User } from '../../../models/user.class';
 import { MatDialogContent } from '@angular/material/dialog';
@@ -11,18 +11,18 @@ import { MatDialogContent } from '@angular/material/dialog';
   imports: [
     HeaderStartComponent,
     FooterStartComponent,
-    RouterLink,
     MatDialogContent
   ],
   templateUrl: './avatar.component.html',
   styleUrl: './avatar.component.scss'
 })
-export class AvatarComponent implements OnInit {
+export class AvatarComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   public userService = inject(UserService);
 
   selectedAvatar = '/avatar/empty-avatar.png';
   user: User = new User();
+  private registrationCompleted = false;
 
   items = [
     '/avatar/woman1.png',
@@ -34,10 +34,7 @@ export class AvatarComponent implements OnInit {
   ];
 
   ngOnInit() {
-    const userData = this.userService.getUserFromLocalStorage();
-    if (userData) {
-      this.user = userData;
-    }
+    this.userService.pendingRegistrationId$.subscribe;
   }
 
   selectAvatar(avatarSrc: string) {
@@ -47,16 +44,52 @@ export class AvatarComponent implements OnInit {
 
   async showSuccessfullyCreateContactOverlay() {
     const backgroundOverlay = document.getElementById('background-overlay');
-    this.user.avatar = this.selectedAvatar;
-    await this.userService.completeUserRegistration(this.user);
-    if (backgroundOverlay) {
-      backgroundOverlay.classList.add('active');
-      setTimeout(() => {
-        backgroundOverlay.classList.remove('active');
-        setTimeout(() => {
-          this.router.navigate(['/']);
-        }, 125);
-      }, 2000);
+    
+    try {
+      const success = await this.userService.completeUserRegistration(this.selectedAvatar);
+      
+      if (success) {
+        this.registrationCompleted = true;
+        
+        if (backgroundOverlay) {
+          backgroundOverlay.classList.add('active');
+          setTimeout(() => {
+            backgroundOverlay.classList.remove('active');
+            setTimeout(() => {
+              this.router.navigate(['/']);
+            }, 125);
+          }, 2000);
+        }
+      } else {
+        console.error('Registrierung konnte nicht abgeschlossen werden');
+      }
+    } catch (error) {
+      console.error('Fehler bei der Registrierung:', error);
+    }
+  }
+
+  navigateBack() {
+    this.userService.cleanupIncompleteRegistration();
+    this.router.navigate(['/signup']);
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadHandler(event: any) {
+    if (!this.registrationCompleted) {
+      this.userService.cleanupIncompleteRegistration();
+    }
+  }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event: any) {
+    if (!this.registrationCompleted) {
+      this.userService.cleanupIncompleteRegistration();
+    }
+  }
+
+  ngOnDestroy() {
+    if (!this.registrationCompleted) {
+      this.userService.cleanupIncompleteRegistration();
     }
   }
 }

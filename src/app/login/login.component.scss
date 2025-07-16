@@ -15,7 +15,6 @@
     z-index: 10;
 
     img {
-      // responsive design update !!!
       width: 18vw;
       max-width: 180px;
       min-width: 80px;
@@ -24,7 +23,7 @@
       z-index: 2;
       position: absolute;
       top: 50%;
-      left: 50%;
+      left: 48%;
       transform: translate(-50%, -50%);
       animation: logo-move 1.2s cubic-bezier(0.77, 0, 0.18, 1) 2s forwards;
     }
@@ -36,7 +35,7 @@
       overflow: hidden;
       white-space: nowrap;
       width: 0;
-      animation: text-typewriter 0.5s steps(20, end) 2.7s forwards, infinite;
+      animation: text-typewriter 0.5s steps(20, end) 2.7s forwards;
       position: absolute;
       left: 43%;
     }
@@ -340,7 +339,7 @@ mat-dialog-content {
   }
 
   to {
-    width: 30%;
+    width: 32%;
   }
 }
 
@@ -378,6 +377,10 @@ mat-dialog-content {
     .login {
       width: 100vw;
     }
+
+    .logo-and-text p {
+      left: 46% !important;
+    }
   }
 }
 
@@ -401,19 +404,6 @@ mat-dialog-content {
       position: static;
       width: 100vw;
       height: auto;
-
-      header {
-        .logo-with-text {
-          img {
-            width: 56px;
-            height: 56px;
-          }
-
-          p {
-            font-size: 20px;
-          }
-        }
-      }
     }
   }
 }
@@ -422,7 +412,20 @@ mat-dialog-content {
   .container {
     .form-position {
       min-width: 300px;
-      border-radius: 20px;
+
+      a {
+        margin: 0 !important;
+      }
+
+      .or-with-border {
+        p {
+          margin: 0;
+        }
+
+        .border {
+          margin: 0;
+        }
+      }
 
       .form {
         gap: 16px;
@@ -434,7 +437,7 @@ mat-dialog-content {
 
         .email-input {
           background-position: 32px 10px !important;
-          margin-bottom: 16px;
+          margin-bottom: 8px;
 
           &:focus {
             background-position: 32px 10px !important;
@@ -443,19 +446,11 @@ mat-dialog-content {
 
         .password-input {
           background-position: 34px 7px !important;
+          margin-top: 8px;
 
           &:focus {
             background-position: 34px 7px !important;
           }
-        }
-      }
-    }
-
-    .login header {
-      .logo-with-text {
-        img {
-          width: 40px;
-          height: 40px;
         }
       }
     }
@@ -464,11 +459,23 @@ mat-dialog-content {
 
 @media (max-width: 500px) {
   .container {
+    .logo-and-text p {
+      left: 47% !important;
+    }
+
+    .signup-link {
+      text-align: end !important;
+
+      a {
+        padding-right: 0 !important;
+      }
+    }
+
     .form-position {
       width: calc(100vw - 64px);
       min-width: auto;
-      border-radius: 16px;
       padding: 12px;
+      margin-top: 12px;
 
       p {
         font-size: 14px;
@@ -501,12 +508,12 @@ mat-dialog-content {
       }
 
       .login-and-guest-login {
-        gap: 10px;
+        gap: 14px;
         margin-top: 16px;
 
         button {
-          width: 40%;
-          font-size: 16px;
+          width: 33%;
+          font-size: 14px;
         }
       }
 
@@ -519,38 +526,12 @@ mat-dialog-content {
         }
       }
     }
-
-    .login header {
-      .logo-with-text {
-        img {
-          width: 32px;
-          height: 32px;
-        }
-
-        p {
-          font-size: 16px;
-        }
-      }
-
-      .signup-link {
-        p {
-          font-size: 12px;
-        }
-
-        a {
-          font-size: 12px;
-          padding: 6px;
-        }
-      }
-    }
   }
 }
 
 @media (max-width: 370px) {
   .container {
     .form-position {
-      border-radius: 12px;
-
       h1 {
         font-size: 24px;
       }
@@ -579,6 +560,19 @@ mat-dialog-content {
           &:focus {
             background-position: 12px 4px !important;
           }
+        }
+      }
+    }
+
+    .login header {
+      .signup-link {
+        p {
+          font-size: 13px;
+        }
+
+        a {
+          font-size: 13px;
+          padding: 6px;
         }
       }
     }
