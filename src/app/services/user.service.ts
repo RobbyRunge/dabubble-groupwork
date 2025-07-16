@@ -42,7 +42,7 @@ export class UserService {
   currentChannelId: string = '';
   currentChannelName: string = '';
   currentChannelDescription: string = '';
-  userSubcollectionId:string = '';
+  userSubcollectionId: string = '';
   userSubcollectionChannel: string = '';
   userSubcollectionChannelName: string = '';
   userSubcollectionDescription: string = '';
@@ -52,7 +52,7 @@ export class UserService {
   unsubscribeUserData!: Subscription;
   unsubscribeUserChannels!: Subscription;
   unsubscribeChannelCreater!: () => void;
-  unsubscribeChannelCreaterName!: () => void;  
+  unsubscribeChannelCreaterName!: () => void;
   unsubscribeUserStorage!: Subscription;
   loginIsSucess = false;
 
@@ -93,7 +93,7 @@ export class UserService {
       this.currentUserId = userDoc.id;
     }
     const userStorageSnapshot = await getDocs(this.getUserSubCol(this.currentUserId));
-    if(!userStorageSnapshot.empty) {
+    if (!userStorageSnapshot.empty) {
       const userStorage = userStorageSnapshot.docs[0];
       this.userSubcollectionId = userStorage.id;
     }
@@ -145,12 +145,12 @@ export class UserService {
     const result = await getDocs(userQuery);
 
     if (!result.empty) {
-    if (!result.empty) {
-      const userDoc = result.docs[0];
-      this.currentUserId = userDoc.id;
-      this.currentUser = new User(userDoc.data());
-      this.loginIsSucess = true;
-    }
+      if (!result.empty) {
+        const userDoc = result.docs[0];
+        this.currentUserId = userDoc.id;
+        this.currentUser = new User(userDoc.data());
+        this.loginIsSucess = true;
+      }
     } else {
       console.error('Guest user not found. Please create a guest user first.');
     }
@@ -171,15 +171,15 @@ export class UserService {
       const userStorageColRef = collection(userRef, 'userstorage');
       await addDoc(userStorageColRef, {
         channel: user.userstorage,
-    });
+      });
       const userStorageDocRef = await addDoc(userStorageColRef, {
-      channel: user.userstorage,
-    });
-    const userStorageId = userStorageDocRef.id;
-     return {
-      userId,
-      userStorageId
-    };
+        channel: user.userstorage,
+      });
+      const userStorageId = userStorageDocRef.id;
+      return {
+        userId,
+        userStorageId
+      };
     } catch (error) {
       throw error;
     }
@@ -263,7 +263,7 @@ export class UserService {
     const storageRef = this.getUserSubCol(this.currentUserId);
     const storageSnapshot = await getDocs(storageRef);
     storageSnapshot.forEach((doc) => {
-      const data =doc.data();
+      const data = doc.data();
       this.userSubcollectionId = doc.id;
       this.userSubcollectionChannel = data['channel'];
       this.userSubcollectionChannelName = data['channelName'];
@@ -274,7 +274,7 @@ export class UserService {
 
   showUserChannel() {
     const channelRef = this.getChannelRef();
-      this.unsubscribeUserChannels = collectionData(channelRef, { idField: 'channelId' })
+    this.unsubscribeUserChannels = collectionData(channelRef, { idField: 'channelId' })
       .subscribe(channels => {
         this.channels = [];
         this.channels = channels;
@@ -317,6 +317,18 @@ export class UserService {
     }
     if (this.unsubscribeChannelCreaterName) {
       this.unsubscribeChannelCreaterName();
+    }
+  }
+
+  async updateUserName(newName: string): Promise<void> {
+    if (!this.currentUserId) {
+      throw new Error('Kein eingeloggter Benutzer');
+    }
+
+    const userRef = this.getSingleUserRef(this.currentUserId);
+    await updateDoc(userRef, { name: newName });
+    if (this.currentUser) {
+      this.currentUser.name = newName;
     }
   }
 

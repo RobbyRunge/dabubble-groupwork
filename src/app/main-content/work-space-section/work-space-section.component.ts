@@ -12,7 +12,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
-import { collection, collectionData, Firestore } from '@angular/fire/firestore';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { AsyncPipe, CommonModule, NgFor } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
@@ -52,7 +51,7 @@ export class WorkSpaceSectionComponent implements OnInit {
   selectedUser: any;
   urlUserId!: string;
   users$: Observable<User[]> | undefined;
-myPanel: any;
+  myPanel: any = true;
 
   constructor(private userService: UserService) { }
 
@@ -66,9 +65,9 @@ myPanel: any;
     this.dataUser.showCurrentUserData();
     console.log('user storage id', this.dataUser.userSubcollectionId);
     this.unsubChannels = this.dataUser.channelsLoaded$.subscribe(loaded => {
-    if (loaded) {
-      console.log('channel route',this.dataUser.userSubcollectionChannel);
-      this.loadSaveRoute();
+      if (loaded) {
+        console.log('channel route', this.dataUser.userSubcollectionChannel);
+        this.loadSaveRoute();
       }
     });
   }
@@ -95,7 +94,7 @@ myPanel: any;
     this.dialog.open(CreateChannelSectionComponent, {
       width: '872px',
       height: '539px',
-      maxWidth: '872px',     
+      maxWidth: '872px',
       maxHeight: '539px',
       panelClass: 'channel-dialog-container',
     });
@@ -103,7 +102,7 @@ myPanel: any;
 
   loadSaveRoute() {
     const channelId = this.dataUser.userSubcollectionChannel;
-    if(channelId) {
+    if (channelId) {
       this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId,]);
     } else {
       this.router.navigate(['mainpage', this.dataUser.currentUserId]);
@@ -131,6 +130,6 @@ myPanel: any;
   }
 
   ngOnDestroy(): void {
-    this.unsubChannels.unsubscribe();        
-   }
+    this.unsubChannels.unsubscribe();
+  }
 }
