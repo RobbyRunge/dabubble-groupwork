@@ -14,9 +14,7 @@
             </button>
             <div>Placeholder User Avatar</div>
         </div>
-        <div class="chat-container" *ngIf="dataUser.isChecked$ | async as selecetedUser"
-         [ngClass]="{
-                'current-user': selectedUser.userId === dataUser.currentUserId,
+        <div class="chat-container" *ngIf="dataUser.isChecked$ | async as selecetedUser" [ngClass]="{
                 'other-user': selectedUser.userId !== dataUser.currentUserId
                     }">
             <div class="user-logo-name-container">
