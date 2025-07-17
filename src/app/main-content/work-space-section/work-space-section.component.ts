@@ -53,15 +53,13 @@ export class WorkSpaceSectionComponent implements OnInit {
   users$: Observable<User[]> | undefined;
   myPanel: any = true;
 
-  constructor(private userService: UserService) { }
-
   /* dialog = inject(MatDialog); */
 
   accordion = viewChild.required(MatAccordion);
   activeChannelId!: string;
 
   ngOnInit(): void {
-    this.users$ = this.userService.getAllUsers();
+    this.users$ = this.dataUser.getAllUsers();
     this.dataUser.showCurrentUserData();
     console.log('user storage id', this.dataUser.userSubcollectionId);
     

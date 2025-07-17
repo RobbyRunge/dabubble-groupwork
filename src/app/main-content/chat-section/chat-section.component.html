@@ -5,10 +5,13 @@
         <div class="channel-user-content">
             <button class="channel-btn" (click)="openDialog()">
                 <span>#</span>
-                <p>Erstelles Channel</p>
+                @if (dataUser.currentChannelName) {
+                    <span>{{ dataUser.currentChannelName }}</span>
+                } @else {
+                    <span>{{ dataUser.userSubcollectionChannelName }}</span>
+                }
                 <img src="/img/arrow_down.png">
             </button>
-            <!-- <div class="user-channel">#{{item.channel}}</div> -->
             <div>Placeholder User Avatar</div>
         </div>
         <div>

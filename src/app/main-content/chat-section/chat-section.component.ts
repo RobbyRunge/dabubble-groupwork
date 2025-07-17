@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Injector, OnInit, runInInjectionContext } from '@angular/core';
 import { WorkSpaceSectionComponent } from "../work-space-section/work-space-section.component";
 import { ThreadSectionComponent } from "../thread-section/thread-section.component";
 import { HeaderComponent } from "../header/header.component";
@@ -35,6 +35,7 @@ import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 export class ChatSectionComponent implements OnInit {
 
   dataUser = inject(UserService);
+  private injector = inject(Injector);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
   messageText: string = '';
@@ -48,14 +49,12 @@ export class ChatSectionComponent implements OnInit {
   showUserList: boolean = false;
   showChanelList: boolean = false;
 
-  constructor(private userService: UserService) { }
-
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
       this.dataUser.currentUserId = params['id'];
       this.showCurrentUserData();
       this.showUserChannel();
-      this.users$ = this.userService.getAllUsers();
+      this.users$ = this.dataUser.getAllUsers();
     });
     // setTimeout(() => {
     //   this.checkChannel();
@@ -65,22 +64,22 @@ export class ChatSectionComponent implements OnInit {
   }
 
   showCurrentUserData() {
-    const userRef = this.dataUser.getSingleUserRef(this.dataUser.currentUserId);
-    this.unsubscribeUserData = docData(userRef).subscribe(data => {
+    const userRef = this.dataUser.getSingleUserRef(this.dataUser.currentUserId); 
+    this.unsubscribeUserData = runInInjectionContext(this.injector, () => docData(userRef).subscribe(data => {
       this.dataUser.currentUser = new User(data);
       console.log('current user id', this.dataUser.currentUserId);
       console.log('current detail', this.dataUser.currentUser);
-    });
+    }));
   }
 
   showUserChannel() {
     const channelRef = this.dataUser.getChannelRef();
-    this.unsubscribeUserChannels = onSnapshot(channelRef, (element) => {
+    this.unsubscribeUserChannels = runInInjectionContext(this.injector, () =>onSnapshot(channelRef, (element) => {
       this.dataUser.channels = [];
       element.forEach(doc => {
         this.dataUser.channels.push({ ...doc.data(), channelId: doc.id });
       })
-    });
+    }));
   }
 
  ngOnDestroy(): void {
