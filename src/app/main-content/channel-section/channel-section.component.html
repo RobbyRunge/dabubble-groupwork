@@ -26,7 +26,6 @@
             <span (click)="saveEditedChannelName()" class="channel-edit">Speichern</span>
         </div>
         <input class="input-edit" type="text" 
-            [value]="'# ' + (dataUser.currentChannelName ? dataUser.currentChannelName : dataUser.userSubcollectionChannelName)"
             [(ngModel)]="newChannel.channelname">
     </div>
     <mat-card *ngIf="!showEditChannelDescription" class="channel-description mat-card-class">

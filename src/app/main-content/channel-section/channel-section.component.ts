@@ -33,6 +33,8 @@ export class ChannelSectionComponent implements OnInit {
 
   editChannelName() {
     this.showEditChannelName = true;
+    let baseName = this.dataUser.currentChannelName ? this.dataUser.currentChannelName : this.dataUser.userSubcollectionChannelName;
+    this.newChannel.channelname = '# ' + baseName;
   }
 
   saveEditedChannelName() {
