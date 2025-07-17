@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Injector, OnInit } from '@angular/core';
 import { User } from '../../../models/user.class';
 import {MatCardModule} from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
@@ -47,5 +47,9 @@ export class ChannelSectionComponent implements OnInit {
   saveEditedChannelDescription() {
     this.showEditChannelDescription = false;
   }
+
+  // async loadChannelCreatorData() {
+  // await this.dataUser.getChannelUserName();
+  // }
 
 }
