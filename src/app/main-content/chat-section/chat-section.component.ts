@@ -64,7 +64,7 @@ export class ChatSectionComponent implements OnInit {
   }
 
   showCurrentUserData() {
-    const userRef = this.dataUser.getSingleUserRef(this.dataUser.currentUserId); 
+    const userRef = this.dataUser.getSingleUserRef(this.dataUser.currentUserId);
     this.unsubscribeUserData = runInInjectionContext(this.injector, () => docData(userRef).subscribe(data => {
       this.dataUser.currentUser = new User(data);
       console.log('current user id', this.dataUser.currentUserId);
@@ -82,7 +82,7 @@ export class ChatSectionComponent implements OnInit {
     }));
   }
 
- ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.routeSub?.unsubscribe();
     if (this.unsubscribeUserChannels) {
       this.unsubscribeUserChannels();
@@ -140,7 +140,7 @@ export class ChatSectionComponent implements OnInit {
     }
   }
 
-    checkInputFieldForChannelMention() {
+  checkInputFieldForChannelMention() {
     const cursorPosition = this.messageText.lastIndexOf('#');
     if (cursorPosition === -1) {
       this.showChanelList = false;

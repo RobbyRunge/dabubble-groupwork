@@ -151,9 +151,10 @@ button {
 }
 
 .users-container {
-    @include dFlex();
+    @include dFlex(flex-start);
     gap: 15px;
     position: relative;
+    width: 100%;
 
     >div {
         @include dFlex();

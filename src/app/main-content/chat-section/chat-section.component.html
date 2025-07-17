@@ -6,16 +6,28 @@
             <button class="channel-btn" (click)="openDialog()">
                 <span>#</span>
                 @if (dataUser.currentChannelName) {
-                    <span>{{ dataUser.currentChannelName }}</span>
+                <span>{{ dataUser.currentChannelName }}</span>
                 } @else {
-                    <span>{{ dataUser.userSubcollectionChannelName }}</span>
+                <span>{{ dataUser.userSubcollectionChannelName }}</span>
                 }
                 <img src="/img/arrow_down.png">
             </button>
             <div>Placeholder User Avatar</div>
         </div>
-        <div>
-
+        <div class="chat-container">
+            <div class="user-logo-name-container">
+                <div class="user-logo-big">
+                    <img src="avatar/men1.png" alt="">
+                </div>
+                <div class="user-name-container"> 
+                    <h2>Frederick Beck (Du)</h2>
+                </div>
+            </div>
+            <div class="chat-info-container">
+                <span>Dieser Raum ist nur für dich da. Mache dir Notizen, liste deine To-dos auf oder bewahre Links
+                    und
+                    Dateien griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.</span>
+            </div>
         </div>
         <div class="write-message-container">
             <form class="example-form">
