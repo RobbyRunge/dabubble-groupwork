@@ -14,19 +14,28 @@
             </button>
             <div>Placeholder User Avatar</div>
         </div>
-        <div class="chat-container">
+        <div class="chat-container" *ngIf="dataUser.isChecked$ | async as selecetedUser"
+         [ngClass]="{
+                'current-user': selectedUser.userId === dataUser.currentUserId,
+                'other-user': selectedUser.userId !== dataUser.currentUserId
+                    }">
             <div class="user-logo-name-container">
-                <div class="user-logo-big">
-                    <img src="avatar/men1.png" alt="">
+                <div class="user-logo-big" *ngIf="selectedUser">
+                    <img src="avatar/{{selectedUser.avatar}}" alt="">
                 </div>
-                <div class="user-name-container"> 
-                    <h2>Frederick Beck (Du)</h2>
+                <div class="user-name-container" *ngIf="selectedUser">
+                    <h2>{{selectedUser.name}} <span *ngIf="selectedUser.userId === dataUser.currentUserId">(Du)</span>
+                    </h2>
                 </div>
             </div>
-            <div class="chat-info-container">
-                <span>Dieser Raum ist nur für dich da. Mache dir Notizen, liste deine To-dos auf oder bewahre Links
-                    und
-                    Dateien griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.</span>
+            <div class="chat-info-container" *ngIf="selectedUser.userId === dataUser.currentUserId">
+                <p>Dieser Raum ist nur für dich da.<span>
+                        für dich da. Mache dir Notizen, liste deine To-dos auf oder bewahre Links
+                        und
+                        Dateien griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.</span></p>
+            </div>
+            <div class="chat-info-container" *ngIf="selectedUser.userId !== dataUser.currentUserId">
+                <p>Diese Unterhaltung findet nur zwischen <span>&#64;{{selecetedUser.name}} </span>und dir statt</p>
             </div>
         </div>
         <div class="write-message-container">
@@ -34,7 +43,7 @@
                 <div class="mention-container" *ngIf="showUserList || showChanelList">
                     <div *ngIf="showUserList">
                         <div class="user-list-container" *ngFor="let user of users$ | async; let index = index"
-                            (click)="selecetedUser(user, index)">
+                            (click)="selecetedUserMention(user, index)">
                             <div>
                                 <img class="user-logo" src="avatar/{{user.avatar}}" alt="">
                             </div>

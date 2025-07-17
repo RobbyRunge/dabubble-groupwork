@@ -12,7 +12,7 @@ import { User } from '../../../models/user.class';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
 
 
 @Component({
@@ -26,7 +26,8 @@ import { AsyncPipe, NgFor, NgIf } from '@angular/common';
     MatInputModule,
     NgIf,
     NgFor,
-    AsyncPipe
+    AsyncPipe,
+    NgClass
   ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
@@ -48,6 +49,7 @@ export class ChatSectionComponent implements OnInit {
   users$: Observable<User[]> | undefined;
   showUserList: boolean = false;
   showChanelList: boolean = false;
+  selectedUser: any;
 
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
@@ -55,12 +57,19 @@ export class ChatSectionComponent implements OnInit {
       this.showCurrentUserData();
       this.showUserChannel();
       this.users$ = this.dataUser.getAllUsers();
+      this.getUserData()
     });
     // setTimeout(() => {
     //   this.checkChannel();
     //   console.log('Channels by user', this.dataUser.showChannelByUser);
 
     // }, 2000);
+  }
+
+  getUserData(){
+    this.dataUser.isChecked$.subscribe(user => {
+     this.selectedUser = user
+    })
   }
 
   showCurrentUserData() {
@@ -156,7 +165,7 @@ export class ChatSectionComponent implements OnInit {
     }
   }
 
-  selecetedUser(user: User, index: number) {
+  selecetedUserMention(user: User, index: number) {
     this.messageText += user.name;
     this.showUserList = false;
   }

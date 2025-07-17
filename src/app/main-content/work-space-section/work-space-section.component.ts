@@ -58,6 +58,11 @@ export class WorkSpaceSectionComponent implements OnInit {
   accordion = viewChild.required(MatAccordion);
   activeChannelId!: string;
 
+onChange(user: any){
+
+  console.log(user);
+}
+
   ngOnInit(): void {
     this.users$ = this.dataUser.getAllUsers();
     this.dataUser.showCurrentUserData();
@@ -78,16 +83,10 @@ export class WorkSpaceSectionComponent implements OnInit {
 
   onUserClick(index: number, user: any) {
     this.selectedUser = user;
+    this.dataUser.setCheckdValue(user);
   }
 
   readonly dialog = inject(MatDialog);
-
-  openDialog(index: number, user: User) {
-    const urlUserId = this.urlUserId
-    this.dialog.open(UserCardComponent, {
-      data: { user, urlUserId },
-    });
-  }
 
   createChannel() {
     this.dialog.open(CreateChannelSectionComponent, {

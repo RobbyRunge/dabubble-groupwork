@@ -3,6 +3,7 @@
 app-chat-section {
     height: 100vh;
 }
+
 @import "./../../../styles.scss";
 
 .header {
@@ -24,7 +25,7 @@ app-chat-section {
     height: 100%;
     background-color: white;
     border-radius: 30px;
-    @include dFlex(space-between);
+    @include dFlex(space-between, flex-start);
     flex-direction: column;
     --mat-sys-primary: #686868;
 }
@@ -61,6 +62,7 @@ app-chat-section {
         color: #535AF1;
         border-radius: 100px;
     }
+
     height: 100%;
 }
 
@@ -170,26 +172,35 @@ mat-label {
     border-radius: 30px;
 }
 
-.chat-container{
+.chat-container {
     height: 100%;
     @include dFlex(flex-end, flex-start);
     flex-direction: column;
     padding-bottom: 35px;
 }
 
-.user-logo-name-container{
+.user-logo-name-container {
     @include dFlex(flex-start, flex-end);
     gap: 25px;
     padding-bottom: 25px;
 }
 
-.user-name-container{
-    h2{
+.user-name-container {
+    @include dFlex();
+
+    >span {
+        font-family: 'Nunito';
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    h2 {
         margin: 0;
         font-family: 'Nunito';
         font-size: 24px;
     }
 }
+
 .user-logo {
     height: 40px;
     width: 40px;
@@ -204,10 +215,29 @@ mat-label {
     }
 }
 
-.chat-info-container{
-    >span{
-        font-family: 'Nunito';
+.chat-info-container {
+    >p {
+        margin: 0;
+        font-weight: 700;
         font-size: 20px;
         color: #686868;
+
+        >span {
+            font-family: 'Nunito';
+            font-size: 20px;
+            color: #686868;
+            font-weight: 400;
+        }
+    }
+}
+
+.other-user{
+    .chat-info-container{
+        >p{
+            font-weight: 400;
+            >span{
+                color: #535AF1;
+            }
+        }
     }
 }
