@@ -43,8 +43,10 @@ export class ChannelSectionComponent implements OnInit {
     const cleaned = this.newChannel.channelname.replace(/^#\s*/, '').trim();
     this.dataUser.currentChannelName = cleaned;
     this.showEditChannelName = false;
+    this.newChannel.channelId = this.dataUser.currentChannelId;
+    this.newChannel.channelname = cleaned;
     this.dataUser.editChannel(this.dataUser.currentChannelId, this.newChannel.toJSON()).then(() => {
-      this.dataUser.updateUserStorage(this.dataUser.currentUserId, this.dataUser.userSubcollectionId, this.newChannel)
+    this.dataUser.updateUserStorage(this.dataUser.currentUserId, this.dataUser.userSubcollectionId, this.newChannel.toJSON())
     });
   }
 
@@ -54,6 +56,7 @@ export class ChannelSectionComponent implements OnInit {
 
   saveEditedChannelDescription() {
     this.showEditChannelDescription = false;
+    // this.newChannel.description = channelDescription;
   }
 
   // async loadChannelCreatorData() {

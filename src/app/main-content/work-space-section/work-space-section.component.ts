@@ -20,6 +20,7 @@ import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { User } from '../../../models/user.class';
+import { Allchannels } from '../../../models/allchannels.class';
 
 @Component({
   selector: 'app-work-space-section',
@@ -46,7 +47,7 @@ export class WorkSpaceSectionComponent implements OnInit {
   private router = inject(Router);
   route = inject(ActivatedRoute);
   unsubChannels!: Subscription;
-
+  newChannel = new Allchannels();
   isDrawerOpen = false;
   selectedUser: any;
   urlUserId!: string;
@@ -63,14 +64,13 @@ onChange(user: any){
   console.log(user);
 }
 
-  ngOnInit(): void {
+   ngOnInit(): void {
     this.users$ = this.dataUser.getAllUsers();
     this.dataUser.showCurrentUserData();
-    console.log('user storage id', this.dataUser.userSubcollectionId);
-    
+    console.log('user storage id', this.dataUser.currentChannelId);
     this.unsubChannels = this.dataUser.channelsLoaded$.subscribe(loaded => {
       if (loaded) {
-        console.log('channel route', this.dataUser.userSubcollectionChannel);
+        console.log('channel route', this.dataUser.userSubcollectionId);
         this.loadSaveRoute();
       }
     });
@@ -99,23 +99,21 @@ onChange(user: any){
   }
 
   loadSaveRoute() {
-    const channelId = this.dataUser.userSubcollectionChannel;
+    const channelId = this.dataUser.userSubcollectionId;
     if (channelId) {
-      this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId,]);
+      this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId,]); 
     } else {
       this.router.navigate(['mainpage', this.dataUser.currentUserId]);
     }
   }
 
   openChannel(channelName: string, channelId: string, channelDescription: string) {
-    const item = {
-      channel: channelId,
-      channelName: channelName,
-      channelDescription: channelDescription
-    };
     this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId,]);
+    this.newChannel.channelname = channelName;
+    this.newChannel.channelId = channelId;
+    this.newChannel.description = channelDescription;
     this.getChannelNameandId(channelName, channelId, channelDescription);
-    this.dataUser.updateUserStorage(this.dataUser.currentUserId, this.dataUser.userSubcollectionId, item)
+    this.dataUser.updateUserStorage(this.dataUser.currentUserId, this.dataUser.userSubcollectionId, this.newChannel.toJSON())
   }
 
   getChannelNameandId(channelName: string, channelId: string, channelDescription: string) {

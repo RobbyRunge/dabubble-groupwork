@@ -35,7 +35,6 @@ export class UserService {
   currentChannelName: string = '';
   currentChannelDescription: string = '';
   userSubcollectionId: string = '';
-  userSubcollectionChannel: string = '';
   userSubcollectionChannelName: string = '';
   userSubcollectionDescription: string = '';
 
@@ -198,17 +197,14 @@ export class UserService {
       const userStorageColRef = runInInjectionContext(this.injector, () =>
         collection(userRef, 'userstorage')
       );
-      await runInInjectionContext(this.injector, () =>
-        addDoc(userStorageColRef, {
-          channel: user.userstorage,
-        })
-      );
       const userStorageDocRef = await runInInjectionContext(this.injector, () =>
         addDoc(userStorageColRef, {
           channel: user.userstorage,
         })
       );
       const userStorageId = userStorageDocRef.id;
+      console.log('user id ist',userId);
+      console.log('user storage id ist', userStorageId);
       return {
         userId,
         userStorageId
@@ -225,7 +221,7 @@ export class UserService {
     });
   }
 
-  async createInitialUser(user: User): Promise<string> {
+  async createInitialUser(user: User): Promise<{ userId: string; userStorageId: string }> {
     try {
       const userData: any = {
         name: user.name,
@@ -240,10 +236,20 @@ export class UserService {
       );
       const userId = userRef.id;
 
+      const userStorageColRef = runInInjectionContext(this.injector, () =>
+        collection(userRef, 'userstorage')
+      );
+      
+      const userStorageDocRef = await runInInjectionContext(this.injector, () =>
+        addDoc(userStorageColRef, {
+        })
+      );
+      const userStorageId = userStorageDocRef.id;
       this.pendingRegistrationId.next(userId);
-
-      console.log('Initial user created with ID:', userId);
-      return userId;
+      return {
+        userId,
+        userStorageId
+      };
     } catch (error) {
       console.error('Error creating initial user:', error);
       throw error;
@@ -323,7 +329,6 @@ export class UserService {
     this.unsubscribeChannelCreater = runInInjectionContext(this.injector, () =>
       onSnapshot(channelRef, (element) => {
         const data = element.data();
-        console.log('das sind die channel user data', data);
         if (data) {
           this.channelCreaterName = data['name'];
           console.log('channel creater name', this.channelCreaterName);
@@ -338,20 +343,17 @@ export class UserService {
       docData(userRef)
     ).subscribe((data) => {
       this.currentUser = new User(data);
-      console.log('current user id', this.currentUserId);
-      console.log('current detail', this.currentUser);
     });
-
     const storageRef = this.getUserSubCol(this.currentUserId);
     const storageSnapshot = await runInInjectionContext(this.injector, () =>
       getDocs(storageRef)
     );
     storageSnapshot.forEach((doc) => {
       const data = doc.data();
+      console.log('data', data);
       this.userSubcollectionId = doc.id;
-      this.userSubcollectionChannel = data['channel'];
-      this.userSubcollectionChannelName = data['channelName'];
-      this.userSubcollectionDescription = data['channelDescription'];
+      this.userSubcollectionChannelName = data['channelname'];  
+      this.userSubcollectionDescription = data['description'];
     });
     this.showUserChannel()
   }
@@ -364,7 +366,6 @@ export class UserService {
       this.channels = [];
       this.channels = channels;
       this.checkChannel();
-      console.log('channel by user', this.showChannelByUser);
       this.channelsLoaded$.next(true);
     });
   }
