@@ -19,7 +19,7 @@
             </div>
             <div class="add-channels-container">
                 <div>
-                    <mat-accordion class="example-headers-align" multi = "false">
+                    <mat-accordion class="example-headers-align" multi="false">
                         <mat-expansion-panel>
                             <mat-expansion-panel-header>
                                 <mat-panel-description>
@@ -32,10 +32,11 @@
                             </mat-expansion-panel-header>
                             <div class="list-channels-container" *ngIf="dataUser.showChannelByUser">
                                 @for (channel of dataUser.showChannelByUser; track $index) {
-                                    <div class="current-channel-name" (click)="openChannel(channel.channelname, channel.channelId, channel.description)" 
-                                        [ngClass]="{'active-channel': activeChannelId === channel.channelId}">
-                                        <span>#</span> 
-                                        <h2>{{channel.channelname}}</h2>
+                                <div class="current-channel-name"
+                                    (click)="openChannel(channel.channelname, channel.channelId, channel.description)"
+                                    [ngClass]="{'active-channel': activeChannelId === channel.channelId}">
+                                    <span>#</span>
+                                    <h2>{{channel.channelname}}</h2>
                                 </div>
                                 }
                             </div>
@@ -62,7 +63,9 @@
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <div class="users-message-container">
-                            <div *ngFor="let user of users$ | async; let index = index"  class="users-container" (click)="openDialog(index, user)">
+                            <div [ngClass]="{'selected-user': user.userId === selectedUser?.userId}"
+                                *ngFor="let user of users$ | async; let index = index" class="users-container"
+                                (click)="onUserClick(index, user)">
                                 <div>
                                     <img class="avatar-small-img" src="avatar/{{user.avatar}}" alt="">
                                     <img class="status-img" src="Online.png" alt="">

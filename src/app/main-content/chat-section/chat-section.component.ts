@@ -12,7 +12,8 @@ import { User } from '../../../models/user.class';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { UserCardComponent } from '../user-card/user-card.component';
 
 
 @Component({
@@ -26,7 +27,8 @@ import { AsyncPipe, NgFor, NgIf } from '@angular/common';
     MatInputModule,
     NgIf,
     NgFor,
-    AsyncPipe
+    AsyncPipe,
+    NgClass
   ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
@@ -38,6 +40,7 @@ export class ChatSectionComponent implements OnInit {
   private injector = inject(Injector);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
+  readonly userDialog = inject(MatDialog);
   messageText: string = '';
   unsubscribeUserData!: Subscription;
   private routeSub?: Subscription;
@@ -48,6 +51,7 @@ export class ChatSectionComponent implements OnInit {
   users$: Observable<User[]> | undefined;
   showUserList: boolean = false;
   showChanelList: boolean = false;
+  selectedUser: any;
 
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
@@ -55,6 +59,7 @@ export class ChatSectionComponent implements OnInit {
       this.showCurrentUserData();
       this.showUserChannel();
       this.users$ = this.dataUser.getAllUsers();
+      this.getUserData()
     });
     // setTimeout(() => {
     //   this.checkChannel();
@@ -63,8 +68,14 @@ export class ChatSectionComponent implements OnInit {
     // }, 2000);
   }
 
+  getUserData(){
+    this.dataUser.isChecked$.subscribe(user => {
+     this.selectedUser = user
+    })
+  }
+
   showCurrentUserData() {
-    const userRef = this.dataUser.getSingleUserRef(this.dataUser.currentUserId); 
+    const userRef = this.dataUser.getSingleUserRef(this.dataUser.currentUserId);
     this.unsubscribeUserData = runInInjectionContext(this.injector, () => docData(userRef).subscribe(data => {
       this.dataUser.currentUser = new User(data);
       console.log('current user id', this.dataUser.currentUserId);
@@ -82,7 +93,7 @@ export class ChatSectionComponent implements OnInit {
     }));
   }
 
- ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.routeSub?.unsubscribe();
     if (this.unsubscribeUserChannels) {
       this.unsubscribeUserChannels();
@@ -140,7 +151,7 @@ export class ChatSectionComponent implements OnInit {
     }
   }
 
-    checkInputFieldForChannelMention() {
+  checkInputFieldForChannelMention() {
     const cursorPosition = this.messageText.lastIndexOf('#');
     if (cursorPosition === -1) {
       this.showChanelList = false;
@@ -156,8 +167,14 @@ export class ChatSectionComponent implements OnInit {
     }
   }
 
-  selecetedUser(user: User, index: number) {
+  selecetedUserMention(user: User, index: number) {
     this.messageText += user.name;
     this.showUserList = false;
+  }
+
+  openUserDialog(){
+    this.userDialog.open(UserCardComponent, {
+      data: {user: this.selectedUser}
+    })
   }
 }
