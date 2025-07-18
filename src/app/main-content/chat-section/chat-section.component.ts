@@ -13,6 +13,7 @@ import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { UserCardComponent } from '../user-card/user-card.component';
 
 
 @Component({
@@ -39,6 +40,7 @@ export class ChatSectionComponent implements OnInit {
   private injector = inject(Injector);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
+  readonly userDialog = inject(MatDialog);
   messageText: string = '';
   unsubscribeUserData!: Subscription;
   private routeSub?: Subscription;
@@ -168,5 +170,11 @@ export class ChatSectionComponent implements OnInit {
   selecetedUserMention(user: User, index: number) {
     this.messageText += user.name;
     this.showUserList = false;
+  }
+
+  openUserDialog(){
+    this.userDialog.open(UserCardComponent, {
+      data: {user: this.selectedUser}
+    })
   }
 }

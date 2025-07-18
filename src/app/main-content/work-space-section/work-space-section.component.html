@@ -63,7 +63,7 @@
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <div class="users-message-container">
-                            <div [ngClass]="{'selected-user': user.userId === selectedUser.userId}"
+                            <div [ngClass]="{'selected-user': user.userId === selectedUser?.userId}"
                                 *ngFor="let user of users$ | async; let index = index" class="users-container"
                                 (click)="onUserClick(index, user)">
                                 <div>
