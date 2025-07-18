@@ -59,8 +59,8 @@
 
     .arrow-back {
       position: fixed;
-      left: 6%;
-      top: 7%;
+      left: 5%;
+      top: 6%;
       width: 24px;
       height: 24px;
       border-radius: 100%;
@@ -107,13 +107,12 @@
 
 @media (max-width: 700px) {
   .imprint-card {
-    width: 55vw !important;
     min-width: 300px;
     padding: 16px;
   }
 
   .imprint-card h1 {
-    font-size: 28px;
+    font-size: 36px !important;
   }
 }
 
@@ -122,27 +121,33 @@
     width: calc(100vw - 64px) !important;
     min-width: auto;
     padding: 12px !important;
-  }
 
-  .imprint-card h1 {
-    font-size: 36px !important;
-  }
+    h1 {
+      font-size: 36px !important;
+    }
 
-  .imprint-card p {
-    font-size: 14px;
+    p {
+      font-size: 14px !important;
+    }
+
+    .arrow-back {
+      top: 3% !important;
+      left: 3% !important;
+    }
   }
 }
 
 @media (max-width: 370px) {
   .imprint-card {
     padding: 8px !important;
-  }
 
-  .imprint-card h1 {
-    font-size: 24px !important;
-  }
 
-  .imprint-card p {
-    font-size: 12px;
+    h1 {
+      font-size: 24px !important;
+    }
+
+    p {
+      font-size: 12px;
+    }
   }
 }

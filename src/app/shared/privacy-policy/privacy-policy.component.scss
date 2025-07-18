@@ -61,8 +61,8 @@
 
     .arrow-back {
       position: absolute;
-      left: 6%;
-      top: 7%;
+      left: 5%;
+      top: 6%;
       width: 24px;
       height: 24px;
       border-radius: 100%;
@@ -84,7 +84,6 @@
     .privacy-card {
       width: 50vw !important;
       min-width: 500px !important;
-      padding: 24px !important;
     }
 
     .privacy-content-width {
@@ -96,7 +95,6 @@
     .privacy-card {
       width: 70vw !important;
       min-width: 400px !important;
-      padding: 32px !important;
 
       h1 {
         font-size: 36px !important;
@@ -111,15 +109,18 @@
 
   @media (max-width: 700px) {
     .privacy-card {
-      width: 55vw !important;
       min-width: 300px !important;
-      padding: 16px !important;
+
+      h1 {
+        font-size: 36px !important;
+      }
     }
   }
 
   @media (max-width: 500px) {
     .privacy-card {
       width: calc(100vw - 64px) !important;
+      min-width: auto;
       padding: 12px !important;
 
       p,
@@ -127,18 +128,10 @@
         font-size: 14px !important;
       }
     }
-
-    .arrow-back {
-      width: 20px !important;
-      height: 20px !important;
-      padding: 6px !important;
-    }
   }
 
   @media (max-width: 370px) {
     .privacy-card {
-      padding: 12px !important;
-
       h1 {
         font-size: 24px !important;
       }
