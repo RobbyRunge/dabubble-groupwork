@@ -21,3 +21,9 @@ footer {
     }
   }
 }
+
+@media (max-height: 800px) {
+  footer {
+    bottom: 24px;
+  }
+}

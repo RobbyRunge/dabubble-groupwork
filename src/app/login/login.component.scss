@@ -578,3 +578,41 @@ mat-dialog-content {
     }
   }
 }
+
+@media (max-height: 800px) {
+  .container {
+    .form-position {
+      height: 440px !important;
+
+      h1 {
+        margin-bottom: 16px;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .form {
+        margin: 12px 0;
+      }
+
+      a {
+        margin: 0;
+      }
+
+      .or-with-border {
+        .border {
+          margin: 0;
+        }
+      }
+
+      .google-button {
+        margin-top: 16px;
+      }
+
+      .login-and-guest-login {
+        margin-top: 12px;
+      }
+    }
+  }
+}
