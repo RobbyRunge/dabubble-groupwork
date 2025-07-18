@@ -95,7 +95,7 @@
     .arrow-back {
       position: absolute;
       left: 5%;
-      top: 4%;
+      top: 7%;
       width: 24px;
       height: 24px;
       border-radius: 100%;
@@ -472,11 +472,6 @@
         }
       }
 
-      .arrow-back {
-        top: 5%;
-        left: 5%;
-      }
-
       .policy-text {
         margin-bottom: 24px;
       }
@@ -497,9 +492,7 @@
       }
 
       .arrow-back {
-        width: 20px;
-        height: 20px;
-        padding: 6px;
+        top: 4%;
       }
 
       .form {
@@ -578,6 +571,18 @@
 
       .form input {
         height: 28px;
+      }
+
+      .arrow-back {
+        width: 20px;
+        height: 20px;
+        top: 3%;
+        left: 3%;
+
+        &:hover {
+          width: 20px;
+          height: 20px;
+        }
       }
 
       .form {
