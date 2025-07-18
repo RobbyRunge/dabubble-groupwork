@@ -35,6 +35,7 @@
 
     .imprint-scroll-content {
       overflow-y: auto;
+      border-radius: 12px;
 
       &::-webkit-scrollbar {
         display: none;

@@ -36,6 +36,7 @@
     .privacy-scroll-content {
       overflow-y: auto;
       width: 100%;
+      border-radius: 12px;
 
       &::-webkit-scrollbar {
         display: none;
