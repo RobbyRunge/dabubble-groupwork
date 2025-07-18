@@ -94,14 +94,14 @@
     min-width: 400px;
     height: auto;
     padding: 20px;
-  }
 
-  .imprint-card h1 {
-    font-size: 36px;
-  }
+    h1 {
+      font-size: 36px;
+    }
 
-  .imprint-card p {
-    font-size: 18px;
+    p {
+      font-size: 18px;
+    }
   }
 }
 
@@ -109,10 +109,10 @@
   .imprint-card {
     min-width: 300px;
     padding: 16px;
-  }
 
-  .imprint-card h1 {
-    font-size: 36px !important;
+    h1 {
+      font-size: 36px !important;
+    }
   }
 }
 
@@ -148,6 +148,17 @@
 
     p {
       font-size: 12px;
+    }
+
+    .arrow-back {
+      top: 1.5% !important;
+      left: 3% !important;
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    .imprint-scroll-content {
+      margin: 12px 0 !important;
     }
   }
 }
