@@ -50,6 +50,12 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  onEnterKey(event: KeyboardEvent) {
+    if (event.key === 'Enter' && this.isFormValid) {
+      this.login();
+    }
+  }
+
   async login() {
     const backgroundOverlay = document.getElementById('background-overlay');
     try {
