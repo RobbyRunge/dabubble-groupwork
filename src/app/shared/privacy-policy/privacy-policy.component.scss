@@ -127,6 +127,11 @@
       li {
         font-size: 14px !important;
       }
+
+      .arrow-back {
+        top: 3% !important;
+        left: 3% !important;
+      }
     }
   }
 
@@ -139,6 +144,17 @@
       p,
       li {
         font-size: 12px !important;
+      }
+
+      .arrow-back {
+        top: 2% !important;
+        left: 3% !important;
+        width: 20px !important;
+        height: 20px !important;
+      }
+
+      .privacy-scroll-content {
+        border-radius: 24px;
       }
     }
   }

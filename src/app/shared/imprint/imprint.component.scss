@@ -122,10 +122,6 @@
     min-width: auto;
     padding: 12px !important;
 
-    h1 {
-      font-size: 36px !important;
-    }
-
     p {
       font-size: 14px !important;
     }
@@ -148,14 +144,14 @@
     }
 
     .arrow-back {
-      top: 1.5% !important;
+      top: 2% !important;
       left: 3% !important;
       width: 20px !important;
       height: 20px !important;
     }
 
     .imprint-scroll-content {
-      margin: 12px 0 !important;
+      border-radius: 24px;
     }
   }
 }
