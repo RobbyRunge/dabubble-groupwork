@@ -118,7 +118,9 @@ export class UserService {
   async signInWithGoogle() {
     try {
       const provider = new GoogleAuthProvider();
-      const credential = await signInWithPopup(this.auth, provider);
+      const credential = await runInInjectionContext(this.injector, () =>
+        signInWithPopup(this.auth, provider)
+      );
       const user = credential.user;
 
       const userQuery = runInInjectionContext(this.injector, () =>
