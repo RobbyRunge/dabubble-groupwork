@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, runInInjectionContext, Injector } from '@angular/core';
 import { HeaderStartComponent } from '../../shared/header-start/header-start.component';
 import { Router, RouterLink } from '@angular/router';
 import { FooterStartComponent } from "../../shared/footer-start/footer-start.component";
@@ -32,6 +32,7 @@ export class PasswordSendEmailComponent {
   public userService = inject(UserService);
   public user = { email: '' };
   private router = inject(Router);
+  private injector = inject(Injector);
 
   private emailjsConfig = {
     serviceId: 'service_mnrcyib',
@@ -41,8 +42,8 @@ export class PasswordSendEmailComponent {
 
   get isFormValid() {
     return (
-      !!this.user.email && 
-      this.isValidEmail(this.user.email) && 
+      !!this.user.email &&
+      this.isValidEmail(this.user.email) &&
       this.emailExistsInDB &&
       !this.isCheckingEmail
     );
@@ -54,13 +55,11 @@ export class PasswordSendEmailComponent {
   }
 
   get showEmailError(): boolean {
-    return this.emailTouched && !!this.user.email && 
-           (!this.isValidEmail(this.user.email) || this.emailNotFoundError);
+    return this.emailTouched && !!this.user.email && (!this.isValidEmail(this.user.email) || this.emailNotFoundError);
   }
 
   async markEmailTouched() {
     this.emailTouched = true;
-    
     if (this.user.email && this.isValidEmail(this.user.email)) {
       await this.checkEmailExists();
     } else {
@@ -72,77 +71,71 @@ export class PasswordSendEmailComponent {
   private async checkEmailExists(): Promise<void> {
     this.isCheckingEmail = true;
     this.emailNotFoundError = false;
-    
     try {
-      const userQuery = query(
-        this.userService.getUsersCollection(),
-        where('email', '==', this.user.email)
-      );
-
-      const result = await getDocs(userQuery);
-      
-      if (result.empty) {
-        this.emailExistsInDB = false;
-        this.emailNotFoundError = true;
-      } else {
-        this.emailExistsInDB = true;
-        this.emailNotFoundError = false;
-      }
+      const result = await runInInjectionContext(this.injector, () => (
+        getDocs(query(this.userService.getUsersCollection(), where('email', '==', this.user.email))
+        )));
+      this.emailExistsInDB = !result.empty;
+      this.emailNotFoundError = result.empty;
     } finally {
       this.isCheckingEmail = false;
     }
   }
 
   async sendEmailForResetPassword() {
-    if (!this.isFormValid) {
-      return;
-    }
-
-    this.showSuccessfullyCreateContactOverlay();
-    
+    if (!this.isFormValid) return;
+    this.showSuccessfullySendEmailOverlay();
     try {
-      const userQuery = query(
-        this.userService.getUsersCollection(),
-        where('email', '==', this.user.email)
-      );
-
-      const result = await getDocs(userQuery);
-      const userDoc = result.docs[0];
-      const userId = userDoc.id;
-      const userData = userDoc.data();
-
+      const userDoc = await this.getUserDocument();
       const resetToken = this.generateResetToken();
       const resetExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
-
-      await this.userService.updateUserDocument(userId, {
-        resetToken,
-        resetTokenExpiry: resetExpiry
-      });
-
-      const resetLink = `http://localhost:4200/password-reset?token=${resetToken}&userId=${userId}`;
-
-      const templateParams = {
-        to_name: userData['name'] || 'Benutzer',
-        user_email: this.user.email,
-        reset_link: resetLink,
-        company_name: 'DABubble',
-        logo: 'https://deine-domain.de/assets/logo.png'
-      };
-
-      await emailjs.send(
-        this.emailjsConfig.serviceId,
-        this.emailjsConfig.templateId,
-        templateParams,
-        this.emailjsConfig.publicKey
-      );
-
+      await this.updateUserResetData(userDoc.id, resetToken, resetExpiry);
+      const resetLink = this.generateResetLink(resetToken, userDoc.id);
+      await this.sendResetEmail(userDoc.data(), resetLink);
     } catch (error: any) {
-      console.error('Fehler beim Passwort-Reset:', error);
-      const message = error.text
-        ? `Fehler beim Senden der E-Mail: ${error.text}`
-        : 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.';
-      alert(message);
+      this.handleResetPasswordError(error);
     }
+  }
+
+  private async getUserDocument() {
+    const result = await runInInjectionContext(this.injector, () => (
+      getDocs(query(this.userService.getUsersCollection(), where('email', '==', this.user.email)))));
+    return result.docs[0];
+  }
+
+  private async updateUserResetData(userId: string, resetToken: string, resetExpiry: Date) {
+    await this.userService.updateUserDocument(userId, {
+      resetToken,
+      resetTokenExpiry: resetExpiry,
+    });
+  }
+
+  private generateResetLink(resetToken: string, userId: string): string {
+    return `http://localhost:4200/password-reset?token=${resetToken}&userId=${userId}`;
+  }
+
+  private async sendResetEmail(userData: any, resetLink: string) {
+    const templateParams = {
+      to_name: userData['name'] || 'Benutzer',
+      user_email: this.user.email,
+      reset_link: resetLink,
+      company_name: 'DABubble',
+      logo: 'logo.png',
+    };
+    await emailjs.send(
+      this.emailjsConfig.serviceId,
+      this.emailjsConfig.templateId,
+      templateParams,
+      this.emailjsConfig.publicKey
+    );
+  }
+
+  private handleResetPasswordError(error: any) {
+    console.error('Fehler beim Passwort-Reset:', error);
+    const message = error.text
+      ? `Fehler beim Senden der E-Mail: ${error.text}`
+      : 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.';
+    alert(message);
   }
 
   generateResetToken(): string {
@@ -151,7 +144,7 @@ export class PasswordSendEmailComponent {
       Date.now().toString(36);
   }
 
-  async showSuccessfullyCreateContactOverlay() {
+  async showSuccessfullySendEmailOverlay() {
     const backgroundOverlay = document.getElementById('background-overlay');
     if (backgroundOverlay) {
       backgroundOverlay.classList.add('active');

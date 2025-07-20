@@ -119,7 +119,9 @@ export class UserService {
   async signInWithGoogle() {
     try {
       const provider = new GoogleAuthProvider();
-      const credential = await signInWithPopup(this.auth, provider);
+      const credential = await runInInjectionContext(this.injector, () =>
+        signInWithPopup(this.auth, provider)
+      );
       const user = credential.user;
 
       const userQuery = runInInjectionContext(this.injector, () =>
@@ -138,7 +140,7 @@ export class UserService {
         newUser.email = user.email || '';
         newUser.name = user.displayName || user.email?.split('@')[0] || '';
         newUser.avatar = "empty-avatar.png";
-        const { userId, userStorageId } = await this.createUser(newUser);
+        const { userId, userStorageId } = await this.createUserBySignInWithGoogle(newUser);
         this.currentUserId = userId;
         this.userSubcollectionId = userStorageId;
       } else {
@@ -180,7 +182,7 @@ export class UserService {
     }
   }
 
-  async createUser(user: User): Promise<{ userId: string; userStorageId: string }> {
+  async createUserBySignInWithGoogle(user: User): Promise<{ userId: string; userStorageId: string }> {
     try {
       const userData: any = {
         name: user.name,

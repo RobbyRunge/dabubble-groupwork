@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
   password = '';
   loginError = '';
   showIntroLogo = false;
+  userId!: string;
 
   private introService = inject(IntroService);
   private userService = inject(UserService);
@@ -35,8 +36,6 @@ export class LoginComponent implements OnInit {
       !!this.password
     );
   }
-
-  userId!: string;
 
   ngOnInit() {
     if (!this.introService.hasIntroBeenShown()) {
@@ -50,24 +49,18 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  onEnterKey(event: KeyboardEvent) {
+    if (event.key === 'Enter' && this.isFormValid) {
+      this.login();
+    }
+  }
+
   async login() {
     const backgroundOverlay = document.getElementById('background-overlay');
     try {
       await this.userService.loginService(this.email, this.password);
       if (this.userService.loginIsSucess) {
-        if (backgroundOverlay) {
-          backgroundOverlay.classList.add('active');
-          setTimeout(() => {
-            backgroundOverlay.classList.remove('active');
-            setTimeout(() => {
-              this.userId = this.userService.currentUserId;
-              this.email = '';
-              this.password = '';
-              this.loginError = '';
-              this.router.navigate(['mainpage', this.userId]);
-            }, 125);
-          }, 2000);
-        }
+        this.handleSuccessfulLogin(backgroundOverlay);
       } else {
         this.loginError = 'Ungültige Email oder Passwort';
       }
@@ -75,6 +68,26 @@ export class LoginComponent implements OnInit {
       console.error('Login-Fehler:', error);
       this.loginError = 'Ein Fehler ist aufgetreten';
     }
+  }
+
+  private handleSuccessfulLogin(backgroundOverlay: HTMLElement | null) {
+    if (backgroundOverlay) {
+      backgroundOverlay.classList.add('active');
+      setTimeout(() => {
+        backgroundOverlay.classList.remove('active');
+        setTimeout(() => {
+          this.userId = this.userService.currentUserId;
+          this.resetLoginForm();
+          this.router.navigate(['mainpage', this.userId]);
+        }, 125);
+      }, 2000);
+    }
+  }
+
+  private resetLoginForm() {
+    this.email = '';
+    this.password = '';
+    this.loginError = '';
   }
 
   loginWithGoogle() {
@@ -91,20 +104,26 @@ export class LoginComponent implements OnInit {
     if (backgroundOverlay) {
       this.userService.signInWithGuest().then(() => {
         if (this.userService.loginIsSucess) {
-          this.userId = this.userService.currentUserId;
-          backgroundOverlay.classList.add('active');
-          setTimeout(() => {
-            backgroundOverlay.classList.remove('active');
-            setTimeout(() => {
-              this.router.navigate(['mainpage', this.userId]);
-            }, 125);
-          }, 2000);
+          this.handleSuccessfulGuestLogin(backgroundOverlay);
         } else {
           console.error('Guest login failed.');
         }
       }).catch(error => {
         console.error('Error during guest login:', error);
       });
+    }
+  }
+
+  private handleSuccessfulGuestLogin(backgroundOverlay: HTMLElement | null) {
+    if (backgroundOverlay) {
+      this.userId = this.userService.currentUserId;
+      backgroundOverlay.classList.add('active');
+      setTimeout(() => {
+        backgroundOverlay.classList.remove('active');
+        setTimeout(() => {
+          this.router.navigate(['mainpage', this.userId]);
+        }, 125);
+      }, 2000);
     }
   }
 }

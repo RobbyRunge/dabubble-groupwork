@@ -33,7 +33,7 @@
 
       .arrow-back {
         position: absolute;
-        left: 6%;
+        left: 5%;
         top: 7%;
         width: 24px;
         height: 24px;
@@ -71,7 +71,6 @@
           cursor: pointer;
           border: 8px solid transparent;
           border-radius: 100%;
-          // object-fit: cover;
 
           &:hover {
             border: 8px solid rgba(230, 230, 230, 1);
@@ -87,7 +86,7 @@
         display: flex;
         flex-direction: column;
         width: 100%;
-        margin-bottom: 24px !important;
+        margin-bottom: 24px;
 
         .avatar-list-imgs {
           display: flex;
@@ -200,6 +199,10 @@ mat-dialog-content {
     h1 {
       font-size: 36px !important;
     }
+
+    .arrow-back {
+      top: 5% !important;
+    }
   }
 }
 
@@ -208,6 +211,10 @@ mat-dialog-content {
     width: 55vw !important;
     min-width: 300px !important;
     padding: 16px !important;
+
+    .arrow-back {
+      top: 4% !important;
+    }
 
     .img-and-name img {
       width: 120px !important;
@@ -248,9 +255,37 @@ mat-dialog-content {
       font-size: 14px !important;
     }
 
+    .arrow-back {
+      width: 20px !important;
+      height: 20px !important;
+      top: 3% !important;
+      left: 3% !important;
+    }
+
     .avatar-list-imgs img {
       width: 36px !important;
       height: 36px !important;
+    }
+  }
+}
+
+@media (max-height: 800px) {
+  .container {
+    .choose-avatar {
+      height: 440px !important;
+
+      h1 {
+        margin-bottom: 16px;
+        width: 90% !important;
+      }
+
+      .img-and-name {
+        gap: 12px !important;
+      }
+
+      .avatar-list-text {
+        margin-bottom: 12px !important;
+      }
     }
   }
 }
