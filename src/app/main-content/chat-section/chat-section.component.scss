@@ -62,18 +62,31 @@ app-chat-section {
 
 .header-user-content {
     >div {
-        position: relative;
-        @include dFlex();
-        padding-left: 45px;
-        flex-direction: row;
-        gap: 15px;
+        padding-left: 35px;
+
+        >div {
+            position: relative;
+            @include dFlex();
+            padding: 5px;
+            flex-direction: row;
+            gap: 15px;
+
+            &:hover {
+                background-color: #ECEEFE;
+                border-radius: 30px;
+            }
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
     }
 }
 
 .status-img {
     position: absolute;
-    top: 44px;
-    left: 75px;
+    top: 33px;
+    left: 35px;
 }
 
 .work-space-section {
@@ -212,8 +225,8 @@ mat-label {
 }
 
 .chat-container {
-    padding: 0 20px;
     height: 100%;
+    width: 100%;
     @include dFlex(flex-end, flex-start);
     flex-direction: column;
     padding-bottom: 35px;
@@ -222,6 +235,7 @@ mat-label {
 .user-logo-name-container {
     @include dFlex(flex-start, flex-end);
     gap: 25px;
+    padding-left: 20px;
     padding-bottom: 25px;
 }
 
@@ -235,7 +249,6 @@ mat-label {
     }
 
     h2 {
-        margin: 0;
         font-family: 'Nunito';
         font-size: 24px;
     }
@@ -256,6 +269,8 @@ mat-label {
 }
 
 .chat-info-container {
+    padding-left: 20px;
+
     >p {
         margin: 0;
         font-weight: 700;
@@ -286,4 +301,16 @@ mat-label {
             }
         }
     }
+}
+
+.chat-card {
+    width: 100%;
+    @include dFlex();
+    flex-direction: column;
+}
+
+.sent-message-component {
+    width: 100%;
+    @include dFlex();
+    flex-direction: column;
 }

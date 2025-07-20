@@ -18,8 +18,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateChannelSectionComponent } from '../create-channel-section/create-channel-section.component';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, timestamp } from 'rxjs';
 import { User } from '../../../models/user.class';
+import { serverTimestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-work-space-section',
@@ -52,8 +53,6 @@ export class WorkSpaceSectionComponent implements OnInit {
   urlUserId!: string;
   users$: Observable<User[]> | undefined;
   myPanel: any = true;
-
-  /* dialog = inject(MatDialog); */
 
   accordion = viewChild.required(MatAccordion);
   activeChannelId!: string;

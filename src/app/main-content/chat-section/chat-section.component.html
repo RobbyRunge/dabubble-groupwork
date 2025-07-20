@@ -2,8 +2,8 @@
 <div class="main-content">
     <app-work-space-section class="work-space-section"></app-work-space-section>
     <div class="chat-section">
-        <div class="channel-user-content" >
-            <div class="header-channel-content">
+        <div class="channel-user-content">
+            <!--             <div class="header-channel-content">
                 <div class="button-container">
                     <button class="channel-btn" (click)="openDialog()">
                         <span>#</span>
@@ -16,16 +16,18 @@
                     </button>
                 </div>
                 <div>Placeholder User Avatar</div>
-            </div>
-<!--             <div class="header-user-content">
+            </div> -->
+            <div class="header-user-content">
                 <div *ngIf="dataUser.isChecked$ | async as selectedUser" [ngClass]="{
                 'other-user': selectedUser.userId !== dataUser.currentUserId
                     }">
-                    <img class="user-logo" src="avatar/{{selectedUser.avatar}}" alt="">
-                    <img class="status-img" [src]="selectedUser.aktiv ? 'Online.png' : 'offline.png'" alt="">
-                    <h2>{{selectedUser.name}}</h2>
+                    <div (click)="openUserDialog()">
+                        <img class="user-logo" src="avatar/{{selectedUser.avatar}}" alt="">
+                        <img class="status-img" [src]="selectedUser.aktiv ? 'Online.png' : 'offline.png'" alt="">
+                        <h2>{{selectedUser.name}}</h2>
+                    </div>
                 </div>
-            </div> -->
+            </div>
         </div>
         <div class="chat-container" *ngIf="dataUser.isChecked$ | async as selectedUser" [ngClass]="{
                 'other-user': selectedUser.userId !== dataUser.currentUserId
@@ -49,6 +51,8 @@
                 <p>Diese Unterhaltung findet nur zwischen <span (click)="openUserDialog()">&#64;{{selectedUser.name}}
                     </span>und dir statt</p>
             </div>
+<!--             <app-received-message class="chat-card"></app-received-message>
+            <app-sent-message class="sent-message-component"></app-sent-message> -->
         </div>
         <div class="write-message-container">
             <form class="example-form">
@@ -70,7 +74,7 @@
                 </div>
                 <mat-form-field class="example-full-width">
                     <mat-label>Starte eine neue Nachricht</mat-label>
-                    <input matInput [(ngModel)]="messageText" name="message" (input)="onInputChange()">
+                    <input matInput [(ngModel)]="messageText" name="message">
                     <div class="icons-container">
                         <div>
                             <div>
@@ -82,7 +86,7 @@
                                     (mouseout)="imgSrcMention = 'mention.png'">
                             </div>
                         </div>
-                        <div class="send-icon-container">
+                        <div class="send-icon-container" (click)="sendMessage(chatId, messageText, dataUser)">
                             <img [src]="imgSrcSend" (mouseover)="imgSrcSend = 'Send icon.png'"
                                 (mouseout)="imgSrcSend = 'send.png'">
                         </div>

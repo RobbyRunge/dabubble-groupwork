@@ -7,13 +7,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute } from '@angular/router';
-import { docData, onSnapshot } from '@angular/fire/firestore';
+import { addDoc, collection, docData, Firestore, onSnapshot, orderBy, query, serverTimestamp } from '@angular/fire/firestore';
 import { User } from '../../../models/user.class';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { UserCardComponent } from '../user-card/user-card.component';
+import { ReceivedMessageComponent } from './received-message/received-message.component';
+import { SentMessageComponent } from "./sent-message/sent-message.component";
 
 
 @Component({
@@ -28,7 +30,9 @@ import { UserCardComponent } from '../user-card/user-card.component';
     NgIf,
     NgFor,
     AsyncPipe,
-    NgClass
+    NgClass,
+    ReceivedMessageComponent,
+    SentMessageComponent
   ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
@@ -36,6 +40,7 @@ import { UserCardComponent } from '../user-card/user-card.component';
 
 export class ChatSectionComponent implements OnInit {
 
+  private firestore = inject(Firestore);
   dataUser = inject(UserService);
   private injector = inject(Injector);
   route = inject(ActivatedRoute);
@@ -52,6 +57,7 @@ export class ChatSectionComponent implements OnInit {
   showUserList: boolean = false;
   showChanelList: boolean = false;
   selectedUser: any;
+  chatId = 'Qk6GdcWjH9tVeyiJTjdh';
 
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
@@ -60,6 +66,7 @@ export class ChatSectionComponent implements OnInit {
       this.showUserChannel();
       this.users$ = this.dataUser.getAllUsers();
       this.getUserData()
+      this.listenToMessages(this.chatId)
     });
     // setTimeout(() => {
     //   this.checkChannel();
@@ -68,9 +75,9 @@ export class ChatSectionComponent implements OnInit {
     // }, 2000);
   }
 
-  getUserData(){
+  getUserData() {
     this.dataUser.isChecked$.subscribe(user => {
-     this.selectedUser = user
+      this.selectedUser = user
     })
   }
 
@@ -85,7 +92,7 @@ export class ChatSectionComponent implements OnInit {
 
   showUserChannel() {
     const channelRef = this.dataUser.getChannelRef();
-    this.unsubscribeUserChannels = runInInjectionContext(this.injector, () =>onSnapshot(channelRef, (element) => {
+    this.unsubscribeUserChannels = runInInjectionContext(this.injector, () => onSnapshot(channelRef, (element) => {
       this.dataUser.channels = [];
       element.forEach(doc => {
         this.dataUser.channels.push({ ...doc.data(), channelId: doc.id });
@@ -172,9 +179,30 @@ export class ChatSectionComponent implements OnInit {
     this.showUserList = false;
   }
 
-  openUserDialog(){
+  openUserDialog() {
     this.userDialog.open(UserCardComponent, {
-      data: {user: this.selectedUser}
+      data: { user: this.selectedUser }
     })
+  }
+
+
+  async sendMessage(chatId: string, messageText: string, dataUser: any ) {
+    const messagesRef = collection(this.firestore, `chats/${chatId}/message`);
+    await addDoc(messagesRef, {
+      text: messageText,
+      senderId: dataUser.currentUserId,
+      timestamp: serverTimestamp()
+    });
+  }
+
+
+  listenToMessages(chatId: string) {
+    const messagesRef = collection(this.firestore, `chats/${chatId}/message`);
+    const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+
+    onSnapshot(messagesQuery, (snapshot) => {
+      const messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      console.log('Nachrichten in Reihenfolge:', messages);
+    });
   }
 }
