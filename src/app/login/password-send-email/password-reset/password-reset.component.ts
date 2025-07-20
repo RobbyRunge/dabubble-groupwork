@@ -49,19 +49,16 @@ export class PasswordResetComponent implements OnInit {
         return;
       }
       this.tokenValid = this.isTokenValid(userDoc.data());
-      if (this.tokenValid) {
-        console.log('✅ Token ist gültig');
-      } else {
-        this.showError('Ungültiger oder abgelaufener Reset-Token.');
-      }
     } catch (error) {
       this.handleValidationError(error);
     }
   }
 
   private async getUserDocument() {
-    const userDoc = await getDoc(doc(this.userService.getUsersCollection(), this.userId));
-    return userDoc.exists() ? userDoc : null;
+    return await runInInjectionContext(this.injector, () => {
+      const userDoc = getDoc(doc(this.userService.getUsersCollection(), this.userId));
+      return userDoc;
+    });
   }
 
   private isTokenValid(userData: any): boolean {
@@ -99,7 +96,8 @@ export class PasswordResetComponent implements OnInit {
         password: this.newPassword,
         resetToken: null,
         resetTokenExpiry: null,
-      })));
+      })
+    ));
   }
 
   private showSuccessMessage() {
