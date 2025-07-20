@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HeaderStartComponent } from '../../../shared/header-start/header-start.component';
 import { FooterStartComponent } from '../../../shared/footer-start/footer-start.component';
 import { getDoc, doc, updateDoc } from '@angular/fire/firestore';
+import { MatDialogModule } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-password-reset',
@@ -12,7 +13,8 @@ import { getDoc, doc, updateDoc } from '@angular/fire/firestore';
     FormsModule,
     HeaderStartComponent,
     RouterLink,
-    FooterStartComponent
+    FooterStartComponent,
+    MatDialogModule
   ],
   templateUrl: './password-reset.component.html',
   styleUrl: './password-reset.component.scss'
@@ -84,7 +86,6 @@ export class PasswordResetComponent implements OnInit {
     try {
       await this.updatePassword();
       this.showSuccessMessage();
-      this.navigateToLogin();
     } catch (error) {
       this.handleResetError(error);
     } finally {
@@ -102,11 +103,16 @@ export class PasswordResetComponent implements OnInit {
   }
 
   private showSuccessMessage() {
-    alert('Passwort erfolgreich geändert! Sie können sich jetzt einloggen.'); // Overlay hinzufügen
-  }
-
-  private navigateToLogin() {
-    this.router.navigate(['/']);
+    const backgroundOverlay = document.getElementById('background-overlay');
+    if (backgroundOverlay) {
+      backgroundOverlay.classList.add('active');
+      setTimeout(() => {
+        backgroundOverlay.classList.remove('active');
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 125);
+      }, 2000);
+    }
   }
 
   private handleResetError(error: any) {
