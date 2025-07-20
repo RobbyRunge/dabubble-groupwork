@@ -59,18 +59,17 @@ export class WorkSpaceSectionComponent implements OnInit {
   accordion = viewChild.required(MatAccordion);
   activeChannelId!: string;
 
-onChange(user: any){
 
+  onChange(user: any){
   console.log(user);
-}
+  }
 
    ngOnInit(): void {
     this.users$ = this.dataUser.getAllUsers();
     this.dataUser.showCurrentUserData();
-    console.log('user storage id', this.dataUser.currentChannelId);
     this.unsubChannels = this.dataUser.channelsLoaded$.subscribe(loaded => {
       if (loaded) {
-        console.log('channel route', this.dataUser.userSubcollectionId);
+        console.log('channel route', this.dataUser.userSubcollectionChannelId);
         this.loadSaveRoute();
       }
     });
@@ -99,7 +98,7 @@ onChange(user: any){
   }
 
   loadSaveRoute() {
-    const channelId = this.dataUser.userSubcollectionId;
+    const channelId = this.dataUser.userSubcollectionChannelId;
     if (channelId) {
       this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId,]); 
     } else {
@@ -108,6 +107,7 @@ onChange(user: any){
   }
 
   openChannel(channelName: string, channelId: string, channelDescription: string) {
+    console.log('channels by user', this.dataUser.showChannelByUser);
     this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId,]);
     this.newChannel.channelname = channelName;
     this.newChannel.channelId = channelId;
@@ -118,7 +118,6 @@ onChange(user: any){
 
   getChannelNameandId(channelName: string, channelId: string, channelDescription: string) {
     this.activeChannelId = channelId;
-    console.log('Aktiver Channel:', this.activeChannelId);
     this.dataUser.currentChannelId = channelId;
     this.dataUser.currentChannelName = channelName;
     this.dataUser.currentChannelDescription = channelDescription;

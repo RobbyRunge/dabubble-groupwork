@@ -61,11 +61,6 @@ export class ChatSectionComponent implements OnInit {
       this.users$ = this.dataUser.getAllUsers();
       this.getUserData()
     });
-    // setTimeout(() => {
-    //   this.checkChannel();
-    //   console.log('Channels by user', this.dataUser.showChannelByUser);
-
-    // }, 2000);
   }
 
   getUserData(){
@@ -78,8 +73,6 @@ export class ChatSectionComponent implements OnInit {
     const userRef = this.dataUser.getSingleUserRef(this.dataUser.currentUserId);
     this.unsubscribeUserData = runInInjectionContext(this.injector, () => docData(userRef).subscribe(data => {
       this.dataUser.currentUser = new User(data);
-      console.log('current user id', this.dataUser.currentUserId);
-      console.log('current detail', this.dataUser.currentUser);
     }));
   }
 
@@ -100,23 +93,17 @@ export class ChatSectionComponent implements OnInit {
     }
   }
 
-  // checkChannel() {
-  //   this.dataUser.showChannelByUser = [];
-  //   this.dataUser.channels.forEach((channel) => {
-  //     if (Array.isArray(channel.userId) && channel.userId.includes(this.dataUser.currentUserId)) {
-  //       this.dataUser.showChannelByUser.push({
-  //         ...channel
-  //       });
-  //     }
-  //   });
-  // }
-
-  openDialog() {
+  openDialog(button: HTMLElement) {
+    const rect = button.getBoundingClientRect();
     const dialog = this.dialog.open(ChannelSectionComponent, {
+       position: {
+      top: `${rect.bottom + window.scrollY}px`,   // unterhalb des Buttons
+      left: `${rect.left + window.scrollX}px`,    // auf gleicher horizontaler Position
+    },
       width: '872px',
-      height: '616px',
+      height: '612px',
       maxWidth: '872px',
-      maxHeight: '616px',
+      maxHeight: '612px',
       panelClass: 'channel-dialog-container'
     });
   }

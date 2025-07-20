@@ -29,6 +29,7 @@ export class ChannelSectionComponent implements OnInit {
   newChannel = new Allchannels();
 
    ngOnInit(): void {
+    
   }
 
   editChannelName() {
@@ -39,25 +40,41 @@ export class ChannelSectionComponent implements OnInit {
 
   saveEditedChannelName() {
     this.showEditChannelName = false;
-    this.dataUser.editChannel(this.dataUser.currentChannelId, this.newChannel.toJSON());
-    const cleaned = this.newChannel.channelname.replace(/^#\s*/, '').trim();
-    this.dataUser.currentChannelName = cleaned;
-    this.showEditChannelName = false;
+    this.dataUser.currentChannelId = this.dataUser.userSubcollectionChannelId;
     this.newChannel.channelId = this.dataUser.currentChannelId;
+    const cleaned = this.newChannel.channelname.replace(/^#\s*/, '').trim();
     this.newChannel.channelname = cleaned;
-    this.dataUser.editChannel(this.dataUser.currentChannelId, this.newChannel.toJSON()).then(() => {
-    this.dataUser.updateUserStorage(this.dataUser.currentUserId, this.dataUser.userSubcollectionId, this.newChannel.toJSON())
+    this.dataUser.editChannel(this.dataUser.currentChannelId, this.newChannel.toJSON(['channelId','channelname'])).then(() => {
+    this.dataUser.updateUserStorage(this.dataUser.currentUserId, this.dataUser.userSubcollectionId, this.newChannel.toJSON(['channelId','channelname']));
+    this.dataUser.currentChannelName = cleaned;
     });
   }
 
   editChannelDescription() {
     this.showEditChannelDescription = true;
+    let baseDescription = this.dataUser.currentChannelDescription ? this.dataUser.currentChannelDescription : this.dataUser.userSubcollectionDescription;
+    this.newChannel.description = baseDescription;
   }
 
   saveEditedChannelDescription() {
     this.showEditChannelDescription = false;
-    // this.newChannel.description = channelDescription;
+    this.dataUser.currentChannelId = this.dataUser.userSubcollectionChannelId;
+    this.dataUser.editChannel(this.dataUser.currentChannelId, this.newChannel.toJSON(['description'])).then(() => {
+    this.dataUser.updateUserStorage(this.dataUser.currentUserId, this.dataUser.userSubcollectionId, this.newChannel.toJSON(['description']));
+    this.dataUser.currentChannelDescription = this.newChannel.description ?? '';
+    });
   }
+
+  // updateChannelListUser(channelName: string, channelId: string) {
+  //   const updatedChannel = {
+  //   channelId: channelId, 
+  //   channelname: channelName                   
+  // };
+  //   const index = this.dataUser.showChannelByUser.findIndex(ch => ch.channelId === updatedChannel.channelId);
+  //   if (index !== -1) {
+  //   this.dataUser.showChannelByUser[index] = updatedChannel;
+  //   }
+  // }
 
   // async loadChannelCreatorData() {
   // await this.dataUser.getChannelUserName();

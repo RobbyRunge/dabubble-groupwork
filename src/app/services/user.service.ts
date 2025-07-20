@@ -35,6 +35,7 @@ export class UserService {
   currentChannelName: string = '';
   currentChannelDescription: string = '';
   userSubcollectionId: string = '';
+  userSubcollectionChannelId: string = '';
   userSubcollectionChannelName: string = '';
   userSubcollectionDescription: string = '';
 
@@ -324,13 +325,13 @@ export class UserService {
   }
 
   getChannelUserName(userId: string) {
-    console.log('channel creater id ist', this.channelCreaterId);
     const channelRef = this.getSingleUserRef(userId);
     this.unsubscribeChannelCreater = runInInjectionContext(this.injector, () =>
       onSnapshot(channelRef, (element) => {
         const data = element.data();
         if (data) {
           this.channelCreaterName = data['name'];
+          console.log('channel creater id ist', this.channelCreaterId);
           console.log('channel creater name', this.channelCreaterName);
         }
       })
@@ -350,7 +351,8 @@ export class UserService {
     );
     storageSnapshot.forEach((doc) => {
       const data = doc.data();
-      console.log('data', data);
+      console.log('doc data', data);
+      this.userSubcollectionChannelId = data['channelId'];
       this.userSubcollectionId = doc.id;
       this.userSubcollectionChannelName = data['channelname'];  
       this.userSubcollectionDescription = data['description'];
