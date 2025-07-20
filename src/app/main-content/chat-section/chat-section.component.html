@@ -2,21 +2,32 @@
 <div class="main-content">
     <app-work-space-section class="work-space-section"></app-work-space-section>
     <div class="chat-section">
-        <div class="channel-user-content">
-            <div class="button-container">
-                <button class="channel-btn" (click)="openDialog()">
-                    <span>#</span>
-                    @if (dataUser.currentChannelName) {
-                    <span>{{ dataUser.currentChannelName }}</span>
-                    } @else {
-                    <span>{{ dataUser.userSubcollectionChannelName }}</span>
-                    }
-                    <img src="/img/arrow_down.png">
-                </button>
+        <div class="channel-user-content" >
+            <div class="header-channel-content">
+                <div class="button-container">
+                    <button class="channel-btn" (click)="openDialog()">
+                        <span>#</span>
+                        @if (dataUser.currentChannelName) {
+                        <span>{{ dataUser.currentChannelName }}</span>
+                        } @else {
+                        <span>{{ dataUser.userSubcollectionChannelName }}</span>
+                        }
+                        <img src="/img/arrow_down.png">
+                    </button>
+                </div>
+                <div>Placeholder User Avatar</div>
             </div>
-            <div>Placeholder User Avatar</div>
+<!--             <div class="header-user-content">
+                <div *ngIf="dataUser.isChecked$ | async as selectedUser" [ngClass]="{
+                'other-user': selectedUser.userId !== dataUser.currentUserId
+                    }">
+                    <img class="user-logo" src="avatar/{{selectedUser.avatar}}" alt="">
+                    <img class="status-img" [src]="selectedUser.aktiv ? 'Online.png' : 'offline.png'" alt="">
+                    <h2>{{selectedUser.name}}</h2>
+                </div>
+            </div> -->
         </div>
-        <div class="chat-container" *ngIf="dataUser.isChecked$ | async as selecetedUser" [ngClass]="{
+        <div class="chat-container" *ngIf="dataUser.isChecked$ | async as selectedUser" [ngClass]="{
                 'other-user': selectedUser.userId !== dataUser.currentUserId
                     }">
             <div class="user-logo-name-container">
@@ -35,7 +46,7 @@
                         Dateien griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.</span></p>
             </div>
             <div class="chat-info-container" *ngIf="selectedUser.userId !== dataUser.currentUserId">
-                <p>Diese Unterhaltung findet nur zwischen <span (click)="openUserDialog()">&#64;{{selecetedUser.name}}
+                <p>Diese Unterhaltung findet nur zwischen <span (click)="openUserDialog()">&#64;{{selectedUser.name}}
                     </span>und dir statt</p>
             </div>
         </div>
