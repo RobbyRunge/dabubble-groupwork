@@ -210,3 +210,32 @@ button {
     top: 38px;
     left: 35px;
 }
+
+.aktiv {
+    >mat-icon {
+        position: absolute;
+        top: 38px;
+        left: 35px;
+        color: #92C83E;
+        font-size: 16px;
+        height: 16px;
+        width: 16px;
+        border: 5px solid #FFFFFF;
+        border-radius: 100%
+    }
+}
+
+.inaktiv {
+    @include dFlex();
+
+    >mat-icon {
+        border: 2px solid #FFFFFF;
+        position: absolute;
+        top: 38px;
+        left: 35px;
+        color: #686868;
+        font-size: 16px;
+        height: 16px;
+        width: 16px;
+    }
+}
