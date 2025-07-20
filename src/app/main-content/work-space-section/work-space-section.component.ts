@@ -54,6 +54,8 @@ export class WorkSpaceSectionComponent implements OnInit {
   users$: Observable<User[]> | undefined;
   myPanel: any = true;
 
+  channels$: Observable<Allchannels[]> | undefined;
+
   /* dialog = inject(MatDialog); */
 
   accordion = viewChild.required(MatAccordion);
@@ -65,6 +67,7 @@ export class WorkSpaceSectionComponent implements OnInit {
   }
 
    ngOnInit(): void {
+    this.channels$ = this.dataUser.showChannelByUser$;
     this.users$ = this.dataUser.getAllUsers();
     this.dataUser.showCurrentUserData();
     this.unsubChannels = this.dataUser.channelsLoaded$.subscribe(loaded => {

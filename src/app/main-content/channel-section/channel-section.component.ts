@@ -47,6 +47,7 @@ export class ChannelSectionComponent implements OnInit {
     this.dataUser.editChannel(this.dataUser.currentChannelId, this.newChannel.toJSON(['channelId','channelname'])).then(() => {
     this.dataUser.updateUserStorage(this.dataUser.currentUserId, this.dataUser.userSubcollectionId, this.newChannel.toJSON(['channelId','channelname']));
     this.dataUser.currentChannelName = cleaned;
+    this.dataUser.checkChannel();
     });
   }
 

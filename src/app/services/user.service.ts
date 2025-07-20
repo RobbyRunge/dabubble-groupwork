@@ -13,6 +13,8 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class UserService {
 
+  private updateChannelByUser = new BehaviorSubject<Allchannels[]>([]);
+  showChannelByUser$ = this.updateChannelByUser.asObservable();
 
   private firestore = inject(Firestore);
 
@@ -374,18 +376,26 @@ export class UserService {
     });
   }
 
+  // checkChannel() {
+  //   this.showChannelByUser = [];
+  //   this.channels.forEach((channel) => {
+  //     if (
+  //       Array.isArray(channel.userId) &&
+  //       channel.userId.includes(this.currentUserId)
+  //     ) {
+        
+  //       this.showChannelByUser.push({
+  //         ...channel,
+  //       });
+  //     }
+  //   });
+  // }
+
   checkChannel() {
-    this.showChannelByUser = [];
-    this.channels.forEach((channel) => {
-      if (
-        Array.isArray(channel.userId) &&
-        channel.userId.includes(this.currentUserId)
-      ) {
-        this.showChannelByUser.push({
-          ...channel,
-        });
-      }
-    });
+  this.showChannelByUser = this.channels.filter(channel =>
+    Array.isArray(channel.userId) && channel.userId.includes(this.currentUserId)
+    );
+    this.updateChannelByUser.next(this.showChannelByUser);
   }
 
   async updateUserStorage(userId: string, storageId: string, item: {}) {
