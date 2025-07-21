@@ -41,6 +41,20 @@ export class PasswordResetComponent implements OnInit {
     }
   }
 
+  // Übertragen für die Validation für die Erstellung des neuen Passwort
+  // private isValidPassword(password: string) {
+  //   if (!password || password.length < 8) {
+  //     return false;
+  //   }
+
+  //   const hasUpperCase = /[A-Z]/.test(password);
+  //   const hasLowerCase = /[a-z]/.test(password);
+  //   const hasNumbers = /\d/.test(password);
+  //   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  //   return hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
+  // }
+
   async validateToken() {
     try {
       const userDoc = await this.getUserDocument();
