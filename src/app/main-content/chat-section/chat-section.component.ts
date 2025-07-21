@@ -12,10 +12,11 @@ import { User } from '../../../models/user.class';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
-import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { ReceivedMessageComponent } from './received-message/received-message.component';
 import { SentMessageComponent } from "./sent-message/sent-message.component";
+import { ChatService } from '../../services/chat.service';
 
 
 @Component({
@@ -31,8 +32,9 @@ import { SentMessageComponent } from "./sent-message/sent-message.component";
     NgFor,
     AsyncPipe,
     NgClass,
-    ReceivedMessageComponent,
-    SentMessageComponent
+    DatePipe,
+/*     ReceivedMessageComponent,
+    SentMessageComponent */
   ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
@@ -42,7 +44,9 @@ export class ChatSectionComponent implements OnInit {
 
   private firestore = inject(Firestore);
   dataUser = inject(UserService);
+
   private injector = inject(Injector);
+  chatService = inject(ChatService);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
   readonly userDialog = inject(MatDialog);
@@ -57,7 +61,6 @@ export class ChatSectionComponent implements OnInit {
   showUserList: boolean = false;
   showChanelList: boolean = false;
   selectedUser: any;
-  chatId = 'Qk6GdcWjH9tVeyiJTjdh';
 
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
@@ -65,9 +68,12 @@ export class ChatSectionComponent implements OnInit {
       this.showCurrentUserData();
       this.showUserChannel();
       this.users$ = this.dataUser.getAllUsers();
-      this.getUserData()
-      this.listenToMessages(this.chatId)
+      this.getUserData();
     });
+
+    /*     this.listenToMessages(this.route);
+        console.log('test' + this.chatId);
+      }); */
     // setTimeout(() => {
     //   this.checkChannel();
     //   console.log('Channels by user', this.dataUser.showChannelByUser);
@@ -79,6 +85,11 @@ export class ChatSectionComponent implements OnInit {
     this.dataUser.isChecked$.subscribe(user => {
       this.selectedUser = user
     })
+  }
+
+  sendMessage(){
+    this.chatService.sendMessage(this.messageText, this.dataUser.currentUserId);
+    this.messageText = '';
   }
 
   showCurrentUserData() {
@@ -183,26 +194,5 @@ export class ChatSectionComponent implements OnInit {
     this.userDialog.open(UserCardComponent, {
       data: { user: this.selectedUser }
     })
-  }
-
-
-  async sendMessage(chatId: string, messageText: string, dataUser: any ) {
-    const messagesRef = collection(this.firestore, `chats/${chatId}/message`);
-    await addDoc(messagesRef, {
-      text: messageText,
-      senderId: dataUser.currentUserId,
-      timestamp: serverTimestamp()
-    });
-  }
-
-
-  listenToMessages(chatId: string) {
-    const messagesRef = collection(this.firestore, `chats/${chatId}/message`);
-    const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
-
-    onSnapshot(messagesQuery, (snapshot) => {
-      const messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      console.log('Nachrichten in Reihenfolge:', messages);
-    });
   }
 }

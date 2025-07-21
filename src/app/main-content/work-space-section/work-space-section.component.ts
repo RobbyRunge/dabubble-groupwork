@@ -20,7 +20,7 @@ import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription, timestamp } from 'rxjs';
 import { User } from '../../../models/user.class';
-import { serverTimestamp } from '@angular/fire/firestore';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-work-space-section',
@@ -44,6 +44,7 @@ import { serverTimestamp } from '@angular/fire/firestore';
 export class WorkSpaceSectionComponent implements OnInit {
 
   dataUser = inject(UserService);
+  chatService = inject(ChatService);
   private router = inject(Router);
   route = inject(ActivatedRoute);
   unsubChannels!: Subscription;
@@ -57,16 +58,16 @@ export class WorkSpaceSectionComponent implements OnInit {
   accordion = viewChild.required(MatAccordion);
   activeChannelId!: string;
 
-onChange(user: any){
+  onChange(user: any) {
 
-  console.log(user);
-}
+    console.log(user);
+  }
 
   ngOnInit(): void {
     this.users$ = this.dataUser.getAllUsers();
     this.dataUser.showCurrentUserData();
     console.log('user storage id', this.dataUser.userSubcollectionId);
-    
+
     this.unsubChannels = this.dataUser.channelsLoaded$.subscribe(loaded => {
       if (loaded) {
         console.log('channel route', this.dataUser.userSubcollectionChannel);
@@ -80,9 +81,12 @@ onChange(user: any){
     drawer.toggle();
   }
 
-  onUserClick(index: number, user: any) {
+  async onUserClick(index: number, user: any) {
     this.selectedUser = user;
     this.dataUser.setCheckdValue(user);
+    this.dataUser.chatId = await this.chatService.getOrCreateChatId(this.dataUser.currentUserId, user.userId);
+    this.router.navigate(['/mainpage', this.dataUser.currentUserId, 'chats', this.dataUser.chatId]);
+    this.chatService.listenToMessages();
   }
 
   readonly dialog = inject(MatDialog);

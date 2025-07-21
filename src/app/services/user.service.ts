@@ -38,6 +38,7 @@ export class UserService {
   userSubcollectionChannel: string = '';
   userSubcollectionChannelName: string = '';
   userSubcollectionDescription: string = '';
+  chatId: any = '';
 
   public channelsLoaded$ = new BehaviorSubject<boolean>(false);
 
@@ -49,7 +50,7 @@ export class UserService {
   loginIsSucess = false;
 
 
-  setCheckdValue(user: string){
+  setCheckdValue(user: string) {
     this.isCheckedSubject.next(user)
   }
 
