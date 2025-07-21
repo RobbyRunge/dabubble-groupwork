@@ -34,13 +34,17 @@ export class ChannelSectionComponent implements OnInit {
 
   editChannelName() {
     this.showEditChannelName = true;
+    console.log('currenChannel Id ist', this.dataUser.currentChannelId);
+    console.log('user SubColS Id ist', this.dataUser.userSubcollectionChannelId);
     let baseName = this.dataUser.currentChannelName ? this.dataUser.currentChannelName : this.dataUser.userSubcollectionChannelName;
     this.newChannel.channelname = '# ' + baseName;
   }
 
   saveEditedChannelName() {
     this.showEditChannelName = false;
-    this.dataUser.currentChannelId = this.dataUser.userSubcollectionChannelId;
+    if(!this.dataUser.currentChannelId) {
+      this.dataUser.currentChannelId = this.dataUser.userSubcollectionChannelId;
+    }
     this.newChannel.channelId = this.dataUser.currentChannelId;
     const cleaned = this.newChannel.channelname.replace(/^#\s*/, '').trim();
     this.newChannel.channelname = cleaned;
