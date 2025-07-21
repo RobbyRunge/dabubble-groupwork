@@ -34,8 +34,6 @@ export class ChannelSectionComponent implements OnInit {
 
   editChannelName() {
     this.showEditChannelName = true;
-    console.log('currenChannel Id ist', this.dataUser.currentChannelId);
-    console.log('user SubColS Id ist', this.dataUser.userSubcollectionChannelId);
     let baseName = this.dataUser.currentChannelName ? this.dataUser.currentChannelName : this.dataUser.userSubcollectionChannelName;
     this.newChannel.channelname = '# ' + baseName;
   }
@@ -63,7 +61,9 @@ export class ChannelSectionComponent implements OnInit {
 
   saveEditedChannelDescription() {
     this.showEditChannelDescription = false;
-    this.dataUser.currentChannelId = this.dataUser.userSubcollectionChannelId;
+    if(!this.dataUser.currentChannelId) {
+      this.dataUser.currentChannelId = this.dataUser.userSubcollectionChannelId;
+    }
     this.dataUser.editChannel(this.dataUser.currentChannelId, this.newChannel.toJSON(['description'])).then(() => {
     this.dataUser.updateUserStorage(this.dataUser.currentUserId, this.dataUser.userSubcollectionId, this.newChannel.toJSON(['description']));
     this.dataUser.currentChannelDescription = this.newChannel.description ?? '';
