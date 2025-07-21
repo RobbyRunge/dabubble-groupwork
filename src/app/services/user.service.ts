@@ -13,9 +13,6 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class UserService {
 
-  private updateChannelByUser = new BehaviorSubject<Allchannels[]>([]);
-  showChannelByUser$ = this.updateChannelByUser.asObservable();
-
   private firestore = inject(Firestore);
 
   private router = inject(Router);
@@ -26,6 +23,9 @@ export class UserService {
   pendingRegistrationId$ = this.pendingRegistrationId.asObservable();
   private isCheckedSubject = new BehaviorSubject<any>(null);
   public isChecked$ = this.isCheckedSubject.asObservable();
+  private updateChannelByUser = new BehaviorSubject<Allchannels[]>([]);
+  showChannelByUser$ = this.updateChannelByUser.asObservable();
+
   userData: User[] = [];
   currentUser?: User;
   channels: any[] = [];
@@ -375,21 +375,6 @@ export class UserService {
       this.channelsLoaded$.next(true);
     });
   }
-
-  // checkChannel() {
-  //   this.showChannelByUser = [];
-  //   this.channels.forEach((channel) => {
-  //     if (
-  //       Array.isArray(channel.userId) &&
-  //       channel.userId.includes(this.currentUserId)
-  //     ) {
-        
-  //       this.showChannelByUser.push({
-  //         ...channel,
-  //       });
-  //     }
-  //   });
-  // }
 
   checkChannel() {
   this.showChannelByUser = this.channels.filter(channel =>
