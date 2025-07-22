@@ -133,9 +133,14 @@ button {
     @include dFlex(flex-start, center);
     flex-direction: row;
     gap: 10px;
-
-    >h2,
-    span {
+    &:hover { 
+        background-color: #ECEEFE;   
+        border-radius: 20px;
+        > span, h2 {
+            color: #535AF1;
+        }
+    }
+    >h2,span {
         margin-block-start: 0;
         margin-block-end: 0;
         font-family: 'Nunito';
@@ -209,4 +214,12 @@ button {
     position: absolute;
     top: 38px;
     left: 35px;
+}
+
+.active-channel {
+    background-color: #ECEEFE;   
+    border-radius: 20px;
+    > span, h2 {
+        color: #535AF1;
+    }
 }

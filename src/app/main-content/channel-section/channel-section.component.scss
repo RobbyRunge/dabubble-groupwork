@@ -93,6 +93,7 @@ mat-icon {
 
 .leave-channel-btn {
      @include dFlex(end, unset);
+     padding-top: 18px;
 }
 
 .edit-channel-name {

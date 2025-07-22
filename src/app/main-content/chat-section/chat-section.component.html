@@ -4,7 +4,7 @@
     <div class="chat-section">
         <div class="channel-user-content">
             <div class="button-container">
-                <button class="channel-btn" (click)="openDialog()">
+                <button #btn class="channel-btn" (click)="openDialog(btn)">
                     <span>#</span>
                     @if (dataUser.currentChannelName) {
                     <span>{{ dataUser.currentChannelName }}</span>

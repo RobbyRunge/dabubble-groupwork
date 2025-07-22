@@ -49,8 +49,8 @@
             <span class="channel-name">Beschreibung</span>
             <span (click)="saveEditedChannelDescription()" class="channel-edit">Speichern</span>
         </div>
-        <input class="input-edit" type="text" 
-            [value]="dataUser.currentChannelDescription ? dataUser.currentChannelDescription : dataUser.userSubcollectionDescription">
+        <input class="input-edit" type="text"    
+            [(ngModel)]="newChannel.description">
         <mat-divider></mat-divider>
             <span class="channel-name">Erstellt von</span>
             <span class="channel-user-name" *ngIf="dataUser.channelCreaterName"> {{dataUser.channelCreaterName}} </span>

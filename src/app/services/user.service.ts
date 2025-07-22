@@ -13,7 +13,6 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class UserService {
 
-
   private firestore = inject(Firestore);
 
   private router = inject(Router);
@@ -24,6 +23,9 @@ export class UserService {
   pendingRegistrationId$ = this.pendingRegistrationId.asObservable();
   private isCheckedSubject = new BehaviorSubject<any>(null);
   public isChecked$ = this.isCheckedSubject.asObservable();
+  private updateChannelByUser = new BehaviorSubject<Allchannels[]>([]);
+  showChannelByUser$ = this.updateChannelByUser.asObservable();
+
   userData: User[] = [];
   currentUser?: User;
   channels: any[] = [];
@@ -35,6 +37,7 @@ export class UserService {
   currentChannelName: string = '';
   currentChannelDescription: string = '';
   userSubcollectionId: string = '';
+  userSubcollectionChannelId: string = '';
   userSubcollectionChannelName: string = '';
   userSubcollectionDescription: string = '';
 
@@ -326,13 +329,13 @@ export class UserService {
   }
 
   getChannelUserName(userId: string) {
-    console.log('channel creater id ist', this.channelCreaterId);
     const channelRef = this.getSingleUserRef(userId);
     this.unsubscribeChannelCreater = runInInjectionContext(this.injector, () =>
       onSnapshot(channelRef, (element) => {
         const data = element.data();
         if (data) {
           this.channelCreaterName = data['name'];
+          console.log('channel creater id ist', this.channelCreaterId);
           console.log('channel creater name', this.channelCreaterName);
         }
       })
@@ -352,7 +355,8 @@ export class UserService {
     );
     storageSnapshot.forEach((doc) => {
       const data = doc.data();
-      console.log('data', data);
+      console.log('doc data', data);
+      this.userSubcollectionChannelId = data['channelId'];
       this.userSubcollectionId = doc.id;
       this.userSubcollectionChannelName = data['channelname'];  
       this.userSubcollectionDescription = data['description'];
@@ -373,17 +377,10 @@ export class UserService {
   }
 
   checkChannel() {
-    this.showChannelByUser = [];
-    this.channels.forEach((channel) => {
-      if (
-        Array.isArray(channel.userId) &&
-        channel.userId.includes(this.currentUserId)
-      ) {
-        this.showChannelByUser.push({
-          ...channel,
-        });
-      }
-    });
+  this.showChannelByUser = this.channels.filter(channel =>
+    Array.isArray(channel.userId) && channel.userId.includes(this.currentUserId)
+    );
+    this.updateChannelByUser.next(this.showChannelByUser);
   }
 
   async updateUserStorage(userId: string, storageId: string, item: {}) {
