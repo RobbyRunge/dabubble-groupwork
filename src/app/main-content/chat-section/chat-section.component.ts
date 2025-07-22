@@ -32,9 +32,8 @@ import { ChatService } from '../../services/chat.service';
     NgFor,
     AsyncPipe,
     NgClass,
-    DatePipe,
-/*     ReceivedMessageComponent,
-    SentMessageComponent */
+    ReceivedMessageComponent,
+    SentMessageComponent
   ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
@@ -81,15 +80,15 @@ export class ChatSectionComponent implements OnInit {
     // }, 2000);
   }
 
+  async sendMessage() {
+    await this.chatService.sendMessage(this.messageText, this.dataUser.currentUserId);
+    this.messageText = '';
+  }
+
   getUserData() {
     this.dataUser.isChecked$.subscribe(user => {
       this.selectedUser = user
     })
-  }
-
-  sendMessage(){
-    this.chatService.sendMessage(this.messageText, this.dataUser.currentUserId);
-    this.messageText = '';
   }
 
   showCurrentUserData() {

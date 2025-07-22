@@ -3,7 +3,7 @@
     <app-work-space-section class="work-space-section"></app-work-space-section>
     <div class="chat-section">
         <div class="channel-user-content">
-<!--             <div class="header-channel-content">
+            <!--             <div class="header-channel-content">
                 <div class="button-container">
                     <button class="channel-btn" (click)="openDialog()">
                         <span>#</span>
@@ -32,7 +32,7 @@
         <div class="chat-container" *ngIf="dataUser.isChecked$ | async as selectedUser" [ngClass]="{
                 'other-user': selectedUser.userId !== dataUser.currentUserId
                     }">
-            <!--             <div class="user-logo-name-container">
+            <div *ngIf="!chatService.hasMessages" class="user-logo-name-container">
                 <div class="user-logo-big" *ngIf="selectedUser">
                     <img src="avatar/{{selectedUser.avatar}}" alt="">
                 </div>
@@ -41,27 +41,20 @@
                     </h2>
                 </div>
             </div>
-            <div class="chat-info-container" *ngIf="selectedUser.userId === dataUser.currentUserId">
+            <div class="chat-info-container"
+                *ngIf="selectedUser.userId === dataUser.currentUserId && !chatService.hasMessages">
                 <p>Dieser Raum ist nur für dich da.<span>
                         für dich da. Mache dir Notizen, liste deine To-dos auf oder bewahre Links
                         und
                         Dateien griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.</span></p>
             </div>
-            <div class="chat-info-container" *ngIf="selectedUser.userId !== dataUser.currentUserId">
+            <div class="chat-info-container" *ngIf="selectedUser.userId !== dataUser.currentUserId && !chatService.hasMessages">
                 <p>Diese Unterhaltung findet nur zwischen <span (click)="openUserDialog()">&#64;{{selectedUser.name}}
                     </span>und dir statt</p>
-            </div> -->
-            <!--             <app-received-message class="chat-card"></app-received-message>
-            <app-sent-message class="sent-message-component"></app-sent-message> -->
-
-
-
-            <div *ngFor="let msg of chatService.messages">
-                <div [ngClass]="{ 'own-message': msg.senderId === dataUser.currentUserId }">
-                    <p>{{ msg.text }}</p>
-                    <small>{{ msg.timestamp?.toDate() | date:'shortTime' }}</small>
-                </div>
             </div>
+            <app-received-message *ngIf="chatService.hasMessages" class="chat-card"></app-received-message>
+            <app-sent-message *ngIf="chatService.hasMessages" class="sent-message-component"></app-sent-message>
+
         </div>
         <div class="write-message-container">
             <form class="example-form">
@@ -83,7 +76,7 @@
                 </div>
                 <mat-form-field class="example-full-width">
                     <mat-label>Starte eine neue Nachricht</mat-label>
-                    <input matInput [(ngModel)]="messageText" name="message">
+                    <input matInput [(ngModel)]="messageText" name="message" (keyup.enter)="sendMessage()">
                     <div class="icons-container">
                         <div>
                             <div>
@@ -95,7 +88,7 @@
                                     (mouseout)="imgSrcMention = 'mention.png'">
                             </div>
                         </div>
-                        <div class="send-icon-container" (click)="chatService.sendMessage( messageText, dataUser)">
+                        <div class="send-icon-container" (click)="sendMessage()">
                             <img [src]="imgSrcSend" (mouseover)="imgSrcSend = 'Send icon.png'"
                                 (mouseout)="imgSrcSend = 'send.png'">
                         </div>

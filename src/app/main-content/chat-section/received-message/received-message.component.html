@@ -1,23 +1,23 @@
 <div class="date-divider">
     <span class="date-label">Dienstag, 14 Januar</span>
 </div>
-<div class="users-message-container">
-    <div class="message-container">
+<div class="users-message-container" *ngFor="let msg of chatService.messages">
+    <div class="message-container" *ngIf="msg.senderId === selectedUser.userId && msg.senderId !== dataUser.currentUserId">
         <div>
             <img class="user-logo" src="avatar/men1.png" alt="">
         </div>
         <div class="message-info">
             <div class="user-date-container">
-                <span>Noah Braun</span>
-                <p>14:25</p>
+                <span>{{selectedUser.name}}</span>
+                <p>{{msg.timestamp?.toDate() | date:'HH:mm'}}</p>
             </div>
             <div class="message-content">
-                <h3>msg.text</h3>
+                <h3>{{msg.text}}</h3>
             </div>
             <div class="answer-date-container">
                 <div>
-                    <span>2 Antworte</span>
-                    <p>Letze Antwort 14:56</p>
+<!--                     <span>2 Antworte</span>
+                    <p>Letze Antwort 14:56</p> -->
                 </div>
             </div>
         </div>

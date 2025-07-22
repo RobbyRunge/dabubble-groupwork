@@ -12,17 +12,33 @@ export class ChatService {
     private injector = inject(Injector);
     dataUser = inject(UserService);
     messages: any[] = [];
-    messageText: string | undefined;
+    hasMessages = false;
 
     async getOrCreateChatId(userId1: string, userId2: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
             const chatsRef = collection(this.firestore, 'chats');
-            const q = query(chatsRef, where('user', 'array-contains', userId1));
 
+            if (userId1 === userId2) {
+                const selfQuery = query(chatsRef, where('user', '==', [userId1]));
+                const selfSnapshot = await getDocs(selfQuery);
+
+                if (!selfSnapshot.empty) {
+                    return selfSnapshot.docs[0].id;
+                }
+
+                const newSelfChat = await addDoc(chatsRef, {
+                    user: [userId1],
+                });
+
+                return newSelfChat.id;
+            }
+
+            const q = query(chatsRef, where('user', 'array-contains', userId1));
             const snapshot = await getDocs(q);
+
             for (const doc of snapshot.docs) {
                 const users = doc.data()['user'];
-                if (users.includes(userId2)) {
+                if (users.includes(userId2) && users.length === 2) {
                     return doc.id;
                 }
             }
@@ -30,19 +46,22 @@ export class ChatService {
             const newChat = await addDoc(chatsRef, {
                 user: [userId1, userId2]
             });
+
             return newChat.id;
         });
     }
 
-    async sendMessage(messageText: string, dataUser: any) {
-        const messagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message`);
-        await addDoc(messagesRef, {
-            text: messageText,
-            senderId: dataUser.currentUserId,
-            timestamp: serverTimestamp(),
-        });
-        this.messageText = '';
+    async sendMessage(messageText: string, senderId: any) {
+        return runInInjectionContext(this.injector, async () => {
+            const messagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message`);
+            await addDoc(messagesRef, {
+                text: messageText,
+                senderId: senderId,
+                timestamp: serverTimestamp(),
+            });
+        })
     }
+
 
 
     listenToMessages() {
@@ -52,7 +71,11 @@ export class ChatService {
 
             onSnapshot(messagesQuery, (snapshot) => {
                 this.messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                console.log('Nachrichten in Reihenfolge:', this.messages);
+                if (this.messages.length !== 0) {
+                    this.hasMessages = true;
+                } else {
+                    this.hasMessages = false;
+                }
             });
         }
         )
