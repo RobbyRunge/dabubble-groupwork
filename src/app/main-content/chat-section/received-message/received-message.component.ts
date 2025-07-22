@@ -12,7 +12,7 @@ import { ChatService } from '../../../services/chat.service';
 export class ReceivedMessageComponent {
 
   dataUser = inject(UserService);
-  chatService = inject(ChatService);
+  public chatService = inject(ChatService);
   constructor() {
     this.getUserData();
   }

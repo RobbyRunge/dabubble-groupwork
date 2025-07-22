@@ -81,5 +81,12 @@ export class ChatService {
         )
     }
 
+        isToday(timestamp: any): boolean {
+        const date = timestamp?.toDate();
+        const today = new Date();
+        return date.getDate() === today.getDate() &&
+            date.getMonth() === today.getMonth() &&
+            date.getFullYear() === today.getFullYear();
+    }
 
 }

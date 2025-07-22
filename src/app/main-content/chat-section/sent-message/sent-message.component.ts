@@ -11,7 +11,7 @@ import { UserService } from '../../../services/user.service';
 })
 export class SentMessageComponent {
 
-  chatService = inject(ChatService);
+  public chatService = inject(ChatService);
   dataUser = inject(UserService);
   constructor() {
     this.getUserData();
@@ -25,4 +25,5 @@ export class SentMessageComponent {
       this.selectedUser = user
     })
   }
+
 }

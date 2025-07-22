@@ -1,8 +1,11 @@
-<div class="date-divider">
-    <span class="date-label">Dienstag, 14 Januar</span>
+<div class="date-divider" *ngFor="let msg of chatService.messages">
+    <span *ngIf="chatService.isToday(msg.timestamp) && chatService.hasMessages" class="date-label">Heute</span>
+    <span *ngIf="!chatService.isToday(msg.timestamp) && chatService.hasMessages"
+        class="date-label">{{msg.timestamp?.toDate() | date:'EEEE, dd MMMM'}}</span>
 </div>
 <div class="users-message-container" *ngFor="let msg of chatService.messages">
-    <div class="message-container" *ngIf="msg.senderId === selectedUser.userId && msg.senderId !== dataUser.currentUserId">
+    <div class="message-container"
+        *ngIf="msg.senderId === selectedUser.userId && msg.senderId !== dataUser.currentUserId">
         <div>
             <img class="user-logo" src="avatar/men1.png" alt="">
         </div>
@@ -16,7 +19,7 @@
             </div>
             <div class="answer-date-container">
                 <div>
-<!--                     <span>2 Antworte</span>
+                    <!--                     <span>2 Antworte</span>
                     <p>Letze Antwort 14:56</p> -->
                 </div>
             </div>
