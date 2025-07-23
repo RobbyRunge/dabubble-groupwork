@@ -26,7 +26,7 @@ import { User } from '../../models/user.class';
   providedIn: 'root',
 })
 export class ChannelService {
-  constructor() {}
+  constructor() { }
 
   private firestore = inject(Firestore);
   private injector = inject(Injector);
@@ -35,6 +35,9 @@ export class ChannelService {
   showChannelByUser$ = this.updateChannelByUser.asObservable();
 
   public channelsLoaded$ = new BehaviorSubject<boolean>(false);
+
+  private isCheckedSubject = new BehaviorSubject<any>(null);
+  public isChecked$ = this.isCheckedSubject.asObservable();
 
   userData: User[] = [];
   currentUser?: User;
@@ -206,4 +209,9 @@ export class ChannelService {
       this.unsubscribeChannelCreaterName();
     }
   }
+
+  setCheckdValue(user: string) {
+    this.isCheckedSubject.next(user)
+  }
+
 }

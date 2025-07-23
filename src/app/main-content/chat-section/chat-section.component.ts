@@ -83,12 +83,12 @@ export class ChatSectionComponent implements OnInit {
   }
 
   async sendMessage() {
-    await this.chatService.sendMessage(this.messageText, this.dataUser.currentUserId);
+    await this.chatService.sendMessage(this.messageText, this.channelService.currentUserId);
     this.messageText = '';
   }
 
   getUserData() {
-    this.dataUser.isChecked$.subscribe(user => {
+    this.channelService.isChecked$.subscribe(user => {
       this.selectedUser = user
     })
   }
@@ -102,28 +102,36 @@ export class ChatSectionComponent implements OnInit {
 
   showUserChannel() {
     const channelRef = this.channelService.getChannelRef();
-    this.unsubscribeUserChannels = runInInjectionContext(this.injector, () =>onSnapshot(channelRef, (element) => {
-      this.channelService.channels = [];
-      element.forEach(doc => {
-        this.channelService.channels.push({ ...doc.data(), channelId: doc.id });
+    this.unsubscribeUserChannels = runInInjectionContext(this.injector, () =>
+      onSnapshot(channelRef, (element) => {
+        this.channelService.channels = [];
+        const channelRef = this.channelService.getChannelRef();
+        this.unsubscribeUserChannels = runInInjectionContext(this.injector, () =>
+          onSnapshot(channelRef, (element) => {
+            this.channelService.channels = [];
+            element.forEach(doc => {
+              this.channelService.channels.push({ ...doc.data(), channelId: doc.id });
+            });
+          })
+        );
       })
-    }));
+    );
   }
 
   ngOnDestroy(): void {
     this.routeSub?.unsubscribe();
     if (this.unsubscribeUserChannels) {
-      this.unsubscribeUserChannels();
+      this.unsubscribeUserChannels()
     }
   }
 
   openDialog(button: HTMLElement) {
     const rect = button.getBoundingClientRect();
     const dialog = this.dialog.open(ChannelSectionComponent, {
-       position: {
-      top: `${rect.bottom + window.scrollY}px`,   // unterhalb des Buttons
-      left: `${rect.left + window.scrollX}px`,    // auf gleicher horizontaler Position
-    },
+      position: {
+        top: `${rect.bottom + window.scrollY}px`,   // unterhalb des Buttons
+        left: `${rect.left + window.scrollX}px`,    // auf gleicher horizontaler Position
+      },
       width: '872px',
       height: '612px',
       maxWidth: '872px',
@@ -188,4 +196,8 @@ export class ChatSectionComponent implements OnInit {
       data: { user: this.selectedUser }
     })
   }
+}
+
+function ngOnDestroy(): ((error: import("@firebase/firestore").FirestoreError) => void) | undefined {
+  throw new Error('Function not implemented.');
 }

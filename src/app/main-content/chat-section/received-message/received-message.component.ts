@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { UserService } from '../../../services/user.service';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { ChatService } from '../../../services/chat.service';
+import { ChannelService } from '../../../services/channel.service';
 
 @Component({
   selector: 'app-received-message',
@@ -11,7 +11,7 @@ import { ChatService } from '../../../services/chat.service';
 })
 export class ReceivedMessageComponent {
 
-  dataUser = inject(UserService);
+  dataUser = inject(ChannelService);
   public chatService = inject(ChatService);
   constructor() {
     this.getUserData();

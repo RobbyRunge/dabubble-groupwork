@@ -21,15 +21,9 @@ export class UserService {
 
   private pendingRegistrationId = new BehaviorSubject<string | null>(null);
   pendingRegistrationId$ = this.pendingRegistrationId.asObservable();
-  private isCheckedSubject = new BehaviorSubject<any>(null);
-  public isChecked$ = this.isCheckedSubject.asObservable();
  
   loginIsSucess = false;
-
-
-  setCheckdValue(user: string) {
-    this.isCheckedSubject.next(user)
-  }
+  chatId: any = '';
 
   getUsersCollection(): CollectionReference {
     return runInInjectionContext(this.injector, () =>

@@ -89,9 +89,9 @@ export class WorkSpaceSectionComponent implements OnInit {
 
   async onUserClick(index: number, user: any) {
     this.selectedUser = user;
-    this.dataUser.setCheckdValue(user);
-    this.dataUser.chatId = await this.chatService.getOrCreateChatId(this.dataUser.currentUserId, user.userId);
-    this.router.navigate(['/mainpage', this.dataUser.currentUserId, 'chats', this.dataUser.chatId]);
+    this.channelService.setCheckdValue(user);
+    this.dataUser.chatId = await this.chatService.getOrCreateChatId(this.channelService.currentUserId, user.userId);
+    this.router.navigate(['/mainpage', this.channelService.currentUserId, 'chats', this.dataUser.chatId]);
     this.chatService.listenToMessages();
   }
 

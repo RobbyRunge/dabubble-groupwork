@@ -3,26 +3,14 @@
     <app-work-space-section class="work-space-section"></app-work-space-section>
     <div class="chat-section">
         <div class="channel-user-content">
-            <div class="button-container">
-                <button #btn class="channel-btn" (click)="openDialog(btn)">
-                    <span>#</span>
-                    @if (channelService.currentChannelName) {
-                    <span>{{ channelService.currentChannelName }}</span>
-                    } @else {
-                    <span>{{ channelService.userSubcollectionChannelName }}</span>
-                    }
-                    <img src="/img/arrow_down.png">
-                </button>
-            </div>
-            <div>Placeholder User Avatar</div>
             <!--             <div class="header-channel-content">
                 <div class="button-container">
                     <button class="channel-btn" (click)="openDialog()">
                         <span>#</span>
-                        @if (dataUser.currentChannelName) {
-                        <span>{{ dataUser.currentChannelName }}</span>
+                        @if (channelService.currentChannelName) {
+                        <span>{{ channelService.currentChannelName }}</span>
                         } @else {
-                        <span>{{ dataUser.userSubcollectionChannelName }}</span>
+                        <span>{{ channelService.userSubcollectionChannelName }}</span>
                         }
                         <img src="/img/arrow_down.png">
                     </button>
@@ -30,8 +18,8 @@
                 <div>Placeholder User Avatar</div>
             </div> -->
             <div class="header-user-content">
-                <div *ngIf="dataUser.isChecked$ | async as selectedUser" [ngClass]="{
-                'other-user': selectedUser.userId !== dataUser.currentUserId
+                <div *ngIf="channelService.isChecked$ | async as selectedUser" [ngClass]="{
+                'other-user': selectedUser.userId !== channelService.currentUserId
                     }">
                     <div (click)="openUserDialog()">
                         <img class="user-logo" src="avatar/{{selectedUser.avatar}}" alt="">
@@ -41,10 +29,8 @@
                 </div>
             </div>
         </div>
-        <div class="chat-container" *ngIf="dataUser.isChecked$ | async as selecetedUser" [ngClass]="{
+        <div class="chat-container" *ngIf="channelService.isChecked$ | async as selectedUser" [ngClass]="{
                 'other-user': selectedUser.userId !== channelService.currentUserId
-        <div class="chat-container" *ngIf="dataUser.isChecked$ | async as selectedUser" [ngClass]="{
-                'other-user': selectedUser.userId !== dataUser.currentUserId
                     }">
             <div *ngIf="!chatService.hasMessages" class="user-logo-name-container">
                 <div class="user-logo-big" *ngIf="selectedUser">
@@ -55,17 +41,14 @@
                     </h2>
                 </div>
             </div>
-            <div class="chat-info-container" *ngIf="selectedUser.userId === channelService.currentUserId">
             <div class="chat-info-container"
-                *ngIf="selectedUser.userId === dataUser.currentUserId && !chatService.hasMessages">
+                *ngIf="selectedUser.userId === channelService.currentUserId && !chatService.hasMessages">
                 <p>Dieser Raum ist nur für dich da.<span>
                         für dich da. Mache dir Notizen, liste deine To-dos auf oder bewahre Links
                         und
                         Dateien griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.</span></p>
             </div>
-            <div class="chat-info-container" *ngIf="selectedUser.userId !== channelService.currentUserId">
-                <p>Diese Unterhaltung findet nur zwischen <span (click)="openUserDialog()">&#64;{{selecetedUser.name}}
-            <div class="chat-info-container" *ngIf="selectedUser.userId !== dataUser.currentUserId && !chatService.hasMessages">
+            <div class="chat-info-container" *ngIf="selectedUser.userId !== channelService.currentUserId && !chatService.hasMessages">
                 <p>Diese Unterhaltung findet nur zwischen <span (click)="openUserDialog()">&#64;{{selectedUser.name}}
                     </span>und dir statt</p>
             </div>

@@ -2,6 +2,7 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ChatService } from '../../../services/chat.service';
 import { UserService } from '../../../services/user.service';
+import { ChannelService } from '../../../services/channel.service';
 
 @Component({
   selector: 'app-sent-message',
@@ -12,7 +13,7 @@ import { UserService } from '../../../services/user.service';
 export class SentMessageComponent {
 
   public chatService = inject(ChatService);
-  dataUser = inject(UserService);
+  dataUser = inject(ChannelService);
   constructor() {
     this.getUserData();
   }

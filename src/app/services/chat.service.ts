@@ -81,7 +81,10 @@ export class ChatService {
         )
     }
 
-        isToday(timestamp: any): boolean {
+    isToday(timestamp: any): boolean {
+        if (!timestamp || typeof timestamp.toDate !== 'function') {
+            return false;
+        }
         const date = timestamp?.toDate();
         const today = new Date();
         return date.getDate() === today.getDate() &&
