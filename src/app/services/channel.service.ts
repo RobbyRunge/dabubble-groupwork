@@ -1,16 +1,32 @@
-import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, doc, docData, Firestore, getDocs, onSnapshot, updateDoc } from '@angular/fire/firestore';
+import {
+  inject,
+  Injectable,
+  Injector,
+  runInInjectionContext,
+  OnDestroy,
+} from '@angular/core';
+import {
+  addDoc,
+  collection,
+  collectionData,
+  CollectionReference,
+  doc,
+  docData,
+  Firestore,
+  getDocs,
+  onSnapshot,
+  updateDoc,
+} from '@angular/fire/firestore';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { UserService } from './user.service';
 import { Allchannels } from '../../models/allchannels.class';
 import { User } from '../../models/user.class';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ChannelService {
-
-  constructor() { }
+  constructor() {}
 
   private firestore = inject(Firestore);
   private injector = inject(Injector);
@@ -41,8 +57,7 @@ export class ChannelService {
   unsubscribeChannelCreaterName!: () => void;
   unsubscribeUserStorage!: Subscription;
 
-  
-getUsersCollection(): CollectionReference {
+  getUsersCollection(): CollectionReference {
     return runInInjectionContext(this.injector, () =>
       collection(this.firestore, 'users')
     );
@@ -60,7 +75,7 @@ getUsersCollection(): CollectionReference {
     );
   }
 
-    getSingleUserRef(docId: string) {
+  getSingleUserRef(docId: string) {
     return runInInjectionContext(this.injector, () =>
       doc(this.getUsersCollection(), docId)
     );
@@ -88,14 +103,16 @@ getUsersCollection(): CollectionReference {
 
   async getChannelUserId(channelId: string) {
     const channelRef = this.getSingleChannelRef(channelId);
-    this.unsubscribeChannelCreaterName = runInInjectionContext(this.injector, () =>
-      onSnapshot(channelRef, (element) => {
-        const data = element.data();
-        if (data) {
-          this.channelCreaterId = data['createdBy'];
-          this.getChannelUserName(this.channelCreaterId);
-        }
-      })
+    this.unsubscribeChannelCreaterName = runInInjectionContext(
+      this.injector,
+      () =>
+        onSnapshot(channelRef, (element) => {
+          const data = element.data();
+          if (data) {
+            this.channelCreaterId = data['createdBy'];
+            this.getChannelUserName(this.channelCreaterId);
+          }
+        })
     );
   }
 
@@ -129,17 +146,17 @@ getUsersCollection(): CollectionReference {
       console.log('doc data', data);
       this.userSubcollectionChannelId = data['channelId'];
       this.userSubcollectionId = doc.id;
-      this.userSubcollectionChannelName = data['channelname'];  
+      this.userSubcollectionChannelName = data['channelname'];
       this.userSubcollectionDescription = data['description'];
     });
-    this.showUserChannel()
+    this.showUserChannel();
   }
 
   showUserChannel() {
     const channelRef = this.getChannelRef();
     this.unsubscribeUserChannels = runInInjectionContext(this.injector, () =>
       collectionData(channelRef, { idField: 'channelId' })
-    ).subscribe(channels => {
+    ).subscribe((channels) => {
       this.channels = [];
       this.channels = channels;
       this.checkChannel();
@@ -148,8 +165,10 @@ getUsersCollection(): CollectionReference {
   }
 
   checkChannel() {
-  this.showChannelByUser = this.channels.filter(channel =>
-    Array.isArray(channel.userId) && channel.userId.includes(this.currentUserId)
+    this.showChannelByUser = this.channels.filter(
+      (channel) =>
+        Array.isArray(channel.userId) &&
+        channel.userId.includes(this.currentUserId)
     );
     this.updateChannelByUser.next(this.showChannelByUser);
   }
@@ -168,5 +187,23 @@ getUsersCollection(): CollectionReference {
     await runInInjectionContext(this.injector, () =>
       updateDoc(singleChannelRef, item)
     );
+  }
+
+  ngOnDestroy(): void {
+    if (this.unsubscribeUserData) {
+      this.unsubscribeUserData.unsubscribe();
+    }
+    if (this.unsubscribeUserChannels) {
+      this.unsubscribeUserChannels.unsubscribe();
+    }
+    if (this.unsubscribeUserStorage) {
+      this.unsubscribeUserStorage.unsubscribe();
+    }
+    if (this.unsubscribeChannelCreater) {
+      this.unsubscribeChannelCreater();
+    }
+    if (this.unsubscribeChannelCreaterName) {
+      this.unsubscribeChannelCreaterName();
+    }
   }
 }
