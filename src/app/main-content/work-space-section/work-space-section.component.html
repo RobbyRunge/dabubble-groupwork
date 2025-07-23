@@ -68,7 +68,7 @@
                                 (click)="onUserClick(index, user)">
                                 <div>
                                     <img class="avatar-small-img" src="avatar/{{user.avatar}}" alt="">
-                                    <img class="status-img" src="Online.png" alt="">
+                                    <img class="status-img" [src]="user.aktiv ? 'Online.png' : 'offline.png'" alt="">
                                 </div>
                                 <div>
                                     <h2>{{ user.name }}

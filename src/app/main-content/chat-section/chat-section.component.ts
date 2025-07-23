@@ -7,13 +7,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute } from '@angular/router';
-import { docData, onSnapshot } from '@angular/fire/firestore';
+import { addDoc, collection, docData, Firestore, onSnapshot, orderBy, query, serverTimestamp } from '@angular/fire/firestore';
 import { User } from '../../../models/user.class';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
-import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { UserCardComponent } from '../user-card/user-card.component';
+import { ReceivedMessageComponent } from './received-message/received-message.component';
+import { SentMessageComponent } from "./sent-message/sent-message.component";
+import { ChatService } from '../../services/chat.service';
 import { ChannelService } from '../../services/channel.service';
 
 
@@ -29,7 +32,9 @@ import { ChannelService } from '../../services/channel.service';
     NgIf,
     NgFor,
     AsyncPipe,
-    NgClass
+    NgClass,
+    ReceivedMessageComponent,
+    SentMessageComponent
   ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
@@ -37,9 +42,12 @@ import { ChannelService } from '../../services/channel.service';
 
 export class ChatSectionComponent implements OnInit {
 
+  private firestore = inject(Firestore);
   dataUser = inject(UserService);
+
   channelService = inject(ChannelService);
   private injector = inject(Injector);
+  chatService = inject(ChatService);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
   readonly userDialog = inject(MatDialog);
@@ -61,13 +69,27 @@ export class ChatSectionComponent implements OnInit {
       this.showCurrentUserData();
       this.showUserChannel();
       this.users$ = this.dataUser.getAllUsers();
-      this.getUserData()
+      this.getUserData();
     });
+
+    /*     this.listenToMessages(this.route);
+        console.log('test' + this.chatId);
+      }); */
+    // setTimeout(() => {
+    //   this.checkChannel();
+    //   console.log('Channels by user', this.dataUser.showChannelByUser);
+
+    // }, 2000);
   }
 
-  getUserData(){
+  async sendMessage() {
+    await this.chatService.sendMessage(this.messageText, this.dataUser.currentUserId);
+    this.messageText = '';
+  }
+
+  getUserData() {
     this.dataUser.isChecked$.subscribe(user => {
-     this.selectedUser = user
+      this.selectedUser = user
     })
   }
 
@@ -161,9 +183,9 @@ export class ChatSectionComponent implements OnInit {
     this.showUserList = false;
   }
 
-  openUserDialog(){
+  openUserDialog() {
     this.userDialog.open(UserCardComponent, {
-      data: {user: this.selectedUser}
+      data: { user: this.selectedUser }
     })
   }
 }

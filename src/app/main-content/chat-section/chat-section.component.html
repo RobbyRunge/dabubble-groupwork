@@ -15,11 +15,38 @@
                 </button>
             </div>
             <div>Placeholder User Avatar</div>
+            <!--             <div class="header-channel-content">
+                <div class="button-container">
+                    <button class="channel-btn" (click)="openDialog()">
+                        <span>#</span>
+                        @if (dataUser.currentChannelName) {
+                        <span>{{ dataUser.currentChannelName }}</span>
+                        } @else {
+                        <span>{{ dataUser.userSubcollectionChannelName }}</span>
+                        }
+                        <img src="/img/arrow_down.png">
+                    </button>
+                </div>
+                <div>Placeholder User Avatar</div>
+            </div> -->
+            <div class="header-user-content">
+                <div *ngIf="dataUser.isChecked$ | async as selectedUser" [ngClass]="{
+                'other-user': selectedUser.userId !== dataUser.currentUserId
+                    }">
+                    <div (click)="openUserDialog()">
+                        <img class="user-logo" src="avatar/{{selectedUser.avatar}}" alt="">
+                        <img class="status-img" [src]="selectedUser.aktiv ? 'Online.png' : 'offline.png'" alt="">
+                        <h2>{{selectedUser.name}}</h2>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="chat-container" *ngIf="dataUser.isChecked$ | async as selecetedUser" [ngClass]="{
                 'other-user': selectedUser.userId !== channelService.currentUserId
+        <div class="chat-container" *ngIf="dataUser.isChecked$ | async as selectedUser" [ngClass]="{
+                'other-user': selectedUser.userId !== dataUser.currentUserId
                     }">
-            <div class="user-logo-name-container">
+            <div *ngIf="!chatService.hasMessages" class="user-logo-name-container">
                 <div class="user-logo-big" *ngIf="selectedUser">
                     <img src="avatar/{{selectedUser.avatar}}" alt="">
                 </div>
@@ -29,6 +56,8 @@
                 </div>
             </div>
             <div class="chat-info-container" *ngIf="selectedUser.userId === channelService.currentUserId">
+            <div class="chat-info-container"
+                *ngIf="selectedUser.userId === dataUser.currentUserId && !chatService.hasMessages">
                 <p>Dieser Raum ist nur für dich da.<span>
                         für dich da. Mache dir Notizen, liste deine To-dos auf oder bewahre Links
                         und
@@ -36,8 +65,13 @@
             </div>
             <div class="chat-info-container" *ngIf="selectedUser.userId !== channelService.currentUserId">
                 <p>Diese Unterhaltung findet nur zwischen <span (click)="openUserDialog()">&#64;{{selecetedUser.name}}
+            <div class="chat-info-container" *ngIf="selectedUser.userId !== dataUser.currentUserId && !chatService.hasMessages">
+                <p>Diese Unterhaltung findet nur zwischen <span (click)="openUserDialog()">&#64;{{selectedUser.name}}
                     </span>und dir statt</p>
             </div>
+            <app-received-message *ngIf="chatService.hasMessages" class="chat-card"></app-received-message>
+            <app-sent-message *ngIf="chatService.hasMessages" class="sent-message-component"></app-sent-message>
+
         </div>
         <div class="write-message-container">
             <form class="example-form">
@@ -59,7 +93,7 @@
                 </div>
                 <mat-form-field class="example-full-width">
                     <mat-label>Starte eine neue Nachricht</mat-label>
-                    <input matInput [(ngModel)]="messageText" name="message" (input)="onInputChange()">
+                    <input matInput [(ngModel)]="messageText" name="message" (keyup.enter)="sendMessage()">
                     <div class="icons-container">
                         <div>
                             <div>
@@ -71,7 +105,7 @@
                                     (mouseout)="imgSrcMention = 'mention.png'">
                             </div>
                         </div>
-                        <div class="send-icon-container">
+                        <div class="send-icon-container" (click)="sendMessage()">
                             <img [src]="imgSrcSend" (mouseover)="imgSrcSend = 'Send icon.png'"
                                 (mouseout)="imgSrcSend = 'send.png'">
                         </div>

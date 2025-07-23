@@ -18,10 +18,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateChannelSectionComponent } from '../create-channel-section/create-channel-section.component';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, timestamp } from 'rxjs';
 import { User } from '../../../models/user.class';
 import { Allchannels } from '../../../models/allchannels.class';
 import { ChannelService } from '../../services/channel.service';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-work-space-section',
@@ -46,6 +47,7 @@ export class WorkSpaceSectionComponent implements OnInit {
 
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
+  chatService = inject(ChatService);
   private router = inject(Router);
   route = inject(ActivatedRoute);
   unsubChannels!: Subscription;
@@ -85,9 +87,12 @@ export class WorkSpaceSectionComponent implements OnInit {
     drawer.toggle();
   }
 
-  onUserClick(index: number, user: any) {
+  async onUserClick(index: number, user: any) {
     this.selectedUser = user;
     this.dataUser.setCheckdValue(user);
+    this.dataUser.chatId = await this.chatService.getOrCreateChatId(this.dataUser.currentUserId, user.userId);
+    this.router.navigate(['/mainpage', this.dataUser.currentUserId, 'chats', this.dataUser.chatId]);
+    this.chatService.listenToMessages();
   }
 
   readonly dialog = inject(MatDialog);

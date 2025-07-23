@@ -1,0 +1,104 @@
+@use "./../../../../styles.scss" as *;
+
+.date-divider {
+    @include dFlex();
+    width: 100%;
+
+    .date-label {
+        position: relative;
+        padding: 0 12px;
+        font-size: 14px;
+        background-color: white;
+        color: black;
+        border: 1px solid #c7c7f5;
+        border-radius: 20px;
+        white-space: nowrap;
+        z-index: 1;
+    }
+
+    &::before,
+    &::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #c7c7f5;
+        margin: 0 10px;
+    }
+}
+
+
+.users-message-container {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    @include dFlex(flex-end);
+    width: 100%;
+    padding-right: 45px;
+}
+
+.user-logo {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+}
+
+.message-info {
+    @include dFlex(center, flex-end);
+    flex-direction: column;
+    gap: 8px;
+}
+
+.message-container {
+    @include dFlex(center, flex-start);
+    flex-direction: row-reverse;
+    gap: 30px;
+}
+
+.user-date-container {
+    @include dFlex(flex-start);
+    gap: 20px;
+
+    >span {
+        font-size: 18px;
+        font-family: 'Nunito';
+        font-weight: 700;
+    }
+
+    >p {
+        font-size: 14px;
+        font-family: 'Nunito';
+        color: #686868;
+    }
+}
+
+.message-content {
+    background-color: #797EF3;
+    border-bottom-left-radius: 30px;
+    border-top-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+
+    >h3 {
+        font-family: 'Nunito';
+        font-size: 18px;
+        font-weight: 400;
+        padding: 15px;
+    }
+}
+
+.answer-date-container {
+    @include dFlex(flex-start);
+    >div{
+        @include dFlex();
+        gap: 20px;
+        >span{
+            color: #535AF1;
+            font-size: 18px;
+            &:hover{
+                cursor: pointer;
+            }
+        }
+        >p{
+            color: #686868;
+            font-size: 14px;
+        }
+      }
+}

@@ -27,7 +27,7 @@ export class UserService {
   loginIsSucess = false;
 
 
-  setCheckdValue(user: string){
+  setCheckdValue(user: string) {
     this.isCheckedSubject.next(user)
   }
 
