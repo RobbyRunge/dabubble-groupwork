@@ -33,6 +33,7 @@ export class PasswordResetComponent implements OnInit {
   userId: string = '';
   newPassword: string = '';
   confirmPassword: string = '';
+  confirmPasswordTouched: boolean = false;
   tokenValid: boolean = false;
   isLoading: boolean = false;
   passwordTouched: boolean = false;
@@ -51,7 +52,6 @@ export class PasswordResetComponent implements OnInit {
     try {
       const userDoc = await this.getUserDocument();
       if (!userDoc) {
-        this.showError('Benutzer nicht gefunden.');
         return;
       }
       this.tokenValid = this.isTokenValid(userDoc.data());
@@ -64,6 +64,10 @@ export class PasswordResetComponent implements OnInit {
     this.passwordTouched = true;
   }
 
+  onConfirmPasswordInput() {
+    this.confirmPasswordTouched = true;
+  }
+
   get showPasswordError(): boolean {
     return this.passwordValidationService.showPasswordError(this.newPassword, this.passwordTouched);
   }
@@ -72,11 +76,15 @@ export class PasswordResetComponent implements OnInit {
     return this.passwordValidationService.getPasswordErrorMessage(this.newPassword);
   }
 
+  get showConfirmPasswordError(): boolean {
+    return this.confirmPasswordTouched && this.confirmPassword.length > 0 && this.newPassword !== this.confirmPassword;
+  }
+
   isFormValid(): boolean {
     return this.newPassword.length >= 8 &&
       this.passwordValidationService.isValidPassword(this.newPassword) &&
-      this.newPassword === this.confirmPassword &&
-      this.tokenValid;
+      this.newPassword === this.confirmPassword
+      && this.tokenValid;
   }
 
   private async getUserDocument() {
@@ -93,12 +101,9 @@ export class PasswordResetComponent implements OnInit {
 
   private handleValidationError(error: any) {
     console.error('Fehler bei Token-Validierung:', error);
-    this.showError('Fehler bei der Validierung des Reset-Links.');
   }
 
   async resetPassword() {
-    if (!this.validateForm()) return;
-    this.isLoading = true;
     try {
       await this.updatePassword();
       this.showSuccessMessage();
@@ -137,20 +142,7 @@ export class PasswordResetComponent implements OnInit {
     alert('Fehler beim Zurücksetzen des Passworts. Bitte versuchen Sie es erneut.');
   }
 
-  private validateForm(): boolean {
-    if (this.newPassword.length < 6) {
-      alert('Das Passwort muss mindestens 6 Zeichen lang sein.');
-      return false;
-    }
-    if (this.newPassword !== this.confirmPassword) {
-      alert('Die Passwörter stimmen nicht überein.');
-      return false;
-    }
-    return true;
-  }
-
-  private showError(message: string) {
+  private showError() {
     this.tokenValid = false;
-    alert(message);
   }
 }
