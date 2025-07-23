@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { UserCardComponent } from '../user-card/user-card.component';
+import { ChannelService } from '../../services/channel.service';
 
 
 @Component({
@@ -37,6 +38,7 @@ import { UserCardComponent } from '../user-card/user-card.component';
 export class ChatSectionComponent implements OnInit {
 
   dataUser = inject(UserService);
+  channelService = inject(ChannelService);
   private injector = inject(Injector);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
@@ -55,7 +57,7 @@ export class ChatSectionComponent implements OnInit {
 
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
-      this.dataUser.currentUserId = params['id'];
+      this.channelService.currentUserId = params['id'];
       this.showCurrentUserData();
       this.showUserChannel();
       this.users$ = this.dataUser.getAllUsers();
@@ -70,18 +72,18 @@ export class ChatSectionComponent implements OnInit {
   }
 
   showCurrentUserData() {
-    const userRef = this.dataUser.getSingleUserRef(this.dataUser.currentUserId);
+    const userRef = this.dataUser.getSingleUserRef(this.channelService.currentUserId);
     this.unsubscribeUserData = runInInjectionContext(this.injector, () => docData(userRef).subscribe(data => {
-      this.dataUser.currentUser = new User(data);
+      this.channelService.currentUser = new User(data);
     }));
   }
 
   showUserChannel() {
-    const channelRef = this.dataUser.getChannelRef();
+    const channelRef = this.channelService.getChannelRef();
     this.unsubscribeUserChannels = runInInjectionContext(this.injector, () =>onSnapshot(channelRef, (element) => {
-      this.dataUser.channels = [];
+      this.channelService.channels = [];
       element.forEach(doc => {
-        this.dataUser.channels.push({ ...doc.data(), channelId: doc.id });
+        this.channelService.channels.push({ ...doc.data(), channelId: doc.id });
       })
     }));
   }

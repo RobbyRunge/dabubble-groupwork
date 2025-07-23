@@ -12,10 +12,10 @@
     </mat-form-field>
     <div class="user-container" (click)="openDialog('0ms', '0ms')">
         <div>
-            <span> {{dataUser.currentUser?.name}} </span>
+            <span> {{channelService.currentUser?.name}} </span>
         </div>
         <div class="avatar-container">
-            <img *ngIf="dataUser?.currentUser?.avatar" [src]="'/avatar/' + dataUser.currentUser?.avatar">
+            <img *ngIf="channelService?.currentUser?.avatar" [src]="'/avatar/' + channelService.currentUser?.avatar">
         </div>
         <div>
             <mat-icon class="arrow-down">keyboard_arrow_down</mat-icon>

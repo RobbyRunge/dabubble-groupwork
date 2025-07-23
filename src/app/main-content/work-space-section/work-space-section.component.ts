@@ -21,6 +21,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { User } from '../../../models/user.class';
 import { Allchannels } from '../../../models/allchannels.class';
+import { ChannelService } from '../../services/channel.service';
 
 @Component({
   selector: 'app-work-space-section',
@@ -44,6 +45,7 @@ import { Allchannels } from '../../../models/allchannels.class';
 export class WorkSpaceSectionComponent implements OnInit {
 
   dataUser = inject(UserService);
+  channelService = inject(ChannelService);
   private router = inject(Router);
   route = inject(ActivatedRoute);
   unsubChannels!: Subscription;
@@ -67,12 +69,12 @@ export class WorkSpaceSectionComponent implements OnInit {
   }
 
    ngOnInit(): void {
-    this.channels$ = this.dataUser.showChannelByUser$;
+    this.channels$ = this.channelService.showChannelByUser$;
     this.users$ = this.dataUser.getAllUsers();
-    this.dataUser.showCurrentUserData();
-    this.unsubChannels = this.dataUser.channelsLoaded$.subscribe(loaded => {
+    this.channelService.showCurrentUserData();
+    this.unsubChannels = this.channelService.channelsLoaded$.subscribe(loaded => {
       if (loaded) {
-        console.log('channel route', this.dataUser.userSubcollectionChannelId);
+        console.log('channel route', this.channelService.userSubcollectionChannelId);
         this.loadSaveRoute();
       }
     });
@@ -101,30 +103,30 @@ export class WorkSpaceSectionComponent implements OnInit {
   }
 
   loadSaveRoute() {
-    const channelId = this.dataUser.userSubcollectionChannelId;
+    const channelId = this.channelService.userSubcollectionChannelId;
     if (channelId) {
-      this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId,]); 
+      this.router.navigate(['mainpage', this.channelService.currentUserId, 'channel', channelId,]); 
     } else {
-      this.router.navigate(['mainpage', this.dataUser.currentUserId]);
+      this.router.navigate(['mainpage', this.channelService.currentUserId]);
     }
   }
 
   openChannel(channelName: string, channelId: string, channelDescription: string) {
-    console.log('channels by user', this.dataUser.showChannelByUser);
-    this.router.navigate(['mainpage', this.dataUser.currentUserId, 'channel', channelId,]);
+    console.log('channels by user', this.channelService.showChannelByUser);
+    this.router.navigate(['mainpage', this.channelService.currentUserId, 'channel', channelId,]);
     this.newChannel.channelname = channelName;
     this.newChannel.channelId = channelId;
     this.newChannel.description = channelDescription;
     this.getChannelNameandId(channelName, channelId, channelDescription);
-    this.dataUser.updateUserStorage(this.dataUser.currentUserId, this.dataUser.userSubcollectionId, this.newChannel.toJSON())
+    this.channelService.updateUserStorage(this.channelService.currentUserId, this.channelService.userSubcollectionId, this.newChannel.toJSON())
   }
 
   getChannelNameandId(channelName: string, channelId: string, channelDescription: string) {
     this.activeChannelId = channelId;
-    this.dataUser.currentChannelId = channelId;
-    this.dataUser.currentChannelName = channelName;
-    this.dataUser.currentChannelDescription = channelDescription;
-    this.dataUser.getChannelUserId(this.activeChannelId);
+    this.channelService.currentChannelId = channelId;
+    this.channelService.currentChannelName = channelName;
+    this.channelService.currentChannelDescription = channelDescription;
+    this.channelService.getChannelUserId(this.activeChannelId);
   }
 
   ngOnDestroy(): void {

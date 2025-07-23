@@ -1,9 +1,9 @@
 <div class="channel-main-content">
     <div class="channel-header">
-       <span># @if (dataUser.currentChannelName) {
-             {{ dataUser.currentChannelName }}
+       <span># @if (channelService.currentChannelName) {
+             {{ channelService.currentChannelName }}
         } @else {
-            {{ dataUser.userSubcollectionChannelName }}
+            {{ channelService.userSubcollectionChannelName }}
         } </span>
         <div class="close-icon">
             <mat-icon (click)="dialogRef.close()">close</mat-icon>
@@ -14,10 +14,10 @@
             <span class="channel-name">Channel - Name</span>
             <span (click)="editChannelName()" class="channel-edit">Bearbeiten</span>
         </div>
-            <div class="created-channel"># @if (dataUser.currentChannelName) {
-                {{ dataUser.currentChannelName }}
+            <div class="created-channel"># @if (channelService.currentChannelName) {
+                {{ channelService.currentChannelName }}
                 } @else {
-                    {{ dataUser.userSubcollectionChannelName }}
+                    {{ channelService.userSubcollectionChannelName }}
                 } </div>
     </mat-card>
     <div *ngIf="showEditChannelName" class="edit-channel-name">
@@ -34,15 +34,15 @@
             <span (click)="editChannelDescription()" class="channel-edit">Bearbeiten</span>
         </div>
         <div class="channel-description-by-user">
-            @if (dataUser.currentChannelDescription) {
-                {{ dataUser.currentChannelDescription }}
+            @if (channelService.currentChannelDescription) {
+                {{ channelService.currentChannelDescription }}
             } @else {
-                    {{ dataUser.userSubcollectionDescription }}
+                    {{ channelService.userSubcollectionDescription }}
             }
         </div>
         <mat-divider></mat-divider>
             <span class="channel-name">Erstellt von</span>
-            <span class="channel-user-name" *ngIf="dataUser.channelCreaterName"> {{dataUser.channelCreaterName}} </span>
+            <span class="channel-user-name" *ngIf="channelService.channelCreaterName"> {{channelService.channelCreaterName}} </span>
     </mat-card>
     <div *ngIf="showEditChannelDescription" class="edit-channel-description">
         <div class="channel-name-description-edit">
@@ -53,7 +53,7 @@
             [(ngModel)]="newChannel.description">
         <mat-divider></mat-divider>
             <span class="channel-name">Erstellt von</span>
-            <span class="channel-user-name" *ngIf="dataUser.channelCreaterName"> {{dataUser.channelCreaterName}} </span>
+            <span class="channel-user-name" *ngIf="channelService.channelCreaterName"> {{channelService.channelCreaterName}} </span>
     </div>
     <div class="leave-channel-btn">
         <button mat-flat-button primary>Channel verlassen</button>

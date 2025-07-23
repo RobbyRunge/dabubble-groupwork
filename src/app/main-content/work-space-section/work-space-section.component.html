@@ -30,8 +30,8 @@
                                     <mat-icon (click)="createChannel(); $event.stopPropagation()">add</mat-icon>
                                 </div>
                             </mat-expansion-panel-header>
-                            <div class="list-channels-container" *ngIf="dataUser.showChannelByUser">
-                                @for (channel of dataUser.showChannelByUser$ | async; track $index) {
+                            <div class="list-channels-container" *ngIf="channelService.showChannelByUser">
+                                @for (channel of channelService.showChannelByUser$ | async; track $index) {
                                 <div class="current-channel-name"
                                     (click)="openChannel(channel.channelname, channel.channelId, channel.description || '')"
                                     [ngClass]="{'active-channel': activeChannelId === channel.channelId}">
@@ -72,7 +72,7 @@
                                 </div>
                                 <div>
                                     <h2>{{ user.name }}
-                                        <span *ngIf="user.userId === dataUser.currentUserId">(Du)</span>
+                                        <span *ngIf="user.userId === channelService.currentUserId">(Du)</span>
                                     </h2>
                                 </div>
                             </div>

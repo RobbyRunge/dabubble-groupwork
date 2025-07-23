@@ -10,6 +10,7 @@ import { UserService } from '../../services/user.service';
 import { getDoc, onSnapshot } from '@angular/fire/firestore';
 import { Allchannels } from '../../../models/allchannels.class';
 import { FormsModule } from '@angular/forms';
+import { ChannelService } from '../../services/channel.service';
 
 @Component({
   selector: 'app-channel-section',
@@ -21,6 +22,7 @@ export class ChannelSectionComponent implements OnInit {
 
   dialogRef = inject(MatDialogRef<ChannelSectionComponent>);
   dataUser = inject(UserService);
+  channelService = inject(ChannelService);
 
   showEditChannelName = false;
   showEditChannelDescription = false;
@@ -34,39 +36,39 @@ export class ChannelSectionComponent implements OnInit {
 
   editChannelName() {
     this.showEditChannelName = true;
-    let baseName = this.dataUser.currentChannelName ? this.dataUser.currentChannelName : this.dataUser.userSubcollectionChannelName;
+    let baseName = this.channelService.currentChannelName ? this.dataUser.channelService.currentChannelName : this.channelService.userSubcollectionChannelName;
     this.newChannel.channelname = '# ' + baseName;
   }
 
   saveEditedChannelName() {
     this.showEditChannelName = false;
-    if(!this.dataUser.currentChannelId) {
-      this.dataUser.currentChannelId = this.dataUser.userSubcollectionChannelId;
+    if(!this.channelService.currentChannelId) {
+      this.channelService.currentChannelId = this.channelService.userSubcollectionChannelId;
     }
-    this.newChannel.channelId = this.dataUser.currentChannelId;
+    this.newChannel.channelId = this.channelService.currentChannelId;
     const cleaned = this.newChannel.channelname.replace(/^#\s*/, '').trim();
     this.newChannel.channelname = cleaned;
-    this.dataUser.editChannel(this.dataUser.currentChannelId, this.newChannel.toJSON(['channelId','channelname'])).then(() => {
-    this.dataUser.updateUserStorage(this.dataUser.currentUserId, this.dataUser.userSubcollectionId, this.newChannel.toJSON(['channelId','channelname']));
-    this.dataUser.currentChannelName = cleaned;
-    this.dataUser.checkChannel();
+    this.channelService.editChannel(this.channelService.currentChannelId, this.newChannel.toJSON(['channelId','channelname'])).then(() => {
+    this.channelService.updateUserStorage(this.channelService.currentUserId, this.channelService.userSubcollectionId, this.newChannel.toJSON(['channelId','channelname']));
+    this.channelService.currentChannelName = cleaned;
+    this.channelService.checkChannel();
     });
   }
 
   editChannelDescription() {
     this.showEditChannelDescription = true;
-    let baseDescription = this.dataUser.currentChannelDescription ? this.dataUser.currentChannelDescription : this.dataUser.userSubcollectionDescription;
+    let baseDescription = this.channelService.currentChannelDescription ? this.channelService.currentChannelDescription : this.channelService.userSubcollectionDescription;
     this.newChannel.description = baseDescription;
   }
 
   saveEditedChannelDescription() {
     this.showEditChannelDescription = false;
-    if(!this.dataUser.currentChannelId) {
-      this.dataUser.currentChannelId = this.dataUser.userSubcollectionChannelId;
+    if(!this.channelService.currentChannelId) {
+      this.channelService.currentChannelId = this.channelService.userSubcollectionChannelId;
     }
-    this.dataUser.editChannel(this.dataUser.currentChannelId, this.newChannel.toJSON(['description'])).then(() => {
-    this.dataUser.updateUserStorage(this.dataUser.currentUserId, this.dataUser.userSubcollectionId, this.newChannel.toJSON(['description']));
-    this.dataUser.currentChannelDescription = this.newChannel.description ?? '';
+    this.channelService.editChannel(this.channelService.currentChannelId, this.newChannel.toJSON(['description'])).then(() => {
+    this.channelService.updateUserStorage(this.channelService.currentUserId, this.channelService.userSubcollectionId, this.newChannel.toJSON(['description']));
+    this.channelService.currentChannelDescription = this.newChannel.description ?? '';
     });
   }
 

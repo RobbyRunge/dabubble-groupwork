@@ -2,13 +2,13 @@
   <div class="channel-user-content">
     <button #buttonRef class="channel-btn" (click)="openDialog(buttonRef)">
       <span>#</span>
-      @if (dataUser.currentChannelName) {
+      @if (channelService.currentChannelName) {
         <p>
-        {{ dataUser.currentChannelName }}
+        {{ channelService.currentChannelName }}
       </p>
       } @else {
          <p>
-        {{ dataUser.userSubcollectionChannelName }}
+        {{ channelService.userSubcollectionChannelName }}
       </p>
       }
       <span class="btn-img"></span>

@@ -8,6 +8,7 @@ import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
 import {  MatDialog } from '@angular/material/dialog';
 import { EditLogoutUserComponent } from './edit-logout-user/edit-logout-user.component';
+import { ChannelService } from '../../services/channel.service';
 
 @Component({
   selector: 'app-header',
@@ -26,6 +27,7 @@ export class HeaderComponent {
   value = 'Clear me';
   readonly dialog = inject(MatDialog);
   dataUser = inject(UserService);
+  channelService = inject(ChannelService);
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(EditLogoutUserComponent, {

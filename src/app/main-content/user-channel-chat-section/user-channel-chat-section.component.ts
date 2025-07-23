@@ -5,12 +5,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 import { UserService } from '../../services/user.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogActions } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { Allchannels } from '../../../models/allchannels.class';
+import { ChannelService } from '../../services/channel.service';
 
 @Component({
   selector: 'app-user-channel-chat-section',
@@ -21,17 +22,18 @@ import { Allchannels } from '../../../models/allchannels.class';
 export class UserChannelChatSectionComponent implements OnInit {
   
   dataUser = inject(UserService);
+  channelService = inject(ChannelService);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
   newChannel = new Allchannels();
-  currentUserId = this.dataUser.currentUserId;
+  currentUserId = this.channelService.currentUserId;
 
   private routeSub?: Subscription;
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((paramMap) => {
     const channelId = paramMap.get('channelId')!;
-    this.dataUser.currentChannelId = channelId;
+    this.channelService.currentChannelId = channelId;
   });
   }
 
@@ -55,7 +57,7 @@ export class UserChannelChatSectionComponent implements OnInit {
   }
 
   userCreateChannel() {
-     this.dataUser.addNewChannel(this.newChannel.toJSON(),this.currentUserId,this.currentUserId).then(() => {
+     this.channelService.addNewChannel(this.newChannel.toJSON(),this.currentUserId,this.currentUserId).then(() => {
     });
   }
 

@@ -6,6 +6,7 @@ import { NgClass, NgIf } from '@angular/common';
 import { UserService } from './../../services/user.service'
 import { FormsModule, NgModel } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ChannelService } from '../../services/channel.service';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class UserCardComponent implements OnInit {
   newName = '';
   urlUserId: string;
   dataUser = inject(UserService);
+  channelService = inject(ChannelService);
   userUpdateNameAktiv: boolean = false;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { user: User, urlUserId: string }, private dialogRef: MatDialogRef<UserCardComponent>,
@@ -46,7 +48,7 @@ export class UserCardComponent implements OnInit {
   }
 
   checkUserId() {
-    return this.urlUserId === this.dataUser.currentUserId;
+    return this.urlUserId === this.channelService.currentUserId;
   }
 
   changeName() {
@@ -64,7 +66,7 @@ export class UserCardComponent implements OnInit {
   }
 
   isCurrentUser(): boolean {
-    return this.dataUser.currentUserId === this.urlUserId;
+    return this.channelService.currentUserId === this.urlUserId;
   }
 }
 

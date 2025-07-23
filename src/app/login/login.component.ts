@@ -6,6 +6,7 @@ import { IntroService } from '../services/intro.service';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user.service';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ChannelService } from '../services/channel.service';
 
 @Component({
   selector: 'app-login',
@@ -28,6 +29,7 @@ export class LoginComponent implements OnInit {
 
   private introService = inject(IntroService);
   private userService = inject(UserService);
+  private channelService = inject(ChannelService);
   private router = inject(Router);
 
   get isFormValid(): boolean {
@@ -76,7 +78,7 @@ export class LoginComponent implements OnInit {
       setTimeout(() => {
         backgroundOverlay.classList.remove('active');
         setTimeout(() => {
-          this.userId = this.userService.currentUserId;
+          this.userId = this.channelService.currentUserId;
           this.resetLoginForm();
           this.router.navigate(['mainpage', this.userId]);
         }, 125);
@@ -116,7 +118,7 @@ export class LoginComponent implements OnInit {
 
   private handleSuccessfulGuestLogin(backgroundOverlay: HTMLElement | null) {
     if (backgroundOverlay) {
-      this.userId = this.userService.currentUserId;
+      this.userId = this.channelService.currentUserId;
       backgroundOverlay.classList.add('active');
       setTimeout(() => {
         backgroundOverlay.classList.remove('active');

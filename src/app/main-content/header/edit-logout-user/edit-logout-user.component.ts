@@ -5,6 +5,7 @@ import { UserCardComponent } from '../../user-card/user-card.component';
 import { User } from '../../../../models/user.class';
 import { UserService } from '../../../services/user.service';
 import { Router } from '@angular/router';
+import { ChannelService } from '../../../services/channel.service';
 
 @Component({
   selector: 'app-edit-logout-user',
@@ -21,10 +22,11 @@ export class EditLogoutUserComponent {
   private router = inject(Router);
   readonly dialog = inject(MatDialog);
   readonly userService = inject(UserService);
+  readonly channelService = inject(ChannelService);
 
   openDialog(): void {
-    const currentUser = this.userService.currentUser;
-    const currentUserId = this.userService.currentUserId;
+    const currentUser = this.channelService.currentUser;
+    const currentUserId = this.channelService.currentUserId;
 
     this.dialog.open(UserCardComponent, {
       data: {

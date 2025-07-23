@@ -1,12 +1,12 @@
 import { Injectable, inject, Injector, runInInjectionContext, OnInit } from '@angular/core';
 import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData, getDoc, updateDoc, deleteDoc, docData } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
-import { Allchannels } from '../../models/allchannels.class';
 import { Observable } from 'rxjs';
 import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { BehaviorSubject } from 'rxjs';
+import { ChannelService } from './channel.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ import { BehaviorSubject } from 'rxjs';
 export class UserService {
 
   private firestore = inject(Firestore);
-
+  channelService = inject(ChannelService);
   private router = inject(Router);
   private auth = inject(Auth);
   private injector = inject(Injector);
@@ -23,31 +23,7 @@ export class UserService {
   pendingRegistrationId$ = this.pendingRegistrationId.asObservable();
   private isCheckedSubject = new BehaviorSubject<any>(null);
   public isChecked$ = this.isCheckedSubject.asObservable();
-  private updateChannelByUser = new BehaviorSubject<Allchannels[]>([]);
-  showChannelByUser$ = this.updateChannelByUser.asObservable();
-
-  userData: User[] = [];
-  currentUser?: User;
-  channels: any[] = [];
-  currentUserId!: string;
-  showChannelByUser: any[] = [];
-  channelCreaterId!: string;
-  channelCreaterName: string = '';
-  currentChannelId: string = '';
-  currentChannelName: string = '';
-  currentChannelDescription: string = '';
-  userSubcollectionId: string = '';
-  userSubcollectionChannelId: string = '';
-  userSubcollectionChannelName: string = '';
-  userSubcollectionDescription: string = '';
-
-  public channelsLoaded$ = new BehaviorSubject<boolean>(false);
-
-  unsubscribeUserData!: Subscription;
-  unsubscribeUserChannels!: Subscription;
-  unsubscribeChannelCreater!: () => void;
-  unsubscribeChannelCreaterName!: () => void;
-  unsubscribeUserStorage!: Subscription;
+ 
   loginIsSucess = false;
 
 
@@ -61,27 +37,9 @@ export class UserService {
     );
   }
 
-  getUserSubCol(docId: string) {
-    return runInInjectionContext(this.injector, () =>
-      collection(this.getSingleUserRef(docId), 'userstorage')
-    );
-  }
-
-  getSingleChannelRef(docId: string) {
-    return runInInjectionContext(this.injector, () =>
-      doc(this.getChannelRef(), docId)
-    );
-  }
-
   getSingleUserRef(docId: string) {
     return runInInjectionContext(this.injector, () =>
       doc(this.getUsersCollection(), docId)
-    );
-  }
-
-  getChannelRef() {
-    return runInInjectionContext(this.injector, () =>
-      collection(this.firestore, 'channels')
     );
   }
 
@@ -106,14 +64,14 @@ export class UserService {
 
     if (!result.empty) {
       const userDoc = result.docs[0];
-      this.currentUserId = userDoc.id;
+      this.channelService.currentUserId = userDoc.id;
     }
     const userStorageSnapshot = await runInInjectionContext(this.injector, () =>
-      getDocs(this.getUserSubCol(this.currentUserId))
+      getDocs(this.channelService.getUserSubCol(this.channelService.currentUserId))
     );
     if (!userStorageSnapshot.empty) {
       const userStorage = userStorageSnapshot.docs[0];
-      this.userSubcollectionId = userStorage.id;
+      this.channelService.userSubcollectionId = userStorage.id;
     }
     this.loginIsSucess = true;
   }
@@ -143,15 +101,15 @@ export class UserService {
         newUser.name = user.displayName || user.email?.split('@')[0] || '';
         newUser.avatar = "empty-avatar.png";
         const { userId, userStorageId } = await this.createUserBySignInWithGoogle(newUser);
-        this.currentUserId = userId;
-        this.userSubcollectionId = userStorageId;
+        this.channelService.currentUserId = userId;
+        this.channelService.userSubcollectionId = userStorageId;
       } else {
         const userDoc = result.docs[0];
-        this.currentUserId = userDoc.id;
+        this.channelService.currentUserId = userDoc.id;
       }
 
       this.loginIsSucess = true;
-      this.router.navigate(['mainpage', this.currentUserId]);
+      this.router.navigate(['mainpage', this.channelService.currentUserId]);
       return user;
     } catch (error) {
       console.error('Error during Google sign in', error);
@@ -175,8 +133,8 @@ export class UserService {
     if (!result.empty) {
       if (!result.empty) {
         const userDoc = result.docs[0];
-        this.currentUserId = userDoc.id;
-        this.currentUser = new User(userDoc.data());
+        this.channelService.currentUserId = userDoc.id;
+        this.channelService.currentUser = new User(userDoc.data());
         this.loginIsSucess = true;
       }
     } else {
@@ -301,115 +259,16 @@ export class UserService {
     }
   }
 
-  async addNewChannel(allChannels: {}, userId: string, user: string) {
-    const dateNow = new Date();
-    dateNow.setHours(0, 0, 0, 0);
-    const channelWithUser = {
-      ...allChannels,
-      userId: [userId],
-      createdBy: user,
-      createdAt: dateNow,
-    };
-    await runInInjectionContext(this.injector, () =>
-      addDoc(collection(this.firestore, 'channels'), channelWithUser)
-    );
-  }
-
-  async getChannelUserId(channelId: string) {
-    const channelRef = this.getSingleChannelRef(channelId);
-    this.unsubscribeChannelCreaterName = runInInjectionContext(this.injector, () =>
-      onSnapshot(channelRef, (element) => {
-        const data = element.data();
-        if (data) {
-          this.channelCreaterId = data['createdBy'];
-          this.getChannelUserName(this.channelCreaterId);
-        }
-      })
-    );
-  }
-
-  getChannelUserName(userId: string) {
-    const channelRef = this.getSingleUserRef(userId);
-    this.unsubscribeChannelCreater = runInInjectionContext(this.injector, () =>
-      onSnapshot(channelRef, (element) => {
-        const data = element.data();
-        if (data) {
-          this.channelCreaterName = data['name'];
-          console.log('channel creater id ist', this.channelCreaterId);
-          console.log('channel creater name', this.channelCreaterName);
-        }
-      })
-    );
-  }
-
-  async showCurrentUserData() {
-    const userRef = this.getSingleUserRef(this.currentUserId);
-    this.unsubscribeUserData = runInInjectionContext(this.injector, () =>
-      docData(userRef)
-    ).subscribe((data) => {
-      this.currentUser = new User(data);
-    });
-    const storageRef = this.getUserSubCol(this.currentUserId);
-    const storageSnapshot = await runInInjectionContext(this.injector, () =>
-      getDocs(storageRef)
-    );
-    storageSnapshot.forEach((doc) => {
-      const data = doc.data();
-      console.log('doc data', data);
-      this.userSubcollectionChannelId = data['channelId'];
-      this.userSubcollectionId = doc.id;
-      this.userSubcollectionChannelName = data['channelname'];  
-      this.userSubcollectionDescription = data['description'];
-    });
-    this.showUserChannel()
-  }
-
-  showUserChannel() {
-    const channelRef = this.getChannelRef();
-    this.unsubscribeUserChannels = runInInjectionContext(this.injector, () =>
-      collectionData(channelRef, { idField: 'channelId' })
-    ).subscribe(channels => {
-      this.channels = [];
-      this.channels = channels;
-      this.checkChannel();
-      this.channelsLoaded$.next(true);
-    });
-  }
-
-  checkChannel() {
-  this.showChannelByUser = this.channels.filter(channel =>
-    Array.isArray(channel.userId) && channel.userId.includes(this.currentUserId)
-    );
-    this.updateChannelByUser.next(this.showChannelByUser);
-  }
-
-  async updateUserStorage(userId: string, storageId: string, item: {}) {
-    const storageDocRef = runInInjectionContext(this.injector, () =>
-      doc(this.getUserSubCol(userId), storageId)
-    );
-    await runInInjectionContext(this.injector, () =>
-      updateDoc(storageDocRef, item)
-    );
-  }
-
-  async editChannel(docId: string, item: {}) {
-    const singleChannelRef = this.getSingleChannelRef(docId);
-    await runInInjectionContext(this.injector, () =>
-      updateDoc(singleChannelRef, item)
-    );
-  }
-
   async updateUserName(newName: string): Promise<void> {
-    if (!this.currentUserId) {
+    if (!this.channelService.currentUserId) {
       throw new Error('Kein eingeloggter Benutzer');
     }
-
-    const userRef = this.getSingleUserRef(this.currentUserId);
+    const userRef = this.getSingleUserRef(this.channelService.currentUserId);
     await runInInjectionContext(this.injector, () =>
       updateDoc(userRef, { name: newName })
     );
-    if (this.currentUser) {
-      this.currentUser.name = newName;
+    if (this.channelService.currentUser) {
+      this.channelService.currentUser.name = newName;
     }
   }
 
