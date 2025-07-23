@@ -6,6 +6,8 @@ import { HeaderStartComponent } from '../../../shared/header-start/header-start.
 import { FooterStartComponent } from '../../../shared/footer-start/footer-start.component';
 import { getDoc, doc, updateDoc } from '@angular/fire/firestore';
 import { MatDialogModule } from "@angular/material/dialog";
+import { isValidPassword, PasswordValidationService } from '../../../services/password-validation.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-password-reset',
@@ -14,7 +16,8 @@ import { MatDialogModule } from "@angular/material/dialog";
     HeaderStartComponent,
     RouterLink,
     FooterStartComponent,
-    MatDialogModule
+    MatDialogModule,
+    CommonModule
   ],
   templateUrl: './password-reset.component.html',
   styleUrl: './password-reset.component.scss'
@@ -24,6 +27,7 @@ export class PasswordResetComponent implements OnInit {
   private router = inject(Router);
   private userService = inject(UserService);
   private injector = inject(Injector);
+  private passwordValidationService = inject(PasswordValidationService);
 
   token: string = '';
   userId: string = '';
@@ -31,6 +35,8 @@ export class PasswordResetComponent implements OnInit {
   confirmPassword: string = '';
   tokenValid: boolean = false;
   isLoading: boolean = false;
+  passwordTouched: boolean = false;
+  user: { password: string } = { password: '' };
 
   async ngOnInit() {
     this.token = this.route.snapshot.queryParamMap.get('token') || '';
@@ -40,20 +46,6 @@ export class PasswordResetComponent implements OnInit {
       await this.validateToken();
     }
   }
-
-  // Übertragen für die Validation für die Erstellung des neuen Passwort
-  // private isValidPassword(password: string) {
-  //   if (!password || password.length < 8) {
-  //     return false;
-  //   }
-
-  //   const hasUpperCase = /[A-Z]/.test(password);
-  //   const hasLowerCase = /[a-z]/.test(password);
-  //   const hasNumbers = /\d/.test(password);
-  //   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-  //   return hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
-  // }
 
   async validateToken() {
     try {
@@ -66,6 +58,25 @@ export class PasswordResetComponent implements OnInit {
     } catch (error) {
       this.handleValidationError(error);
     }
+  }
+
+  onPasswordInput() {
+    this.passwordTouched = true;
+  }
+
+  get showPasswordError(): boolean {
+    return this.passwordValidationService.showPasswordError(this.newPassword, this.passwordTouched);
+  }
+
+  get passwordErrorMessage(): string {
+    return this.passwordValidationService.getPasswordErrorMessage(this.newPassword);
+  }
+
+  isFormValid(): boolean {
+    return this.newPassword.length >= 8 &&
+      this.passwordValidationService.isValidPassword(this.newPassword) &&
+      this.newPassword === this.confirmPassword &&
+      this.tokenValid;
   }
 
   private async getUserDocument() {
@@ -83,12 +94,6 @@ export class PasswordResetComponent implements OnInit {
   private handleValidationError(error: any) {
     console.error('Fehler bei Token-Validierung:', error);
     this.showError('Fehler bei der Validierung des Reset-Links.');
-  }
-
-  isFormValid(): boolean {
-    return this.newPassword.length >= 6 &&
-      this.newPassword === this.confirmPassword &&
-      this.tokenValid;
   }
 
   async resetPassword() {
