@@ -12,7 +12,8 @@ export class ChatService {
     private injector = inject(Injector);
     dataUser = inject(UserService);
     messages: any[] = [];
-    hasMessages = false;
+    hasMessages: boolean = false;
+    messageToday: boolean = false;
 
     async getOrCreateChatId(userId1: string, userId2: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
@@ -81,15 +82,43 @@ export class ChatService {
         )
     }
 
-    isToday(timestamp: any): boolean {
-        if (!timestamp || typeof timestamp.toDate !== 'function') {
-            return false;
-        }
-        const date = timestamp?.toDate();
-        const today = new Date();
-        return date.getDate() === today.getDate() &&
-            date.getMonth() === today.getMonth() &&
-            date.getFullYear() === today.getFullYear();
+    isFirstMessageOfDay(timestamp: any, index: number): boolean {
+        const currentDate = this.getDateWithoutTime(timestamp?.toDate());
+        if (!currentDate) return false;
+
+        if (index === 0) return true;
+
+        const prevMsg = this.messages[index - 1];
+        const prevDate = this.getDateWithoutTime(prevMsg?.timestamp?.toDate());
+        if (!prevDate) return true;
+
+        return currentDate.getTime() !== prevDate.getTime();
     }
 
+    private getDateWithoutTime(date: Date | undefined | null): Date | null {
+        if (!date) return null;
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
+    getDateLabel(timestamp: any): string {
+        const date = timestamp?.toDate();
+        if (!date) return '';
+
+        const today = new Date();
+        const yesterday = new Date();
+        yesterday.setDate(today.getDate() - 1);
+
+        const msgDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const yesterdayDate = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate());
+
+        if (msgDate.getTime() === todayDate.getTime()) return 'Heute';
+        if (msgDate.getTime() === yesterdayDate.getTime()) return 'Gestern';
+
+        return date.toLocaleDateString('de-DE', {
+            weekday: 'long',
+            day: '2-digit',
+            month: 'long'
+        });
+    }
 }

@@ -1,24 +1,22 @@
-<div class="date-divider" *ngFor="let msg of chatService.messages">
-    <span *ngIf="chatService.isToday(msg.timestamp) && chatService.hasMessages" class="date-label">Heute</span>
-    <span *ngIf="!chatService.isToday(msg.timestamp) && chatService.hasMessages" class="date-label">{{msg.timestamp?.toDate() | date:'EEEE, dd MMMM'}}</span>
-</div>
-<div class="users-message-container" *ngFor="let msg of chatService.messages">
-    <div class="message-container" *ngIf="msg.senderId == dataUser.currentUserId">
-        <div>
-            <img class="user-logo" src="avatar/men1.png" alt="">
-        </div>
-        <div class="message-info">
-            <div class="user-date-container">
-                <p>{{msg.timestamp?.toDate() | date:'HH:mm'}}</p>
-                <span>{{dataUser.currentUser?.name}}</span>
+<div class="messages-container">
+    <div class="users-message-container" *ngIf="message.senderId == dataUser.currentUserId">
+        <div class="message-container">
+            <div>
+                <img class="user-logo" src="avatar/men1.png" alt="">
             </div>
-            <div class="message-content">
-                <h3>{{msg.text}}</h3>
-            </div>
-            <div class="answer-date-container">
-                <div>
-<!--                     <span>2 Antworte</span>
+            <div class="message-info">
+                <div class="user-date-container">
+                    <p>{{message.timestamp?.toDate() | date:'HH:mm'}}</p>
+                    <span>{{dataUser.currentUser?.name}}</span>
+                </div>
+                <div class="message-content">
+                    <h3>{{message.text}}</h3>
+                </div>
+                <div class="answer-date-container">
+                    <div>
+                        <!--                     <span>2 Antworte</span>
                     <p>Letze Antwort 14:56</p> -->
+                    </div>
                 </div>
             </div>
         </div>

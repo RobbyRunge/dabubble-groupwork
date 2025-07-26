@@ -1,31 +1,11 @@
 @use "./../../../../styles.scss" as *;
 
-.date-divider {
-    @include dFlex();
+
+.messages-container {
     width: 100%;
-
-    .date-label {
-        position: relative;
-        padding: 0 12px;
-        font-size: 14px;
-        background-color: white;
-        color: black;
-        border: 1px solid #c7c7f5;
-        border-radius: 20px;
-        white-space: nowrap;
-        z-index: 1;
-    }
-
-    &::before,
-    &::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: #c7c7f5;
-        margin: 0 10px;
-    }
+    @include dFlex();
+    flex-direction: column;
 }
-
 
 .users-message-container {
     padding-top: 20px;
@@ -85,19 +65,23 @@
 
 .answer-date-container {
     @include dFlex(flex-start);
-    >div{
+
+    >div {
         @include dFlex();
         gap: 20px;
-        >span{
+
+        >span {
             color: #535AF1;
             font-size: 18px;
-            &:hover{
+
+            &:hover {
                 cursor: pointer;
             }
         }
-        >p{
+
+        >p {
             color: #686868;
             font-size: 14px;
         }
-      }
+    }
 }
