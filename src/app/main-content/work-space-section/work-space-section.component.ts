@@ -93,6 +93,8 @@ export class WorkSpaceSectionComponent implements OnInit {
     this.dataUser.chatId = await this.chatService.getOrCreateChatId(this.channelService.currentUserId, user.userId);
     this.router.navigate(['/mainpage', this.channelService.currentUserId, 'chats', this.dataUser.chatId]);
     this.chatService.listenToMessages();
+    this.dataUser.showChannel = false;
+    this.dataUser.showChatPartnerHeader = true;
   }
 
   readonly dialog = inject(MatDialog);
@@ -118,6 +120,8 @@ export class WorkSpaceSectionComponent implements OnInit {
 
   openChannel(channelName: string, channelId: string, channelDescription: string) {
     console.log('channels by user', this.channelService.showChannelByUser);
+    this.dataUser.showChannel = true;
+    this.dataUser.showChatPartnerHeader = false;
     this.router.navigate(['mainpage', this.channelService.currentUserId, 'channel', channelId,]);
     this.newChannel.channelname = channelName;
     this.newChannel.channelId = channelId;
@@ -132,6 +136,7 @@ export class WorkSpaceSectionComponent implements OnInit {
     this.channelService.currentChannelName = channelName;
     this.channelService.currentChannelDescription = channelDescription;
     this.channelService.getChannelUserId(this.activeChannelId);
+    this.dataUser.getUserIdsFromChannel(channelId);
   }
 
   ngOnDestroy(): void {

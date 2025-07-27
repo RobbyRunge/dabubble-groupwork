@@ -3,9 +3,9 @@
     <app-work-space-section class="work-space-section"></app-work-space-section>
     <div class="chat-section">
         <div class="channel-user-content">
-            <!--             <div class="header-channel-content">
+            <div *ngIf="dataUser.showChannel" class="header-channel-content">
                 <div class="button-container">
-                    <button class="channel-btn" (click)="openDialog()">
+                    <button #btn class="channel-btn" (click)="openDialog(btn)">
                         <span>#</span>
                         @if (channelService.currentChannelName) {
                         <span>{{ channelService.currentChannelName }}</span>
@@ -15,9 +15,11 @@
                         <img src="/img/arrow_down.png">
                     </button>
                 </div>
-                <div>Placeholder User Avatar</div>
-            </div> -->
-            <div class="header-user-content">
+                <div class="users-in-channel">
+                    <!-- <div *ngFor=""></div> -->
+                </div>
+            </div>
+            <div *ngIf="dataUser.showChatPartnerHeader" class="header-user-content">
                 <div *ngIf="channelService.isChecked$ | async as selectedUser" [ngClass]="{
                 'other-user': selectedUser.userId !== channelService.currentUserId
                     }">
