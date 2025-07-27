@@ -1,4 +1,4 @@
-import { Component, inject, Injector, OnInit, runInInjectionContext, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, Injector, OnInit, runInInjectionContext, SimpleChanges, ViewChild } from '@angular/core';
 import { WorkSpaceSectionComponent } from "../work-space-section/work-space-section.component";
 import { ThreadSectionComponent } from "../thread-section/thread-section.component";
 import { HeaderComponent } from "../header/header.component";
@@ -19,6 +19,7 @@ import { SentMessageComponent } from "./sent-message/sent-message.component";
 import { ChatService } from '../../services/chat.service';
 import { ChannelService } from '../../services/channel.service';
 import { Allchannels } from '../../../models/allchannels.class';
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 
 
 @Component({
@@ -35,7 +36,8 @@ import { Allchannels } from '../../../models/allchannels.class';
     AsyncPipe,
     NgClass,
     ReceivedMessageComponent,
-    SentMessageComponent
+    SentMessageComponent,
+    PickerComponent
   ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
@@ -63,6 +65,9 @@ export class ChatSectionComponent implements OnInit {
   showUserList: boolean = false;
   showChanelList: boolean = false;
   selectedUser: any;
+  showEmojis: boolean = false;
+  @ViewChild('chatContainer') chatContainer!: ElementRef;
+
 
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
@@ -72,7 +77,6 @@ export class ChatSectionComponent implements OnInit {
       this.users$ = this.dataUser.getAllUsers();
       this.getUserData();
     });
-
     /*     this.listenToMessages(this.route);
         console.log('test' + this.chatId);
       }); */
@@ -83,11 +87,9 @@ export class ChatSectionComponent implements OnInit {
     // }, 2000);
   }
 
-  ngOnChanges(changes: SimpleChanges){
-    if (changes[this.messageText]) {
-    this.onInputChange();      
-    console.log('input feld is changed');
-    }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
   }
 
   async sendMessage() {
@@ -137,8 +139,8 @@ export class ChatSectionComponent implements OnInit {
     const rect = button.getBoundingClientRect();
     const dialog = this.dialog.open(ChannelSectionComponent, {
       position: {
-        top: `${rect.bottom + window.scrollY}px`,   
-        left: `${rect.left + window.scrollX}px`,    
+        top: `${rect.bottom + window.scrollY}px`,
+        left: `${rect.left + window.scrollX}px`,
       },
       width: '872px',
       height: '612px',
@@ -198,13 +200,35 @@ export class ChatSectionComponent implements OnInit {
     this.messageText += user.name;
     this.showUserList = false;
   }
+  selecetedChannelMention(channel: Allchannels, index: number) {
+    this.messageText += channel.channelname;
+    this.showChanelList = false;
+  }
+
+  showAllEmojis() {
+    this.showEmojis = true;
+  }
 
   openUserDialog() {
     this.userDialog.open(UserCardComponent, {
       data: { user: this.selectedUser }
     })
   }
+
+  addEmoji($event: any) {
+    this.messageText += $event.emoji.native;
+    this.showEmojis = false;
+  }
+
+  scrollToBottom(): void {
+    if (this.chatContainer) {
+      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+    }
+  }
+
 }
+
+
 
 function ngOnDestroy(): ((error: import("@firebase/firestore").FirestoreError) => void) | undefined {
   throw new Error('Function not implemented.');

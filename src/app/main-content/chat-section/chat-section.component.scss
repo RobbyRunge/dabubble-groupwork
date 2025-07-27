@@ -223,7 +223,7 @@ mat-label {
     max-height: 470px;
 
     >div {
-        >.user-list-container {
+        >.user-chanel-list-container {
             @include dFlex(flex-start);
             flex-direction: row;
             gap: 10px;
@@ -232,7 +232,10 @@ mat-label {
             border-radius: 100px;
 
             &:hover {
-                background-color: #535bf183;
+                background-color: #ECEEFE;
+                >p{
+                   color: #535AF1; 
+                }
             }
         }
     }
@@ -339,4 +342,9 @@ mat-label {
     width: 100%;
     @include dFlex();
     flex-direction: column;
+}
+
+.emoji{
+    height: 24px;
+    width: 24px;
 }

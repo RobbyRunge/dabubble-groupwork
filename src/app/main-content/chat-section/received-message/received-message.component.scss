@@ -2,9 +2,11 @@
 
 
 .messages-container {
-    width: 100%;
-    @include dFlex();
-    flex-direction: column;
+    &:hover{
+        .message-content{
+            background-color: white;
+        }
+    }
 }
 
 .users-message-container {
@@ -84,4 +86,9 @@
             font-size: 14px;
         }
     }
+}
+
+.message-hover-options{
+    right: 45px;
+    top: -25px;
 }

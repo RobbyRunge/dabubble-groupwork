@@ -1,3 +1,5 @@
+@use '@ctrl/ngx-emoji-mart/picker' as *;
+
 @mixin dFlex($jc: center, $ai: center) {
     display: flex;
     justify-content: $jc;
@@ -22,7 +24,14 @@ body {
     height: 100%;
 }
 
-h1,h2,h3,h4,h5,h6,p,span {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span {
     margin: 0;
 }
 
@@ -38,9 +47,9 @@ body {
 
 
 .channel-dialog-container .mat-mdc-dialog-surface {
-  background-color: #FFFFFF;
-  padding: 25px;
-  border-top-left-radius: 0;
+    background-color: #FFFFFF;
+    padding: 25px;
+    border-top-left-radius: 0;
 }
 
 .close-icon {
@@ -50,18 +59,56 @@ body {
     cursor: pointer;
     transition: all 100ms ease-in;
     @include dFlex();
-        &:hover {
-            padding: 5px;
-            color: #535AF1; 
-            background-color: #ECEEFE;
-            border-radius: 50%;
-        }
+
+    &:hover {
+        padding: 5px;
+        color: #535AF1;
+        background-color: #ECEEFE;
+        border-radius: 50%;
+    }
 }
 
 .custom-menu {
-  width: 872px !important;
-  height: 539px !important;
-  background-color: white;
-  padding: 24px;
-  overflow-y: auto;
+    width: 872px !important;
+    height: 539px !important;
+    background-color: white;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.messages-container {
+    width: 100%;
+    @include dFlex();
+    flex-direction: column;
+    position: relative;
+
+    &:hover {
+        background-color: #ECEEFE;
+        .message-hover-options{
+            @include dFlex();
+        }
+    }
+}
+
+.message-hover-options {
+    display: none;
+    flex-direction: row-reverse;
+    border: 1px solid #ADB0D9;
+    padding-left: 25px;
+    padding-right: 15px;
+    border-bottom-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-top-left-radius: 30px;
+    position: absolute;
+    background-color: white;
+
+
+    >div {
+        padding: 10px 10px;
+        @include dFlex();
+        &:hover{
+            background-color: #ECEEFE;
+            border-radius: 100%;
+        }
+    }
 }
