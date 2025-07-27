@@ -10,7 +10,24 @@
                     <span>{{dataUser.currentUser?.name}}</span>
                 </div>
                 <div class="message-content">
-                    <h3>{{message.text}}</h3>
+                    <h3 *ngIf="!editMessageActive">{{message.text}}</h3>
+                    <mat-form-field *ngIf="editMessageActive" class="example-full-width">
+                        <input matInput name="message" placeholder="{{message.text}}">
+                        <div class="icons-container">
+                            <div>
+                                <div (click)="showAllEmojis()">
+                                    <img [src]="imgReaction" (mouseover)="imgReaction = 'add_reaction_color.png'"
+                                        (mouseout)="imgReaction = 'add reaction.png'">
+                                </div>
+                            </div>
+                            <div>
+                                <button>Abbrechen</button>
+                            </div>
+                            <div>
+                                <button>Speichern</button>
+                            </div>
+                        </div>
+                    </mat-form-field>
                 </div>
                 <div class="answer-date-container">
                     <div>
@@ -23,13 +40,22 @@
     </div>
     <div class="message-hover-options">
         <div>
-            <img [src]="imgSrcMore" (mouseover)="imgSrcMore = 'img/more_vert_color.png'" (mouseout)="imgSrcMore = 'img/more_vert.png'">
+            <img [matMenuTriggerFor]="menu" [src]="imgSrcMore" (mouseover)="imgSrcMore = 'img/more_vert_color.png'"
+                (mouseout)="imgSrcMore = 'img/more_vert.png'">
+            <div>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="editMessage()">Nachricht bearbeiten</button>
+                </mat-menu>
+
+            </div>
         </div>
         <div>
-            <img [src]="imgComment" (mouseover)="imgComment='img/comment_color.png'" (mouseout)="imgComment='img/comment.png'">
+            <img [src]="imgComment" (mouseover)="imgComment='img/comment_color.png'"
+                (mouseout)="imgComment='img/comment.png'">
         </div>
         <div>
-            <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'" (mouseout)="imgReaction='img/add_reaction.png'">
+            <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
+                (mouseout)="imgReaction='img/add_reaction.png'">
         </div>
         <div>
             <img src="/emojis/emoji_thumb.png" alt="">

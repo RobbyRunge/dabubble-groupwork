@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <app-sent-message *ngIf="msg.senderId === channelService.currentUserId"
-                        [message]="msg"></app-sent-message>
+                        [message]="msg" [index]="i"></app-sent-message>
 
                     <app-received-message *ngIf="msg.senderId !== channelService.currentUserId"
                         [message]="msg"></app-received-message>

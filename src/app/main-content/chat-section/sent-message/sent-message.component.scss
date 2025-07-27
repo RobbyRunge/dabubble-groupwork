@@ -52,7 +52,8 @@
     max-width: 100%;
     width: auto;
 
-    >h3 {
+    >h3,
+    input {
         font-family: 'Nunito';
         font-size: 18px;
         font-weight: 400;
@@ -83,7 +84,52 @@
     }
 }
 
-.message-hover-options{
+.message-hover-options {
     left: 45px;
     top: -25px;
+}
+
+::ng-deep .mat-mdc-menu-panel {
+    background-color: white !important;
+    border-bottom-left-radius: 30px !important;
+    border-bottom-right-radius: 30px !important;
+    border-top-right-radius: 30px !important;
+    padding: 0px 20px !important;
+    width: 313px !important;
+    max-width: unset !important;
+
+    >button {
+        >span {
+            color: black !important;
+        }
+    }
+}
+
+::ng-deep .mat-mdc-menu-item {
+    padding: 10px 20px !important;
+
+    >span {
+        text-align: center;
+        color: black !important;
+        font-size: 24px !important;
+        font-family: 'Nunito' !important;
+    }
+
+    &:hover {
+        background-color: #ECEEFE !important;
+        border-radius: 100px;
+
+        >span {
+            font-weight: 700 !important;
+            color: #535AF1 !important;
+        }
+    }
+}
+
+.example-full-width .mat-mdc-text-field-wrapper {
+    height: unset !important;
+}
+
+.mat-mdc-form-field-infix {
+    width: unset;
 }
