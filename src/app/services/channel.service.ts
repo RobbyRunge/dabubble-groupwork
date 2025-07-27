@@ -17,7 +17,7 @@ import {
   onSnapshot,
   updateDoc,
 } from '@angular/fire/firestore';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { UserService } from './user.service';
 import { Allchannels } from '../../models/allchannels.class';
 import { User } from '../../models/user.class';
@@ -214,4 +214,9 @@ export class ChannelService {
     this.isCheckedSubject.next(user)
   }
 
+  getAllChannels(): Observable<Allchannels[]> {
+    return runInInjectionContext(this.injector, () =>
+      collectionData(this.getChannelRef(), { idField: 'channelId' })
+    ) as Observable<Allchannels[]>;
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, Injector, OnInit, runInInjectionContext } from '@angular/core';
+import { Component, inject, Injector, OnInit, runInInjectionContext, SimpleChanges } from '@angular/core';
 import { WorkSpaceSectionComponent } from "../work-space-section/work-space-section.component";
 import { ThreadSectionComponent } from "../thread-section/thread-section.component";
 import { HeaderComponent } from "../header/header.component";
@@ -18,6 +18,7 @@ import { ReceivedMessageComponent } from './received-message/received-message.co
 import { SentMessageComponent } from "./sent-message/sent-message.component";
 import { ChatService } from '../../services/chat.service';
 import { ChannelService } from '../../services/channel.service';
+import { Allchannels } from '../../../models/allchannels.class';
 
 
 @Component({
@@ -59,6 +60,8 @@ export class ChatSectionComponent implements OnInit {
   imgSrcMention: any = 'mention.png'
   imgSrcSend: any = 'send.png';
   users$: Observable<User[]> | undefined;
+  channels$: Observable<Allchannels[]> | undefined;
+  users: any;
   showUserList: boolean = false;
   showChanelList: boolean = false;
   selectedUser: any;
@@ -69,6 +72,7 @@ export class ChatSectionComponent implements OnInit {
       this.showCurrentUserData();
       this.showUserChannel();
       this.users$ = this.dataUser.getAllUsers();
+      this.channels$ = this.channelService.getAllChannels();
       this.getUserData();
     });
 
@@ -80,6 +84,13 @@ export class ChatSectionComponent implements OnInit {
     //   console.log('Channels by user', this.dataUser.showChannelByUser);
 
     // }, 2000);
+  }
+
+  ngOnChanges(changes: SimpleChanges){
+    if (changes[this.messageText]) {
+    this.onInputChange();      
+    console.log('input feld is changed');
+    }
   }
 
   async sendMessage() {

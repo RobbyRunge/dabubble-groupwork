@@ -32,37 +32,42 @@
         <div class="chat-container" *ngIf="channelService.isChecked$ | async as selectedUser" [ngClass]="{
                 'other-user' :selectedUser.userId !== channelService.currentUserId
                     }">
-            <div *ngIf="!chatService.hasMessages" class="user-logo-name-container">
-                <div class="user-logo-big" *ngIf="selectedUser">
-                    <img src="avatar/{{selectedUser.avatar}}" alt="">
-                </div>
-                <div class="user-name-container" *ngIf="selectedUser">
-                    <h2>{{selectedUser.name}} <span
-                            *ngIf="selectedUser.userId === channelService.currentUserId">(Du)</span>
-                    </h2>
-                </div>
-            </div>
-            <div class="chat-info-container"
-                *ngIf="selectedUser.userId === channelService.currentUserId && !chatService.hasMessages">
-                <p>Dieser Raum ist nur für dich da.<span>
-                        für dich da. Mache dir Notizen, liste deine To-dos auf oder bewahre Links
-                        und
-                        Dateien griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.</span></p>
-            </div>
-            <div class="chat-info-container">
-                <p *ngIf="selectedUser.userId !== channelService.currentUserId && !chatService.hasMessages">Diese Unterhaltung findet nur zwischen <span (click)="openUserDialog()">&#64;{{selectedUser.name}}
-                    </span>und dir statt</p>
-            </div>
-            <div *ngFor="let msg of chatService.messages; let i = index">
-                <div *ngIf="chatService.isFirstMessageOfDay(msg.timestamp, i)">
-                    <div class="date-divider">
-                        <span class="date-label">{{ chatService.getDateLabel(msg.timestamp) }}</span>
+            <div>
+                <div *ngIf="!chatService.hasMessages" class="user-logo-name-container">
+                    <div class="user-logo-big" *ngIf="selectedUser">
+                        <img src="avatar/{{selectedUser.avatar}}" alt="">
+                    </div>
+                    <div class="user-name-container" *ngIf="selectedUser">
+                        <h2>{{selectedUser.name}} <span
+                                *ngIf="selectedUser.userId === channelService.currentUserId">(Du)</span>
+                        </h2>
                     </div>
                 </div>
-                <app-sent-message *ngIf="msg.senderId === channelService.currentUserId" [message]="msg"></app-sent-message>
+                <div class="chat-info-container"
+                    *ngIf="selectedUser.userId === channelService.currentUserId && !chatService.hasMessages">
+                    <p>Dieser Raum ist nur für dich da.<span>
+                            für dich da. Mache dir Notizen, liste deine To-dos auf oder bewahre Links
+                            und
+                            Dateien griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.</span>
+                    </p>
+                </div>
+                <div class="chat-info-container">
+                    <p *ngIf="selectedUser.userId !== channelService.currentUserId && !chatService.hasMessages">Diese
+                        Unterhaltung findet nur zwischen <span (click)="openUserDialog()">&#64;{{selectedUser.name}}
+                        </span>und dir statt</p>
+                </div>
+                <div *ngFor="let msg of chatService.messages; let i = index">
+                    <div *ngIf="chatService.isFirstMessageOfDay(msg.timestamp, i)">
+                        <div class="date-divider">
+                            <span class="date-label">{{ chatService.getDateLabel(msg.timestamp) }}</span>
+                        </div>
+                    </div>
+                    <app-sent-message *ngIf="msg.senderId === channelService.currentUserId"
+                        [message]="msg"></app-sent-message>
 
-                <app-received-message *ngIf="msg.senderId !== channelService.currentUserId"
-                    [message]="msg"></app-received-message>
+                    <app-received-message *ngIf="msg.senderId !== channelService.currentUserId"
+                        [message]="msg"></app-received-message>
+                </div>
             </div>
         </div>
         <div class="write-message-container">
@@ -77,15 +82,15 @@
                             <div>{{user.name}}</div>
                         </div>
                     </div>
-                    <div *ngFor="let chanel of users$ | async; let index = index">
+                    <div *ngFor="let chanel of channels$ | async; let index = index">
                         <div *ngIf="showChanelList">
-                            {{chanel.name}}
+                            {{chanel.channelname}}
                         </div>
                     </div>
                 </div>
                 <mat-form-field class="example-full-width">
                     <mat-label>Starte eine neue Nachricht</mat-label>
-                    <input matInput [(ngModel)]="messageText" name="message" (keyup.enter)="sendMessage()">
+                    <input matInput [(ngModel)]="messageText" (input)="onInputChange()" name="message" (keyup.enter)="sendMessage()">
                     <div class="icons-container">
                         <div>
                             <div>

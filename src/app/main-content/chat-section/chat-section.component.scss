@@ -26,7 +26,7 @@
 .channel-user-content {
     @include dFlex(space-between);
     flex-direction: row;
-    height: 110px;
+    min-height: 110px;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     width: 100%;
@@ -245,14 +245,17 @@ mat-label {
 }
 
 .chat-container {
-    overflow-y: scroll;
-    overflow-x: hidden;
     width: 100%;
-    height: 1063px;
+    height: calc(100vh - 405px);
     @include dFlex(flex-end);
     align-items: unset;
     flex-direction: column;
-    padding-bottom: 35px;
+    /* padding-bottom: 35px; */
+    >div{
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-top: 35px
+    }
 }
 
 .user-logo-name-container {
