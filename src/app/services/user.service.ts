@@ -308,10 +308,9 @@ export class UserService {
           this.userAvatarInChannel.push(userAvatar);
           }
         }
-        console.log('names', this.userNamesInChannel);
-        console.log('avatar', this.userAvatarInChannel);
       }
+      console.log('names', this.userNamesInChannel);
+        console.log('avatar', this.userAvatarInChannel);
     }
 }
-
 } 
