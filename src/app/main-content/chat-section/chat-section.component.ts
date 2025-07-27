@@ -45,7 +45,6 @@ export class ChatSectionComponent implements OnInit {
 
   private firestore = inject(Firestore);
   dataUser = inject(UserService);
-
   channelService = inject(ChannelService);
   private injector = inject(Injector);
   chatService = inject(ChatService);
@@ -140,8 +139,8 @@ export class ChatSectionComponent implements OnInit {
     const rect = button.getBoundingClientRect();
     const dialog = this.dialog.open(ChannelSectionComponent, {
       position: {
-        top: `${rect.bottom + window.scrollY}px`,   // unterhalb des Buttons
-        left: `${rect.left + window.scrollX}px`,    // auf gleicher horizontaler Position
+        top: `${rect.bottom + window.scrollY}px`,   
+        left: `${rect.left + window.scrollX}px`,    
       },
       width: '872px',
       height: '612px',

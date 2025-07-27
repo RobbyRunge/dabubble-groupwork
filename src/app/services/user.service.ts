@@ -19,6 +19,13 @@ export class UserService {
   private auth = inject(Auth);
   private injector = inject(Injector);
 
+  showChannel = true;
+  showChatPartnerHeader = true;
+
+  usersIdsInChannel: any[] = [];
+  userNamesInChannel: any[] = [];
+  userAvatarInChannel: any[] = [];
+
   private pendingRegistrationId = new BehaviorSubject<string | null>(null);
   pendingRegistrationId$ = this.pendingRegistrationId.asObservable();
  
@@ -34,6 +41,14 @@ export class UserService {
   getSingleUserRef(docId: string) {
     return runInInjectionContext(this.injector, () =>
       doc(this.getUsersCollection(), docId)
+    );
+  }
+
+  getUserRefsByIds() {
+  return this.usersIdsInChannel.map(id =>
+    runInInjectionContext(this.injector, () =>
+        doc(this.getUsersCollection(), id)
+      )
     );
   }
 
@@ -271,4 +286,32 @@ export class UserService {
       collectionData(this.getUsersCollection(), { idField: 'userId' })
     ) as Observable<User[]>;
   }
+
+  async getUserIdsFromChannel(docId: string) {
+    const singleChannel = this.channelService.getSingleChannelRef(docId);
+    const snapshot = await runInInjectionContext(this.injector, () =>
+      getDoc(singleChannel));
+      if (snapshot.exists()) {
+      const data = snapshot.data();
+      if (data && Array.isArray(data['userId'])) {
+        this.usersIdsInChannel = data['userId'];
+        console.log('users in channel id', this.usersIdsInChannel);
+        for (const id of this.usersIdsInChannel) {
+        const name = this.getSingleUserRef(id);
+        const nameSnap =  await runInInjectionContext(this.injector, () =>
+          getDoc(name));
+        const dataName = nameSnap.data();
+        if (dataName) {
+          const userName = dataName['name'];
+          const userAvatar = dataName['avatar'];  
+          this.userNamesInChannel.push(userName);
+          this.userAvatarInChannel.push(userAvatar);
+          }
+        }
+        console.log('names', this.userNamesInChannel);
+        console.log('avatar', this.userAvatarInChannel);
+      }
+    }
 }
+
+} 

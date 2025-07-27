@@ -71,20 +71,4 @@ export class ChannelSectionComponent implements OnInit {
     this.channelService.currentChannelDescription = this.newChannel.description ?? '';
     });
   }
-
-  // updateChannelListUser(channelName: string, channelId: string) {
-  //   const updatedChannel = {
-  //   channelId: channelId, 
-  //   channelname: channelName                   
-  // };
-  //   const index = this.dataUser.showChannelByUser.findIndex(ch => ch.channelId === updatedChannel.channelId);
-  //   if (index !== -1) {
-  //   this.dataUser.showChannelByUser[index] = updatedChannel;
-  //   }
-  // }
-
-  // async loadChannelCreatorData() {
-  // await this.dataUser.getChannelUserName();
-  // }
-
 }
