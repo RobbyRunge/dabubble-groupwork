@@ -84,7 +84,7 @@
                             <div>{{user.name}}</div>
                         </div>
                     </div>
-                    <div *ngFor="let chanel of channels$ | async; let index = index">
+                    <div *ngFor="let chanel of channelService.showChannelByUser$ | async;">
                         <div *ngIf="showChanelList">
                             {{chanel.channelname}}
                         </div>

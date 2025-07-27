@@ -59,7 +59,6 @@ export class ChatSectionComponent implements OnInit {
   imgSrcMention: any = 'mention.png'
   imgSrcSend: any = 'send.png';
   users$: Observable<User[]> | undefined;
-  channels$: Observable<Allchannels[]> | undefined;
   users: any;
   showUserList: boolean = false;
   showChanelList: boolean = false;
@@ -71,7 +70,6 @@ export class ChatSectionComponent implements OnInit {
       this.showCurrentUserData();
       this.showUserChannel();
       this.users$ = this.dataUser.getAllUsers();
-      this.channels$ = this.channelService.getAllChannels();
       this.getUserData();
     });
 

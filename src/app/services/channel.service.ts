@@ -213,10 +213,4 @@ export class ChannelService {
   setCheckdValue(user: string) {
     this.isCheckedSubject.next(user)
   }
-
-  getAllChannels(): Observable<Allchannels[]> {
-    return runInInjectionContext(this.injector, () =>
-      collectionData(this.getChannelRef(), { idField: 'channelId' })
-    ) as Observable<Allchannels[]>;
-  }
 }
