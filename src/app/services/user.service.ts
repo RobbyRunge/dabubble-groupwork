@@ -19,8 +19,6 @@ export class UserService {
   private auth = inject(Auth);
   private injector = inject(Injector);
 
-  unsubChannelUserNames!: () => void;
-
   showChannel = true;
   showChatPartnerHeader = true;
 
@@ -316,9 +314,4 @@ export class UserService {
     }
 }
 
-  ngOnDestroy(): void {
-   if (this.unsubChannelUserNames) {
-      this.unsubChannelUserNames();
-    }
-  }
 } 
