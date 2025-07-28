@@ -340,3 +340,45 @@ mat-label {
     @include dFlex();
     flex-direction: column;
 }
+
+.user-avatar-channels {
+    height: 40px;
+    @include dFlex();
+    flex-direction: row;
+    >mat-icon {
+        margin-left: 10px;
+        fill: none !important;
+    }
+}
+
+.avatar {
+  width: 40px;
+  height: 100%;
+  border-radius: 50%; 
+  border: 2px solid white;
+  margin-left: -10px; 
+  object-fit: cover;
+  box-shadow: 0 0 0 1px #ffffff; 
+}
+
+.user-avatar-channels .avatar:first-child {
+  margin-left: 0;
+}
+
+.number-of-users {
+    font-family: 'Nunito';
+    font-weight: 600;
+    font-size: 20px;
+    cursor: default;
+    margin-left: 10px;
+}
+
+.add-user-to-channel {
+    background-image: url('/img/person_add_black.png');
+    background-size: cover;        
+    background-position: center;   
+    background-repeat: no-repeat; 
+    height: 24px;
+    width: 24px;
+    margin-left: 10px; 
+}

@@ -15,8 +15,12 @@
                         <img src="/img/arrow_down.png">
                     </button>
                 </div>
-                <div class="users-in-channel">
-                    <!-- <div *ngFor=""></div> -->
+                <div class="user-avatar-channels">
+                    @for (user of dataUser.userAvatarInChannel; track $index) {
+                        <img class="avatar" [src]="'avatar/' + user">
+                    }
+                        <span class="number-of-users">{{ dataUser.userAvatarInChannel.length }}</span>
+                        <span class="add-user-to-channel"></span>
                 </div>
             </div>
             <div *ngIf="dataUser.showChatPartnerHeader" class="header-user-content">

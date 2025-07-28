@@ -19,6 +19,7 @@ import { SentMessageComponent } from "./sent-message/sent-message.component";
 import { ChatService } from '../../services/chat.service';
 import { ChannelService } from '../../services/channel.service';
 import { Allchannels } from '../../../models/allchannels.class';
+import { MatIcon } from '@angular/material/icon';
 
 
 @Component({
@@ -35,7 +36,8 @@ import { Allchannels } from '../../../models/allchannels.class';
     AsyncPipe,
     NgClass,
     ReceivedMessageComponent,
-    SentMessageComponent
+    SentMessageComponent,
+    MatIcon
   ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'

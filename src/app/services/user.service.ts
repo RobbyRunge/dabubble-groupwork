@@ -288,29 +288,30 @@ export class UserService {
   }
 
   async getUserIdsFromChannel(docId: string) {
-    const singleChannel = this.channelService.getSingleChannelRef(docId);
+    this.clearUserInChannelsArray();
     const snapshot = await runInInjectionContext(this.injector, () =>
-      getDoc(singleChannel));
+      getDoc(this.channelService.getSingleChannelRef(docId)));
       if (snapshot.exists()) {
       const data = snapshot.data();
       if (data && Array.isArray(data['userId'])) {
-        this.usersIdsInChannel = data['userId'];
-        console.log('users in channel id', this.usersIdsInChannel);
+        this.usersIdsInChannel.push(...data['userId']);
         for (const id of this.usersIdsInChannel) {
-        const name = this.getSingleUserRef(id);
         const nameSnap =  await runInInjectionContext(this.injector, () =>
-          getDoc(name));
-        const dataName = nameSnap.data();
-        if (dataName) {
-          const userName = dataName['name'];
-          const userAvatar = dataName['avatar'];  
-          this.userNamesInChannel.push(userName);
-          this.userAvatarInChannel.push(userAvatar);
+          getDoc(this.getSingleUserRef(id)));
+          const dataName = nameSnap.data();
+          if (dataName) { 
+            this.userNamesInChannel.push(dataName['name']);
+            this.userAvatarInChannel.push(dataName['avatar']);
           }
         }
       }
-      console.log('names', this.userNamesInChannel);
-        console.log('avatar', this.userAvatarInChannel);
     }
+  }
+
+clearUserInChannelsArray() {
+  this.userNamesInChannel = [];
+  this.userAvatarInChannel = [];
+  this.usersIdsInChannel = [];
 }
+
 } 
