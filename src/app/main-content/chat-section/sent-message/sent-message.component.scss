@@ -52,8 +52,7 @@
     max-width: 100%;
     width: auto;
 
-    >h3,
-    input {
+    >h3 {
         font-family: 'Nunito';
         font-size: 18px;
         font-weight: 400;
@@ -126,10 +125,57 @@
     }
 }
 
-.example-full-width .mat-mdc-text-field-wrapper {
+::ng-deep .example-full-width .mat-mdc-text-field-wrapper {
     height: unset !important;
+    min-width: 400px !important;
 }
 
 .mat-mdc-form-field-infix {
     width: unset;
+}
+
+.editMessageActive {
+    background-color: unset;
+}
+
+.buttons-cotntainer {
+    @include dFlex(space-around !important);
+    width: 100%;
+
+    >div {
+        >button {
+            padding: 12px 25px;
+            font-size: 18px;
+        }
+    }
+
+    .discard-btn-container {
+        >button {
+            border: 1px solid #797EF3;
+            background-color: unset;
+            border-radius: 50px;
+            color: #444DF2;
+            &:hover{
+                background-color: #444DF2;
+                color: white;
+            }
+        }
+    }
+
+    .save-btn-container {
+        >button {
+            color: white;
+            border: 1px solid #797EF3;
+            background-color: #444DF2;
+            border-radius: 50px;
+            &:hover{
+                background-color: #797EF3;
+                color: white;
+            }
+        }
+    }
+}
+
+input{
+    color: #686868 !important;
 }

@@ -1,5 +1,5 @@
 import { Injectable, inject, Injector, runInInjectionContext } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy } from '@angular/fire/firestore';
+import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc } from '@angular/fire/firestore';
 import { UserService } from './user.service';
 
 @Injectable({
@@ -120,5 +120,18 @@ export class ChatService {
             day: '2-digit',
             month: 'long'
         });
+    }
+
+    async updateUserMessage(messageId: string, newMessage: string): Promise<void> {
+        const messageDocRef = this.getMessageDoc(messageId);
+        await runInInjectionContext(this.injector, () =>
+            updateDoc(messageDocRef, { text: newMessage })
+        );
+    }
+
+    getMessageDoc(messageId: string): DocumentReference {
+        return runInInjectionContext(this.injector, () =>
+            doc(this.firestore, `chats/${this.dataUser.chatId}/message/${messageId}`)
+        );
     }
 }

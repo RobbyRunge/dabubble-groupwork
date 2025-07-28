@@ -9,23 +9,30 @@
                     <p>{{message.timestamp?.toDate() | date:'HH:mm'}}</p>
                     <span>{{dataUser.currentUser?.name}}</span>
                 </div>
-                <div class="message-content">
+                <div class="message-content" [ngClass]="{
+                'editMessageActive' :editMessageActive, }">
                     <h3 *ngIf="!editMessageActive">{{message.text}}</h3>
                     <mat-form-field *ngIf="editMessageActive" class="example-full-width">
-                        <input matInput name="message" placeholder="{{message.text}}">
+                        <input [(ngModel)]="editMessageText" matInput name="message" value="{{message.text}}">
                         <div class="icons-container">
                             <div>
                                 <div (click)="showAllEmojis()">
-                                    <img [src]="imgReaction" (mouseover)="imgReaction = 'add_reaction_color.png'"
-                                        (mouseout)="imgReaction = 'add reaction.png'">
+                                    <img [src]="imgReactionInput"
+                                        (mouseover)="imgReactionInput = 'add_reaction_color.png'"
+                                        (mouseout)="imgReactionInput = 'add reaction.png'">
                                 </div>
                             </div>
-                            <div>
-                                <button>Abbrechen</button>
+                            <div class="buttons-cotntainer">
+                                <div class="discard-btn-container">
+                                    <button (click)="discardEditMessage()">Abbrechen</button>
+                                </div>
+                                <div class="save-btn-container">
+                                    <button (click)="updateMessage()">Speichern</button>
+                                </div>
                             </div>
-                            <div>
-                                <button>Speichern</button>
-                            </div>
+                        </div>
+                        <div *ngIf="showEmojis">
+                            <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
                         </div>
                     </mat-form-field>
                 </div>
