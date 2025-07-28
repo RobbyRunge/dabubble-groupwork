@@ -107,6 +107,7 @@ export class UserService {
     if (!result.empty) {
       const userDoc = result.docs[0];
       this.currentUserId = userDoc.id;
+      await this.updateUserDocument(this.currentUserId, { active: true });
     }
     const userStorageSnapshot = await runInInjectionContext(this.injector, () =>
       getDocs(this.getUserSubCol(this.currentUserId))
@@ -148,6 +149,7 @@ export class UserService {
       } else {
         const userDoc = result.docs[0];
         this.currentUserId = userDoc.id;
+        await this.updateUserDocument(this.currentUserId, { active: true });
       }
 
       this.loginIsSucess = true;
@@ -160,7 +162,6 @@ export class UserService {
   }
 
   async signInWithGuest() {
-    // active: true / false in der Datenbank hinzufügen?
     const guestEmail = 'guestemail@gmail.com';
     const userQuery = runInInjectionContext(this.injector, () =>
       query(
@@ -178,6 +179,7 @@ export class UserService {
         const userDoc = result.docs[0];
         this.currentUserId = userDoc.id;
         this.currentUser = new User(userDoc.data());
+        await this.updateUserDocument(this.currentUserId, { active: true });
         this.loginIsSucess = true;
       }
     } else {
@@ -188,7 +190,7 @@ export class UserService {
   async createUserBySignInWithGoogle(user: User): Promise<{ userId: string; userStorageId: string }> {
     try {
       const userData: any = {
-        active: true, // ist true, weil man ja sofort zu main-page kommt nach erfolgreicher Google-Anmeldung (muss bei Logout auf false gesetzt werde)
+        active: true,
         name: user.name,
         email: user.email,
         avatar: user.avatar
@@ -361,7 +363,7 @@ export class UserService {
       console.log('doc data', data);
       this.userSubcollectionChannelId = data['channelId'];
       this.userSubcollectionId = doc.id;
-      this.userSubcollectionChannelName = data['channelname'];  
+      this.userSubcollectionChannelName = data['channelname'];
       this.userSubcollectionDescription = data['description'];
     });
     this.showUserChannel()
@@ -380,8 +382,8 @@ export class UserService {
   }
 
   checkChannel() {
-  this.showChannelByUser = this.channels.filter(channel =>
-    Array.isArray(channel.userId) && channel.userId.includes(this.currentUserId)
+    this.showChannelByUser = this.channels.filter(channel =>
+      Array.isArray(channel.userId) && channel.userId.includes(this.currentUserId)
     );
     this.updateChannelByUser.next(this.showChannelByUser);
   }
