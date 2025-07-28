@@ -55,6 +55,8 @@ export class WorkSpaceSectionComponent implements OnInit {
   myPanel: any = true;
 
   channels$: Observable<Allchannels[]> | undefined;
+  onlineUser: string = 'Online.png';
+  offlineUser: string = 'offline.png';
 
   /* dialog = inject(MatDialog); */
 
