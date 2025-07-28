@@ -155,7 +155,8 @@
             background-color: unset;
             border-radius: 50px;
             color: #444DF2;
-            &:hover{
+
+            &:hover {
                 background-color: #444DF2;
                 color: white;
             }
@@ -168,7 +169,8 @@
             border: 1px solid #797EF3;
             background-color: #444DF2;
             border-radius: 50px;
-            &:hover{
+
+            &:hover {
                 background-color: #797EF3;
                 color: white;
             }
@@ -176,6 +178,22 @@
     }
 }
 
-input{
+input {
     color: #686868 !important;
+}
+
+emoji-mart {
+
+    position: absolute;
+    top: -400px;
+    left: 40px;
+
+}
+
+.message-reaction-container{
+    position: absolute;
+    top: 95px;
+    >span{
+        font-size: 18px;
+    }
 }

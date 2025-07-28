@@ -12,6 +12,9 @@
                 <div class="message-content" [ngClass]="{
                 'editMessageActive' :editMessageActive, }">
                     <h3 *ngIf="!editMessageActive">{{message.text}}</h3>
+                    <div class="message-reaction-container">
+                        <span>{{messageReacton}}</span>
+                    </div>
                     <mat-form-field *ngIf="editMessageActive" class="example-full-width">
                         <input [(ngModel)]="editMessageText" matInput name="message" value="{{message.text}}">
                         <div class="icons-container">
@@ -60,15 +63,22 @@
             <img [src]="imgComment" (mouseover)="imgComment='img/comment_color.png'"
                 (mouseout)="imgComment='img/comment.png'">
         </div>
-        <div>
+        <div (click)="showAllEmojisMessage()">
             <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
                 (mouseout)="imgReaction='img/add_reaction.png'">
         </div>
-        <div>
-            <img src="/emojis/emoji_thumb.png" alt="">
+        <div *ngFor="let emoji of chatService.mostUsedEmojis">
+            <div *ngIf="chatService.mostUsedEmojis.length > 0">
+                {{emoji}}
+                <!-- <img src="/emojis/emoji_thumb.png" alt=""> -->
+            </div>
+            <div *ngIf="chatService.mostUsedEmojis.length > 0">
+                <!-- <img src="/emojis/emoji_white heavy_check mark.png" alt=""> -->
+                {{emoji}}
+            </div>
         </div>
-        <div>
-            <img src="/emojis/emoji_white heavy_check mark.png" alt="">
-        </div>
+    </div>
+    <div *ngIf="showEmojisMessage">
+        <emoji-mart (emojiClick)="addEmojiMessage($event)"></emoji-mart>
     </div>
 </div>

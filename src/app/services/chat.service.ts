@@ -14,6 +14,7 @@ export class ChatService {
     messages: any[] = [];
     hasMessages: boolean = false;
     messageToday: boolean = false;
+    mostUsedEmojis: string[] = [];
 
     async getOrCreateChatId(userId1: string, userId2: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
@@ -133,5 +134,18 @@ export class ChatService {
         return runInInjectionContext(this.injector, () =>
             doc(this.firestore, `chats/${this.dataUser.chatId}/message/${messageId}`)
         );
+    }
+
+    loadMostUsedEmojis() {
+        const stored = localStorage.getItem('emoji-mart.frequently');
+        if (stored) {
+            const recent = JSON.parse(stored) as {[emoji: string]:number}; // { "😂": 5, "😍": 4, ... }
+            const sorted = Object.entries(recent)
+                .sort((a, b) => b[1] - a[1]) // nach Häufigkeit sortieren
+                .slice(0, 2)
+                .map(([emoji]) => emoji); // nur die Emoji-Zeichen
+
+            this.mostUsedEmojis = sorted;
+        }
     }
 }

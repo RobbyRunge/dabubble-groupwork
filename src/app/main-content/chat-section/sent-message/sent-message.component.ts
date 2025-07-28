@@ -1,5 +1,5 @@
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ChatService } from '../../../services/chat.service';
 import { UserService } from '../../../services/user.service';
 import { ChannelService } from '../../../services/channel.service';
@@ -11,11 +11,11 @@ import { FormsModule, NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-sent-message',
-  imports: [DatePipe, NgIf, MatMenuModule, MatFormField, MatInputModule, NgClass, PickerComponent, FormsModule],
+  imports: [DatePipe, NgIf, MatMenuModule, MatFormField, MatInputModule, NgClass, PickerComponent, FormsModule, NgFor],
   templateUrl: './sent-message.component.html',
   styleUrl: './sent-message.component.scss'
 })
-export class SentMessageComponent {
+export class SentMessageComponent implements OnInit {
 
   public chatService = inject(ChatService);
   userService = inject(UserService);
@@ -23,9 +23,8 @@ export class SentMessageComponent {
   @Input() message: any;
   @Input() index: number | undefined
   showEmojis: boolean = false;
-  constructor() {
-    this.getUserData();
-  }
+  messageReacton: string = '';
+  constructor() { this.getUserData(); }
   imgSrcMore: any = 'img/more_vert.png';
   imgComment: any = 'img/comment.png';
   imgReaction: any = 'img/add_reaction.png';
@@ -33,7 +32,12 @@ export class SentMessageComponent {
   selectedUser: any;
   editMessageActive: boolean = false;
   editMessageText: string = '';
+  showEmojisMessage: boolean = false;
 
+
+  ngOnInit(){
+    this.chatService.loadMostUsedEmojis();
+  }
 
   getUserData() {
     this.dataUser.isChecked$.subscribe(user => {
@@ -57,5 +61,14 @@ export class SentMessageComponent {
   }
   async updateMessage() {
     await this.chatService.updateUserMessage(this.message.id, this.editMessageText);
+  }
+
+  showAllEmojisMessage(){
+    this.showEmojisMessage = true;
+  }
+  addEmojiMessage($event: any) {
+    this.messageReacton += $event.emoji.native;
+    this.showEmojisMessage = false;
+    this.chatService.loadMostUsedEmojis();
   }
 }
