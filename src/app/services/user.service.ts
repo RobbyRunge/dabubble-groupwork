@@ -74,6 +74,7 @@ export class UserService {
     if (!result.empty) {
       const userDoc = result.docs[0];
       this.channelService.currentUserId = userDoc.id;
+      await this.updateUserDocument(this.channelService.currentUserId, { active: true });
     }
     const userStorageSnapshot = await runInInjectionContext(this.injector, () =>
       getDocs(this.channelService.getUserSubCol(this.channelService.currentUserId))
@@ -144,6 +145,7 @@ export class UserService {
         const userDoc = result.docs[0];
         this.channelService.currentUserId = userDoc.id;
         this.channelService.currentUser = new User(userDoc.data());
+        await this.updateUserDocument(this.channelService.currentUserId, { active: true });
         this.loginIsSucess = true;
       }
     } else {
@@ -154,6 +156,7 @@ export class UserService {
   async createUserBySignInWithGoogle(user: User): Promise<{ userId: string; userStorageId: string }> {
     try {
       const userData: any = {
+        active: true,
         name: user.name,
         email: user.email,
         avatar: user.avatar
@@ -196,6 +199,7 @@ export class UserService {
   async createInitialUser(user: User): Promise<{ userId: string; userStorageId: string }> {
     try {
       const userData: any = {
+        active: false,
         name: user.name,
         email: user.email,
         password: user.password,

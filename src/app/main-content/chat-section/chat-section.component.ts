@@ -65,6 +65,8 @@ export class ChatSectionComponent implements OnInit {
   showUserList: boolean = false;
   showChanelList: boolean = false;
   selectedUser: any;
+  onlineUser: string = 'Online.png';
+  offlineUser: string = 'offline.png';
 
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
@@ -85,10 +87,10 @@ export class ChatSectionComponent implements OnInit {
     // }, 2000);
   }
 
-  ngOnChanges(changes: SimpleChanges){
+  ngOnChanges(changes: SimpleChanges) {
     if (changes[this.messageText]) {
-    this.onInputChange();      
-    console.log('input feld is changed');
+      this.onInputChange();
+      console.log('input feld is changed');
     }
   }
 
@@ -139,8 +141,8 @@ export class ChatSectionComponent implements OnInit {
     const rect = button.getBoundingClientRect();
     const dialog = this.dialog.open(ChannelSectionComponent, {
       position: {
-        top: `${rect.bottom + window.scrollY}px`,   
-        left: `${rect.left + window.scrollX}px`,    
+        top: `${rect.bottom + window.scrollY}px`,
+        left: `${rect.left + window.scrollX}px`,
       },
       width: '872px',
       height: '612px',

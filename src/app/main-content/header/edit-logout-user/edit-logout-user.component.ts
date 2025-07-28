@@ -36,7 +36,8 @@ export class EditLogoutUserComponent {
     });
   }
 
-  logout() {
+  async logout() {
+    await this.userService.updateUserDocument(this.userService.channelService.currentUserId, { active: false });
     this.router.navigate(['']);
     this.dialogRef.close();
   }
