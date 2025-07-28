@@ -160,7 +160,7 @@ export class UserService {
   }
 
   async signInWithGuest() {
-    // activ: true / false in der Datenbank hinzufügen?
+    // active: true / false in der Datenbank hinzufügen?
     const guestEmail = 'guestemail@gmail.com';
     const userQuery = runInInjectionContext(this.injector, () =>
       query(
@@ -188,7 +188,7 @@ export class UserService {
   async createUserBySignInWithGoogle(user: User): Promise<{ userId: string; userStorageId: string }> {
     try {
       const userData: any = {
-        activ: true, // ist true, weil man ja sofort zu main-page kommt nach erfolgreicher Google-Anmeldung (muss bei Logout auf false gesetzt werde)
+        active: true, // ist true, weil man ja sofort zu main-page kommt nach erfolgreicher Google-Anmeldung (muss bei Logout auf false gesetzt werde)
         name: user.name,
         email: user.email,
         avatar: user.avatar
@@ -231,7 +231,7 @@ export class UserService {
   async createInitialUser(user: User): Promise<{ userId: string; userStorageId: string }> {
     try {
       const userData: any = {
-        activ: false, // muss bei Logout auf false gesetzt werde
+        active: false, // muss bei Logout auf false gesetzt werde
         name: user.name,
         email: user.email,
         password: user.password,
