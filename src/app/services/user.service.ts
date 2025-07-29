@@ -28,7 +28,9 @@ export class UserService {
 
   private pendingRegistrationId = new BehaviorSubject<string | null>(null);
   pendingRegistrationId$ = this.pendingRegistrationId.asObservable();
- 
+
+  pendingUser: User | null = null;
+
   loginIsSucess = false;
   chatId: any = '';
 
@@ -45,8 +47,8 @@ export class UserService {
   }
 
   getUserRefsByIds() {
-  return this.usersIdsInChannel.map(id =>
-    runInInjectionContext(this.injector, () =>
+    return this.usersIdsInChannel.map(id =>
+      runInInjectionContext(this.injector, () =>
         doc(this.getUsersCollection(), id)
       )
     );
@@ -178,7 +180,7 @@ export class UserService {
         })
       );
       const userStorageId = userStorageDocRef.id;
-      console.log('user id ist',userId);
+      console.log('user id ist', userId);
       console.log('user storage id ist', userStorageId);
       return {
         userId,
@@ -215,13 +217,14 @@ export class UserService {
       const userStorageColRef = runInInjectionContext(this.injector, () =>
         collection(userRef, 'userstorage')
       );
-      
+
       const userStorageDocRef = await runInInjectionContext(this.injector, () =>
         addDoc(userStorageColRef, {
         })
       );
       const userStorageId = userStorageDocRef.id;
       this.pendingRegistrationId.next(userId);
+      this.pendingUser = user;
       return {
         userId,
         userStorageId
@@ -269,6 +272,7 @@ export class UserService {
       );
 
       this.pendingRegistrationId.next(null);
+      this.pendingUser = null;
     }
   }
 
@@ -295,15 +299,15 @@ export class UserService {
     this.clearUserInChannelsArray();
     const snapshot = await runInInjectionContext(this.injector, () =>
       getDoc(this.channelService.getSingleChannelRef(docId)));
-      if (snapshot.exists()) {
+    if (snapshot.exists()) {
       const data = snapshot.data();
       if (data && Array.isArray(data['userId'])) {
         this.usersIdsInChannel.push(...data['userId']);
         for (const id of this.usersIdsInChannel) {
-        const nameSnap =  await runInInjectionContext(this.injector, () =>
-          getDoc(this.getSingleUserRef(id)));
+          const nameSnap = await runInInjectionContext(this.injector, () =>
+            getDoc(this.getSingleUserRef(id)));
           const dataName = nameSnap.data();
-          if (dataName) { 
+          if (dataName) {
             this.userNamesInChannel.push(dataName['name']);
             this.userAvatarInChannel.push(dataName['avatar']);
           }
@@ -312,10 +316,10 @@ export class UserService {
     }
   }
 
-clearUserInChannelsArray() {
-  this.userNamesInChannel = [];
-  this.userAvatarInChannel = [];
-  this.usersIdsInChannel = [];
-}
+  clearUserInChannelsArray() {
+    this.userNamesInChannel = [];
+    this.userAvatarInChannel = [];
+    this.usersIdsInChannel = [];
+  }
 
-} 
+}

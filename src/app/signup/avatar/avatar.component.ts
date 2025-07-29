@@ -19,10 +19,10 @@ import { MatDialogContent } from '@angular/material/dialog';
 export class AvatarComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   public userService = inject(UserService);
+  private registrationCompleted = false;
 
   selectedAvatar = '/avatar/empty-avatar.png';
   user: User = new User();
-  private registrationCompleted = false;
 
   items = [
     '/avatar/woman1.png',
@@ -37,6 +37,10 @@ export class AvatarComponent implements OnInit, OnDestroy {
     this.userService.pendingRegistrationId$.subscribe;
   }
 
+  getUserName(): string {
+    return this.userService.pendingUser?.name || 'Unbekannter Benutzer';
+  }
+
   selectAvatar(avatarSrc: string) {
     this.selectedAvatar = avatarSrc;
     const filename = avatarSrc.replace('/avatar/', '');
@@ -45,20 +49,21 @@ export class AvatarComponent implements OnInit, OnDestroy {
 
   async showSuccessfullyCreateContactOverlay() {
     const backgroundOverlay = document.getElementById('background-overlay');
-    
+
     try {
       const avatarFilename = this.selectedAvatar.replace('/avatar/', '');
       const success = await this.userService.completeUserRegistration(avatarFilename);
-      
+
       if (success) {
         this.registrationCompleted = true;
-        
+
         if (backgroundOverlay) {
           backgroundOverlay.classList.add('active');
           setTimeout(() => {
             backgroundOverlay.classList.remove('active');
             setTimeout(() => {
               this.router.navigate(['/']);
+              this.userService.pendingUser = null;
             }, 125);
           }, 2000);
         }
