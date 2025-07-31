@@ -9,7 +9,7 @@
         <h1>Wähle deinen Avatar</h1>
 
         <div class="img-and-name">
-          <img class="standard-transition" src="{{ selectedAvatar }}" alt="avatar empty">
+          <img class="standard-transition" src="{{ selectedAvatar }}" alt="avatar empty" (click)="removeAvatar()">
           <h2>{{ getUserName() }}</h2>
         </div>
 

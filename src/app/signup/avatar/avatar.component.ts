@@ -47,6 +47,10 @@ export class AvatarComponent implements OnInit, OnDestroy {
     this.user.avatar = filename;
   }
 
+  removeAvatar() {
+    this.selectedAvatar = '/avatar/empty-avatar.png';
+  }
+
   async showSuccessfullyCreateContactOverlay() {
     const backgroundOverlay = document.getElementById('background-overlay');
 
