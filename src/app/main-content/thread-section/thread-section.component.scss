@@ -26,14 +26,17 @@
     flex-direction: column;
 }
 
-.chat-container{
+.chat-container {
     @include dFlex(flex-end, flex-end);
     flex-direction: column;
-    height: 100%;
-    padding-top: 35px;
-    padding-bottom: 60px;
-    >div{
+    height: calc(100vh - 380px);
+
+    >div {
+        overflow-y: auto;
+        overflow-x: hidden;
         width: 100%;
+        padding-top: 35px;
+        padding-bottom: 60px;
     }
 }
 

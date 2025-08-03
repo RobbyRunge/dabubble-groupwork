@@ -23,6 +23,7 @@ export class ChatService {
     channelService = inject(ChannelService);
     private router = inject(Router);
     chatService: any;
+    private unsubscribeMessages: (() => void) | undefined;
 
     async getOrCreateChatId(userId1: string, userId2: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
@@ -75,20 +76,20 @@ export class ChatService {
 
 
     listenToMessages() {
+        // Alten Listener beenden
+        if (this.unsubscribeMessages) {
+            this.unsubscribeMessages();
+        }
+
         return runInInjectionContext(this.injector, async () => {
             const messagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message`);
             const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
 
-            onSnapshot(messagesQuery, (snapshot) => {
+            this.unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
                 this.messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                if (this.messages.length !== 0) {
-                    this.hasMessages = true;
-                } else {
-                    this.hasMessages = false;
-                }
+                this.hasMessages = this.messages.length !== 0;
             });
-        }
-        )
+        });
     }
 
     isFirstMessageOfDay(timestamp: any, index: number): boolean {
@@ -184,5 +185,11 @@ export class ChatService {
         this.listenToMessages();
         this.dataUser.showChannel = false;
         this.dataUser.showChatPartnerHeader = true;
+    }
+
+    ngOnDestroy() {
+        if (this.unsubscribeMessages) {
+            this.unsubscribeMessages();
+        }
     }
 }
