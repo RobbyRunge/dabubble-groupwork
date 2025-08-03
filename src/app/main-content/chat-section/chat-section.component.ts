@@ -16,10 +16,6 @@ import { ChatService } from '../../services/chat.service';
 import { ChannelService } from '../../services/channel.service';
 import { InputMessageComponent } from '../input-message/input-message.component';
 import { HeaderChatSectionComponent } from "../header-chat-section/header-chat-section.component";
-import { Allchannels } from '../../../models/allchannels.class';
-import { MatIcon } from '@angular/material/icon';
-import { ChannelSectionComponent } from '../channel-section/channel-section.component';
-
 
 @Component({
   selector: 'app-chat-section',

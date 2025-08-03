@@ -30,7 +30,7 @@ import { HeaderChatSectionComponent } from '../header-chat-section/header-chat-s
   templateUrl: './thread-section.component.html',
   styleUrl: './thread-section.component.scss'
 })
-export class ThreadSectionComponent implements AfterViewInit {
+export class ThreadSectionComponent implements AfterViewInit, OnInit {
 
   @ViewChild('drawer') drawer!: MatDrawer;
   dataUser = inject(UserService);
@@ -44,6 +44,16 @@ export class ThreadSectionComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.chatServices.setDrawer(this.drawer);
+  }
+
+  ngOnInit():void {
+    this.getUserData();
+  }
+
+  getUserData() {
+    this.channelService.isChecked$.subscribe(user => {
+      this.selectedUser = user
+    })
   }
 
   closeThread() {

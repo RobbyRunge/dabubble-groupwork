@@ -44,23 +44,6 @@
     }
 }
 
-.message-content {
-    background-color: #797EF3;
-    border-bottom-left-radius: 30px;
-    border-top-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-    flex-wrap: wrap;
-    max-width: 100%;
-    width: auto;
-
-    >h3 {
-        font-family: 'Nunito';
-        font-size: 18px;
-        font-weight: 400;
-        padding: 15px;
-    }
-}
-
 .answer-date-container {
     @include dFlex(flex-start);
 

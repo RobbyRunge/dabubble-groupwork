@@ -30,6 +30,8 @@
     @include dFlex(flex-end, flex-end);
     flex-direction: column;
     height: 100%;
+    padding-top: 35px;
+    padding-bottom: 60px;
     >div{
         width: 100%;
     }
