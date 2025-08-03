@@ -11,9 +11,9 @@
             <h3>{{data.user.name}}</h3>
             <span *ngIf="checkUserId()" (click)="changeName()">Bearbeiten</span>
         </div>
-        <div [ngClass]="dataUser ? 'aktiv' : 'inaktiv'">
+        <div [ngClass]="data.user.active ? 'aktiv' : 'inaktiv'">
             <mat-icon>fiber_manual_record</mat-icon>
-            <p>{{dataUser ? 'Aktiv' : 'Abwesend'}}</p>
+            <p>{{data.user.active ? 'Aktiv' : 'Abwesend'}}</p>
         </div>
     </div>
     <div class="email-container">
