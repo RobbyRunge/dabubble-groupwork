@@ -52,30 +52,41 @@ export class AvatarComponent implements OnInit, OnDestroy {
   }
 
   async showSuccessfullyCreateContactOverlay() {
-    const backgroundOverlay = document.getElementById('background-overlay');
+    const avatarFilename = this.getAvatarFilename();
+    const success = await this.completeRegistration(avatarFilename);
 
+    if (success) {
+      this.registrationCompleted = true;
+      this.showOverlayAndNavigate();
+    } else {
+      console.error('Registrierung konnte nicht abgeschlossen werden');
+    }
+  }
+
+  private getAvatarFilename(): string {
+    return this.selectedAvatar.replace('/avatar/', '');
+  }
+
+  private async completeRegistration(avatarFilename: string): Promise<boolean> {
     try {
-      const avatarFilename = this.selectedAvatar.replace('/avatar/', '');
-      const success = await this.userService.completeUserRegistration(avatarFilename);
-
-      if (success) {
-        this.registrationCompleted = true;
-
-        if (backgroundOverlay) {
-          backgroundOverlay.classList.add('active');
-          setTimeout(() => {
-            backgroundOverlay.classList.remove('active');
-            setTimeout(() => {
-              this.router.navigate(['/']);
-              this.userService.pendingUser = null;
-            }, 125);
-          }, 2000);
-        }
-      } else {
-        console.error('Registrierung konnte nicht abgeschlossen werden');
-      }
+      return await this.userService.completeUserRegistration(avatarFilename);
     } catch (error) {
       console.error('Fehler bei der Registrierung:', error);
+      return false;
+    }
+  }
+
+  private showOverlayAndNavigate() {
+    const backgroundOverlay = document.getElementById('background-overlay');
+    if (backgroundOverlay) {
+      backgroundOverlay.classList.add('active');
+      setTimeout(() => {
+        backgroundOverlay.classList.remove('active');
+        setTimeout(() => {
+          this.router.navigate(['/']);
+          this.userService.pendingUser = null;
+        }, 125);
+      }, 2000);
     }
   }
 
