@@ -25,6 +25,8 @@ export class HeaderChatSectionComponent implements OnInit {
   dialog = inject(MatDialog);
   userDialog = inject(MatDialog);
   selectedUser: any;
+  onlineUser: string = 'Online.png';
+  offlineUser: string = 'offline.png';
 
   ngOnInit(): void {
     this.getUserData();

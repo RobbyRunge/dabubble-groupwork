@@ -61,9 +61,6 @@ export class ChatSectionComponent implements OnInit {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
   readonly emojiDialog = inject(MatDialog);
 
-  onlineUser: string = 'Online.png';
-  offlineUser: string = 'offline.png';
-
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
       this.channelService.currentUserId = params['id'];
@@ -137,21 +134,6 @@ export class ChatSectionComponent implements OnInit {
       this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
     }
   }
-  openDialog(button: HTMLElement) {
-    const rect = button.getBoundingClientRect();
-    const dialog = this.dialog.open(ChannelSectionComponent, {
-      position: {
-        top: `${rect.bottom + window.scrollY}px`,
-        left: `${rect.left + window.scrollX}px`,
-      },
-      width: '872px',
-      height: '612px',
-      maxWidth: '872px',
-      maxHeight: '612px',
-      panelClass: 'channel-dialog-container'
-    });
-  }
-
 
   openUserDialog() {
     this.userDialog.open(UserCardComponent, {
