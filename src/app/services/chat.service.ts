@@ -1,6 +1,7 @@
 import { Injectable, inject, Injector, runInInjectionContext } from '@angular/core';
 import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc } from '@angular/fire/firestore';
 import { UserService } from './user.service';
+import { MatDrawer } from '@angular/material/sidenav';
 
 @Injectable({
     providedIn: 'root',
@@ -15,6 +16,7 @@ export class ChatService {
     hasMessages: boolean = false;
     messageToday: boolean = false;
     mostUsedEmojis: string[] = [];
+    private drawer!: MatDrawer;
 
     async getOrCreateChatId(userId1: string, userId2: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
@@ -139,13 +141,32 @@ export class ChatService {
     loadMostUsedEmojis() {
         const stored = localStorage.getItem('emoji-mart.frequently');
         if (stored) {
-            const recent = JSON.parse(stored) as {[emoji: string]:number}; // { "😂": 5, "😍": 4, ... }
+            const recent = JSON.parse(stored) as { [emoji: string]: number }; 
             const sorted = Object.entries(recent)
-                .sort((a, b) => b[1] - a[1]) // nach Häufigkeit sortieren
+                .sort((a, b) => b[1] - a[1]) 
                 .slice(0, 2)
-                .map(([emoji]) => emoji); // nur die Emoji-Zeichen
+                .map(([emoji]) => emoji); 
 
             this.mostUsedEmojis = sorted;
         }
+    }
+    setDrawer(drawer: MatDrawer) {
+        this.drawer = drawer;
+    }
+
+    toggle() {
+        this.drawer?.toggle();
+    }
+
+    open() {
+        this.drawer?.open();
+    }
+
+    close() {
+        this.drawer?.close();
+    }
+
+    isOpen(): boolean {
+        return this.drawer?.opened || false;
     }
 }

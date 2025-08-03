@@ -34,6 +34,7 @@
         font-size: 18px;
         font-family: 'Nunito';
         font-weight: 700;
+        color: black;
     }
 
     >p {
@@ -86,6 +87,10 @@
 .message-hover-options {
     left: 45px;
     top: -25px;
+    z-index: 1;
+    >div{
+        color: black;
+    }
 }
 
 ::ng-deep .mat-mdc-menu-panel {
@@ -187,6 +192,7 @@ emoji-mart {
     position: absolute;
     top: -400px;
     left: 40px;
+    z-index: 1000;
 
 }
 

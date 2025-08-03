@@ -1,0 +1,106 @@
+@use '../../../styles.scss' as *;
+
+.write-message-container {
+    position: relative;
+    width: 96%;
+    padding: 0 20px;
+}
+
+.mat-mdc-form-field {
+    width: 100%;
+}
+
+input {
+    color: #686868 !important;
+    border: unset;
+}
+
+input:focus{
+    border: unset;
+}
+
+mat-label {
+    color: #686868;
+}
+
+
+::ng-deep .example-full-width .mat-mdc-text-field-wrapper {
+    height: 145px !important;
+    border: 1px solid #ADB0D9;
+    border-radius: 20px !important;
+}
+
+::ng-deep.mdc-line-ripple {
+    display: none !important;
+}
+
+::ng-deep.mat-mdc-form-field-infix {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+
+    >.icons-container {
+        @include dFlex(space-between);
+        padding-left: 4px;
+        padding-right: 4px;
+
+        >div {
+            @include dFlex();
+
+            >div {
+                @include dFlex();
+                height: 40px;
+                width: 40px;
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: #ECEEFE;
+                    border-radius: 20px;
+                }
+            }
+        }
+    }
+}
+
+.send-icon-container {
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.mention-container {
+    position: absolute;
+    bottom: 85%;
+    left: 15px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 100;
+    padding: 30px;
+    background-color: white;
+    border: 1px solid #ADB0D9;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 470px;
+
+    >div {
+        >.user-chanel-list-container {
+            @include dFlex(flex-start);
+            flex-direction: row;
+            gap: 10px;
+            padding: 5px 20px;
+            cursor: pointer;
+            border-radius: 100px;
+
+            &:hover {
+                background-color: #ECEEFE;
+                >p{
+                   color: #535AF1; 
+                }
+            }
+        }
+    }
+}

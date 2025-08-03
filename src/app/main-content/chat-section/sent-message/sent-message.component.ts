@@ -1,5 +1,5 @@
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ChatService } from '../../../services/chat.service';
 import { UserService } from '../../../services/user.service';
 import { ChannelService } from '../../../services/channel.service';
@@ -8,10 +8,22 @@ import { MatFormField, MatLabel } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { FormsModule, NgModel } from '@angular/forms';
+import { MatDialogContent } from '@angular/material/dialog';
+import {MatDrawer, MatSidenavModule} from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-sent-message',
-  imports: [DatePipe, NgIf, MatMenuModule, MatFormField, MatInputModule, NgClass, PickerComponent, FormsModule, NgFor],
+  imports: [
+    DatePipe,
+    NgIf,
+    MatMenuModule,
+    MatFormField,
+    MatInputModule,
+    NgClass,
+    PickerComponent,
+    FormsModule,
+    NgFor,
+  ],
   templateUrl: './sent-message.component.html',
   styleUrl: './sent-message.component.scss'
 })
@@ -33,9 +45,10 @@ export class SentMessageComponent implements OnInit {
   editMessageActive: boolean = false;
   editMessageText: string = '';
   showEmojisMessage: boolean = false;
+  @Output() showAllEmojisMessage1 = new EventEmitter<boolean>();
 
 
-  ngOnInit(){
+  ngOnInit() {
     this.chatService.loadMostUsedEmojis();
   }
 
@@ -63,12 +76,17 @@ export class SentMessageComponent implements OnInit {
     await this.chatService.updateUserMessage(this.message.id, this.editMessageText);
   }
 
-  showAllEmojisMessage(){
-    this.showEmojisMessage = true;
+  showAllEmojisMessage(index: number | any) {
+    /* this.showEmojisMessage = true; */
+    this.showAllEmojisMessage1.emit(index)
   }
   addEmojiMessage($event: any) {
     this.messageReacton += $event.emoji.native;
     this.showEmojisMessage = false;
     this.chatService.loadMostUsedEmojis();
+  }
+
+  answerOnMessage(){
+    this.chatService.open();
   }
 }

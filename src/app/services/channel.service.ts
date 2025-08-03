@@ -53,6 +53,7 @@ export class ChannelService {
   userSubcollectionChannelId: string = '';
   userSubcollectionChannelName: string = '';
   userSubcollectionDescription: string = '';
+  selectedUser: any
 
   unsubscribeUserData!: Subscription;
   unsubscribeUserChannels!: Subscription;
@@ -212,5 +213,11 @@ export class ChannelService {
 
   setCheckdValue(user: string) {
     this.isCheckedSubject.next(user)
+  }
+
+  getUserData() {
+    this.isChecked$.subscribe(user => {
+      this.selectedUser = user
+    })
   }
 }
