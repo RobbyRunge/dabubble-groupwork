@@ -91,7 +91,7 @@ export class WorkSpaceSectionComponent implements OnInit {
     drawer.toggle();
   }
 
-  async onUserClick(index: number, user: any) {
+/*   async onUserClick(index: number, user: any) {
     this.selectedUser = user;
     this.channelService.setCheckdValue(user);
     this.dataUser.chatId = await this.chatService.getOrCreateChatId(this.channelService.currentUserId, user.userId);
@@ -99,7 +99,7 @@ export class WorkSpaceSectionComponent implements OnInit {
     this.chatService.listenToMessages();
     this.dataUser.showChannel = false;
     this.dataUser.showChatPartnerHeader = true;
-  }
+  } */
 
   readonly dialog = inject(MatDialog);
 

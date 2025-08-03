@@ -1,7 +1,9 @@
-import { Injectable, inject, Injector, runInInjectionContext } from '@angular/core';
+import { Injectable, inject, Injector, runInInjectionContext, ViewChild, ElementRef } from '@angular/core';
 import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc } from '@angular/fire/firestore';
 import { UserService } from './user.service';
 import { MatDrawer } from '@angular/material/sidenav';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ChannelService } from './channel.service';
 
 @Injectable({
     providedIn: 'root',
@@ -17,6 +19,10 @@ export class ChatService {
     messageToday: boolean = false;
     mostUsedEmojis: string[] = [];
     private drawer!: MatDrawer;
+    selectedUser: any;
+    channelService = inject(ChannelService);
+    private router = inject(Router);
+    chatService: any;
 
     async getOrCreateChatId(userId1: string, userId2: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
@@ -141,11 +147,11 @@ export class ChatService {
     loadMostUsedEmojis() {
         const stored = localStorage.getItem('emoji-mart.frequently');
         if (stored) {
-            const recent = JSON.parse(stored) as { [emoji: string]: number }; 
+            const recent = JSON.parse(stored) as { [emoji: string]: number };
             const sorted = Object.entries(recent)
-                .sort((a, b) => b[1] - a[1]) 
+                .sort((a, b) => b[1] - a[1])
                 .slice(0, 2)
-                .map(([emoji]) => emoji); 
+                .map(([emoji]) => emoji);
 
             this.mostUsedEmojis = sorted;
         }
@@ -168,5 +174,15 @@ export class ChatService {
 
     isOpen(): boolean {
         return this.drawer?.opened || false;
+    }
+
+    async onUserClick(index: number, user: any) {
+        this.selectedUser = user;
+        this.channelService.setCheckdValue(user);
+        this.dataUser.chatId = await this.getOrCreateChatId(this.channelService.currentUserId, user.userId);
+        this.router.navigate(['/mainpage', this.channelService.currentUserId, 'chats', this.dataUser.chatId]);
+        this.listenToMessages();
+        this.dataUser.showChannel = false;
+        this.dataUser.showChatPartnerHeader = true;
     }
 }

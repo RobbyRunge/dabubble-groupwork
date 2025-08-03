@@ -66,8 +66,8 @@ export class ChatSectionComponent implements OnInit {
       this.channelService.currentUserId = params['id'];
       this.showCurrentUserData();
       this.showUserChannel();
-      this.users$ = this.dataUser.getAllUsers();
       this.getUserData();
+      this.scrollToBottom();
     });
     /*     this.listenToMessages(this.route);
         console.log('test' + this.chatId);
@@ -77,11 +77,6 @@ export class ChatSectionComponent implements OnInit {
     //   console.log('Channels by user', this.dataUser.showChannelByUser);
 
     // }, 2000);
-  }
-
-
-  ngAfterViewChecked() {
-    this.scrollToBottom();
   }
 
 /*   ngOnChanges(changes: SimpleChanges) {

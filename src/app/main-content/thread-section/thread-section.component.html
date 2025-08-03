@@ -9,7 +9,7 @@
           <mat-icon (click)="chatService.close()">close</mat-icon>
         </div>
       </div>
-      <div>
+      <div class="chat-container">
         <div *ngFor="let msg of chatService.messages; let i = index">
           <div *ngIf="chatService.isFirstMessageOfDay(msg.timestamp, i)">
             <div class="date-divider">

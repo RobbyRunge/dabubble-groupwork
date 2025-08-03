@@ -7,6 +7,8 @@ import { UserService } from './../../services/user.service'
 import { FormsModule, NgModel } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ChannelService } from '../../services/channel.service';
+import { Observable } from 'rxjs';
+import { ChatService } from '../../services/chat.service';
 
 
 @Component({
@@ -21,6 +23,7 @@ export class UserCardComponent implements OnInit {
   newName = '';
   urlUserId: string;
   dataUser = inject(UserService);
+  chatService = inject (ChatService);
   channelService = inject(ChannelService);
   userUpdateNameAktiv: boolean = false;
 
@@ -30,7 +33,7 @@ export class UserCardComponent implements OnInit {
   ) {
     this.urlUserId = data.urlUserId;
   }
-  ngOnInit() {
+  ngOnInit(): void {
     this.checkUserId();
   }
 

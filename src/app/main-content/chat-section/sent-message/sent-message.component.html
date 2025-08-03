@@ -59,8 +59,8 @@
 
             </div>
         </div>
-        <div>
-            <img (click)="answerOnMessage()" [src]="imgComment" (mouseover)="imgComment='img/comment_color.png'"
+        <div (click)="answerOnMessage()">
+            <img [src]="imgComment" (mouseover)="imgComment='img/comment_color.png'"
                 (mouseout)="imgComment='img/comment.png'">
         </div>
         <div (click)="showAllEmojisMessage(index)">

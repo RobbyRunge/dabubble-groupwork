@@ -1,5 +1,5 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
 import { MatFormField, MatLabel } from '@angular/material/select';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -10,6 +10,7 @@ import { ChatService } from '../../services/chat.service';
 import { Allchannels } from '../../../models/allchannels.class';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-input-message',
@@ -27,13 +28,14 @@ import { MatInputModule } from '@angular/material/input';
   templateUrl: './input-message.component.html',
   styleUrl: './input-message.component.scss'
 })
-export class InputMessageComponent {
+export class InputMessageComponent implements OnInit {
 
   showUserList: boolean = false;
   showChanelList: boolean = false;
   showEmojis: boolean = false;
   channelService = inject(ChannelService);
   chatService = inject(ChatService);
+  dataUser = inject(UserService)
   users$: Observable<User[]> | undefined;
   messageText: string = '';
   imgSrcReaction: any = 'add reaction.png';
@@ -41,6 +43,9 @@ export class InputMessageComponent {
   imgSrcSend: any = 'send.png';
   selectedEmoji: any;
 
+  ngOnInit(): void {
+    this.users$ = this.dataUser.getAllUsers();
+  }
 
   userMention() {
     this.messageText += '@';

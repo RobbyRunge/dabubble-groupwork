@@ -20,23 +20,33 @@
     width: 485px;
 }
 
-::ng-deep .mat-drawer-inner-container {
+:host ::ng-deep .mat-drawer-inner-container {
     overflow-x: hidden !important;
-/*     @include dFlex(space-between);
-    flex-direction: column; */
+    @include dFlex(space-between, unset);
+    flex-direction: column;
 }
 
-mat-icon{
+.chat-container{
+    @include dFlex(flex-end, flex-end);
+    flex-direction: column;
+    height: 100%;
+    >div{
+        width: 100%;
+    }
+}
+
+mat-icon {
     color: black;
 }
 
-.close-button{
+.close-button {
     @include dFlex();
     position: absolute;
     top: 40px;
     right: 40px;
     padding: 5px;
-    &:hover{
+
+    &:hover {
         cursor: pointer;
         background-color: #ECEEFE;
         border-radius: 100px;

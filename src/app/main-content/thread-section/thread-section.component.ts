@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { ChatService } from '../../services/chat.service';
@@ -45,7 +45,6 @@ export class ThreadSectionComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.chatServices.setDrawer(this.drawer);
   }
-
 
   closeThread() {
     this.chatServices.close()

@@ -7,9 +7,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatFormField, MatLabel } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
-import { FormsModule, NgModel } from '@angular/forms';
-import { MatDialogContent } from '@angular/material/dialog';
-import {MatDrawer, MatSidenavModule} from '@angular/material/sidenav';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-sent-message',

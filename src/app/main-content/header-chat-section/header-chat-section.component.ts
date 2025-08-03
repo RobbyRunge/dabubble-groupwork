@@ -24,7 +24,7 @@ export class HeaderChatSectionComponent implements OnInit {
   chatService = inject(ChatService);
   dialog = inject(MatDialog);
   userDialog = inject(MatDialog);
-  selectedUser: any;
+  /* selectedUser: any; */
   onlineUser: string = 'Online.png';
   offlineUser: string = 'offline.png';
 
@@ -34,7 +34,7 @@ export class HeaderChatSectionComponent implements OnInit {
 
   getUserData() {
     this.channelService.isChecked$.subscribe(user => {
-      this.selectedUser = user
+      this.chatService.selectedUser = user
     })
   }
 
@@ -55,7 +55,7 @@ export class HeaderChatSectionComponent implements OnInit {
 
   openUserDialog() {
     this.userDialog.open(UserCardComponent, {
-      data: { user: this.selectedUser }
+      data: { user: this.chatService.selectedUser }
     })
   }
 }

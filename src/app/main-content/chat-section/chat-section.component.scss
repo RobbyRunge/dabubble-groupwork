@@ -39,7 +39,7 @@
 
 .chat-container {
     width: 100%;
-    height: calc(100vh - 405px);
+    height: calc(100vh - 205px);
     @include dFlex(flex-end);
     align-items: unset;
     flex-direction: column;
@@ -129,6 +129,7 @@
 
 app-input-message {
     width: 100%;
+    @include dFlex();
 }
 
 app-header-chat-section{
