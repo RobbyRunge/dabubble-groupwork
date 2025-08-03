@@ -9,8 +9,35 @@
                     <p>{{message.timestamp?.toDate() | date:'HH:mm'}}</p>
                     <span>{{dataUser.currentUser?.name}}</span>
                 </div>
-                <div class="message-content">
-                    <h3>{{message.text}}</h3>
+                <div class="message-content" [ngClass]="{
+                'editMessageActive' :editMessageActive, }">
+                    <h3 *ngIf="!editMessageActive">{{message.text}}</h3>
+                    <div class="message-reaction-container">
+                        <span>{{messageReacton}}</span>
+                    </div>
+                    <mat-form-field *ngIf="editMessageActive" class="example-full-width">
+                        <input [(ngModel)]="editMessageText" matInput name="message" value="{{message.text}}">
+                        <div class="icons-container">
+                            <div>
+                                <div (click)="showAllEmojis()">
+                                    <img [src]="imgReactionInput"
+                                        (mouseover)="imgReactionInput = 'add_reaction_color.png'"
+                                        (mouseout)="imgReactionInput = 'add reaction.png'">
+                                </div>
+                            </div>
+                            <div class="buttons-cotntainer">
+                                <div class="discard-btn-container">
+                                    <button (click)="discardEditMessage()">Abbrechen</button>
+                                </div>
+                                <div class="save-btn-container">
+                                    <button (click)="updateMessage()">Speichern</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="showEmojis">
+                            <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
+                        </div>
+                    </mat-form-field>
                 </div>
                 <div class="answer-date-container">
                     <div>
@@ -18,6 +45,34 @@
                     <p>Letze Antwort 14:56</p> -->
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="message-hover-options">
+        <div>
+            <img [matMenuTriggerFor]="menu" [src]="imgSrcMore" (mouseover)="imgSrcMore = 'img/more_vert_color.png'"
+                (mouseout)="imgSrcMore = 'img/more_vert.png'">
+            <div>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="editMessage()">Nachricht bearbeiten</button>
+                </mat-menu>
+
+            </div>
+        </div>
+        <div>
+            <img (click)="answerOnMessage()" [src]="imgComment" (mouseover)="imgComment='img/comment_color.png'"
+                (mouseout)="imgComment='img/comment.png'">
+        </div>
+        <div (click)="showAllEmojisMessage(index)">
+            <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
+                (mouseout)="imgReaction='img/add_reaction.png'">
+        </div>
+        <div *ngFor="let emoji of chatService.mostUsedEmojis">
+            <div *ngIf="chatService.mostUsedEmojis.length > 0">
+                {{emoji}}
+            </div>
+            <div *ngIf="chatService.mostUsedEmojis.length > 0">
+                {{emoji}}
             </div>
         </div>
     </div>

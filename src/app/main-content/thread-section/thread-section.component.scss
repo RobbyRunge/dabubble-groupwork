@@ -1,20 +1,44 @@
-@import './../../../styles.scss';
+@use './../../../styles.scss' as *;
 
 .example-container {
-    height: calc(100vh - 146px);
+    height: calc(100vh - 100px);
     border-radius: 30px;
     background-color: white;
     position: relative;
 }
 
-.mat-mdc-icon-button{
+.mat-mdc-icon-button {
     border-radius: 0;
 }
 
-.open-close-img{
+.open-close-img {
     rotate: 90deg;
 }
 
-.mat-drawer{
+.mat-drawer {
     background-color: white;
+    width: 485px;
+}
+
+::ng-deep .mat-drawer-inner-container {
+    overflow-x: hidden !important;
+/*     @include dFlex(space-between);
+    flex-direction: column; */
+}
+
+mat-icon{
+    color: black;
+}
+
+.close-button{
+    @include dFlex();
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    padding: 5px;
+    &:hover{
+        cursor: pointer;
+        background-color: #ECEEFE;
+        border-radius: 100px;
+    }
 }

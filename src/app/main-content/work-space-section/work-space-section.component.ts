@@ -1,8 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   inject,
   OnInit,
+  ViewChild,
   viewChild,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -68,11 +70,11 @@ export class WorkSpaceSectionComponent implements OnInit {
   activeChannelId!: string;
 
 
-  onChange(user: any){
-  console.log(user);
+  onChange(user: any) {
+    console.log(user);
   }
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.channels$ = this.channelService.showChannelByUser$;
     this.users$ = this.dataUser.getAllUsers();
     this.channelService.showCurrentUserData();
@@ -114,7 +116,7 @@ export class WorkSpaceSectionComponent implements OnInit {
   loadSaveRoute() {
     const channelId = this.channelService.userSubcollectionChannelId;
     if (channelId) {
-      this.router.navigate(['mainpage', this.channelService.currentUserId, 'channel', channelId,]); 
+      this.router.navigate(['mainpage', this.channelService.currentUserId, 'channel', channelId,]);
     } else {
       this.router.navigate(['mainpage', this.channelService.currentUserId]);
     }

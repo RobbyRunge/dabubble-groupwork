@@ -1,0 +1,16 @@
+.other-user {
+    .chat-info-container {
+        >p {
+            font-weight: 400;
+
+            >span {
+                color: #535AF1;
+
+                &:hover {
+                    cursor: pointer;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+}

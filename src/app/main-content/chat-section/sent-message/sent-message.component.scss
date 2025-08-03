@@ -1,9 +1,4 @@
 @use "./../../../../styles.scss" as *;
-.messages-container{
-    width: 100%;
-    @include dFlex();
-    flex-direction: column;
-}
 
 .users-message-container {
     padding-top: 20px;
@@ -39,6 +34,7 @@
         font-size: 18px;
         font-family: 'Nunito';
         font-weight: 700;
+        color: black;
     }
 
     >p {
@@ -53,6 +49,9 @@
     border-bottom-left-radius: 30px;
     border-top-left-radius: 30px;
     border-bottom-right-radius: 30px;
+    flex-wrap: wrap;
+    max-width: 100%;
+    width: auto;
 
     >h3 {
         font-family: 'Nunito';
@@ -64,19 +63,143 @@
 
 .answer-date-container {
     @include dFlex(flex-start);
-    >div{
+
+    >div {
         @include dFlex();
         gap: 20px;
-        >span{
+
+        >span {
             color: #535AF1;
             font-size: 18px;
-            &:hover{
+
+            &:hover {
                 cursor: pointer;
             }
         }
-        >p{
+
+        >p {
             color: #686868;
             font-size: 14px;
         }
-      }
+    }
+}
+
+.message-hover-options {
+    left: 45px;
+    top: -25px;
+    z-index: 1;
+    >div{
+        color: black;
+    }
+}
+
+::ng-deep .mat-mdc-menu-panel {
+    background-color: white !important;
+    border-bottom-left-radius: 30px !important;
+    border-bottom-right-radius: 30px !important;
+    border-top-right-radius: 30px !important;
+    padding: 0px 20px !important;
+    width: 313px !important;
+    max-width: unset !important;
+
+    >button {
+        >span {
+            color: black !important;
+        }
+    }
+}
+
+::ng-deep .mat-mdc-menu-item {
+    padding: 10px 20px !important;
+
+    >span {
+        text-align: center;
+        color: black !important;
+        font-size: 24px !important;
+        font-family: 'Nunito' !important;
+    }
+
+    &:hover {
+        background-color: #ECEEFE !important;
+        border-radius: 100px;
+
+        >span {
+            font-weight: 700 !important;
+            color: #535AF1 !important;
+        }
+    }
+}
+
+::ng-deep .example-full-width .mat-mdc-text-field-wrapper {
+    height: unset !important;
+    min-width: 400px !important;
+}
+
+.mat-mdc-form-field-infix {
+    width: unset;
+}
+
+.editMessageActive {
+    background-color: unset;
+}
+
+.buttons-cotntainer {
+    @include dFlex(space-around !important);
+    width: 100%;
+
+    >div {
+        >button {
+            padding: 12px 25px;
+            font-size: 18px;
+        }
+    }
+
+    .discard-btn-container {
+        >button {
+            border: 1px solid #797EF3;
+            background-color: unset;
+            border-radius: 50px;
+            color: #444DF2;
+
+            &:hover {
+                background-color: #444DF2;
+                color: white;
+            }
+        }
+    }
+
+    .save-btn-container {
+        >button {
+            color: white;
+            border: 1px solid #797EF3;
+            background-color: #444DF2;
+            border-radius: 50px;
+
+            &:hover {
+                background-color: #797EF3;
+                color: white;
+            }
+        }
+    }
+}
+
+input {
+    color: #686868 !important;
+}
+
+emoji-mart {
+
+    position: absolute;
+    top: -400px;
+    left: 40px;
+    z-index: 1000;
+
+}
+
+.message-reaction-container{
+    position: absolute;
+    top: 95px;
+    >span{
+        font-size: 18px;
+    }
 }

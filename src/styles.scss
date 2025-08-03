@@ -1,3 +1,5 @@
+@use '@ctrl/ngx-emoji-mart/picker' as *;
+
 @mixin dFlex($jc: center, $ai: center) {
   display: flex;
   justify-content: $jc;
@@ -30,7 +32,7 @@ h5,
 h6,
 p,
 span {
-  margin: 0;
+    margin: 0;
 }
 
 body {
@@ -45,9 +47,9 @@ body {
 
 
 .channel-dialog-container .mat-mdc-dialog-surface {
-  background-color: #FFFFFF;
-  padding: 25px;
-  border-top-left-radius: 0;
+    background-color: #FFFFFF;
+    padding: 25px;
+    border-top-left-radius: 0;
 }
 
 .close-icon {
@@ -67,11 +69,11 @@ body {
 }
 
 .custom-menu {
-  width: 872px !important;
-  height: 539px !important;
-  background-color: white;
-  padding: 24px;
-  overflow-y: auto;
+    width: 872px !important;
+    height: 539px !important;
+    background-color: white;
+    padding: 24px;
+    overflow-y: auto;
 }
 
 #background-overlay {

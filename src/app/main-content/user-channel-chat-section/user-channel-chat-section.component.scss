@@ -1,4 +1,4 @@
-@import "./../../../styles.scss";
+@use "./../../../styles.scss" as *;
 
 .channel-user-content {
     @include dFlex(space-between);

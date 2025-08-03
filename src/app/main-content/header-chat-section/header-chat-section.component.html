@@ -1,0 +1,33 @@
+<div class="channel-user-content">
+    <div *ngIf="dataUser.showChannel" class="header-channel-content">
+        <div class="button-container">
+            <button #btn class="channel-btn" (click)="openDialog(btn)">
+                <span>#</span>
+                @if (channelService.currentChannelName) {
+                <span>{{ channelService.currentChannelName }}</span>
+                } @else {
+                <span>{{ channelService.userSubcollectionChannelName }}</span>
+                }
+                <img src="/img/arrow_down.png">
+            </button>
+        </div>
+        <div class="user-avatar-channels">
+            @for (user of dataUser.userAvatarInChannel; track $index) {
+            <img class="avatar" [src]="'avatar/' + user">
+            }
+            <span class="number-of-users">{{ dataUser.userAvatarInChannel.length }}</span>
+            <span class="add-user-to-channel"></span>
+        </div>
+    </div>
+    <div *ngIf="dataUser.showChatPartnerHeader" class="header-user-content">
+        <div *ngIf="channelService.isChecked$ | async as selectedUser" [ngClass]="{
+                'other-user': selectedUser.userId !== channelService.currentUserId
+                    }">
+            <div (click)="openUserDialog()">
+                <img class="user-logo" src="avatar/{{selectedUser.avatar}}" alt="">
+                <img class="status-img" [src]="selectedUser.aktiv ? 'Online.png' : 'offline.png'" alt="">
+                <h2>{{selectedUser.name}}</h2>
+            </div>
+        </div>
+    </div>
+</div>

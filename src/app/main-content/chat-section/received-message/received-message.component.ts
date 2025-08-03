@@ -17,6 +17,9 @@ export class ReceivedMessageComponent {
   constructor() {
     this.getUserData();
   }
+  imgSrcMore: any = 'img/more_vert.png';
+  imgComment: any = 'img/comment.png';
+  imgReaction: any = 'img/add_reaction.png';
   selectedUser: any;
 
 

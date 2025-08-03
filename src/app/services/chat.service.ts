@@ -1,6 +1,7 @@
 import { Injectable, inject, Injector, runInInjectionContext } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy } from '@angular/fire/firestore';
+import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc } from '@angular/fire/firestore';
 import { UserService } from './user.service';
+import { MatDrawer } from '@angular/material/sidenav';
 
 @Injectable({
     providedIn: 'root',
@@ -14,6 +15,8 @@ export class ChatService {
     messages: any[] = [];
     hasMessages: boolean = false;
     messageToday: boolean = false;
+    mostUsedEmojis: string[] = [];
+    private drawer!: MatDrawer;
 
     async getOrCreateChatId(userId1: string, userId2: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
@@ -120,5 +123,50 @@ export class ChatService {
             day: '2-digit',
             month: 'long'
         });
+    }
+
+    async updateUserMessage(messageId: string, newMessage: string): Promise<void> {
+        const messageDocRef = this.getMessageDoc(messageId);
+        await runInInjectionContext(this.injector, () =>
+            updateDoc(messageDocRef, { text: newMessage })
+        );
+    }
+
+    getMessageDoc(messageId: string): DocumentReference {
+        return runInInjectionContext(this.injector, () =>
+            doc(this.firestore, `chats/${this.dataUser.chatId}/message/${messageId}`)
+        );
+    }
+
+    loadMostUsedEmojis() {
+        const stored = localStorage.getItem('emoji-mart.frequently');
+        if (stored) {
+            const recent = JSON.parse(stored) as { [emoji: string]: number }; 
+            const sorted = Object.entries(recent)
+                .sort((a, b) => b[1] - a[1]) 
+                .slice(0, 2)
+                .map(([emoji]) => emoji); 
+
+            this.mostUsedEmojis = sorted;
+        }
+    }
+    setDrawer(drawer: MatDrawer) {
+        this.drawer = drawer;
+    }
+
+    toggle() {
+        this.drawer?.toggle();
+    }
+
+    open() {
+        this.drawer?.open();
+    }
+
+    close() {
+        this.drawer?.close();
+    }
+
+    isOpen(): boolean {
+        return this.drawer?.opened || false;
     }
 }

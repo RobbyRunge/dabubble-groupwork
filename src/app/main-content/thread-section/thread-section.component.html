@@ -1,11 +1,35 @@
 <div class="sidenav-wrapper">
-<!--   <button class="sidenav-toggle-btn" mat-icon-button (click)="toggleDrawer(drawer)">
-  </button> -->
-<!--   For threads to open and close -->
-
   <mat-drawer-container class="example-container" autosize>
     <mat-drawer #drawer class="example-sidenav" mode="side">
-      <p>Workspace</p>
+      <div>
+        <div>
+          <app-header-chat-section></app-header-chat-section>
+        </div>
+        <div class="close-button">
+          <mat-icon (click)="chatService.close()">close</mat-icon>
+        </div>
+      </div>
+      <div>
+        <div *ngFor="let msg of chatService.messages; let i = index">
+          <div *ngIf="chatService.isFirstMessageOfDay(msg.timestamp, i)">
+            <div class="date-divider">
+              <span class="date-label">{{ chatService.getDateLabel(msg.timestamp) }}</span>
+            </div>
+          </div>
+          <div class="sent-message">
+            <app-sent-message *ngIf="msg.senderId === channelService.currentUserId" [message]="msg" [index]="i">
+            </app-sent-message>
+            <!--           <div *ngIf="selectedEmoji === i" class="emoji-container">
+            <emoji-mart (emojiClick)="addEmojiMessage($event)"></emoji-mart>
+          </div> -->
+          </div>
+          <app-received-message *ngIf="msg.senderId !== channelService.currentUserId" [message]="msg">
+          </app-received-message>
+        </div>
+      </div>
+      <div>
+        <app-input-message></app-input-message>
+      </div>
     </mat-drawer>
   </mat-drawer-container>
 </div>

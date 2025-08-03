@@ -1,31 +1,92 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { Component, inject, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ChatService } from '../../../services/chat.service';
 import { UserService } from '../../../services/user.service';
 import { ChannelService } from '../../../services/channel.service';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormField, MatLabel } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { FormsModule, NgModel } from '@angular/forms';
+import { MatDialogContent } from '@angular/material/dialog';
+import {MatDrawer, MatSidenavModule} from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-sent-message',
-  imports: [DatePipe, NgIf],
+  imports: [
+    DatePipe,
+    NgIf,
+    MatMenuModule,
+    MatFormField,
+    MatInputModule,
+    NgClass,
+    PickerComponent,
+    FormsModule,
+    NgFor,
+  ],
   templateUrl: './sent-message.component.html',
   styleUrl: './sent-message.component.scss'
 })
-export class SentMessageComponent {
+export class SentMessageComponent implements OnInit {
 
   public chatService = inject(ChatService);
+  userService = inject(UserService);
   dataUser = inject(ChannelService);
   @Input() message: any;
-  constructor() {
-    this.getUserData();
-  }
-
+  @Input() index: number | undefined
+  showEmojis: boolean = false;
+  messageReacton: string = '';
+  constructor() { this.getUserData(); }
+  imgSrcMore: any = 'img/more_vert.png';
+  imgComment: any = 'img/comment.png';
+  imgReaction: any = 'img/add_reaction.png';
+  imgReactionInput: any = 'add reaction.png';
   selectedUser: any;
+  editMessageActive: boolean = false;
+  editMessageText: string = '';
+  showEmojisMessage: boolean = false;
+  @Output() showAllEmojisMessage1 = new EventEmitter<boolean>();
 
+
+  ngOnInit() {
+    this.chatService.loadMostUsedEmojis();
+  }
 
   getUserData() {
     this.dataUser.isChecked$.subscribe(user => {
       this.selectedUser = user
     })
   }
+  editMessage() {
+    this.editMessageText = this.message.text;
+    this.editMessageActive = true;
+  }
+  showAllEmojis() {
+    this.showEmojis = true;
+  }
+  discardEditMessage() {
+    this.editMessageActive = false;
+  }
 
+  addEmoji($event: any) {
+    this.editMessageText += $event.emoji.native;
+    this.showEmojis = false;
+  }
+  async updateMessage() {
+    await this.chatService.updateUserMessage(this.message.id, this.editMessageText);
+  }
+
+  showAllEmojisMessage(index: number | any) {
+    /* this.showEmojisMessage = true; */
+    this.showAllEmojisMessage1.emit(index)
+  }
+  addEmojiMessage($event: any) {
+    this.messageReacton += $event.emoji.native;
+    this.showEmojisMessage = false;
+    this.chatService.loadMostUsedEmojis();
+  }
+
+  answerOnMessage(){
+    this.chatService.open();
+  }
 }
