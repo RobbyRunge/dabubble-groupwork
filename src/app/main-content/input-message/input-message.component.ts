@@ -43,6 +43,7 @@ export class InputMessageComponent implements OnInit {
   imgSrcSend: any = 'send.png';
   selectedEmoji: any;
 
+
   ngOnInit(): void {
     this.users$ = this.dataUser.getAllUsers();
   }
@@ -102,9 +103,16 @@ export class InputMessageComponent implements OnInit {
     this.showChanelList = false;
   }
 
-  async sendMessage() {
-    await this.chatService.sendMessage(this.messageText, this.channelService.currentUserId);
-    this.messageText = '';
+  sendMessage() {
+    if (!this.messageText.trim()) return;
+
+    if (this.chatService.parentMessageId && this.chatService.threadRef) {
+      this.chatService.sendThreadMessage(this.dataUser.chatId, this.chatService.parentMessageId, this.chatService.threadRef, this.channelService.currentUserId, this.messageText);
+      this.messageText = '';
+    } else {
+      this.chatService.sendChatMessage(this.messageText, this.channelService.currentUserId);
+      this.messageText = ''
+    }
   }
 
   addEmoji($event: any) {

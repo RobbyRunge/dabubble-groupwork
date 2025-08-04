@@ -6,6 +6,7 @@ import { User } from '../../../../models/user.class';
 import { UserService } from '../../../services/user.service';
 import { Router } from '@angular/router';
 import { ChannelService } from '../../../services/channel.service';
+import { ChatService } from '../../../services/chat.service';
 
 @Component({
   selector: 'app-edit-logout-user',
@@ -20,21 +21,18 @@ export class EditLogoutUserComponent {
   ) {
   }
   private router = inject(Router);
-  readonly dialog = inject(MatDialog);
+  readonly userDialog = inject(MatDialog);
   readonly userService = inject(UserService);
   readonly channelService = inject(ChannelService);
+  readonly chatService = inject(ChatService);
 
-  openDialog(): void {
-    const currentUser = this.channelService.currentUser;
-    const currentUserId = this.channelService.currentUserId;
 
-    this.dialog.open(UserCardComponent, {
-      data: {
-        user: currentUser,
-        urlUserId: currentUserId
-      }
-    });
+  openUserDialog() {
+    this.userDialog.open(UserCardComponent, {
+      data: { user: this.channelService.currentUser }
+    })
   }
+
 
   async logout() {
     await this.userService.updateUserDocument(this.userService.channelService.currentUserId, { active: false });

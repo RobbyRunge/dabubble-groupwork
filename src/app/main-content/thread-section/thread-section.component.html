@@ -11,7 +11,7 @@
       </div>
       <div class="chat-container">
         <div>
-          <div *ngFor="let msg of chatService.messages; let i = index">
+          <div *ngFor="let msg of chatService.messagesThread; let i = index">
             <div *ngIf="chatService.isFirstMessageOfDay(msg.timestamp, i)">
               <div class="date-divider">
                 <span class="date-label">{{ chatService.getDateLabel(msg.timestamp) }}</span>

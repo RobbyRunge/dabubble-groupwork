@@ -1,5 +1,5 @@
 import { Injectable, inject, Injector, runInInjectionContext, ViewChild, ElementRef } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc, CollectionReference } from '@angular/fire/firestore';
 import { UserService } from './user.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,45 +24,79 @@ export class ChatService {
     private router = inject(Router);
     chatService: any;
     private unsubscribeMessages: (() => void) | undefined;
+    messageDocRef: any;
+    threadRef: any
+    isThreadAktiv: boolean = false;
+    chatId: string = '';
+    parentMessageId: string = '';
+    threadId: string = '';
+    senderId: string = '';
+    text: string = '';
+    messageText: string = '';
+    messagesThread: any[] = [];
+    hasMessagesThread: boolean = false;
+    parentMessagesRef: any;
 
     async getOrCreateChatId(userId1: string, userId2: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
             const chatsRef = collection(this.firestore, 'chats');
 
             if (userId1 === userId2) {
-                const selfQuery = query(chatsRef, where('user', '==', [userId1]));
-                const selfSnapshot = await getDocs(selfQuery);
-
-                if (!selfSnapshot.empty) {
-                    return selfSnapshot.docs[0].id;
-                }
-
-                const newSelfChat = await addDoc(chatsRef, {
-                    user: [userId1],
-                });
-
-                return newSelfChat.id;
+                return await this.getOrCreateSelfChat(chatsRef, userId1);
             }
 
-            const q = query(chatsRef, where('user', 'array-contains', userId1));
-            const snapshot = await getDocs(q);
-
-            for (const doc of snapshot.docs) {
-                const users = doc.data()['user'];
-                if (users.includes(userId2) && users.length === 2) {
-                    return doc.id;
-                }
+            const existingChatId = await this.findExistingChatBetweenUsers(chatsRef, userId1, userId2);
+            if (existingChatId) {
+                return existingChatId;
             }
 
-            const newChat = await addDoc(chatsRef, {
-                user: [userId1, userId2]
-            });
-
-            return newChat.id;
+            return await this.createNewChat(chatsRef, [userId1, userId2]);
         });
     }
 
+    private async getOrCreateSelfChat(chatsRef: CollectionReference, userId: string): Promise<string> {
+        const selfQuery = query(chatsRef, where('user', '==', [userId]));
+        const selfSnapshot = await getDocs(selfQuery);
+
+        if (!selfSnapshot.empty) {
+            return selfSnapshot.docs[0].id;
+        }
+
+        const newSelfChat = await addDoc(chatsRef, { user: [userId] });
+        return newSelfChat.id;
+    }
+
+    private async findExistingChatBetweenUsers(chatsRef: CollectionReference, userId1: string, userId2: string): Promise<string | null> {
+        const q = query(chatsRef, where('user', 'array-contains', userId1));
+        const snapshot = await getDocs(q);
+
+        for (const doc of snapshot.docs) {
+            const users = doc.data()['user'];
+            if (Array.isArray(users) && users.includes(userId2) && users.length === 2) {
+                return doc.id;
+            }
+        }
+
+        return null;
+    }
+
+    private async createNewChat(chatsRef: CollectionReference, users: string[]): Promise<string> {
+        const newChat = await addDoc(chatsRef, { user: users });
+        return newChat.id;
+    }
+
+
     async sendMessage(messageText: string, senderId: any) {
+        return runInInjectionContext(this.injector, async () => {
+            if (this.isThreadAktiv) {
+                this.sendThreadMessage(this.chatId, this.parentMessageId, this.threadId, this.senderId, this.text);
+            } else {
+                this.sendChatMessage(messageText, senderId)
+            }
+        })
+    }
+
+    async sendChatMessage(messageText: string, senderId: any) {
         return runInInjectionContext(this.injector, async () => {
             const messagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message`);
             await addDoc(messagesRef, {
@@ -73,10 +107,64 @@ export class ChatService {
         })
     }
 
+    async getOrCreateThread(chatId: string, parentMessageId: string, senderId: string, text: string): Promise<string> {
+        return runInInjectionContext(this.injector, async () => {
+            this.threadRef = collection(this.firestore, 'chats', chatId, 'message', parentMessageId, 'threads');
+            const snapshot = await getDocs(this.threadRef);
+            if (!snapshot.empty) {
+                return snapshot.docs[0].id;
+            }
+            const newThread = await addDoc(this.threadRef, {
+                senderId,
+                text,
+                timestamp: serverTimestamp()
+            });
+            return newThread.id;
+        })
+    }
+
+    async getParrentMessageId() {
+        return runInInjectionContext(this.injector, async () => {
+            this.parentMessagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message/`);
+            const snapshot = await getDocs(this.parentMessagesRef);
+            console.log(this.parentMessageId);
+            if (!snapshot.empty) {
+                return snapshot.docs[0].id;
+            }
+            return null;
+        })
+    }
+
+    async sendThreadMessage(chatId: string, parentMessageId: string, threadId: string, senderId: string, text: string) {
+        return runInInjectionContext(this.injector, async () => {
+            const threadMessageRef = collection(this.firestore, 'chats', chatId, 'message', parentMessageId, 'threads', threadId);
+            await addDoc(threadMessageRef, {
+                senderId,
+                text,
+                timestamp: serverTimestamp()
+            });
+        })
+    }
+
+    listenToMessagesThread() {
+        if (this.unsubscribeMessages) {
+            this.unsubscribeMessages();
+        }
+
+        return runInInjectionContext(this.injector, async () => {
+            const messagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message/${this.parentMessageId}/threads/${this.threadId}`);
+            const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+
+            this.unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
+                this.messagesThread = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                this.hasMessagesThread = this.messages.length !== 0;
+                console.log(this.messagesThread);
+            });
+        });
+    }
 
 
     listenToMessages() {
-        // Alten Listener beenden
         if (this.unsubscribeMessages) {
             this.unsubscribeMessages();
         }
@@ -133,9 +221,9 @@ export class ChatService {
     }
 
     async updateUserMessage(messageId: string, newMessage: string): Promise<void> {
-        const messageDocRef = this.getMessageDoc(messageId);
+        this.messageDocRef = this.getMessageDoc(messageId);
         await runInInjectionContext(this.injector, () =>
-            updateDoc(messageDocRef, { text: newMessage })
+            updateDoc(this.messageDocRef, { text: newMessage })
         );
     }
 

@@ -29,7 +29,7 @@ export class SentMessageComponent implements OnInit {
 
   public chatService = inject(ChatService);
   userService = inject(UserService);
-  dataUser = inject(ChannelService);
+  channelService = inject(ChannelService);
   @Input() message: any;
   @Input() index: number | undefined
   showEmojis: boolean = false;
@@ -51,7 +51,7 @@ export class SentMessageComponent implements OnInit {
   }
 
   getUserData() {
-    this.dataUser.isChecked$.subscribe(user => {
+    this.channelService.isChecked$.subscribe(user => {
       this.selectedUser = user
     })
   }
@@ -86,5 +86,8 @@ export class SentMessageComponent implements OnInit {
 
   answerOnMessage(){
     this.chatService.open();
+    this.chatService.getOrCreateThread(this.userService.chatId, this.message.id, this.channelService.currentUserId, this.message.text);
+    this.chatService.isThreadAktiv = true;
+    this.chatService.getParrentMessageId();
   }
 }
