@@ -14,7 +14,7 @@ export class User {
     this.password = obj ? obj.password : '';
     this.avatar = obj ? obj.avatar : '';
     this.userId! = obj ? obj.id : '';
-    this.userstorage = obj ? obj.userstorage : '';
+    this.active = obj ? obj.active : false;
     this.userstorage = obj ? obj.userstorage : '';
   }
 
@@ -25,6 +25,7 @@ export class User {
       password: this.password,
       avatar: this.avatar,
       userId: this.userId,
+      active: this.active,
       userstorage: this.userstorage
     }
   }
