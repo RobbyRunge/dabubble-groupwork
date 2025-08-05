@@ -63,6 +63,7 @@ mat-icon {
 mat-panel-description {
     >mat-icon {
         padding-right: 10px;
+        width: 22px;
     }
 }
 
@@ -74,6 +75,17 @@ mat-panel-description {
 .mat-expansion-panel-header {
     flex-direction: row-reverse;
     gap: 15px;
+
+    &:hover {
+        mat-icon,
+        .mat-expansion-panel-header-description {
+            color: #535AF1;
+        }
+
+        .account-img {
+            filter: brightness(0) saturate(100%) invert(34%) sepia(68%) saturate(3151%) hue-rotate(225deg) brightness(96%) contrast(91%);
+        }
+    }
 }
 
 .mat-expansion-panel-header-description {
@@ -83,6 +95,14 @@ mat-panel-description {
 .mat-accordion .mat-expansion-panel:last-of-type {
     border: none;
     box-shadow: none;
+}
+
+::ng-deep .mat-expansion-indicator svg {
+    fill: black !important;
+}
+
+::ng-deep .mat-expansion-panel-header:hover .mat-expansion-indicator svg {
+    fill: #535AF1 !important;
 }
 
 ::ng-deep.mat-expansion-indicator svg {
@@ -133,14 +153,19 @@ button {
     @include dFlex(flex-start, center);
     flex-direction: row;
     gap: 10px;
-    &:hover { 
-        background-color: #ECEEFE;   
+
+    &:hover {
+        background-color: #ECEEFE;
         border-radius: 20px;
-        > span, h2 {
+
+        >span,
+        h2 {
             color: #535AF1;
         }
     }
-    >h2,span {
+
+    >h2,
+    span {
         margin-block-start: 0;
         margin-block-end: 0;
         font-family: 'Nunito';
@@ -166,6 +191,7 @@ button {
     gap: 15px;
     position: relative;
     width: 100%;
+    border-radius: 30px;
 
     >div {
         @include dFlex();
@@ -244,9 +270,11 @@ button {
 }
 
 .active-channel {
-    background-color: #ECEEFE;   
+    background-color: #ECEEFE;
     border-radius: 20px;
-    > span, h2 {
+
+    >span,
+    h2 {
         color: #535AF1;
     }
 }

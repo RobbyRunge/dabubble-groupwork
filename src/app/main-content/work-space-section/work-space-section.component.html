@@ -22,8 +22,8 @@
                     <mat-accordion class="example-headers-align" multi="false">
                         <mat-expansion-panel>
                             <mat-expansion-panel-header>
-                                <mat-panel-description>
-                                    <mat-icon>workspaces_outline</mat-icon>
+                                <mat-panel-description class="standard-transition">
+                                    <mat-icon class="standard-transition">workspaces_outline</mat-icon>
                                     Channels
                                 </mat-panel-description>
                                 <div>
@@ -57,14 +57,14 @@
                 <mat-accordion class="example-headers-align" multi>
                     <mat-expansion-panel #myPaneltwo="matExpansionPanel">
                         <mat-expansion-panel-header>
-                            <mat-panel-description>
-                                <img class="account-img" src="account_circle.png" alt="">
+                            <mat-panel-description class="standard-transition">
+                                <img class="account-img standard-transition" src="account_circle.png" alt="">
                                 Direktnachrichten
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <div class="users-message-container">
                             <div [ngClass]="{'selected-user': user.userId === selectedUser?.userId}"
-                                *ngFor="let user of users$ | async; let index = index" class="users-container"
+                                *ngFor="let user of users$ | async; let index = index" class="users-container standard-transition"
                                 (click)="chatService.onUserClick(index, user)">
                                 <div>
                                     <img class="avatar-small-img" src="avatar/{{user.avatar}}" alt="">
