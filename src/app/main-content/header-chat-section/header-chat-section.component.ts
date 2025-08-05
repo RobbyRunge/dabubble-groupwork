@@ -40,13 +40,15 @@ export class HeaderChatSectionComponent implements OnInit {
 
   openDialog(button: HTMLElement) {
     const rect = button.getBoundingClientRect();
-    const dialog = this.dialog.open(ChannelSectionComponent, {
+    const width = window.innerWidth < 1080 ? '800px' : '872px';
+    const height = window.innerHeight < 700 ? '500px' : '612px';
+    this.dialog.open(ChannelSectionComponent, {
       position: {
         top: `${rect.bottom + window.scrollY}px`,
         left: `${rect.left + window.scrollX}px`,
       },
-      width: '872px',
-      height: '612px',
+      width,
+      height,
       maxWidth: '872px',
       maxHeight: '612px',
       panelClass: 'channel-dialog-container'
