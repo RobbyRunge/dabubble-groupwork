@@ -23,7 +23,7 @@
         <div *ngIf="channelService.isChecked$ | async as selectedUser" [ngClass]="{
                 'other-user': selectedUser.userId !== channelService.currentUserId
                     }">
-            <div (click)="openUserDialog()">
+            <div class="standard-transition" (click)="openUserDialog()">
                 <img class="user-logo" src="avatar/{{selectedUser.avatar}}" alt="">
                 <img class="status-img" [src]="selectedUser.active ? 'Online.png' : 'offline.png'" alt="">
                 <h2>{{selectedUser.name}}</h2>
