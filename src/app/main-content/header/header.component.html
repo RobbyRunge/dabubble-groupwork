@@ -12,7 +12,7 @@
     </mat-form-field>
     <div class="user-container" (click)="openDialog('0ms', '0ms')">
         <div>
-            <span> {{channelService.currentUser?.name}} </span>
+            <span class="standard-transition"> {{channelService.currentUser?.name}} </span>
         </div>
         <div class="avatar-container">
             <img *ngIf="channelService?.currentUser?.avatar" [src]="'/avatar/' + channelService.currentUser?.avatar">

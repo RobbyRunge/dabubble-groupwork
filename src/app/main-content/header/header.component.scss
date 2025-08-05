@@ -34,16 +34,18 @@ header {
             font-size: 32px;
             color: black;
             font-weight: 700;
-            cursor: default;
         }
     }
 
     &:hover {
+        cursor: pointer;
+
         >div {
             >span {
                 color: #535AF1 !important;
             }
         }
+
         color: #535AF1 !important;
     }
 }
