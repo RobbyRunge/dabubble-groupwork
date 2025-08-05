@@ -1,0 +1,21 @@
+<div class="add-user-to-channel-main-cont">
+    <div>
+        <div class="add-user-header">
+            <p>Leute hinzufügen</p>
+            <mat-icon class="close-icon" (click)="dialogRef.close()">close</mat-icon>
+        </div>
+        <div class="current-channel-name-headline">
+            # @if (channelService.currentChannelName) {
+                {{ channelService.currentChannelName }}
+            } @else {
+                {{ channelService.userSubcollectionChannelName }}
+            }
+        </div>
+    </div>
+  <div>
+    <input class="user-name-channel" type="text" placeholder="Name eingeben">
+  </div>
+  <div class="btn-add-cont">
+    <button mat-flat-button class="button-add">Hinzufügen</button>
+  </div>
+</div> 

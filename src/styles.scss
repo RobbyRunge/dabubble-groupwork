@@ -327,6 +327,16 @@ mat-dialog-content {
     height: 24px;
     width: 24px;
     margin-left: 10px;
+    cursor: pointer;
+    &:hover {
+        background-image: url('/img/person_add_purple.png');
+        transform: scale(1.05);
+    }
+}
+
+.add-user .mat-mdc-dialog-surface {
+    background-color: white;
+    border-top-right-radius: 0;
 }
 
 app-input-message {

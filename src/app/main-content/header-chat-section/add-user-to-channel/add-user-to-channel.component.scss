@@ -1,0 +1,58 @@
+@use './../../../../styles.scss' as *;
+
+.add-user-to-channel-main-cont {
+    padding: 40px;
+    height: 100%;
+    @include dFlex(space-between, unset);
+    flex-direction: column
+}
+
+.add-user-header {
+    @include dFlex(space-between, center);
+    flex-direction: row;
+    font-size: 24px;
+    font-weight: 700;
+    >p {
+        cursor: default;
+    }
+    mat-icon {
+        cursor: pointer;
+    }
+}
+
+.current-channel-name-headline {
+    margin-top: 5px;
+    font-size: 18px;
+    font-weight: 400;
+    color: #797EF3; 
+}
+
+.user-name-channel {
+    width: 434px;
+    height: 55px;
+    border: 1px solid #ADB0D9; 
+    border-radius: 30px;
+    padding: 15px 20px 15px 20px;
+    box-sizing: border-box;
+    font-size: 18px;
+    font-weight: 400;
+    &::placeholder {
+        font-size: 18px;
+        font-weight: 400;
+        color: #686868;  
+    }
+    &:focus {
+    border: 1px solid #ADB0D9; 
+    outline: none;                      
+  }
+}
+
+.btn-add-cont {
+    @include dFlex(end, center);
+}
+
+.mat-mdc-unelevated-button {   
+    background-color: #686868 !important;
+    font-weight: 700 !important;
+    color: white !important;
+}

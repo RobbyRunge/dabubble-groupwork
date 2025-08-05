@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { ChatService } from '../../services/chat.service';
+import { AddUserToChannelComponent } from './add-user-to-channel/add-user-to-channel.component';
 
 @Component({
   selector: 'app-header-chat-section',
@@ -59,5 +60,21 @@ export class HeaderChatSectionComponent implements OnInit {
     this.userDialog.open(UserCardComponent, {
       data: { user: this.chatService.selectedUser }
     })
+  }
+
+  addUserToChannel(button: HTMLElement) {
+    const rect = button.getBoundingClientRect();
+    const dialogWidth = 514;
+    this.dialog.open(AddUserToChannelComponent, {
+      position: {
+        top: `${rect.bottom + window.scrollY}px`,
+        left: `${rect.right + window.scrollX - dialogWidth}px`,
+      },
+      width: '514px',
+      height: '294px',
+      maxWidth: '514px',
+      maxHeight: '294px',
+      panelClass: 'add-user'
+    });
   }
 }

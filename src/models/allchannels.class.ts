@@ -9,14 +9,6 @@ export class Allchannels {
     this.channelId = obj ? obj.channelId : '';
   }
 
-  // public toJSON() {
-  //     return {
-  //         channelname: this.channelname,
-  //         description: this.description,
-  //         channelId: this.channelId
-  //     }
-  // }
-
   public toJSON(fields?: (keyof Allchannels)[]) {
     const json: any = {};
     const allFields:any  = {
