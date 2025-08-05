@@ -4,7 +4,7 @@ import { ThreadSectionComponent } from "../thread-section/thread-section.compone
 import { HeaderComponent } from "../header/header.component";
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute } from '@angular/router';
-import { docData, Firestore, onSnapshot } from '@angular/fire/firestore';
+import { docData, onSnapshot } from '@angular/fire/firestore';
 import { User } from '../../../models/user.class';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -65,22 +65,7 @@ export class ChatSectionComponent implements OnInit {
       this.getUserData();
       this.scrollToBottom();
     });
-    /*     this.listenToMessages(this.route);
-        console.log('test' + this.chatId);
-      }); */
-    // setTimeout(() => {
-    //   this.checkChannel();
-    //   console.log('Channels by user', this.dataUser.showChannelByUser);
-
-    // }, 2000);
   }
-
-/*   ngOnChanges(changes: SimpleChanges) {
-    if (changes[this.messageText]) {
-      this.onInputChange();
-      console.log('input feld is changed');
-    }
-  } */
 
   getUserData() {
     this.channelService.isChecked$.subscribe(user => {
@@ -94,30 +79,20 @@ export class ChatSectionComponent implements OnInit {
       this.channelService.currentUser = new User(data);
     }));
   }
-
+  
   showUserChannel() {
     const channelRef = this.channelService.getChannelRef();
     this.unsubscribeUserChannels = runInInjectionContext(this.injector, () =>
-      onSnapshot(channelRef, (element) => {
+      onSnapshot(channelRef, (snapshot) => {
         this.channelService.channels = [];
-        const channelRef = this.channelService.getChannelRef();
-        this.unsubscribeUserChannels = runInInjectionContext(this.injector, () =>
-          onSnapshot(channelRef, (element) => {
-            this.channelService.channels = [];
-            element.forEach(doc => {
-              this.channelService.channels.push({ ...doc.data(), channelId: doc.id });
-            });
-          })
-        );
+        snapshot.forEach(doc => {
+          this.channelService.channels.push({
+            ...doc.data(),
+            channelId: doc.id
+          });
+        });
       })
     );
-  }
-
-  ngOnDestroy(): void {
-    this.routeSub?.unsubscribe();
-    if (this.unsubscribeUserChannels) {
-      this.unsubscribeUserChannels()
-    }
   }
 
   scrollToBottom(): void {
@@ -131,9 +106,15 @@ export class ChatSectionComponent implements OnInit {
       data: { user: this.selectedUser }
     })
   }
+
+   ngOnDestroy(): void {
+    this.routeSub?.unsubscribe();
+    if (this.unsubscribeUserChannels) {
+      this.unsubscribeUserChannels()
+    }
+    if (this.unsubscribeUserChannels) {
+      this.unsubscribeUserChannels(); 
+    }
+  }
+
 }
-
-
-/* function ngOnDestroy(): ((error: import("@firebase/firestore").FirestoreError) => void) | undefined {
-  throw new Error('Function not implemented.');
-} */
