@@ -16,6 +16,7 @@
         </div>
         <div class="avatar-container">
             <img *ngIf="channelService?.currentUser?.avatar" [src]="'/avatar/' + channelService.currentUser?.avatar">
+            <img class="status-img" src="{{ channelService.currentUser?.active ? onlineUser : offlineUser }}" alt="">
         </div>
         <div>
             <mat-icon class="arrow-down">keyboard_arrow_down</mat-icon>

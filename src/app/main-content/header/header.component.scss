@@ -67,10 +67,19 @@ mat-icon {
 }
 
 .avatar-container {
+    position: relative;
     >img {
         height: 70px;
         width: 70px;
         border-radius: 42px;
+    }
+
+    .status-img {
+        position: absolute;
+        top: 56px;
+        left: 48px;
+        width: 18px;
+        height: 18px;
     }
 }
 

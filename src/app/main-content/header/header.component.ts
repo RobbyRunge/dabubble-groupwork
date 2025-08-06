@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
-import {  MatDialog } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { EditLogoutUserComponent } from './edit-logout-user/edit-logout-user.component';
 import { ChannelService } from '../../services/channel.service';
 
@@ -28,6 +28,9 @@ export class HeaderComponent {
   readonly dialog = inject(MatDialog);
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
+
+  onlineUser: string = 'online-header.png';
+  offlineUser: string = 'offline.png';
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(EditLogoutUserComponent, {
