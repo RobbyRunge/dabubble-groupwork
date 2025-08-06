@@ -71,4 +71,9 @@ export class ChannelSectionComponent implements OnInit {
     this.channelService.currentChannelDescription = this.newChannel.description ?? '';
     });
   }
+
+  deleteUserFromChannel() {
+    this.channelService.deleteUserFromCh(this.channelService.currentChannelId, this.newChannel.toJSON(['userId']));
+    this.dialogRef.close()
+  }
 }

@@ -55,6 +55,7 @@ export class ChannelService {
   userSubcollectionDescription: string = '';
   selectedUser: any
 
+
   unsubscribeUserData!: Subscription;
   unsubscribeUserChannels!: Subscription;
   unsubscribeChannelCreater!: () => void;
@@ -187,6 +188,23 @@ export class ChannelService {
     const singleChannelRef = this.getSingleChannelRef(docId);
     await runInInjectionContext(this.injector, () =>
       updateDoc(singleChannelRef, item)
+    );
+  }
+
+  async deleteUserFromCh(channelId: string, item: any) {
+    const channelRef = this.getSingleChannelRef(channelId);
+    this.unsubscribeChannelCreaterName = runInInjectionContext(
+      this.injector, () =>
+        onSnapshot(channelRef, async (element) => {
+          const data = element.data();
+          if (data && Array.isArray(data['userId'])) {
+            const filteredUserIds = data['userId'].filter((channelUser: string) => channelUser !== this.currentUserId);
+            item.userId = filteredUserIds;
+            await runInInjectionContext(this.injector, () =>
+              updateDoc(channelRef, item)
+            );
+          }
+        })
     );
   }
 

@@ -56,6 +56,6 @@
             <span class="channel-user-name" *ngIf="channelService.channelCreaterName"> {{channelService.channelCreaterName}} </span>
     </div>
     <div class="leave-channel-btn">
-        <button mat-flat-button primary>Channel verlassen</button>
+        <button mat-flat-button primary (click)="deleteUserFromChannel()">Channel verlassen</button>
     </div>
 </div>
