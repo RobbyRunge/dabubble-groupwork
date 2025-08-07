@@ -68,6 +68,7 @@ export class WorkSpaceSectionComponent implements OnInit {
 
   accordion = viewChild.required(MatAccordion);
   activeChannelId!: string;
+  activeUserId!: string;
 
 
   onChange(user: any) {
@@ -78,12 +79,20 @@ export class WorkSpaceSectionComponent implements OnInit {
     this.channels$ = this.channelService.showChannelByUser$;
     this.users$ = this.dataUser.getAllUsers();
     this.channelService.showCurrentUserData();
+    this.getUserData();
     this.unsubChannels = this.channelService.channelsLoaded$.subscribe(loaded => {
       if (loaded) {
         console.log('channel route', this.channelService.userSubcollectionChannelId);
         this.loadSaveRoute();
       }
     });
+  }
+
+  getUserData() {
+    this.channelService.isChecked$.subscribe(user => {
+      this.selectedUser = user;
+      this.activeUserId = user?.userId || '';
+    })
   }
 
   toggleDrawer(drawer: MatDrawer) {

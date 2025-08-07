@@ -63,8 +63,9 @@
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <div class="users-message-container">
-                            <div [ngClass]="{'selected-user': user.userId === selectedUser?.userId}"
-                                *ngFor="let user of users$ | async; let index = index" class="users-container standard-transition"
+                            <div [ngClass]="{'selected-user': user.userId === selectedUser?.userId, 'active-user-channel': user.userId === activeUserId}"
+                                *ngFor="let user of users$ | async; let index = index"
+                                class="users-container standard-transition"
                                 (click)="chatService.onUserClick(index, user)">
                                 <div>
                                     <img class="avatar-small-img" src="avatar/{{user.avatar}}" alt="">

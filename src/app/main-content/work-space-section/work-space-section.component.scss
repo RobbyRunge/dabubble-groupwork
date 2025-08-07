@@ -218,6 +218,19 @@ button {
     }
 }
 
+.active-user-channel {
+    background-color: #ECEEFE;
+    border-radius: 30px;
+
+    >div {
+        >h2,
+        span {
+            color: #535AF1;
+            font-weight: bold;
+        }
+    }
+}
+
 .selected-user {
     cursor: pointer;
     background-color: #ECEEFE;
