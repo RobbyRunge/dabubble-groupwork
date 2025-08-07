@@ -24,13 +24,8 @@ export class CreateChannelSectionComponent {
   newChannel = new Allchannels();
   currentUserId = this.channelService.currentUserId;
 
-  createChannel() {
-    this.userCreateChannel();  
-  }
-
-  userCreateChannel() {
-     this.channelService.addNewChannel(this.newChannel.toJSON(),this.currentUserId,this.currentUserId).then(() => {
-      this.dialogRef.close();
-    });
+  async createChannel() {
+    await this.channelService.addNewChannel(this.newChannel.toJSON(),this.currentUserId,this.currentUserId); 
+    this.dialogRef.close();
   }
 }

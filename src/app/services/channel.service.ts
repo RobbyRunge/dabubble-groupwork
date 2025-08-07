@@ -18,7 +18,6 @@ import {
   updateDoc,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { UserService } from './user.service';
 import { Allchannels } from '../../models/allchannels.class';
 import { User } from '../../models/user.class';
 
@@ -58,6 +57,7 @@ export class ChannelService {
 
   unsubscribeUserData!: Subscription;
   unsubscribeUserChannels!: Subscription;
+  unsubscribeDeleteUserFromCh!: () => void;;
   unsubscribeChannelCreater!: () => void;
   unsubscribeChannelCreaterName!: () => void;
   unsubscribeUserStorage!: Subscription;
@@ -99,11 +99,16 @@ export class ChannelService {
       ...allChannels,
       userId: [userId],
       createdBy: user,
-      createdAt: dateNow,
     };
-    await runInInjectionContext(this.injector, () =>
+    const docRef = await runInInjectionContext(this.injector, () =>
       addDoc(collection(this.firestore, 'channels'), channelWithUser)
     );
+    const generatedChannelId = docRef.id;
+    await runInInjectionContext(this.injector, () => 
+     updateDoc(doc(this.firestore, 'channels', generatedChannelId), {
+      channelId: generatedChannelId,
+     })
+    )
   }
 
   async getChannelUserId(channelId: string) {
@@ -193,7 +198,7 @@ export class ChannelService {
 
   async deleteUserFromCh(channelId: string, item: any) {
     const channelRef = this.getSingleChannelRef(channelId);
-    this.unsubscribeChannelCreaterName = runInInjectionContext(
+    this.unsubscribeDeleteUserFromCh = runInInjectionContext(
       this.injector, () =>
         onSnapshot(channelRef, async (element) => {
           const data = element.data();
@@ -223,6 +228,9 @@ export class ChannelService {
     }
     if (this.unsubscribeChannelCreaterName) {
       this.unsubscribeChannelCreaterName();
+    }
+    if (this.unsubscribeDeleteUserFromCh) {
+      this.unsubscribeDeleteUserFromCh();
     }
   }
 
