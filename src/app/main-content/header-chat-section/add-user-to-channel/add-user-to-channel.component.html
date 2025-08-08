@@ -13,8 +13,9 @@
         </div>
     </div>
   <div>
-    <input [(ngModel)]="searchInput" (keydown)="filterUsers()" class="user-name-channel" type="text" placeholder="Name eingeben">
+    <input [(ngModel)]="searchInput" (input)="filterUsers()" class="user-name-channel" type="text" placeholder="Name eingeben">
   </div>
+  <app-show-filtered-user *ngIf="showFilteredUser"></app-show-filtered-user> 
   <div class="btn-add-cont">
     <button (click)="addUserToChannel()" mat-flat-button class="button-add">Hinzufügen</button>
   </div>
