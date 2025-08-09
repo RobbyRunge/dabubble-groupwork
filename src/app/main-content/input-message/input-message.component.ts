@@ -42,6 +42,8 @@ export class InputMessageComponent implements OnInit {
   imgSrcMention: any = 'mention.png'
   imgSrcSend: any = 'send.png';
   selectedEmoji: any;
+  onlineUser: string = 'Online.png';
+  offlineUser: string = 'offline.png';
 
 
   ngOnInit(): void {

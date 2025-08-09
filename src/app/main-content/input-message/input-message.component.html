@@ -6,6 +6,7 @@
                     (click)="selecetedUserMention(user, index)">
                     <div>
                         <img class="user-logo" src="avatar/{{user.avatar}}" alt="">
+                        <img class="status-img" src="{{ user.active ? onlineUser : offlineUser }}" alt="">
                     </div>
                     <div>{{user.name}}</div>
                 </div>
