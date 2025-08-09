@@ -10,6 +10,7 @@ import { PasswordResetComponent } from './login/password-send-email/password-res
 import { UserChannelChatSectionComponent } from './main-content/user-channel-chat-section/user-channel-chat-section.component';
 import { avatarGuard } from './guards/avatar.guard';
 import { ChatSectionComponent } from './main-content/chat-section/chat-section.component';
+import { ThreadSectionComponent } from './main-content/thread-section/thread-section.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -23,7 +24,8 @@ export const routes: Routes = [
     path: 'mainpage/:id', component: MainContentComponent,
     children: [
       { path: 'channel/:channelId', component: UserChannelChatSectionComponent },
-      { path: 'chats/:chatId', component: ChatSectionComponent }
+      { path: 'chats/:chatId', component: ChatSectionComponent },
+      { path: 'chats/:chatId/threads/:threadId', component: ThreadSectionComponent }
     ]
   },
 ];

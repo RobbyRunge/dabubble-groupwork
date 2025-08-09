@@ -84,10 +84,4 @@ export class SentMessageComponent implements OnInit {
     this.chatService.loadMostUsedEmojis();
   }
 
-  answerOnMessage(){
-    this.chatService.open();
-    this.chatService.getOrCreateThread(this.userService.chatId, this.message.id, this.channelService.currentUserId, this.message.text);
-    this.chatService.isThreadAktiv = true;
-    this.chatService.getParrentMessageId();
-  }
 }

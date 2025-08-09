@@ -75,12 +75,12 @@ export class ChatSectionComponent implements OnInit {
     // }, 2000);
   }
 
-/*   ngOnChanges(changes: SimpleChanges) {
-    if (changes[this.messageText]) {
-      this.onInputChange();
-      console.log('input feld is changed');
-    }
-  } */
+  /*   ngOnChanges(changes: SimpleChanges) {
+      if (changes[this.messageText]) {
+        this.onInputChange();
+        console.log('input feld is changed');
+      }
+    } */
 
   getUserData() {
     this.channelService.isChecked$.subscribe(user => {

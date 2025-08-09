@@ -1,5 +1,5 @@
 import { Injectable, inject, Injector, runInInjectionContext, ViewChild, ElementRef } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc, CollectionReference } from '@angular/fire/firestore';
+import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc, CollectionReference, getDoc } from '@angular/fire/firestore';
 import { UserService } from './user.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -23,7 +23,8 @@ export class ChatService {
     channelService = inject(ChannelService);
     private router = inject(Router);
     chatService: any;
-    private unsubscribeMessages: (() => void) | undefined;
+    private unsubscribeMessages?: (() => void);
+    private unsubscribeMessagesThread?: (() => void);
     messageDocRef: any;
     threadRef: any
     isThreadAktiv: boolean = false;
@@ -89,9 +90,9 @@ export class ChatService {
     async sendMessage(messageText: string, senderId: any) {
         return runInInjectionContext(this.injector, async () => {
             if (this.isThreadAktiv) {
-                this.sendThreadMessage(this.chatId, this.parentMessageId, this.threadId, this.senderId, this.text);
+                await this.sendThreadMessage(this.dataUser.chatId, this.parentMessageId, senderId, this.text);
             } else {
-                this.sendChatMessage(messageText, senderId)
+                await this.sendChatMessage(messageText, senderId)
             }
         })
     }
@@ -107,9 +108,9 @@ export class ChatService {
         })
     }
 
-    async getOrCreateThread(chatId: string, parentMessageId: string, senderId: string, text: string): Promise<string> {
+    async getOrCreateThread(chatId: string, parentMessageId: string, senderId: string, text: string, threadId: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
-            this.threadRef = collection(this.firestore, 'chats', chatId, 'message', parentMessageId, 'threads');
+            this.threadRef = collection(this.firestore, `chats/${chatId}/message/${parentMessageId}/threads/${parentMessageId}/messages`);
             const snapshot = await getDocs(this.threadRef);
             if (!snapshot.empty) {
                 return snapshot.docs[0].id;
@@ -119,165 +120,198 @@ export class ChatService {
                 text,
                 timestamp: serverTimestamp()
             });
-            return newThread.id;
+            return parentMessageId;
         })
     }
 
     async getParrentMessageId() {
         return runInInjectionContext(this.injector, async () => {
-            this.parentMessagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message/`);
+            this.parentMessagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message`);
             const snapshot = await getDocs(this.parentMessagesRef);
-            console.log(this.parentMessageId);
             if (!snapshot.empty) {
                 return snapshot.docs[0].id;
             }
             return null;
-        })
+        });
     }
 
-    async sendThreadMessage(chatId: string, parentMessageId: string, threadId: string, senderId: string, text: string) {
+    async sendThreadMessage(chatId: string, rootId: string, senderId: string, text: string) {
         return runInInjectionContext(this.injector, async () => {
-            const threadMessageRef = collection(this.firestore, 'chats', chatId, 'message', parentMessageId, 'threads', threadId);
+            const threadMessageRef = collection(this.firestore, `chats/${chatId}/message/${rootId}/threads/messages`);
             await addDoc(threadMessageRef, {
                 senderId,
                 text,
                 timestamp: serverTimestamp()
             });
-        })
-    }
-
-    listenToMessagesThread() {
-        if (this.unsubscribeMessages) {
-            this.unsubscribeMessages();
-        }
-
-        return runInInjectionContext(this.injector, async () => {
-            const messagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message/${this.parentMessageId}/threads/${this.threadId}`);
-            const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
-
-            this.unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
-                this.messagesThread = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                this.hasMessagesThread = this.messages.length !== 0;
-                console.log(this.messagesThread);
+            const rootRef = doc(this.firestore, `chats/${chatId}/messages/${rootId}`);
+            await updateDoc(rootRef, {
+                replyCount: ((await getDoc(rootRef)).data()?.['replyCount'] ?? 0) + 1,
+                lastReplyAt: serverTimestamp()
             });
+    })
+}
+
+listenToMessagesThread() {
+            if (this.unsubscribeMessagesThread) {
+                this.unsubscribeMessagesThread();
+            }
+
+    return runInInjectionContext(this.injector, async () => {
+        const messagesRef = collection(this.firestore,
+            `chats/${this.dataUser.chatId}/message/${this.parentMessageId}/threads/${this.threadId}/messages`);
+        const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+
+        this.unsubscribeMessagesThread = onSnapshot(messagesQuery, (snapshot) => {
+            this.messagesThread = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            this.hasMessagesThread = this.messagesThread.length !== 0;
         });
+    });
+}
+
+
+
+listenToMessages() {
+    if (this.unsubscribeMessages) {
+        this.unsubscribeMessages();
     }
 
+    return runInInjectionContext(this.injector, async () => {
+        const messagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message`);
+        const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
 
-    listenToMessages() {
-        if (this.unsubscribeMessages) {
-            this.unsubscribeMessages();
-        }
-
-        return runInInjectionContext(this.injector, async () => {
-            const messagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message`);
-            const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
-
-            this.unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
-                this.messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                this.hasMessages = this.messages.length !== 0;
-            });
+        this.unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
+            this.messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            this.hasMessages = this.messages.length !== 0;
         });
-    }
+    });
+}
 
-    isFirstMessageOfDay(timestamp: any, index: number): boolean {
-        const currentDate = this.getDateWithoutTime(timestamp?.toDate());
-        if (!currentDate) return false;
+isFirstMessageOfDay(timestamp: any, index: number): boolean {
+    const currentDate = this.getDateWithoutTime(timestamp?.toDate());
+    if (!currentDate) return false;
 
-        if (index === 0) return true;
+    if (index === 0) return true;
 
-        const prevMsg = this.messages[index - 1];
-        const prevDate = this.getDateWithoutTime(prevMsg?.timestamp?.toDate());
-        if (!prevDate) return true;
+    const prevMsg = this.messages[index - 1];
+    const prevDate = this.getDateWithoutTime(prevMsg?.timestamp?.toDate());
+    if (!prevDate) return true;
 
-        return currentDate.getTime() !== prevDate.getTime();
-    }
+    return currentDate.getTime() !== prevDate.getTime();
+}
 
     private getDateWithoutTime(date: Date | undefined | null): Date | null {
-        if (!date) return null;
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    }
+    if (!date) return null;
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
 
-    getDateLabel(timestamp: any): string {
-        const date = timestamp?.toDate();
-        if (!date) return '';
+getDateLabel(timestamp: any): string {
+    const date = timestamp?.toDate();
+    if (!date) return '';
 
-        const today = new Date();
-        const yesterday = new Date();
-        yesterday.setDate(today.getDate() - 1);
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
 
-        const msgDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-        const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        const yesterdayDate = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate());
+    const msgDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const yesterdayDate = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate());
 
-        if (msgDate.getTime() === todayDate.getTime()) return 'Heute';
-        if (msgDate.getTime() === yesterdayDate.getTime()) return 'Gestern';
+    if (msgDate.getTime() === todayDate.getTime()) return 'Heute';
+    if (msgDate.getTime() === yesterdayDate.getTime()) return 'Gestern';
 
-        return date.toLocaleDateString('de-DE', {
-            weekday: 'long',
-            day: '2-digit',
-            month: 'long'
-        });
-    }
+    return date.toLocaleDateString('de-DE', {
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long'
+    });
+}
 
-    async updateUserMessage(messageId: string, newMessage: string): Promise<void> {
-        this.messageDocRef = this.getMessageDoc(messageId);
-        await runInInjectionContext(this.injector, () =>
-            updateDoc(this.messageDocRef, { text: newMessage })
+    async updateUserMessage(messageId: string, newMessage: string): Promise < void> {
+    this.messageDocRef = this.getMessageDoc(messageId);
+    await runInInjectionContext(this.injector, () =>
+updateDoc(this.messageDocRef, { text: newMessage })
         );
     }
 
-    getMessageDoc(messageId: string): DocumentReference {
-        return runInInjectionContext(this.injector, () =>
-            doc(this.firestore, `chats/${this.dataUser.chatId}/message/${messageId}`)
-        );
-    }
+getMessageDoc(messageId: string): DocumentReference {
+    return runInInjectionContext(this.injector, () =>
+        doc(this.firestore, `chats/${this.dataUser.chatId}/message/${messageId}`)
+    );
+}
 
-    loadMostUsedEmojis() {
-        const stored = localStorage.getItem('emoji-mart.frequently');
-        if (stored) {
-            const recent = JSON.parse(stored) as { [emoji: string]: number };
-            const sorted = Object.entries(recent)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 2)
-                .map(([emoji]) => emoji);
+loadMostUsedEmojis() {
+    const stored = localStorage.getItem('emoji-mart.frequently');
+    if (stored) {
+        const recent = JSON.parse(stored) as { [emoji: string]: number };
+        const sorted = Object.entries(recent)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 2)
+            .map(([emoji]) => emoji);
 
-            this.mostUsedEmojis = sorted;
-        }
+        this.mostUsedEmojis = sorted;
     }
-    setDrawer(drawer: MatDrawer) {
-        this.drawer = drawer;
-    }
+}
+setDrawer(drawer: MatDrawer) {
+    this.drawer = drawer;
+}
 
-    toggle() {
-        this.drawer?.toggle();
-    }
+toggle() {
+    this.drawer?.toggle();
+}
 
-    open() {
-        this.drawer?.open();
-    }
+open() {
+    this.drawer?.open();
+}
 
-    close() {
-        this.drawer?.close();
-    }
+close() {
+    this.drawer?.close();
+}
 
-    isOpen(): boolean {
-        return this.drawer?.opened || false;
-    }
+isOpen(): boolean {
+    return this.drawer?.opened || false;
+}
 
     async onUserClick(index: number, user: any) {
-        this.selectedUser = user;
-        this.channelService.setCheckdValue(user);
-        this.dataUser.chatId = await this.getOrCreateChatId(this.channelService.currentUserId, user.userId);
-        this.router.navigate(['/mainpage', this.channelService.currentUserId, 'chats', this.dataUser.chatId]);
-        this.listenToMessages();
-        this.dataUser.showChannel = false;
-        this.dataUser.showChatPartnerHeader = true;
-    }
+    this.selectedUser = user;
+    this.channelService.setCheckdValue(user);
+    this.dataUser.chatId = await this.getOrCreateChatId(this.channelService.currentUserId, user.userId);
+    this.router.navigate(['/mainpage', this.channelService.currentUserId, 'chats', this.dataUser.chatId]);
+    this.listenToMessages();
+    this.dataUser.showChannel = false;
+    this.dataUser.showChatPartnerHeader = true;
+}
 
-    ngOnDestroy() {
-        if (this.unsubscribeMessages) {
-            this.unsubscribeMessages();
-        }
+ngOnDestroy() {
+    if (this.unsubscribeMessages) {
+        this.unsubscribeMessages();
     }
+    if (this.unsubscribeMessagesThread) {
+        this.unsubscribeMessagesThread();
+    }
+}
+
+    async answerOnMessage(parentMessageId: string, parentText: string) {
+    this.parentMessageId = parentMessageId;
+    this.threadId = await this.getOrCreateThread(
+        this.dataUser.chatId,
+        parentMessageId,
+        this.channelService.currentUserId,
+        parentText,
+        this.threadId,
+    );
+    this.isThreadAktiv = true;
+
+    this.open();
+
+    this.router.navigate([
+        '/mainpage',
+        this.channelService.currentUserId,
+        'chats',
+        this.dataUser.chatId,
+        'threads',
+        this.threadId
+    ]);
+
+    this.listenToMessagesThread();
+}
 }

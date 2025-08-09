@@ -59,7 +59,7 @@
 
             </div>
         </div>
-        <div (click)="answerOnMessage()">
+        <div (click)="chatService.answerOnMessage(message.id, message.text)">
             <img [src]="imgComment" (mouseover)="imgComment='img/comment_color.png'"
                 (mouseout)="imgComment='img/comment.png'">
         </div>

@@ -45,7 +45,8 @@
                     </app-received-message>
                 </div>
             </div>
-            <app-input-message></app-input-message>
+            <app-input-message mode="chat" [chatId]="chatService.chatId" [currentUserId]="channelService.currentUserId">
+            </app-input-message>
         </div>
     </div>
     <app-thread-section class="thread-section"></app-thread-section>

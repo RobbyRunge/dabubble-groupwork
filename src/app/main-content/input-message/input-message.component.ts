@@ -1,5 +1,5 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
 import { MatFormField, MatLabel } from '@angular/material/select';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -42,6 +42,10 @@ export class InputMessageComponent implements OnInit {
   imgSrcMention: any = 'mention.png'
   imgSrcSend: any = 'send.png';
   selectedEmoji: any;
+  @Input() mode: 'chat' | 'thread' = 'chat';
+  @Input() chatId!: string;
+  @Input() threadRootId?: string; 
+  @Input() currentUserId!: string;
 
 
   ngOnInit(): void {
@@ -106,13 +110,12 @@ export class InputMessageComponent implements OnInit {
   sendMessage() {
     if (!this.messageText.trim()) return;
 
-    if (this.chatService.parentMessageId && this.chatService.threadRef) {
-      this.chatService.sendThreadMessage(this.dataUser.chatId, this.chatService.parentMessageId, this.chatService.threadRef, this.channelService.currentUserId, this.messageText);
-      this.messageText = '';
+    if (this.mode === 'thread' && this.threadRootId) {
+      this.chatService.sendThreadMessage(this.dataUser.chatId, this.chatService.parentMessageId, this.channelService.currentUserId, this.messageText);
     } else {
       this.chatService.sendChatMessage(this.messageText, this.channelService.currentUserId);
-      this.messageText = ''
     }
+    this.messageText = ''
   }
 
   addEmoji($event: any) {

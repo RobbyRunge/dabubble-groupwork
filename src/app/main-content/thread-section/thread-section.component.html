@@ -30,7 +30,12 @@
         </div>
       </div>
       <div>
-        <app-input-message></app-input-message>
+        <app-input-message
+          mode="thread"
+          [chatId]="chatService.chatId"
+          [threadRootId]="parentMessageId"
+          [currentUserId]="channelService.currentUserId">
+        </app-input-message>
       </div>
     </mat-drawer>
   </mat-drawer-container>
