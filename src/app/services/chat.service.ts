@@ -110,7 +110,7 @@ export class ChatService {
 
     async getOrCreateThread(chatId: string, parentMessageId: string, senderId: string, text: string, threadId: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
-            this.threadRef = collection(this.firestore, `chats/${chatId}/message/${parentMessageId}/threads/${parentMessageId}/messages`);
+            this.threadRef = collection(this.firestore, `chats/${chatId}/message/${parentMessageId}/threads`);
             const snapshot = await getDocs(this.threadRef);
             if (!snapshot.empty) {
                 return snapshot.docs[0].id;
@@ -120,7 +120,7 @@ export class ChatService {
                 text,
                 timestamp: serverTimestamp()
             });
-            return parentMessageId;
+            return newThread.id;
         })
     }
 
@@ -152,13 +152,12 @@ export class ChatService {
 }
 
 listenToMessagesThread() {
-            if (this.unsubscribeMessagesThread) {
-                this.unsubscribeMessagesThread();
-            }
+    if (this.unsubscribeMessagesThread) {
+        this.unsubscribeMessagesThread();
+    }
 
     return runInInjectionContext(this.injector, async () => {
-        const messagesRef = collection(this.firestore,
-            `chats/${this.dataUser.chatId}/message/${this.parentMessageId}/threads/${this.threadId}/messages`);
+        const messagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message/${this.parentMessageId}/threads`);
         const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
 
         this.unsubscribeMessagesThread = onSnapshot(messagesQuery, (snapshot) => {
