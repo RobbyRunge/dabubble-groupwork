@@ -43,9 +43,6 @@ export class InputMessageComponent implements OnInit {
   imgSrcSend: any = 'send.png';
   selectedEmoji: any;
   @Input() mode: 'chat' | 'thread' = 'chat';
-  @Input() chatId!: string;
-  @Input() threadRootId?: string; 
-  @Input() currentUserId!: string;
 
 
   ngOnInit(): void {
@@ -110,7 +107,7 @@ export class InputMessageComponent implements OnInit {
   sendMessage() {
     if (!this.messageText.trim()) return;
 
-    if (this.mode === 'thread' && this.threadRootId) {
+    if (this.mode === 'thread') {
       this.chatService.sendThreadMessage(this.dataUser.chatId, this.chatService.parentMessageId, this.channelService.currentUserId, this.messageText);
     } else {
       this.chatService.sendChatMessage(this.messageText, this.channelService.currentUserId);

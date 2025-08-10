@@ -39,10 +39,10 @@
                         </div>
                     </mat-form-field>
                 </div>
-                <div class="answer-date-container">
+                <div class="answer-date-container" *ngIf="message.id === chatService.parentMessageId">
                     <div>
-                        <!--                     <span>2 Antworte</span>
-                    <p>Letze Antwort 14:56</p> -->
+                        <span *ngIf="chatService.hasMessagesThread">{{chatService.messagesThread.length}} Antworten</span>
+                        <p></p>
                     </div>
                 </div>
             </div>
