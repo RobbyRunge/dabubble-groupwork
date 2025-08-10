@@ -1,10 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   inject,
   OnInit,
-  ViewChild,
   viewChild,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -63,8 +61,6 @@ export class WorkSpaceSectionComponent implements OnInit {
   channels$: Observable<Allchannels[]> | undefined;
   onlineUser: string = 'Online.png';
   offlineUser: string = 'offline.png';
-
-  /* dialog = inject(MatDialog); */
 
   accordion = viewChild.required(MatAccordion);
   activeChannelId!: string;

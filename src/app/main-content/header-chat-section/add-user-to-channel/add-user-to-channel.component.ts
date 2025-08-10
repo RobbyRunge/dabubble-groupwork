@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-user-to-channel',
-  imports: [MatIcon, FormsModule, MatButtonModule, MatListModule, MatDividerModule, ShowFilteredUserComponent, CommonModule],
+  imports: [MatIcon, FormsModule, MatButtonModule, MatListModule, MatDividerModule, CommonModule],
   templateUrl: './add-user-to-channel.component.html',
   styleUrl: './add-user-to-channel.component.scss'
 })
@@ -22,10 +22,10 @@ export class AddUserToChannelComponent {
 
   channelService = inject(ChannelService);
   unserService = inject(UserService);
-  dialogRef = inject(MatDialogRef<AddUserToChannelComponent>);
   filterDialog = inject(MatDialog);
+  dialogRef: MatDialogRef<ShowFilteredUserComponent> | null = null;
+  dialog = inject(MatDialogRef<ShowFilteredUserComponent>);
   showFilteredUser = false;
-
   filterUserSubscription!: Subscription;
 
   searchInput: string = '';
@@ -35,7 +35,7 @@ export class AddUserToChannelComponent {
    
   }
 
- filterUsers() {
+ filterUsers(inputFilterUser: HTMLElement) {
   if (this.searchInput === '') {
     this.showFilteredUser = false;
     return;
@@ -50,9 +50,35 @@ export class AddUserToChannelComponent {
         avatar: user.avatar
       }));
       this.showFilteredUser = true;
+      this.showFilteredUsers(inputFilterUser, this.filteredUsers)
     console.log('Gefilterte Benutzer:', this.filteredUsers);
     console.log('boolean', this.showFilteredUser);
   });
+}
+
+showFilteredUsers(inputFilterUser: HTMLElement, filteredUser: string) {
+  const rect = inputFilterUser.getBoundingClientRect();
+  const width = window.innerWidth < 1080 ? '335px' : '335px';
+  const height = window.innerHeight < 700 ? '171px' : '171px';
+  if(!this.dialogRef) {
+    this.dialogRef = this.filterDialog.open(ShowFilteredUserComponent, {
+    position: {
+    top: `${rect.bottom + window.scrollY}px`,
+    left: `${rect.left + window.scrollX}px`,
+    },
+    width,
+    height,
+    maxWidth: '335px',
+    maxHeight: '171px',
+    panelClass: 'channel-dialog-container'
+    });
+      this.dialogRef.afterClosed().subscribe(() => {
+      this.dialogRef = null; 
+     });
+    } else {
+      console.log('dialog geöffnete');
+      // this.dialogRef.componentInstance.updateQuery(filteredUser);
+  }
 }
 
 ngOnDestroy() {
