@@ -9,7 +9,7 @@
     <div class="user-name-aktiv-container">
         <div class="user-name">
             <h3>{{data.user.name}}</h3>
-            <span *ngIf="checkUserId()" (click)="changeName()">Bearbeiten</span>
+            <span *ngIf="isCurrentUser()" (click)="changeName()">Bearbeiten</span>
         </div>
         <div [ngClass]="data.user.active ? 'aktiv' : 'inaktiv'">
             <mat-icon>fiber_manual_record</mat-icon>
@@ -25,7 +25,7 @@
             <a href="mailto:{{data.user.email}}">{{data.user.email}}</a>
         </div>
     </div>
-    <div class="button-container" *ngIf="!checkUserId()">
+    <div class="button-container" *ngIf="!isCurrentUser()">
         <button (click)="closeDialog()"><mat-icon>chat_bubble_outline</mat-icon>Nachricht</button>
     </div>
 </div>

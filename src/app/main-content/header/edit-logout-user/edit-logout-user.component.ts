@@ -29,7 +29,10 @@ export class EditLogoutUserComponent {
 
   openUserDialog() {
     this.userDialog.open(UserCardComponent, {
-      data: { user: this.channelService.currentUser }
+      data: { 
+        user: this.channelService.currentUser, 
+        urlUserId: this.channelService.currentUserId 
+      }
     })
   }
 

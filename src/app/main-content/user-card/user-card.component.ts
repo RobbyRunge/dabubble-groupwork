@@ -69,7 +69,10 @@ export class UserCardComponent implements OnInit {
   }
 
   isCurrentUser(): boolean {
-    return this.channelService.currentUserId === this.urlUserId;
+    if (this.urlUserId) {
+      return this.checkUserId();
+    }
+    return this.data.user === this.channelService.currentUser;
   }
 }
 
