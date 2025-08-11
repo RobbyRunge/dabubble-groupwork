@@ -19,6 +19,10 @@ mat-icon {
     cursor: pointer;
 }
 
+.close-icon {
+    border-radius: 50%;
+}
+
 .mat-card-class {
     background-color: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -46,7 +50,6 @@ mat-icon {
         color: #444DF2;;   
         font-weight: 600;
         transform: scale(1.02);
-        transition: all 100ms ease-in;
     }
 }
 
