@@ -66,6 +66,7 @@ export class HeaderChatSectionComponent implements OnInit {
     const rect = button.getBoundingClientRect();
     const dialogWidth = 514;
     this.dialog.open(AddUserToChannelComponent, {
+      autoFocus: false,
       position: {
         top: `${rect.bottom + window.scrollY}px`,
         left: `${rect.right + window.scrollX - dialogWidth}px`,
