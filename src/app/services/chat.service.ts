@@ -172,7 +172,6 @@ export class ChatService {
             this.unsubscribeMessagesThread = onSnapshot(messagesQuery, (snapshot) => {
                 this.messagesThread = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 this.hasMessagesThread = this.messagesThread.length !== 0;
-                console.log(this.messagesThread);
             });
         });
     }
@@ -307,18 +306,38 @@ export class ChatService {
         }
     }
 
+
+    private async resolveThreadSenderId(parentMessageId: string): Promise<string> {
+        return runInInjectionContext(this.injector, async () => {
+            const parentMsgRef = doc(this.firestore, `chats/${this.dataUser.chatId}/message/${parentMessageId}`);
+            const snap = await getDoc(parentMsgRef);
+
+            if (!snap.exists()) return this.channelService.currentUserId;
+
+            const data = snap.data() as any;
+
+            const senderId = data?.senderId ??
+                data?.userId ??
+                data?.sender?.id ??
+                this.channelService.currentUserId;
+
+            return senderId;
+        });
+    }
     async answerOnMessage(parentMessageId: string, parentText: string) {
         this.parentMessageId = parentMessageId;
+
+        const senderIdForThread = await this.resolveThreadSenderId(parentMessageId);
+
         this.threadId = await this.getOrCreateThread(
             this.dataUser.chatId,
             parentMessageId,
-            this.channelService.currentUserId,
+            senderIdForThread,
             parentText,
-            this.threadId,
+            this.threadId
         );
 
         this.open();
-
         this.router.navigate([
             '/mainpage',
             this.channelService.currentUserId,
