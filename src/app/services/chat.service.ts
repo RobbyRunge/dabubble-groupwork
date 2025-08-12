@@ -81,9 +81,10 @@ export class ChatService {
     }
 
     private async createNewChat(chatsRef: CollectionReference, users: string[]): Promise<string> {
-        const newChat = await addDoc(chatsRef, { user: users });
-        return newChat.id;
-    }
+        return runInInjectionContext(this.injector, async () => {
+            const newChat = await addDoc(chatsRef, { user: users });
+            return newChat.id;
+    })};
 
 
     async sendMessage(messageText: string, senderId: any) {
