@@ -26,7 +26,7 @@ export class AddUserToChannelComponent {
   filterUserSubscription!: Subscription;
 
   searchInput: string = '';
-  filteredUsers: any;
+  filteredUsers: { name: string; avatar: string }[] = [];
 
   addUserToChannel() {
    
