@@ -72,10 +72,8 @@ body {
 
 .close-icon {
     padding: 5px;
-    height: 24px;
-    width: 24px;
     cursor: pointer;
-    transition: all 100ms ease-in;
+    transition: all 125ms ease-in;
     @include dFlex();
 
     &:hover {

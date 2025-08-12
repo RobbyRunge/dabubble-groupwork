@@ -28,6 +28,13 @@ p {
     >button {
         background-color: unset;
         border: none;
+        border-radius: 50%;
+
+        &:hover {
+            padding: 5px;
+            color: #535AF1;
+            background-color: #ECEEFE;
+        }
     }
 }
 
@@ -168,7 +175,8 @@ p {
                 color: white;
                 padding: 12px 25px;
             }
-            >.discard-btn{
+
+            >.discard-btn {
                 background-color: white;
                 color: #797EF3;
                 border: 1px solid #797EF3;
@@ -186,9 +194,10 @@ p {
                 padding-left: 20px;
                 font-size: 18px;
                 color: #686868;
-                &:focus{
+
+                &:focus {
                     outline: none;
-                    border: 2px solid #ADB0D9; 
+                    border: 2px solid #ADB0D9;
                 }
             }
         }
@@ -209,6 +218,6 @@ p {
     }
 }
 
-.avatar-img{
+.avatar-img {
     border-radius: 50%;
 }
