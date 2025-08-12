@@ -24,7 +24,7 @@
             <emoji-mart (emojiClick)="addEmojiMessage($event)"></emoji-mart>
           </div> -->
             </div>
-            <app-received-message [mode]="'thread'" *ngIf="msg.senderId !== channelService.currentUserId" [message]="msg">
+            <app-received-message [mode]="'thread'" *ngIf="msg.senderId !== channelService.currentUserId" [message]="msg" [index]="i">
             </app-received-message>
           </div>
         </div>
