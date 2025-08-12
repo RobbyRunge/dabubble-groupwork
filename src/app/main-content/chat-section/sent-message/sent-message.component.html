@@ -39,9 +39,9 @@
                         </div>
                     </mat-form-field>
                 </div>
-                <div class="answer-date-container" *ngIf="message.id === chatService.parentMessageId">
-                    <div>
-                        <span *ngIf="chatService.hasMessagesThread">{{chatService.messagesThread.length}} Antworten</span>
+                <div class="answer-date-container">
+                    <div *ngIf="message.threadCount > 0">
+                        <span>{{message.threadCount}} Antwort{{message.threadCount > 1 ? 'en' : ''}}</span>
                         <p></p>
                     </div>
                 </div>
