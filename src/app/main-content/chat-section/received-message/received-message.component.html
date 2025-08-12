@@ -3,7 +3,7 @@
         *ngIf="message.senderId === selectedUser.userId && message.senderId !== dataUser.currentUserId">
         <div class="message-container">
             <div>
-                <img class="user-logo" src="avatar/men1.png" alt="">
+                <img class="user-logo" src="avatar/{{selectedUser.avatar}}" alt="">
             </div>
             <div class="message-info">
                 <div class="user-date-container">
@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="message-hover-options">
-        <div (click)="chatService.answerOnMessage(message.id, message.text)">
+        <div *ngIf="mode !== 'thread'" (click)="chatService.answerOnMessage(message.id, message.text)">
             <img [src]="imgComment" (mouseover)="imgComment='img/comment_color.png'"
                 (mouseout)="imgComment='img/comment.png'">
         </div>

@@ -2,7 +2,7 @@
     <div class="users-message-container" *ngIf="message.senderId == channelService.currentUserId">
         <div class="message-container">
             <div>
-                <img class="user-logo" src="avatar/men1.png" alt="">
+                <img class="user-logo" src="avatar/{{channelService.currentUser?.avatar}}" alt="">
             </div>
             <div class="message-info">
                 <div class="user-date-container">
@@ -39,7 +39,7 @@
                         </div>
                     </mat-form-field>
                 </div>
-                <div class="answer-date-container">
+                <div class="answer-date-container" (click)="chatService.answerOnMessage(message.id, message.text)">
                     <div *ngIf="message.threadCount > 0">
                         <span>{{message.threadCount}} Antwort{{message.threadCount > 1 ? 'en' : ''}}</span>
                         <p></p>
@@ -59,7 +59,7 @@
 
             </div>
         </div>
-        <div (click)="chatService.answerOnMessage(message.id, message.text)">
+        <div *ngIf="mode !== 'thread'" (click)="chatService.answerOnMessage(message.id, message.text)">
             <img [src]="imgComment" (mouseover)="imgComment='img/comment_color.png'"
                 (mouseout)="imgComment='img/comment.png'">
         </div>

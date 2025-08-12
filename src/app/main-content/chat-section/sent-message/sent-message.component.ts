@@ -32,6 +32,7 @@ export class SentMessageComponent implements OnInit {
   channelService = inject(ChannelService);
   @Input() message: any;
   @Input() index: number | undefined
+  @Input() mode: string = '';
   showEmojis: boolean = false;
   messageReacton: string = '';
   constructor() { this.getUserData(); }
@@ -83,5 +84,5 @@ export class SentMessageComponent implements OnInit {
     this.showEmojisMessage = false;
     this.chatService.loadMostUsedEmojis();
   }
-
+  
 }

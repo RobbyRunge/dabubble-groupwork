@@ -13,6 +13,8 @@ export class ReceivedMessageComponent {
 
   dataUser = inject(ChannelService);
   @Input() message: any;
+  @Input() index: number | undefined
+  @Input() mode: string = '';
   public chatService = inject(ChatService);
   constructor() {
     this.getUserData();
