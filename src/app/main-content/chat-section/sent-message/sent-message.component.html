@@ -68,9 +68,6 @@
                 (mouseout)="imgReaction='img/add_reaction.png'">
         </div>
         <div *ngFor="let emoji of chatService.mostUsedEmojis">
-            <div *ngIf="chatService.mostUsedEmojis.length < 0">
-                {{emoji}}
-            </div>
             <div *ngIf="chatService.mostUsedEmojis.length > 0">
                 {{emoji}}
             </div>

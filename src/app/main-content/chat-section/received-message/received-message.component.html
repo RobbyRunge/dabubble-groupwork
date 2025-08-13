@@ -13,7 +13,7 @@
                 <div class="message-content">
                     <h3>{{message.text}}</h3>
                 </div>
-                <div class="answer-date-container">
+                <div class="answer-date-container" (click)="chatService.answerOnMessage(message.id, message.text)">
                     <div *ngIf="message.threadCount > 0">
                         <span>{{message.threadCount}} Antwort{{message.threadCount > 1 ? 'en' : ''}}</span>
                         <p></p>
@@ -32,9 +32,6 @@
                 (mouseout)="imgReaction='img/add_reaction.png'">
         </div>
         <div *ngFor="let emoji of chatService.mostUsedEmojis">
-            <div *ngIf="chatService.mostUsedEmojis.length < 0">
-                {{emoji}}
-            </div>
             <div *ngIf="chatService.mostUsedEmojis.length > 0">
                 {{emoji}}
             </div>
