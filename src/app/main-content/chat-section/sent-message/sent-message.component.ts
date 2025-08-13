@@ -68,8 +68,16 @@ export class SentMessageComponent implements OnInit {
   }
 
   addEmoji($event: any) {
-    this.editMessageText += $event.emoji.native;
+    // Manche Wrapper liefern $event.emoji.native, andere direkt $event.native
+    const native = $event?.emoji?.native ?? $event?.native ?? '';
+    if (!native) return;
+
+    this.chatService.saveEmoji(native);
+    this.editMessageText += native;
     this.showEmojis = false;
+
+    // Debug: kurz prüfen, was gespeichert wurde
+     console.log('stored:', localStorage.getItem('frequently'));
   }
   async updateMessage() {
     await this.chatService.updateUserMessage(this.message.id, this.editMessageText);
@@ -84,5 +92,5 @@ export class SentMessageComponent implements OnInit {
     this.showEmojisMessage = false;
     this.chatService.loadMostUsedEmojis();
   }
-  
+
 }

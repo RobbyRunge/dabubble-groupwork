@@ -255,7 +255,14 @@ export class ChatService {
         );
     }
 
-    loadMostUsedEmojis() {
+    saveEmoji(emoji: string) {
+        // Beispiel: Häufigkeiten im LocalStorage speichern
+        const stored = JSON.parse(localStorage.getItem('frequently') || '{}');
+        stored[emoji] = (stored[emoji] || 0) + 1;
+        localStorage.setItem('frequently', JSON.stringify(stored));
+    }
+
+/*     loadMostUsedEmojis() {
         const stored = localStorage.getItem('emoji-mart.frequently');
         if (stored) {
             const recent = JSON.parse(stored) as { [emoji: string]: number };
@@ -266,6 +273,17 @@ export class ChatService {
 
             this.mostUsedEmojis = sorted;
         }
+    } */
+
+    loadMostUsedEmojis() {
+        const stored = localStorage.getItem('frequently');
+        if (!stored) return;
+
+        const recent = JSON.parse(stored) as Record<string, number>;
+        this.mostUsedEmojis = Object.entries(recent)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 2)
+            .map(([emoji]) => emoji); // schon fertige Zeichen
     }
     setDrawer(drawer: MatDrawer) {
         this.drawer = drawer;

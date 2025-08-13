@@ -31,11 +31,13 @@
             <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
                 (mouseout)="imgReaction='img/add_reaction.png'">
         </div>
-        <div>
-            <img src="/emojis/emoji_thumb.png" alt="">
-        </div>
-        <div>
-            <img src="/emojis/emoji_white heavy_check mark.png" alt="">
+        <div *ngFor="let emoji of chatService.mostUsedEmojis">
+            <div *ngIf="chatService.mostUsedEmojis.length < 0">
+                {{emoji}}
+            </div>
+            <div *ngIf="chatService.mostUsedEmojis.length > 0">
+                {{emoji}}
+            </div>
         </div>
     </div>
 </div>

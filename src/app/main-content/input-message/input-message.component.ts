@@ -115,9 +115,18 @@ export class InputMessageComponent implements OnInit {
     this.messageText = ''
   }
 
-  addEmoji($event: any) {
+/*   addEmoji($event: any) {
     this.messageText += $event.emoji.native;
     this.showEmojis = false;
+  } */
+
+    addEmoji($event: any) {
+    this.chatService.saveEmoji($event.emoji.native);
+    this.showEmojis = false;
+    this.messageText += $event.emoji.native;
+
+    // Debug: kurz prüfen, was gespeichert wurde
+     console.log('stored:', localStorage.getItem('frequently'));
   }
 
   showAllEmojisMessage(index: number) {
