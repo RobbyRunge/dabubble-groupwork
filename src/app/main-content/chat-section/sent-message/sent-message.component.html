@@ -48,9 +48,9 @@
             </div>
         </div>
     </div>
-    <div class="message-hover-options">
-        <div (mouseover)="imgSrcMore = 'img/more_vert_color.png'" (mouseout)="imgSrcMore = 'img/more_vert.png'">
-            <img [matMenuTriggerFor]="menu" [src]="imgSrcMore">
+    <div class="message-hover-options" >
+        <div [matMenuTriggerFor]="menu" (mouseover)="imgSrcMore = 'img/more_vert_color.png'" (mouseout)="imgSrcMore = 'img/more_vert.png'">
+            <img [src]="imgSrcMore">
             <div>
                 <mat-menu #menu="matMenu">
                     <button mat-menu-item (click)="editMessage()">Nachricht bearbeiten</button>
