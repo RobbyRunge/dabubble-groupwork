@@ -32,7 +32,6 @@ export class InputMessageComponent implements OnInit {
 
   showUserList: boolean = false;
   showChanelList: boolean = false;
-  showEmojis: boolean = false;
   channelService = inject(ChannelService);
   chatService = inject(ChatService);
   dataUser = inject(UserService)
@@ -115,25 +114,18 @@ export class InputMessageComponent implements OnInit {
     this.messageText = ''
   }
 
-/*   addEmoji($event: any) {
-    this.messageText += $event.emoji.native;
-    this.showEmojis = false;
-  } */
-
-    addEmoji($event: any) {
+  addEmoji($event: any) {
     this.chatService.saveEmoji($event.emoji.native);
-    this.showEmojis = false;
+    this.chatService.showEmojis = false;
     this.messageText += $event.emoji.native;
-
-    // Debug: kurz prüfen, was gespeichert wurde
-     console.log('stored:', localStorage.getItem('frequently'));
   }
 
   showAllEmojisMessage(index: number) {
     this.selectedEmoji = index;
   }
 
-  showAllEmojis() {
-    this.showEmojis = true;
+  showAllEmojis(event: MouseEvent) {
+    event.stopPropagation();
+    this.chatService.showEmojis = true;
   }
 }

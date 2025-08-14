@@ -19,7 +19,7 @@
                         <input [(ngModel)]="editMessageText" matInput name="message" value="{{message.text}}">
                         <div class="icons-container">
                             <div>
-                                <div (click)="showAllEmojis()">
+                                <div (click)="showAllEmojisMessage(index)">
                                     <img [src]="imgReactionInput"
                                         (mouseover)="imgReactionInput = 'add_reaction_color.png'"
                                         (mouseout)="imgReactionInput = 'add reaction.png'">
@@ -34,7 +34,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div *ngIf="showEmojis">
+                        <div>
                             <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
                         </div>
                     </mat-form-field>
@@ -67,10 +67,13 @@
             <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
                 (mouseout)="imgReaction='img/add_reaction.png'">
         </div>
-        <div *ngFor="let emoji of chatService.mostUsedEmojis">
+        <div *ngFor="let emoji of chatService.mostUsedEmojis let i = index">
             <div *ngIf="chatService.mostUsedEmojis.length > 0">
-                {{emoji}}
+                <p (click)="addMostUsedEmojiMessage(emoji, i)">{{emoji}}</p>
             </div>
         </div>
+    </div>
+    <div *ngIf="showEmojisMessage">
+        <emoji-mart (emojiClick)="addEmojiMessage($event)"></emoji-mart>
     </div>
 </div>

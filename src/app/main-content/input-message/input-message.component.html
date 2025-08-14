@@ -1,6 +1,6 @@
 <div class="write-message-container">
     <form class="example-form">
-        <div class="mention-container" *ngIf="showUserList || showChanelList || showEmojis">
+        <div class="mention-container" *ngIf="showUserList || showChanelList || chatService.showEmojis">
             <div *ngIf="showUserList">
                 <div class="user-chanel-list-container" *ngFor="let user of users$ | async; let index = index"
                     (click)="selecetedUserMention(user, index)">
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div>
-                <div *ngIf="showEmojis">
+                <div *ngIf="chatService.showEmojis">
                     <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                 (keyup.enter)="sendMessage()">
             <div class="icons-container">
                 <div>
-                    <div (click)="showAllEmojis()">
+                    <div (click)="showAllEmojis($event)">
                         <img [src]="imgSrcReaction" (mouseover)="imgSrcReaction = 'add_reaction_color.png'"
                             (mouseout)="imgSrcReaction = 'add reaction.png'">
                     </div>

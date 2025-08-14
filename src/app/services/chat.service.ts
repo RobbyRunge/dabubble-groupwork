@@ -1,5 +1,5 @@
 import { Injectable, inject, Injector, runInInjectionContext, ViewChild, ElementRef } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc, CollectionReference, getDoc, limit, increment, writeBatch, WriteBatch } from '@angular/fire/firestore';
+import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc, CollectionReference, getDoc, limit, increment, writeBatch, WriteBatch, arrayUnion } from '@angular/fire/firestore';
 import { UserService } from './user.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -39,6 +39,7 @@ export class ChatService {
     hasMessagesThread: boolean = false;
     parentMessagesRef: any;
     batch: any;
+    showEmojis: boolean = false;
 
     async getOrCreateChatId(userId1: string, userId2: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
@@ -256,24 +257,10 @@ export class ChatService {
     }
 
     saveEmoji(emoji: string) {
-        // Beispiel: Häufigkeiten im LocalStorage speichern
         const stored = JSON.parse(localStorage.getItem('frequently') || '{}');
         stored[emoji] = (stored[emoji] || 0) + 1;
         localStorage.setItem('frequently', JSON.stringify(stored));
     }
-
-/*     loadMostUsedEmojis() {
-        const stored = localStorage.getItem('emoji-mart.frequently');
-        if (stored) {
-            const recent = JSON.parse(stored) as { [emoji: string]: number };
-            const sorted = Object.entries(recent)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 2)
-                .map(([emoji]) => emoji);
-
-            this.mostUsedEmojis = sorted;
-        }
-    } */
 
     loadMostUsedEmojis() {
         const stored = localStorage.getItem('frequently');
@@ -283,7 +270,7 @@ export class ChatService {
         this.mostUsedEmojis = Object.entries(recent)
             .sort((a, b) => b[1] - a[1])
             .slice(0, 2)
-            .map(([emoji]) => emoji); // schon fertige Zeichen
+            .map(([emoji]) => emoji);
     }
     setDrawer(drawer: MatDrawer) {
         this.drawer = drawer;
@@ -366,4 +353,33 @@ export class ChatService {
         ]);
         this.listenToMessagesThread();
     }
+
+    hideAllEmojis() {
+        this.showEmojis = false;
+    }
+
+    saveEmojisInDatabase(selectedEmoji: string, messageId: string) {
+        return runInInjectionContext(this.injector, async () => {
+            const messagesRef = doc(this.firestore, `chats/${this.dataUser.chatId}/message/${messageId}`);
+            await updateDoc(messagesRef, {
+                reactions: arrayUnion({
+                    emoji: selectedEmoji,
+                    user: this.channelService.currentUserId
+                })
+            });
+        })
+    }
+
+/*     listenToEmojis(chatId: string, messageId: string) {
+        const reactionsRef = collection(
+            this.firestore,
+            `chats/${chatId}/message/${messageId}/reactions`
+        );
+        const q = query(reactionsRef, orderBy('createdAt', 'asc'));
+
+        return onSnapshot(q, (snapshot) => {
+            const emojis = snapshot.docs.map(doc => doc.data());
+            console.log('Aktuelle Emojis:', emojis);
+        });
+    } */
 }

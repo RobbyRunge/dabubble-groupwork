@@ -44,7 +44,6 @@ export class SentMessageComponent implements OnInit {
   editMessageActive: boolean = false;
   editMessageText: string = '';
   showEmojisMessage: boolean = false;
-  @Output() showAllEmojisMessage1 = new EventEmitter<boolean>();
 
 
   ngOnInit() {
@@ -68,29 +67,30 @@ export class SentMessageComponent implements OnInit {
   }
 
   addEmoji($event: any) {
-    // Manche Wrapper liefern $event.emoji.native, andere direkt $event.native
     const native = $event?.emoji?.native ?? $event?.native ?? '';
     if (!native) return;
 
     this.chatService.saveEmoji(native);
     this.editMessageText += native;
     this.showEmojis = false;
-
-    // Debug: kurz prüfen, was gespeichert wurde
-     console.log('stored:', localStorage.getItem('frequently'));
   }
   async updateMessage() {
     await this.chatService.updateUserMessage(this.message.id, this.editMessageText);
   }
 
   showAllEmojisMessage(index: number | any) {
-    /* this.showEmojisMessage = true; */
-    this.showAllEmojisMessage1.emit(index)
+    this.showEmojisMessage = true;
   }
   addEmojiMessage($event: any) {
     this.messageReacton += $event.emoji.native;
     this.showEmojisMessage = false;
     this.chatService.loadMostUsedEmojis();
+    this.chatService.saveEmojisInDatabase($event.emoji.native, this.message.id)
+  }
+
+  addMostUsedEmojiMessage(emoji: any, index: number){
+    this.messageReacton += emoji.native;
+    this.chatService.saveEmojisInDatabase(emoji, this.message.id)
   }
 
 }
