@@ -49,23 +49,21 @@
         </div>
     </div>
     <div class="message-hover-options">
-        <div>
-            <img [matMenuTriggerFor]="menu" [src]="imgSrcMore" (mouseover)="imgSrcMore = 'img/more_vert_color.png'"
-                (mouseout)="imgSrcMore = 'img/more_vert.png'">
+        <div (mouseover)="imgSrcMore = 'img/more_vert_color.png'" (mouseout)="imgSrcMore = 'img/more_vert.png'">
+            <img [matMenuTriggerFor]="menu" [src]="imgSrcMore">
             <div>
                 <mat-menu #menu="matMenu">
                     <button mat-menu-item (click)="editMessage()">Nachricht bearbeiten</button>
                 </mat-menu>
-
             </div>
         </div>
-        <div (click)="answerOnMessage()">
-            <img [src]="imgComment" (mouseover)="imgComment='img/comment_color.png'"
-                (mouseout)="imgComment='img/comment.png'">
+        <div (click)="answerOnMessage()" (mouseover)="imgComment='img/comment_color.png'"
+            (mouseout)="imgComment='img/comment.png'">
+            <img [src]="imgComment">
         </div>
-        <div (click)="showAllEmojisMessage(index)">
-            <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
-                (mouseout)="imgReaction='img/add_reaction.png'">
+        <div (click)="showAllEmojisMessage(index)" (mouseover)="imgReaction='img/add_reaction_color.png'"
+            (mouseout)="imgReaction='img/add_reaction.png'">
+            <img [src]="imgReaction">
         </div>
         <div *ngFor="let emoji of chatService.mostUsedEmojis">
             <div *ngIf="chatService.mostUsedEmojis.length > 0">

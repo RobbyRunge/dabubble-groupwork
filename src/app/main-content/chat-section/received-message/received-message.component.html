@@ -1,5 +1,6 @@
 <div class="messages-container">
-    <div class="users-message-container" *ngIf="message.senderId === selectedUser.userId && message.senderId !== dataUser.currentUserId">
+    <div class="users-message-container"
+        *ngIf="message.senderId === selectedUser.userId && message.senderId !== dataUser.currentUserId">
         <div class="message-container">
             <div>
                 <img class="user-logo" src="avatar/men1.png" alt="">
@@ -22,11 +23,11 @@
         </div>
     </div>
     <div class="message-hover-options">
-        <div>
-            <img [src]="imgComment" (mouseover)="imgComment='img/comment_color.png'" (mouseout)="imgComment='img/comment.png'">
+        <div (mouseover)="imgComment='img/comment_color.png'" (mouseout)="imgComment='img/comment.png'">
+            <img [src]="imgComment">
         </div>
-        <div>
-            <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'" (mouseout)="imgReaction='img/add_reaction.png'">
+        <div (mouseover)="imgReaction='img/add_reaction_color.png'" (mouseout)="imgReaction='img/add_reaction.png'">
+            <img [src]="imgReaction">
         </div>
         <div>
             <img src="/emojis/emoji_thumb.png" alt="">

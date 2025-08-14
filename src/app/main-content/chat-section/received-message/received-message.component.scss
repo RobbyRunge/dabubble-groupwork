@@ -91,4 +91,10 @@
 .message-hover-options{
     right: 45px;
     top: -25px;
+
+    >div {
+        &:hover {
+            cursor: pointer;
+        }
+    }
 }
