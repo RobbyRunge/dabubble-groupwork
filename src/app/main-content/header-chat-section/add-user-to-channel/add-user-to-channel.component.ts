@@ -26,13 +26,15 @@ export class AddUserToChannelComponent {
   filterUserSubscription!: Subscription;
 
   searchInput: string = '';
-  filteredUsers: { name: string; avatar: string }[] = [];
+  selectedUser: any;
+  filteredUsers: { name: string; avatar: string; userId: string }[] = [];
+  selectedUsers: { name: string; avatar: string; userId: string }[] = [];
 
   addUserToChannel() {
    
   }
 
- filterUsers(inputFilterUser: HTMLElement) {
+ filterUsers() {
   if (this.searchInput === '') {
     this.filteredUsers = [];
     return;
@@ -44,7 +46,8 @@ export class AddUserToChannelComponent {
       )
       .map(user => ({
         name: user.name,
-        avatar: user.avatar
+        avatar: user.avatar,
+        userId: user.userId
       }));
     console.log('Gefilterte Benutzer:', this.filteredUsers);
   });
@@ -54,6 +57,15 @@ ngOnDestroy() {
   if (this.filterUserSubscription) {
     this.filterUserSubscription.unsubscribe();
   }
+}
+
+displayUser(user: any): string {
+  return user && user.name ? user.name : '';
+}
+
+selectUser(user: any) {
+  this.selectedUser = user;
+   console.log('ausgewählter Benutzer', this.selectedUser);
 }
 
 }

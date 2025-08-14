@@ -13,13 +13,20 @@
         </div>
     </div>
   <div>
-    <input #inputFilterUser [(ngModel)]="searchInput" [matAutocomplete]="auto" (input)="filterUsers(inputFilterUser)" class="user-name-channel" type="text" placeholder="Name eingeben">
-      <mat-autocomplete #auto="matAutocomplete" panelClass="user-name-avatar">
-        <mat-option *ngFor="let user of filteredUsers" [value]="user.name">
-          <div class="user-avatar-name">
-            <img class="user-avatar" src="avatar/{{user.avatar}}"> {{ user.name }}
-          </div>
-        </mat-option>
+    <input  
+    [(ngModel)]="searchInput" 
+    [matAutocomplete]="auto" 
+    (input)="filterUsers()" 
+    class="user-name-channel" type="text" 
+    placeholder="Name eingeben">
+      <mat-autocomplete #auto="matAutocomplete" panelClass="user-name-avatar" [displayWith]="displayUser" (optionSelected)="selectUser($event.option.value)">
+        @for (user of filteredUsers; track $index) {
+          <mat-option [value]="user">
+             <div class="user-avatar-name">
+                <img class="user-avatar" src="avatar/{{user.avatar}}"> {{ user.name }}
+            </div>
+          </mat-option>
+        }
       </mat-autocomplete>
   </div>
   <div class="btn-add-cont">
