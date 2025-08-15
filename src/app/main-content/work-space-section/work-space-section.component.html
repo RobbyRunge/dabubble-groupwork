@@ -1,9 +1,9 @@
 <div class="sidenav-wrapper">
     <button class="sidenav-toggle-btn" mat-icon-button (click)="toggleDrawer(drawer)">
-        <span>
+        <span class="standard-transition">
             {{ isDrawerOpen ? 'Workspace-Menü schließen' : 'Workspace-Menü öffnen' }}
         </span>
-        <img class="open-close-img" [src]="isDrawerOpen ? 'Hide-menu.png' : 'Show-menu.png'" alt="" />
+        <img class="open-close-img standard-transition" [src]="isDrawerOpen ? 'Hide-menu.png' : 'Show-menu.png'" alt="" />
     </button>
 
     <mat-drawer-container class="example-container" autosize>
