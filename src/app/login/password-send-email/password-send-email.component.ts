@@ -120,7 +120,7 @@ export class PasswordSendEmailComponent {
       user_email: this.user.email,
       reset_link: resetLink,
       company_name: 'DABubble',
-      logo: 'logo.png',
+      logo: 'https://dabubble-413.developerakademie.net/logo.png',
     };
     await emailjs.send(
       this.emailjsConfig.serviceId,
