@@ -1,14 +1,14 @@
 <div class="channel-user-content">
     <div *ngIf="dataUser.showChannel" class="header-channel-content">
         <div class="button-container">
-            <button #btn class="channel-btn" (click)="openDialog(btn)">
+            <button #btn class="channel-btn standard-transition" (click)="openDialog(btn)">
                 <span>#</span>
                 @if (channelService.currentChannelName) {
                 <span>{{ channelService.currentChannelName }}</span>
                 } @else {
                 <span>{{ channelService.userSubcollectionChannelName }}</span>
                 }
-                <img src="/img/arrow_down.png">
+                <img class="standard-transition" src="/img/arrow_down.png">
             </button>
         </div>
         <div class="user-avatar-channels">

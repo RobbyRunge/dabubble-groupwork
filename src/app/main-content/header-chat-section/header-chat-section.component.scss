@@ -14,3 +14,7 @@
         }
     }
 }
+
+.button-container:hover img {
+    filter: brightness(0) saturate(100%) invert(34%) sepia(68%) saturate(3151%) hue-rotate(225deg) brightness(96%) contrast(91%);
+}
