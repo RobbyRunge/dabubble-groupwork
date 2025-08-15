@@ -364,13 +364,14 @@ export class ChatService {
             await updateDoc(messagesRef, {
                 reactions: arrayUnion({
                     emoji: selectedEmoji,
-                    user: this.channelService.currentUserId
+                    user: this.channelService.currentUser?.name,
+                    addedAt: Date.now()
                 })
             });
         })
     }
 
-/*     listenToEmojis(chatId: string, messageId: string) {
+    listenToEmojis(chatId: string, messageId: string) {
         const reactionsRef = collection(
             this.firestore,
             `chats/${chatId}/message/${messageId}/reactions`
@@ -381,5 +382,5 @@ export class ChatService {
             const emojis = snapshot.docs.map(doc => doc.data());
             console.log('Aktuelle Emojis:', emojis);
         });
-    } */
+    }
 }

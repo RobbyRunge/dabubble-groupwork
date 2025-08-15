@@ -71,7 +71,8 @@
     left: 45px;
     top: -25px;
     z-index: 1;
-    >div{
+
+    >div {
         color: black;
     }
 }
@@ -179,10 +180,57 @@ input {
 
 } */
 
-.message-reaction-container{
-    position: absolute;
-    top: 95px;
-    >span{
+.message-reaction-container {
+    @include dFlex();
+    flex-direction: row-reverse;
+    gap: 5px;
+    transition: transform 0.3s ease;
+
+    >div {
+        @include dFlex();
+        gap: 5px;
+
+        >div {
+            @include dFlex();
+        }
+    }
+}
+
+.reaction-container {
+    >span {
         font-size: 18px;
     }
+}
+
+.emoji-container.shifted {
+    transform: translateX(-5px);
+}
+
+.reaction-user-container {
+    position: absolute;
+    @include dFlex();
+    flex-direction: column;
+    text-align: center;
+    top: 0px;
+    right: 5px;
+    border-bottom-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    background: #444DF2;
+    height: 112px;
+    width: 158px;
+
+    >div {
+        color: white;
+        >span {
+            font-size: 16px;
+        }
+        >h3{
+            font-size: 18px;
+        }
+        >p{
+            font-size: 22px;
+        }
+    }
+
 }

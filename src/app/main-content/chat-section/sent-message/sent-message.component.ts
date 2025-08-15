@@ -44,6 +44,8 @@ export class SentMessageComponent implements OnInit {
   editMessageActive: boolean = false;
   editMessageText: string = '';
   showEmojisMessage: boolean = false;
+  shiftContainer: boolean = false;
+  hoveredReactionIndex: number | null = null;
 
 
   ngOnInit() {
@@ -85,12 +87,23 @@ export class SentMessageComponent implements OnInit {
     this.messageReacton += $event.emoji.native;
     this.showEmojisMessage = false;
     this.chatService.loadMostUsedEmojis();
-    this.chatService.saveEmojisInDatabase($event.emoji.native, this.message.id)
+    this.chatService.saveEmojisInDatabase($event.emoji.native, this.message.id);
+    this.shiftContainer = true;
+    setTimeout(() => {
+      this.shiftContainer = false;
+    }, 300);
   }
 
-  addMostUsedEmojiMessage(emoji: any, index: number){
-    this.messageReacton += emoji.native;
+  addMostUsedEmojiMessage(emoji: any, index: number) {
+    this.messageReacton += emoji;
     this.chatService.saveEmojisInDatabase(emoji, this.message.id)
   }
 
+  showReactionUserName(index: number) {
+    this.hoveredReactionIndex = index;
+  }
+
+  hideReactionUserName() {
+    this.hoveredReactionIndex = null;
+  }
 }

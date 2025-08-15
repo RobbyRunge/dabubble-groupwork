@@ -13,6 +13,25 @@
                 <div class="message-content">
                     <h3>{{message.text}}</h3>
                 </div>
+                <div *ngFor="let reaction of message.reactions; let i = index">
+                    <div class="reaction-container" (mouseover)="showReactionUserName(i)"
+                        (mouseout)="hideReactionUserName()">
+                        <span>
+                            {{ reaction.emoji }}
+                        </span>
+                    </div>
+                    <div class="reaction-user-container" *ngIf="hoveredReactionIndex === i">
+                        <div>
+                            <p>{{reaction.emoji}}</p>
+                        </div>
+                        <div>
+                            <h3>{{ reaction.user }}</h3>
+                        </div>
+                        <div>
+                            <span>hat reagieret</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="answer-date-container" (click)="chatService.answerOnMessage(message.id, message.text)">
                     <div *ngIf="message.threadCount > 0">
                         <span>{{message.threadCount}} Antwort{{message.threadCount > 1 ? 'en' : ''}}</span>

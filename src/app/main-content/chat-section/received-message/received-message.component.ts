@@ -16,6 +16,7 @@ export class ReceivedMessageComponent implements OnInit {
   @Input() index: number | undefined
   @Input() mode: string = '';
   public chatService = inject(ChatService);
+  hoveredReactionIndex: number | null = null;
   constructor() { this.getUserData(); }
   imgSrcMore: any = 'img/more_vert.png';
   imgComment: any = 'img/comment.png';
@@ -30,5 +31,14 @@ export class ReceivedMessageComponent implements OnInit {
     this.dataUser.isChecked$.subscribe(user => {
       this.selectedUser = user
     })
+  }
+  
+
+  showReactionUserName(index: number) {
+    this.hoveredReactionIndex = index;
+  }
+
+  hideReactionUserName() {
+    this.hoveredReactionIndex = null;
   }
 }

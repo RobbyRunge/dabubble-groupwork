@@ -12,9 +12,6 @@
                 <div class="message-content" [ngClass]="{
                 'editMessageActive' :editMessageActive, }">
                     <h3 *ngIf="!editMessageActive">{{message.text}}</h3>
-                    <div class="message-reaction-container">
-                        <span>{{messageReacton}}</span>
-                    </div>
                     <mat-form-field *ngIf="editMessageActive" class="example-full-width">
                         <input [(ngModel)]="editMessageText" matInput name="message" value="{{message.text}}">
                         <div class="icons-container">
@@ -38,6 +35,31 @@
                             <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
                         </div>
                     </mat-form-field>
+                </div>
+                <div class="message-reaction-container" [class.shifted]="shiftContainer">
+                    <div (click)="showAllEmojisMessage(index)">
+                        <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
+                            (mouseout)="imgReaction='img/add_reaction.png'">
+                    </div>
+                    <div *ngFor="let reaction of message.reactions; let i = index">
+                        <div class="reaction-container" (mouseover)="showReactionUserName(i)"
+                            (mouseout)="hideReactionUserName()">
+                            <span>
+                                {{ reaction.emoji }}
+                            </span>
+                        </div>
+                        <div class="reaction-user-container" *ngIf="hoveredReactionIndex === i">
+                            <div>
+                                <p>{{reaction.emoji}}</p>
+                            </div>
+                            <div>
+                                <h3>{{ reaction.user }}</h3>
+                            </div>
+                            <div>
+                                <span>hat reagieret</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="answer-date-container" (click)="chatService.answerOnMessage(message.id, message.text)">
                     <div *ngIf="message.threadCount > 0">
