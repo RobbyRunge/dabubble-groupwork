@@ -67,15 +67,20 @@ displayUser(user: any): string {
 selectUser(user: any) {
   this.selectedUser = user;
   this.showSelectedUser = true;
-  console.log('ausgewählter Benutzer', this.selectedUser);
   if (!this.selectedUsers.some(u => u.userId === this.selectedUser.userId)) {
   this.selectedUsers.push(this.selectedUser);
   }
-  console.log('Benutzer in array selectedUsers', this.selectedUsers);
 }
 
 showSearchInput() {
   this.showSelectedUser = false;
+}
+
+removeSelectedUser(i: number) {
+  this.selectedUsers = this.selectedUsers.filter((_, index) => index !== i);
+  // this.searchInput = '';
+  console.log('Div anzeigen',this.showSelectedUser);
+  this.showSelectedUser = true;
 }
 
 }
