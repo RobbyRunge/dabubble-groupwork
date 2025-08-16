@@ -80,7 +80,8 @@ export class SentMessageComponent implements OnInit {
     await this.chatService.updateUserMessage(this.message.id, this.editMessageText);
   }
 
-  showAllEmojisMessage(index: number | any) {
+  showAllEmojisMessage(index: number | any, event: MouseEvent) {
+    event.stopPropagation();
     this.showEmojisMessage = true;
   }
   addEmojiMessage($event: any) {
@@ -105,5 +106,10 @@ export class SentMessageComponent implements OnInit {
 
   hideReactionUserName() {
     this.hoveredReactionIndex = null;
+  }
+
+
+  hideAllEmojis() {
+    this.showEmojisMessage = false;
   }
 }

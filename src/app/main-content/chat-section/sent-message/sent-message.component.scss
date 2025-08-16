@@ -196,41 +196,59 @@ input {
     }
 }
 
-.reaction-container {
-    >span {
-        font-size: 18px;
-    }
+
+.reaction-wrapper {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
 }
 
-.emoji-container.shifted {
+.reaction-container>span {
+    font-size: 18px;
+}
+
+
+.message-reaction-container.shifted {
     transform: translateX(-5px);
 }
 
 .reaction-user-container {
     position: absolute;
+    bottom: 100%;
+    right: -250px;
+    transform: translate(-50%, -8px);
     @include dFlex();
     flex-direction: column;
     text-align: center;
-    top: 0px;
-    right: 5px;
     border-bottom-right-radius: 30px;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     background: #444DF2;
     height: 112px;
     width: 158px;
+    padding: 8px;
+    z-index: 10;
 
     >div {
         color: white;
+
         >span {
             font-size: 16px;
         }
-        >h3{
+
+        >h3 {
             font-size: 18px;
         }
-        >p{
+
+        >p {
             font-size: 22px;
         }
     }
+}
 
+.emoji-mart-container{
+position: absolute;
+top: -380px;
+right: 150px;
 }

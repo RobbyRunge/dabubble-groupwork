@@ -1,4 +1,4 @@
-<div class="messages-container">
+<div class="messages-container" (click)="hideAllEmojis()">
     <div class="users-message-container" *ngIf="message.senderId == channelService.currentUserId">
         <div class="message-container">
             <div>
@@ -16,7 +16,7 @@
                         <input [(ngModel)]="editMessageText" matInput name="message" value="{{message.text}}">
                         <div class="icons-container">
                             <div>
-                                <div (click)="showAllEmojisMessage(index)">
+                                <div (click)="showAllEmojisMessage(index, $event)">
                                     <img [src]="imgReactionInput"
                                         (mouseover)="imgReactionInput = 'add_reaction_color.png'"
                                         (mouseout)="imgReactionInput = 'add reaction.png'">
@@ -37,27 +37,26 @@
                     </mat-form-field>
                 </div>
                 <div class="message-reaction-container" [class.shifted]="shiftContainer">
-                    <div (click)="showAllEmojisMessage(index)">
+                    <div (click)="showAllEmojisMessage(index, $event)">
                         <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
                             (mouseout)="imgReaction='img/add_reaction.png'">
                     </div>
-                    <div *ngFor="let reaction of message.reactions; let i = index">
-                        <div class="reaction-container" (mouseover)="showReactionUserName(i)"
-                            (mouseout)="hideReactionUserName()">
-                            <span>
-                                {{ reaction.emoji }}
-                            </span>
+
+                    <div *ngFor="let reaction of message.reactions; let i = index" class="reaction-wrapper"
+                        (mouseenter)="showReactionUserName(i)" (mouseleave)="hideReactionUserName()">
+
+                        <div class="reaction-container">
+                            <span>{{ reaction.emoji }}</span>
                         </div>
+
                         <div class="reaction-user-container" *ngIf="hoveredReactionIndex === i">
                             <div>
-                                <p>{{reaction.emoji}}</p>
+                                <p class="emoji">{{reaction.emoji}}</p>
                             </div>
                             <div>
                                 <h3>{{ reaction.user }}</h3>
                             </div>
-                            <div>
-                                <span>hat reagieret</span>
-                            </div>
+                            <div><span>hat reagiert</span></div>
                         </div>
                     </div>
                 </div>
@@ -85,7 +84,7 @@
             <img [src]="imgComment" (mouseover)="imgComment='img/comment_color.png'"
                 (mouseout)="imgComment='img/comment.png'">
         </div>
-        <div (click)="showAllEmojisMessage(index)">
+        <div (click)="showAllEmojisMessage(index, $event)">
             <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
                 (mouseout)="imgReaction='img/add_reaction.png'">
         </div>
@@ -95,7 +94,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="showEmojisMessage">
+    <div *ngIf="showEmojisMessage" class="emoji-mart-container">
         <emoji-mart (emojiClick)="addEmojiMessage($event)"></emoji-mart>
     </div>
 </div>

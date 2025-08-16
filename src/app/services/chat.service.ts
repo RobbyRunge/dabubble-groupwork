@@ -380,7 +380,6 @@ export class ChatService {
 
         return onSnapshot(q, (snapshot) => {
             const emojis = snapshot.docs.map(doc => doc.data());
-            console.log('Aktuelle Emojis:', emojis);
         });
     }
 }
