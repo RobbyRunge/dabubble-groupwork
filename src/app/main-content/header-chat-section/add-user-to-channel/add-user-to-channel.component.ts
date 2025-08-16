@@ -30,8 +30,10 @@ export class AddUserToChannelComponent {
   filteredUsers: { name: string; avatar: string; userId: string }[] = [];
   selectedUsers: { name: string; avatar: string; userId: string }[] = [];
 
+  showSelectedUser = false;
+
   addUserToChannel() {
-   
+   this.selectedUsers = [];
   }
 
  filterUsers() {
@@ -49,7 +51,6 @@ export class AddUserToChannelComponent {
         avatar: user.avatar,
         userId: user.userId
       }));
-    console.log('Gefilterte Benutzer:', this.filteredUsers);
   });
 }
 
@@ -65,7 +66,16 @@ displayUser(user: any): string {
 
 selectUser(user: any) {
   this.selectedUser = user;
-   console.log('ausgewählter Benutzer', this.selectedUser);
+  this.showSelectedUser = true;
+  console.log('ausgewählter Benutzer', this.selectedUser);
+  if (!this.selectedUsers.some(u => u.userId === this.selectedUser.userId)) {
+  this.selectedUsers.push(this.selectedUser);
+  }
+  console.log('Benutzer in array selectedUsers', this.selectedUsers);
+}
+
+showSearchInput() {
+  this.showSelectedUser = false;
 }
 
 }

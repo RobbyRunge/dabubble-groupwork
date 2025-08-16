@@ -78,3 +78,30 @@
     height: 50px;
     border-radius: 50%;
 }
+
+.all-selected-user {  
+    width: 434px;
+    height: 55px;
+    @include dFlex(flex-start, center);
+    flex-direction: row;
+    border: 1px solid #ADB0D9;
+    border-radius: 30px;
+    padding: 7.5px 20px 7.5px 20px;
+    box-sizing: border-box;
+}
+
+.selected-user-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+}
+
+.selected-user {
+    @include dFlex(flex-start, center);
+    flex-direction: row;
+    gap: 15px;
+    background: #ECEEFE;
+    border-radius: 35px;
+    box-sizing: border-box;
+    padding: 3px 10px 3px 10px;
+}

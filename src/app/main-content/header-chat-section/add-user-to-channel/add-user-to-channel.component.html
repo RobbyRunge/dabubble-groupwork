@@ -12,23 +12,35 @@
             }
         </div>
     </div>
-  <div>
-    <input  
-    [(ngModel)]="searchInput" 
-    [matAutocomplete]="auto" 
-    (input)="filterUsers()" 
-    class="user-name-channel" type="text" 
-    placeholder="Name eingeben">
-      <mat-autocomplete #auto="matAutocomplete" panelClass="user-name-avatar" [displayWith]="displayUser" (optionSelected)="selectUser($event.option.value)">
-        @for (user of filteredUsers; track $index) {
-          <mat-option [value]="user">
-             <div class="user-avatar-name">
+    @if (!showSelectedUser) {
+      <div>
+        <input  
+          [(ngModel)]="searchInput" 
+          [matAutocomplete]="auto" 
+          (input)="filterUsers()" 
+          class="user-name-channel" type="text" 
+          placeholder="Name eingeben">
+        <mat-autocomplete #auto="matAutocomplete" panelClass="user-name-avatar" [displayWith]="displayUser" (optionSelected)="selectUser($event.option.value)">
+          @for (user of filteredUsers; track $index) {
+            <mat-option [value]="user">
+              <div class="user-avatar-name">
                 <img class="user-avatar" src="avatar/{{user.avatar}}"> {{ user.name }}
-            </div>
-          </mat-option>
+              </div>
+            </mat-option>
+          }
+        </mat-autocomplete>
+      </div>
+    }@else if (showSelectedUser) {
+      <div class="all-selected-user" (click)="showSearchInput()">
+        @for (selectedUser of selectedUsers; track $index) {
+          <div class="selected-user">
+            <img class="selected-user-avatar" src="avatar/{{selectedUser.avatar}}"> 
+            <span>{{selectedUser.name}}</span>
+            <mat-icon>close</mat-icon> 
+          </div>
         }
-      </mat-autocomplete>
-  </div>
+      </div>     
+    }
   <div class="btn-add-cont">
     <button (click)="addUserToChannel()" mat-flat-button class="button-add">Hinzufügen</button>
   </div>
