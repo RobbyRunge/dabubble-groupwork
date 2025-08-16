@@ -51,6 +51,16 @@
         @include dFlex();
         gap: 20px;
 
+        .last-reply-time {
+            color: #686868;
+            font-size: 14px;
+            font-weight: 400;
+
+            &:hover {
+                cursor: default;
+            }
+        }
+
         >span {
             color: #535AF1;
             font-size: 18px;
@@ -247,8 +257,8 @@ input {
     }
 }
 
-.emoji-mart-container{
-position: absolute;
-top: -380px;
-right: 150px;
+.emoji-mart-container {
+    position: absolute;
+    top: -380px;
+    right: 150px;
 }

@@ -41,4 +41,8 @@ export class ReceivedMessageComponent implements OnInit {
   hideReactionUserName() {
     this.hoveredReactionIndex = null;
   }
+
+  getLastThreadReplyTime(): Date | null {
+    return this.chatService.getLastThreadReplyTime(this.message.id);
+  }
 }

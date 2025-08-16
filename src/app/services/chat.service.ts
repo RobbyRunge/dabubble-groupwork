@@ -136,7 +136,10 @@ export class ChatService {
 
     private incrementThreadCount(batch: WriteBatch, chatId: string, parentMessageId: string): void {
         const parentMsgRef = doc(this.firestore, `chats/${chatId}/message/${parentMessageId}`);
-        batch.update(parentMsgRef, { threadCount: increment(1) });
+        batch.update(parentMsgRef, { 
+            threadCount: increment(1),
+            lastThreadReply: serverTimestamp()
+        });
     }
 
     async getParrentMessageId() {
@@ -356,6 +359,14 @@ export class ChatService {
 
     hideAllEmojis() {
         this.showEmojis = false;
+    }
+
+    getLastThreadReplyTime(messageId: string): Date | null {
+        const message = this.messages.find(msg => msg.id === messageId);
+        if (message && message.lastThreadReply) {
+            return message.lastThreadReply.toDate();
+        }
+        return null;
     }
 
     saveEmojisInDatabase(selectedEmoji: string, messageId: string) {

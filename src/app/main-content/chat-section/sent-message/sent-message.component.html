@@ -62,6 +62,7 @@
                 </div>
                 <div class="answer-date-container" (click)="chatService.answerOnMessage(message.id, message.text)">
                     <div *ngIf="message.threadCount > 0">
+                        <span *ngIf="getLastThreadReplyTime()" class="last-reply-time">Letzte Antwort {{getLastThreadReplyTime() | date:'HH:mm'}}</span>
                         <span>{{message.threadCount}} Antwort{{message.threadCount > 1 ? 'en' : ''}}</span>
                         <p></p>
                     </div>

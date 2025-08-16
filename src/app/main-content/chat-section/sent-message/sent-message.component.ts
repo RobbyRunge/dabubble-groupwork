@@ -112,4 +112,8 @@ export class SentMessageComponent implements OnInit {
   hideAllEmojis() {
     this.showEmojisMessage = false;
   }
+
+  getLastThreadReplyTime(): Date | null {
+    return this.chatService.getLastThreadReplyTime(this.message.id);
+  }
 }

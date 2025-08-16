@@ -73,6 +73,17 @@
     >div {
         @include dFlex();
         gap: 20px;
+        flex-direction: row-reverse;
+
+        .last-reply-time {
+            color: #686868;
+            font-size: 14px;
+            font-weight: 400;
+            
+            &:hover {
+                cursor: default;
+            }
+        }
 
         >span {
             color: #535AF1;
