@@ -46,6 +46,7 @@ export class SentMessageComponent implements OnInit {
   showEmojisMessage: boolean = false;
   shiftContainer: boolean = false;
   hoveredReactionIndex: number | null = null;
+  showAllMessageReactions: boolean = false;
 
 
   ngOnInit() {
@@ -115,5 +116,12 @@ export class SentMessageComponent implements OnInit {
 
   getLastThreadReplyTime(): Date | null {
     return this.chatService.getLastThreadReplyTime(this.message.id);
+  }
+
+  showAllReactions(){
+    this.showAllMessageReactions = true;
+  }
+  hideAllReactions(){
+    this.showAllMessageReactions = false; 
   }
 }

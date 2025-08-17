@@ -136,7 +136,7 @@ export class ChatService {
 
     private incrementThreadCount(batch: WriteBatch, chatId: string, parentMessageId: string): void {
         const parentMsgRef = doc(this.firestore, `chats/${chatId}/message/${parentMessageId}`);
-        batch.update(parentMsgRef, { 
+        batch.update(parentMsgRef, {
             threadCount: increment(1),
             lastThreadReply: serverTimestamp()
         });
@@ -371,17 +371,38 @@ export class ChatService {
         return null;
     }
 
-    saveEmojisInDatabase(selectedEmoji: string, messageId: string) {
+    async saveEmojisInDatabase(selectedEmoji: string, messageId: string) {
         return runInInjectionContext(this.injector, async () => {
             const messagesRef = doc(this.firestore, `chats/${this.dataUser.chatId}/message/${messageId}`);
-            await updateDoc(messagesRef, {
-                reactions: arrayUnion({
-                    emoji: selectedEmoji,
-                    user: this.channelService.currentUser?.name,
-                    addedAt: Date.now()
-                })
-            });
+            const messageSnap = await getDoc(messagesRef);
+            await this.checkIfEmojiExists(selectedEmoji, messageSnap, messagesRef);
+        });
+    }
+
+    async checkIfEmojiExists(selectedEmoji: any, messageSnap: any, messagesRef: any) {
+        return runInInjectionContext(this.injector, async () => {
+            if (messageSnap.exists()) {
+                const data = messageSnap.data();
+                const reactions = data['reactions'] || [];
+                const existingReactionIndex = reactions.findIndex(
+                    (r: any) => r.emoji === selectedEmoji
+                );
+
+                if (existingReactionIndex > -1) {
+                    reactions[existingReactionIndex].emojiCounter += 1;
+                } else {
+                    reactions.push({
+                        emoji: selectedEmoji,
+                        user: this.channelService.currentUser?.name,
+                        emojiCounter: 1,
+                    });
+                }
+                await updateDoc(messagesRef, {
+                    reactions: reactions
+                });
+            }
         })
+
     }
 
     listenToEmojis(chatId: string, messageId: string) {

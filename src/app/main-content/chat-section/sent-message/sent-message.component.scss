@@ -192,9 +192,11 @@ input {
 
 .message-reaction-container {
     @include dFlex();
-    flex-direction: row-reverse;
+    flex-direction: row;
     gap: 5px;
     transition: transform 0.3s ease;
+    max-width: 750px;
+    flex-wrap: wrap;
 
     >div {
         @include dFlex();
@@ -214,13 +216,21 @@ input {
     align-items: center;
 }
 
-.reaction-container>span {
-    font-size: 18px;
+.reaction-container {
+    border: 1px solid #ADB0D9;
+    border-radius: 30px;
+    padding: 5px 10px;
+    gap: 5px;
+
+    >span {
+        font-size: 18px;
+    }
+
 }
 
 
 .message-reaction-container.shifted {
-    transform: translateX(-5px);
+    transform: translateX(+5px);
 }
 
 .reaction-user-container {
