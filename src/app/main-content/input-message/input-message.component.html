@@ -1,4 +1,4 @@
-<div class="write-message-container">
+<div class="write-message-container" (click)="hideUserMentionList()">
     <form class="example-form">
         <div class="mention-container" *ngIf="showUserList || showChanelList || chatService.showEmojis">
             <div *ngIf="showUserList">
@@ -35,7 +35,7 @@
                         <img [src]="imgSrcReaction" (mouseover)="imgSrcReaction = 'add_reaction_color.png'"
                             (mouseout)="imgSrcReaction = 'add reaction.png'">
                     </div>
-                    <div (click)="userMention()">
+                    <div (click)="userMention($event)">
                         <img [src]="imgSrcMention" (mouseover)="imgSrcMention = 'mention_color.png'"
                             (mouseout)="imgSrcMention = 'mention.png'">
                     </div>

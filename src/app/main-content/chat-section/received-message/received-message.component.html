@@ -1,4 +1,4 @@
-<div class="messages-container">
+<div class="messages-container" (click)="hideAllEmojis()">
     <div class="users-message-container"
         *ngIf="message.senderId === selectedUser.userId && message.senderId !== dataUser.currentUserId">
         <div class="message-container">
@@ -13,28 +13,35 @@
                 <div class="message-content">
                     <h3>{{message.text}}</h3>
                 </div>
-                <div *ngFor="let reaction of message.reactions; let i = index">
-                    <div class="reaction-container" (mouseover)="showReactionUserName(i)"
-                        (mouseout)="hideReactionUserName()">
-                        <span>
-                            {{ reaction.emoji }}
-                        </span>
+                <div class="message-reaction-container" [class.shifted]="shiftContainer">
+                    <div *ngFor="let reaction of message.reactions; let i = index" class="reaction-wrapper"
+                        (mouseenter)="showReactionUserName(i)" (mouseleave)="hideReactionUserName()">
+
+                        <div class="reaction-container" *ngIf="i < 20 || showAllMessageReactions">
+                            <span>{{ reaction.emoji }}</span>
+                            <span>{{reaction.emojiCounter}}</span>
+                        </div>
+
+                        <div class="reaction-user-container" *ngIf="hoveredReactionIndex === i">
+                            <div>
+                                <p class="emoji">{{reaction.emoji}}</p>
+                            </div>
+                            <div>
+                                <h3>{{ reaction.user }}</h3>
+                            </div>
+                            <div><span>hat reagiert</span></div>
+                        </div>
                     </div>
-                    <div class="reaction-user-container" *ngIf="hoveredReactionIndex === i">
-                        <div>
-                            <p>{{reaction.emoji}}</p>
-                        </div>
-                        <div>
-                            <h3>{{ reaction.user }}</h3>
-                        </div>
-                        <div>
-                            <span>hat reagieret</span>
-                        </div>
+                    <div class="reaction-container" *ngIf="message?.reactions?.length > 20">
+                        <p *ngIf="!showAllMessageReactions" (click)="showAllReactions()">{{message.reactions.length -
+                            20}} weitere</p>
+                        <p *ngIf="showAllMessageReactions" (click)="hideAllReactions()">Weniger anzeigen</p>
                     </div>
                 </div>
                 <div class="answer-date-container" (click)="chatService.answerOnMessage(message.id, message.text)">
                     <div *ngIf="message.threadCount > 0">
-                        <span *ngIf="getLastThreadReplyTime()" class="last-reply-time">Letzte Antwort {{getLastThreadReplyTime() | date:'HH:mm'}}</span>
+                        <span *ngIf="getLastThreadReplyTime()" class="last-reply-time">Letzte Antwort
+                            {{getLastThreadReplyTime() | date:'HH:mm'}}</span>
                         <span>{{message.threadCount}} Antwort{{message.threadCount > 1 ? 'en' : ''}}</span>
                         <p></p>
                     </div>
@@ -47,14 +54,17 @@
             <img [src]="imgComment" (mouseover)="imgComment='img/comment_color.png'"
                 (mouseout)="imgComment='img/comment.png'">
         </div>
-        <div>
+        <div (click)="showAllEmojisMessage(index, $event)">
             <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
                 (mouseout)="imgReaction='img/add_reaction.png'">
         </div>
-        <div *ngFor="let emoji of chatService.mostUsedEmojis">
+        <div *ngFor="let emoji of chatService.mostUsedEmojis let i = index">
             <div *ngIf="chatService.mostUsedEmojis.length > 0">
-                {{emoji}}
+                <p (click)="addMostUsedEmojiMessage(emoji, i)">{{emoji}}</p>
             </div>
         </div>
+    </div>
+    <div *ngIf="showEmojisMessage" class="emoji-mart-container">
+        <emoji-mart (emojiClick)="addEmojiMessage($event)"></emoji-mart>
     </div>
 </div>

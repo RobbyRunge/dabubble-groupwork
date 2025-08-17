@@ -48,7 +48,8 @@ export class InputMessageComponent implements OnInit {
     this.users$ = this.dataUser.getAllUsers();
   }
 
-  userMention() {
+  userMention(event: MouseEvent) {
+    event.stopPropagation();
     this.messageText += '@';
     this.onInputChange();
   }
@@ -127,5 +128,10 @@ export class InputMessageComponent implements OnInit {
   showAllEmojis(event: MouseEvent) {
     event.stopPropagation();
     this.chatService.showEmojis = true;
+  }
+
+  hideUserMentionList(){
+    this.showUserList = false;
+    this.showChanelList = false;
   }
 }
