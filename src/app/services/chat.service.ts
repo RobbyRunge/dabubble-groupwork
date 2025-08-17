@@ -224,9 +224,11 @@ export class ChatService {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate());
     }
 
-    getDateLabel(timestamp: any): string {
-        const date = timestamp?.toDate();
+    getDateLabel(timestamp: any, messageIndex: number): string {
+        const date = timestamp?.toDate ? timestamp.toDate() : null;
         if (!date) return '';
+
+        if (!this.isFirstMessageOfDay(timestamp, messageIndex)) return '';
 
         const today = new Date();
         const yesterday = new Date();

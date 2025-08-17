@@ -14,7 +14,7 @@
           <div *ngFor="let msg of chatService.messagesThread; let i = index">
             <div *ngIf="chatService.isFirstMessageOfDay(msg.timestamp, i)">
               <div class="date-divider">
-                <span class="date-label">{{ chatService.getDateLabel(msg.timestamp) }}</span>
+                <span class="date-label">{{ chatService.getDateLabel(msg.timestamp, i) }}</span>
               </div>
             </div>
             <div class="sent-message">
