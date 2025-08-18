@@ -41,6 +41,8 @@ export class InputMessageComponent implements OnInit {
   imgSrcMention: any = 'mention.png'
   imgSrcSend: any = 'send.png';
   selectedEmoji: any;
+  onlineUser: string = 'Online.png';
+  offlineUser: string = 'offline.png';
   @Input() mode: 'chat' | 'thread' = 'chat';
 
 
@@ -130,7 +132,7 @@ export class InputMessageComponent implements OnInit {
     this.chatService.showEmojis = true;
   }
 
-  hideUserMentionList(){
+  hideUserMentionList() {
     this.showUserList = false;
     this.showChanelList = false;
   }
