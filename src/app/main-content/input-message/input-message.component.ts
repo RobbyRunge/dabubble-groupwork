@@ -1,5 +1,5 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
 import { MatFormField, MatLabel } from '@angular/material/select';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -32,7 +32,6 @@ export class InputMessageComponent implements OnInit {
 
   showUserList: boolean = false;
   showChanelList: boolean = false;
-  showEmojis: boolean = false;
   channelService = inject(ChannelService);
   chatService = inject(ChatService);
   dataUser = inject(UserService)
@@ -42,15 +41,15 @@ export class InputMessageComponent implements OnInit {
   imgSrcMention: any = 'mention.png'
   imgSrcSend: any = 'send.png';
   selectedEmoji: any;
-  onlineUser: string = 'Online.png';
-  offlineUser: string = 'offline.png';
+  @Input() mode: 'chat' | 'thread' = 'chat';
 
 
   ngOnInit(): void {
     this.users$ = this.dataUser.getAllUsers();
   }
 
-  userMention() {
+  userMention(event: MouseEvent) {
+    event.stopPropagation();
     this.messageText += '@';
     this.onInputChange();
   }
@@ -108,25 +107,31 @@ export class InputMessageComponent implements OnInit {
   sendMessage() {
     if (!this.messageText.trim()) return;
 
-    if (this.chatService.parentMessageId && this.chatService.threadRef) {
-      this.chatService.sendThreadMessage(this.dataUser.chatId, this.chatService.parentMessageId, this.chatService.threadRef, this.channelService.currentUserId, this.messageText);
-      this.messageText = '';
+    if (this.mode === 'thread') {
+      this.chatService.sendThreadMessage(this.dataUser.chatId, this.chatService.parentMessageId, this.channelService.currentUserId, this.messageText);
     } else {
       this.chatService.sendChatMessage(this.messageText, this.channelService.currentUserId);
-      this.messageText = ''
     }
+    this.messageText = ''
   }
 
   addEmoji($event: any) {
+    this.chatService.saveEmoji($event.emoji.native);
+    this.chatService.showEmojis = false;
     this.messageText += $event.emoji.native;
-    this.showEmojis = false;
   }
 
   showAllEmojisMessage(index: number) {
     this.selectedEmoji = index;
   }
 
-  showAllEmojis() {
-    this.showEmojis = true;
+  showAllEmojis(event: MouseEvent) {
+    event.stopPropagation();
+    this.chatService.showEmojis = true;
+  }
+
+  hideUserMentionList(){
+    this.showUserList = false;
+    this.showChanelList = false;
   }
 }

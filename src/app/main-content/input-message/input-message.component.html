@@ -1,6 +1,6 @@
-<div class="write-message-container">
+<div class="write-message-container" (click)="hideUserMentionList()">
     <form class="example-form">
-        <div class="mention-container" *ngIf="showUserList || showChanelList || showEmojis">
+        <div class="mention-container" *ngIf="showUserList || showChanelList || chatService.showEmojis">
             <div *ngIf="showUserList">
                 <div class="user-chanel-list-container" *ngFor="let user of users$ | async; let index = index"
                     (click)="selecetedUserMention(user, index)">
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div>
-                <div *ngIf="showEmojis">
+                <div *ngIf="chatService.showEmojis">
                     <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
                 </div>
             </div>
@@ -32,11 +32,13 @@
                 (keyup.enter)="sendMessage()">
             <div class="icons-container standard-transition">
                 <div>
-                    <div class="reaction-icon" (click)="showAllEmojis()">
-                        <img src="add reaction.png">
+                    <div (click)="showAllEmojis($event)">
+                        <img [src]="imgSrcReaction" (mouseover)="imgSrcReaction = 'add_reaction_color.png'"
+                            (mouseout)="imgSrcReaction = 'add reaction.png'">
                     </div>
-                    <div class="mention-icon" (click)="userMention()">
-                        <img src="mention.png">
+                    <div (click)="userMention($event)">
+                        <img [src]="imgSrcMention" (mouseover)="imgSrcMention = 'mention_color.png'"
+                            (mouseout)="imgSrcMention = 'mention.png'">
                     </div>
                 </div>
                 <div class="send-icon-container" (click)="sendMessage()">

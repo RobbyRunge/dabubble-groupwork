@@ -1,9 +1,10 @@
 import { Injectable, inject, Injector, runInInjectionContext, ViewChild, ElementRef } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc, CollectionReference } from '@angular/fire/firestore';
+import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc, CollectionReference, getDoc, limit, increment, writeBatch, WriteBatch, arrayUnion } from '@angular/fire/firestore';
 import { UserService } from './user.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChannelService } from './channel.service';
+import { from, map, shareReplay } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -23,7 +24,8 @@ export class ChatService {
     channelService = inject(ChannelService);
     private router = inject(Router);
     chatService: any;
-    private unsubscribeMessages: (() => void) | undefined;
+    private unsubscribeMessages?: (() => void);
+    private unsubscribeMessagesThread?: (() => void);
     messageDocRef: any;
     threadRef: any
     isThreadAktiv: boolean = false;
@@ -36,6 +38,8 @@ export class ChatService {
     messagesThread: any[] = [];
     hasMessagesThread: boolean = false;
     parentMessagesRef: any;
+    batch: any;
+    showEmojis: boolean = false;
 
     async getOrCreateChatId(userId1: string, userId2: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
@@ -86,17 +90,6 @@ export class ChatService {
             return newChat.id;
     })};
 
-
-    async sendMessage(messageText: string, senderId: any) {
-        return runInInjectionContext(this.injector, async () => {
-            if (this.isThreadAktiv) {
-                this.sendThreadMessage(this.chatId, this.parentMessageId, this.threadId, this.senderId, this.text);
-            } else {
-                this.sendChatMessage(messageText, senderId)
-            }
-        })
-    }
-
     async sendChatMessage(messageText: string, senderId: any) {
         return runInInjectionContext(this.injector, async () => {
             const messagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message`);
@@ -108,62 +101,95 @@ export class ChatService {
         })
     }
 
-    async getOrCreateThread(chatId: string, parentMessageId: string, senderId: string, text: string): Promise<string> {
+
+    private async getExistingThreadId(chatId: string, parentMessageId: string): Promise<string | null> {
+        const threadsCol = collection(this.firestore, `chats/${chatId}/message/${parentMessageId}/threads`);
+        const existing = await getDocs(query(threadsCol, limit(1)));
+        return existing.empty ? null : existing.docs[0].id;
+    }
+
+    private createThreadDocument(batch: WriteBatch, chatId: string, parentMessageId: string, senderId: string, text: string, threadId?: string): string {
+        const threadsCol = collection(this.firestore, `chats/${chatId}/message/${parentMessageId}/threads`);
+        const newThreadRef = threadId ? doc(threadsCol, threadId) : doc(threadsCol);
+
+        batch.set(newThreadRef, {
+            senderId,
+            text,
+            timestamp: serverTimestamp()
+        });
+
+        return newThreadRef.id;
+    }
+
+    async getOrCreateThread(chatId: string, parentMessageId: string, senderId: string, text: string, threadId?: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
-            this.threadRef = collection(this.firestore, 'chats', chatId, 'message', parentMessageId, 'threads');
-            const snapshot = await getDocs(this.threadRef);
-            if (!snapshot.empty) {
-                return snapshot.docs[0].id;
-            }
-            const newThread = await addDoc(this.threadRef, {
-                senderId,
-                text,
-                timestamp: serverTimestamp()
-            });
-            return newThread.id;
-        })
+            const existingId = await this.getExistingThreadId(chatId, parentMessageId);
+            if (existingId) return existingId;
+
+            const batch = writeBatch(this.firestore);
+            const newThreadId = this.createThreadDocument(batch, chatId, parentMessageId, senderId, text, threadId);
+            this.incrementThreadCount(batch, chatId, parentMessageId);
+
+            await batch.commit();
+            return newThreadId;
+        });
+    }
+
+    private incrementThreadCount(batch: WriteBatch, chatId: string, parentMessageId: string): void {
+        const parentMsgRef = doc(this.firestore, `chats/${chatId}/message/${parentMessageId}`);
+        batch.update(parentMsgRef, {
+            threadCount: increment(1),
+            lastThreadReply: serverTimestamp()
+        });
     }
 
     async getParrentMessageId() {
         return runInInjectionContext(this.injector, async () => {
-            this.parentMessagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message/`);
+            this.parentMessagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message`);
             const snapshot = await getDocs(this.parentMessagesRef);
-            console.log(this.parentMessageId);
+            console.log(this.parentMessagesRef);
             if (!snapshot.empty) {
                 return snapshot.docs[0].id;
             }
             return null;
-        })
+        });
     }
 
-    async sendThreadMessage(chatId: string, parentMessageId: string, threadId: string, senderId: string, text: string) {
+    async sendThreadMessage(chatId: string, rootId: string, senderId: string, text: string) {
         return runInInjectionContext(this.injector, async () => {
-            const threadMessageRef = collection(this.firestore, 'chats', chatId, 'message', parentMessageId, 'threads', threadId);
-            await addDoc(threadMessageRef, {
-                senderId,
-                text,
-                timestamp: serverTimestamp()
-            });
-        })
+            const batch = writeBatch(this.firestore);
+
+            this.createThreadDocument(batch, chatId, rootId, senderId, text);
+
+            this.incrementThreadCount(batch, chatId, rootId);
+
+            await batch.commit();
+        });
     }
 
     listenToMessagesThread() {
-        if (this.unsubscribeMessages) {
-            this.unsubscribeMessages();
+        if (this.unsubscribeMessagesThread) {
+            this.unsubscribeMessagesThread();
         }
-
         return runInInjectionContext(this.injector, async () => {
-            const messagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message/${this.parentMessageId}/threads/${this.threadId}`);
+            const messagesRef = collection(this.firestore, `chats/${this.dataUser.chatId}/message/${this.parentMessageId}/threads`);
             const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
-
-            this.unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
+            this.unsubscribeMessagesThread = onSnapshot(messagesQuery, (snapshot) => {
                 this.messagesThread = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                this.hasMessagesThread = this.messages.length !== 0;
-                console.log(this.messagesThread);
+                this.hasMessagesThread = this.messagesThread.length !== 0;
             });
         });
     }
 
+    async checkIfMessageHasThreads(parentMessageId: string) {
+        const threadsRef = collection(
+            this.firestore,
+            `chats/${this.dataUser.chatId}/message/${parentMessageId}/threads`
+        );
+
+        const threadsSnap = await getDocs(threadsRef);
+        return !threadsSnap.empty;
+    }
 
     listenToMessages() {
         if (this.unsubscribeMessages) {
@@ -199,9 +225,11 @@ export class ChatService {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate());
     }
 
-    getDateLabel(timestamp: any): string {
-        const date = timestamp?.toDate();
+    getDateLabel(timestamp: any, messageIndex: number): string {
+        const date = timestamp?.toDate ? timestamp.toDate() : null;
         if (!date) return '';
+
+        if (!this.isFirstMessageOfDay(timestamp, messageIndex)) return '';
 
         const today = new Date();
         const yesterday = new Date();
@@ -234,17 +262,21 @@ export class ChatService {
         );
     }
 
-    loadMostUsedEmojis() {
-        const stored = localStorage.getItem('emoji-mart.frequently');
-        if (stored) {
-            const recent = JSON.parse(stored) as { [emoji: string]: number };
-            const sorted = Object.entries(recent)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 2)
-                .map(([emoji]) => emoji);
+    saveEmoji(emoji: string) {
+        const stored = JSON.parse(localStorage.getItem('frequently') || '{}');
+        stored[emoji] = (stored[emoji] || 0) + 1;
+        localStorage.setItem('frequently', JSON.stringify(stored));
+    }
 
-            this.mostUsedEmojis = sorted;
-        }
+    loadMostUsedEmojis() {
+        const stored = localStorage.getItem('frequently');
+        if (!stored) return;
+
+        const recent = JSON.parse(stored) as Record<string, number>;
+        this.mostUsedEmojis = Object.entries(recent)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 2)
+            .map(([emoji]) => emoji);
     }
     setDrawer(drawer: MatDrawer) {
         this.drawer = drawer;
@@ -280,5 +312,109 @@ export class ChatService {
         if (this.unsubscribeMessages) {
             this.unsubscribeMessages();
         }
+        if (this.unsubscribeMessagesThread) {
+            this.unsubscribeMessagesThread();
+        }
+    }
+
+
+    private async resolveThreadSenderId(parentMessageId: string): Promise<string> {
+        return runInInjectionContext(this.injector, async () => {
+            const parentMsgRef = doc(this.firestore, `chats/${this.dataUser.chatId}/message/${parentMessageId}`);
+            const snap = await getDoc(parentMsgRef);
+
+            if (!snap.exists()) return this.channelService.currentUserId;
+
+            const data = snap.data() as any;
+
+            const senderId = data?.senderId ??
+                data?.userId ??
+                data?.sender?.id ??
+                this.channelService.currentUserId;
+
+            return senderId;
+        });
+    }
+    async answerOnMessage(parentMessageId: string, parentText: string) {
+        this.parentMessageId = parentMessageId;
+
+        const senderIdForThread = await this.resolveThreadSenderId(parentMessageId);
+
+        this.threadId = await this.getOrCreateThread(
+            this.dataUser.chatId,
+            parentMessageId,
+            senderIdForThread,
+            parentText,
+            this.threadId
+        );
+
+        this.open();
+        this.router.navigate([
+            '/mainpage',
+            this.channelService.currentUserId,
+            'chats',
+            this.dataUser.chatId,
+            'threads',
+            this.threadId
+        ]);
+        this.listenToMessagesThread();
+    }
+
+    hideAllEmojis() {
+        this.showEmojis = false;
+    }
+
+    getLastThreadReplyTime(messageId: string): Date | null {
+        const message = this.messages.find(msg => msg.id === messageId);
+        if (message && message.lastThreadReply) {
+            return message.lastThreadReply.toDate();
+        }
+        return null;
+    }
+
+    async saveEmojisInDatabase(selectedEmoji: string, messageId: string) {
+        return runInInjectionContext(this.injector, async () => {
+            const messagesRef = doc(this.firestore, `chats/${this.dataUser.chatId}/message/${messageId}`);
+            const messageSnap = await getDoc(messagesRef);
+            await this.checkIfEmojiExists(selectedEmoji, messageSnap, messagesRef);
+        });
+    }
+
+    async checkIfEmojiExists(selectedEmoji: any, messageSnap: any, messagesRef: any) {
+        return runInInjectionContext(this.injector, async () => {
+            if (messageSnap.exists()) {
+                const data = messageSnap.data();
+                const reactions = data['reactions'] || [];
+                const existingReactionIndex = reactions.findIndex(
+                    (r: any) => r.emoji === selectedEmoji
+                );
+
+                if (existingReactionIndex > -1) {
+                    reactions[existingReactionIndex].emojiCounter += 1;
+                } else {
+                    reactions.push({
+                        emoji: selectedEmoji,
+                        user: this.channelService.currentUser?.name,
+                        emojiCounter: 1,
+                    });
+                }
+                await updateDoc(messagesRef, {
+                    reactions: reactions
+                });
+            }
+        })
+
+    }
+
+    listenToEmojis(chatId: string, messageId: string) {
+        const reactionsRef = collection(
+            this.firestore,
+            `chats/${chatId}/message/${messageId}/reactions`
+        );
+        const q = query(reactionsRef, orderBy('createdAt', 'asc'));
+
+        return onSnapshot(q, (snapshot) => {
+            const emojis = snapshot.docs.map(doc => doc.data());
+        });
     }
 }

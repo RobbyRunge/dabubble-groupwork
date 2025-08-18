@@ -39,6 +39,7 @@ export class ThreadSectionComponent implements AfterViewInit, OnInit {
   selectedUser: any;
   readonly userDialog = inject(MatDialog);
   dialog = inject(MatDialog);
+  parentMessageId: string | undefined;
 
   constructor(private chatServices: ChatService) { }
 
@@ -46,7 +47,7 @@ export class ThreadSectionComponent implements AfterViewInit, OnInit {
     this.chatServices.setDrawer(this.drawer);
   }
 
-  ngOnInit():void {
+  ngOnInit(): void {
     this.getUserData();
   }
 

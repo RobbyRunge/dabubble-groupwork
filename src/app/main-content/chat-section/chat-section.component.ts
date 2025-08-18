@@ -65,7 +65,22 @@ export class ChatSectionComponent implements OnInit {
       this.getUserData();
       this.scrollToBottom();
     });
+    /*     this.listenToMessages(this.route);
+        console.log('test' + this.chatId);
+      }); */
+    // setTimeout(() => {
+    //   this.checkChannel();
+    //   console.log('Channels by user', this.dataUser.showChannelByUser);
+
+    // }, 2000);
   }
+
+  /*   ngOnChanges(changes: SimpleChanges) {
+      if (changes[this.messageText]) {
+        this.onInputChange();
+        console.log('input feld is changed');
+      }
+    } */
 
   getUserData() {
     this.channelService.isChecked$.subscribe(user => {
