@@ -31,17 +31,25 @@
         </mat-autocomplete>
       </div>
     }@else if (showSelectedUser) {
-      <div class="all-selected-user" (click)="showSearchInput()">
-        @for (selectedUser of selectedUsers; track $index) {
+      <div class="all-selected-user">
+        <div class="selected-user"> 
+          <img class="selected-user-avatar" src="avatar/{{selectedUser.avatar}}"> 
+          <span>{{selectedUser.name}}</span>
+          <mat-icon class="selceted-user-remove-icon" (click)="removeSelectedUser()">close</mat-icon>
+        </div>
+        <!-- @for (selectedUser of selectedUsers; track $index) {
           <div class="selected-user">
             <img class="selected-user-avatar" src="avatar/{{selectedUser.avatar}}"> 
             <span>{{selectedUser.name}}</span>
-            <mat-icon class="selceted-user-remove-icon" (click)="removeSelectedUser($index)">close</mat-icon> 
+            <mat-icon class="selceted-user-remove-icon" (click)="removeSelectedUser()">close</mat-icon> 
           </div>
-        }
+        } -->
       </div>     
     }
   <div class="btn-add-cont">
-    <button (click)="addUserToChannel()" mat-flat-button class="button-add">Hinzufügen</button>
+    <button class="btn-add-user" 
+      [disabled]="!isEnabled" 
+      [ngClass]="{'btn-enabled': isEnabled, 'btn-disabled': !isEnabled}" 
+      (click)="addUserToChannel()">Hinzufügen</button>
   </div>
 </div> 

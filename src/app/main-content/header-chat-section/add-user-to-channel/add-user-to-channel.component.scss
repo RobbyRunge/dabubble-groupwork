@@ -109,3 +109,24 @@
 .selceted-user-remove-icon {
     cursor: pointer;
 }
+
+.btn-add-user {
+    color: whitesmoke;
+    font-size: 18px;
+    font-weight: 700;
+    width: 147px;
+    height: 49px;
+    padding: 12px 25px 12px 25px;
+    border-radius: 25px;
+}
+
+.btn-disabled {
+    border: solid 1px #686868;
+    background: #686868;
+    cursor: not-allowed;
+}
+
+.btn-enabled {
+    border: solid 1px #444DF2;
+    background: #444DF2;
+}

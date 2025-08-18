@@ -8,9 +8,9 @@ import { UserService } from '../../../services/user.service';
 import { Subscription } from 'rxjs';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
-import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-user-to-channel',
@@ -24,24 +24,33 @@ export class AddUserToChannelComponent {
   unserService = inject(UserService);
   dialog = inject(MatDialogRef<AddUserToChannelComponent>);
   filterUserSubscription!: Subscription;
-
+  router = inject(Router);
   searchInput: string = '';
   selectedUser: any;
   filteredUsers: { name: string; avatar: string; userId: string }[] = [];
   selectedUsers: { name: string; avatar: string; userId: string }[] = [];
-
+  currentChannelId?: string;
   showSelectedUser = false;
+  isEnabled = false;
 
   addUserToChannel() {
-   this.selectedUsers = [];
+  //  this.selectedUsers = [];
+    console.log('das ist die Channel Id', this.currentChannelId);
+    console.log('das ist die User Id', this.selectedUser.userId);
+    if (this.currentChannelId && this.selectedUser?.userId) {
+      this.channelService.addUserToCh(this.currentChannelId, this.selectedUser.userId);
+    }
+    this.dialog.close();
   }
 
  filterUsers() {
   if (this.searchInput === '') {
     this.filteredUsers = [];
+    this.isEnabled = false;
     return;
   }
   this.unserService.getAllUsers().subscribe(users => {
+    this.isEnabled = true;
     this.filteredUsers = users
       .filter(user =>
         user.name.toLowerCase().startsWith(this.searchInput.toLowerCase())
@@ -54,12 +63,6 @@ export class AddUserToChannelComponent {
   });
 }
 
-ngOnDestroy() {
-  if (this.filterUserSubscription) {
-    this.filterUserSubscription.unsubscribe();
-  }
-}
-
 displayUser(user: any): string {
   return user && user.name ? user.name : '';
 }
@@ -67,20 +70,36 @@ displayUser(user: any): string {
 selectUser(user: any) {
   this.selectedUser = user;
   this.showSelectedUser = true;
-  if (!this.selectedUsers.some(u => u.userId === this.selectedUser.userId)) {
-  this.selectedUsers.push(this.selectedUser);
-  }
+  const parts = this.router.url.split('/').filter(Boolean);
+  const channelId = parts[3];
+  this.currentChannelId = channelId;
+  // if (!this.selectedUsers.some(u => u.userId === this.selectedUser.userId)) {
+  // this.selectedUsers.push(this.selectedUser);
+  // }
 }
 
-showSearchInput() {
+// showSearchInput() {
+//   this.showSelectedUser = false;
+// }
+
+// removeSelectedUser(i: number) {
+//   this.selectedUsers = this.selectedUsers.filter((_, index) => index !== i);
+//   // this.searchInput = '';
+//   console.log('Div anzeigen',this.showSelectedUser);
+//   this.showSelectedUser = true;
+// }
+
+removeSelectedUser() {
+  this.selectedUser = null;
+  this.searchInput = '';
+  this.filteredUsers = [];
   this.showSelectedUser = false;
+  this.isEnabled = false;
 }
 
-removeSelectedUser(i: number) {
-  this.selectedUsers = this.selectedUsers.filter((_, index) => index !== i);
-  // this.searchInput = '';
-  console.log('Div anzeigen',this.showSelectedUser);
-  this.showSelectedUser = true;
-}
-
+ngOnDestroy() {
+  if (this.filterUserSubscription) {
+    this.filterUserSubscription.unsubscribe();
+    }
+  }
 }

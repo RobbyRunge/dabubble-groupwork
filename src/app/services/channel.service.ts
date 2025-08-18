@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import {
   addDoc,
+  arrayUnion,
   collection,
   collectionData,
   CollectionReference,
@@ -57,7 +58,7 @@ export class ChannelService {
 
   unsubscribeUserData!: Subscription;
   unsubscribeUserChannels!: Subscription;
-  unsubscribeDeleteUserFromCh!: () => void;;
+  unsubscribeDeleteUserFromCh!: () => void;
   unsubscribeChannelCreater!: () => void;
   unsubscribeChannelCreaterName!: () => void;
   unsubscribeUserStorage!: Subscription;
@@ -212,6 +213,25 @@ export class ChannelService {
         })
     );
   }
+  
+  async addUserToCh(channelId: string, newUserId: string) {
+    const channelRef = this.getSingleChannelRef(channelId);
+    await runInInjectionContext(this.injector, () =>
+        updateDoc(channelRef, {
+          userId: arrayUnion(newUserId)
+      })
+    );
+  }
+
+  setCheckdValue(user: string) {
+    this.isCheckedSubject.next(user)
+  }
+
+  getUserData() {
+    this.isChecked$.subscribe(user => {
+      this.selectedUser = user
+    })
+  }
 
   ngOnDestroy(): void {
     if (this.unsubscribeUserData) {
@@ -232,15 +252,5 @@ export class ChannelService {
     if (this.unsubscribeDeleteUserFromCh) {
       this.unsubscribeDeleteUserFromCh();
     }
-  }
-
-  setCheckdValue(user: string) {
-    this.isCheckedSubject.next(user)
-  }
-
-  getUserData() {
-    this.isChecked$.subscribe(user => {
-      this.selectedUser = user
-    })
   }
 }
