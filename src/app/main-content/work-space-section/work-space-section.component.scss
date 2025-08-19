@@ -96,7 +96,8 @@ mat-panel-description {
             color: #535AF1;
         }
 
-        .channel-img {
+        .channel-img,
+        .account-img {
             filter: brightness(0) saturate(100%) invert(34%) sepia(68%) saturate(3151%) hue-rotate(225deg) brightness(96%) contrast(91%);
         }
     }
