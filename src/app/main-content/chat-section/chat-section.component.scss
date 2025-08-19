@@ -47,15 +47,16 @@
     .chat-messages-container {
         overflow-y: auto;
         overflow-x: hidden;
-        padding-top: 30px;
-        padding-bottom: 30px;
+        padding-top: 32px;
+        padding-bottom: 16px;
+        scroll-behavior: smooth;
     }
 
     >div:not(.chat-messages-container) {
         overflow-y: auto;
         overflow-x: hidden;
-        padding-top: 30px;
-        padding-bottom: 30px;
+        padding-top: 32px;
+        padding-bottom: 16px;
     }
 }
 

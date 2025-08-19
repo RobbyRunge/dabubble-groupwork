@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="chat-container">
-        <div>
+        <div #threadContainer class="thread-messages-container">
           <div *ngFor="let msg of chatService.messagesThread; let i = index">
             <div *ngIf="chatService.isFirstMessageOfDay(msg.timestamp, i, chatService.messagesThread)">
               <div class="date-divider">
