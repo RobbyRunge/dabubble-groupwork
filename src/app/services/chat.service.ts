@@ -88,7 +88,8 @@ export class ChatService {
         return runInInjectionContext(this.injector, async () => {
             const newChat = await addDoc(chatsRef, { user: users });
             return newChat.id;
-    })};
+        })
+    };
 
     async sendChatMessage(messageText: string, senderId: any) {
         return runInInjectionContext(this.injector, async () => {
@@ -360,6 +361,17 @@ export class ChatService {
         this.listenToMessagesThread();
     }
 
+    saveEmojisThreadInDatabase(selectedEmoji: string, messageId: string, parentMessageId: string,) {
+        return runInInjectionContext(this.injector, async () => {
+            const messagesRef = doc(this.firestore, `chats/${this.dataUser.chatId}/message/${parentMessageId}/threads/${messageId}`);
+            const messageSnap = await getDoc(messagesRef);
+            /* console.log(messageSnap); */
+            console.log('[EMOJI]', { parentMessageId, messageId });
+            console.log('[EMOJI path]', messagesRef.path);
+            await this.checkIfEmojiExists(selectedEmoji, messageSnap, messagesRef);
+        });
+    }
+
     hideAllEmojis() {
         this.showEmojis = false;
     }
@@ -376,6 +388,7 @@ export class ChatService {
         return runInInjectionContext(this.injector, async () => {
             const messagesRef = doc(this.firestore, `chats/${this.dataUser.chatId}/message/${messageId}`);
             const messageSnap = await getDoc(messagesRef);
+            /* console.log(messageSnap); */
             await this.checkIfEmojiExists(selectedEmoji, messageSnap, messagesRef);
         });
     }

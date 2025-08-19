@@ -34,11 +34,11 @@
                         </div>
                     </div>
                     <div class="sent-message">
-                        <app-sent-message *ngIf="msg.senderId === channelService.currentUserId" [message]="msg"
+                        <app-sent-message [mode]="'chat'" *ngIf="msg.senderId === channelService.currentUserId" [message]="msg"
                             [index]="i">
                         </app-sent-message>
                     </div>
-                    <app-received-message *ngIf="msg.senderId !== channelService.currentUserId" [message]="msg">
+                    <app-received-message [mode]="'chat'" *ngIf="msg.senderId !== channelService.currentUserId" [message]="msg">
                     </app-received-message>
                 </div>
             </div>

@@ -89,16 +89,28 @@ export class SentMessageComponent implements OnInit {
     this.messageReacton += $event.emoji.native;
     this.showEmojisMessage = false;
     this.chatService.loadMostUsedEmojis();
-    this.chatService.saveEmojisInDatabase($event.emoji.native, this.message.id);
+    if (this.mode === 'thread') {
+      this.chatService.saveEmojisThreadInDatabase($event.emoji.native, this.message.id, this.chatService.parentMessageId)
+    } else {
+      this.chatService.saveEmojisInDatabase($event.emoji.native, this.message.id);
+    }
     this.shiftContainer = true;
-    setTimeout(() => {
-      this.shiftContainer = false;
-    }, 300);
+    setTimeout(() => (this.shiftContainer = false), 300);
   }
 
   addMostUsedEmojiMessage(emoji: any, index: number) {
     this.messageReacton += emoji;
-    this.chatService.saveEmojisInDatabase(emoji, this.message.id)
+    if (this.mode === 'thread') {
+      this.chatService.saveEmojisThreadInDatabase(emoji, this.message.id, this.chatService.parentMessageId)
+    } else {
+      this.chatService.saveEmojisInDatabase(emoji, this.message.id)
+    }
+  }
+
+  chekIfIsThreadOrChatMode(){
+    if (this.mode === 'thread') {
+      
+    }
   }
 
   showReactionUserName(index: number) {
@@ -118,10 +130,10 @@ export class SentMessageComponent implements OnInit {
     return this.chatService.getLastThreadReplyTime(this.message.id);
   }
 
-  showAllReactions(){
+  showAllReactions() {
     this.showAllMessageReactions = true;
   }
-  hideAllReactions(){
-    this.showAllMessageReactions = false; 
+  hideAllReactions() {
+    this.showAllMessageReactions = false;
   }
 }
