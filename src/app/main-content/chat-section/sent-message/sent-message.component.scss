@@ -200,6 +200,7 @@ input {
     gap: 5px;
     transition: transform 0.3s ease;
     max-width: 750px;
+    padding-left: 40px;
     flex-wrap: wrap;
 
     &:hover {
@@ -280,4 +281,5 @@ input {
     position: absolute;
     top: -380px;
     right: 150px;
+    z-index: 100;
 }

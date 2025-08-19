@@ -107,12 +107,6 @@ export class SentMessageComponent implements OnInit {
     }
   }
 
-  chekIfIsThreadOrChatMode(){
-    if (this.mode === 'thread') {
-      
-    }
-  }
-
   showReactionUserName(index: number) {
     this.hoveredReactionIndex = index;
   }
