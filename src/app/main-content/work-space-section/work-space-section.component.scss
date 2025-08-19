@@ -55,8 +55,25 @@
     @include dFlex(space-between);
     gap: 16px;
     padding-left: 30px;
-    padding-right: 30px;
+    padding-right: 24px;
     padding-top: 32px;
+
+
+    .test-div {
+        display: flex;
+        padding: 4px;
+        border-radius: 50%;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #ECEEFE;
+
+            mat-icon {
+                filter: brightness(0) saturate(100%) invert(34%) sepia(68%) saturate(3151%) hue-rotate(225deg) brightness(96%) contrast(91%);
+            }
+        }
+    }
+
 }
 
 .channel-logo-name {
