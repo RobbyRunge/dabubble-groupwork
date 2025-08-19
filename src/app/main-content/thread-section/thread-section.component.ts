@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild, ElementRef, AfterViewChecked, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { ChatService } from '../../services/chat.service';
@@ -30,9 +30,10 @@ import { HeaderChatSectionComponent } from '../header-chat-section/header-chat-s
   templateUrl: './thread-section.component.html',
   styleUrl: './thread-section.component.scss'
 })
-export class ThreadSectionComponent implements AfterViewInit, OnInit {
+export class ThreadSectionComponent implements AfterViewInit, OnInit, AfterViewChecked {
 
   @ViewChild('drawer') drawer!: MatDrawer;
+  @ViewChild('threadContainer') threadContainer!: ElementRef;
   dataUser = inject(UserService);
   chatService = inject(ChatService);
   channelService = inject(ChannelService);
@@ -40,11 +41,26 @@ export class ThreadSectionComponent implements AfterViewInit, OnInit {
   readonly userDialog = inject(MatDialog);
   dialog = inject(MatDialog);
   parentMessageId: string | undefined;
+  private shouldScrollToBottom = false;
+  private lastThreadMessageCount = 0;
 
   constructor(private chatServices: ChatService) { }
 
   ngAfterViewInit() {
     this.chatServices.setDrawer(this.drawer);
+    this.scrollToBottom();
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.chatService.messagesThread.length > this.lastThreadMessageCount) {
+      this.lastThreadMessageCount = this.chatService.messagesThread.length;
+      this.shouldScrollToBottom = true;
+    }
+    
+    if (this.shouldScrollToBottom) {
+      this.scrollToBottom();
+      this.shouldScrollToBottom = false;
+    }
   }
 
   ngOnInit(): void {
@@ -53,8 +69,23 @@ export class ThreadSectionComponent implements AfterViewInit, OnInit {
 
   getUserData() {
     this.channelService.isChecked$.subscribe(user => {
-      this.selectedUser = user
+      this.selectedUser = user;
+      this.shouldScrollToBottom = true;
+      this.lastThreadMessageCount = 0;
     })
+  }
+
+  private scrollToBottom(): void {
+    try {
+      if (this.threadContainer?.nativeElement) {
+        setTimeout(() => {
+          const element = this.threadContainer.nativeElement;
+          element.scrollTop = element.scrollHeight;
+        }, 200);
+      }
+    } catch (err) {
+      console.error('Error scrolling to bottom in thread:', err);
+    }
   }
 
   closeThread() {

@@ -73,6 +73,7 @@ selectUser(user: any) {
   const parts = this.router.url.split('/').filter(Boolean);
   const channelId = parts[3];
   this.currentChannelId = channelId;
+  this.unserService.getUserIdsFromChannel(this.currentChannelId);
   // if (!this.selectedUsers.some(u => u.userId === this.selectedUser.userId)) {
   // this.selectedUsers.push(this.selectedUser);
   // }

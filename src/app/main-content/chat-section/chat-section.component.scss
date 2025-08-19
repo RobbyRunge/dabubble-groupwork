@@ -44,11 +44,19 @@
     align-items: unset;
     flex-direction: column;
 
-    >div {
+    .chat-messages-container {
         overflow-y: auto;
         overflow-x: hidden;
-        padding-top: 35px;
-        padding-bottom: 60px;
+        padding-top: 32px;
+        padding-bottom: 16px;
+        scroll-behavior: smooth;
+    }
+
+    >div:not(.chat-messages-container) {
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-top: 32px;
+        padding-bottom: 16px;
     }
 }
 

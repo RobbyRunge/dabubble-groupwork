@@ -26,7 +26,7 @@
 
     &:hover {
         color: #535AF1;
-        
+
         span {
             font-size: 18.5px;
         }
@@ -92,13 +92,26 @@ mat-panel-description {
 
     &:hover {
 
-        mat-icon,
         .mat-expansion-panel-header-description {
             color: #535AF1;
         }
 
-        .account-img {
+        .channel-img {
             filter: brightness(0) saturate(100%) invert(34%) sepia(68%) saturate(3151%) hue-rotate(225deg) brightness(96%) contrast(91%);
+        }
+    }
+
+    .add-channel {
+        display: flex;
+        border-radius: 50%;
+        padding: 4px;
+
+        &:hover {
+            background-color: #ECEEFE;
+
+            mat-icon {
+                filter: brightness(0) saturate(100%) invert(34%) sepia(68%) saturate(3151%) hue-rotate(225deg) brightness(96%) contrast(91%);
+            }
         }
     }
 }

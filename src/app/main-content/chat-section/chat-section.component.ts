@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, Injector, OnInit, runInInjectionContext, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Injector, OnInit, runInInjectionContext, SimpleChanges, ViewChild, AfterViewInit, AfterViewChecked, OnDestroy } from '@angular/core';
 import { WorkSpaceSectionComponent } from "../work-space-section/work-space-section.component";
 import { ThreadSectionComponent } from "../thread-section/thread-section.component";
 import { HeaderComponent } from "../header/header.component";
@@ -37,7 +37,8 @@ import { HeaderChatSectionComponent } from "../header-chat-section/header-chat-s
   styleUrl: './chat-section.component.scss'
 })
 
-export class ChatSectionComponent implements OnInit {
+export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
+  @ViewChild('chatContainer') chatContainer!: ElementRef;
 
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
@@ -54,8 +55,9 @@ export class ChatSectionComponent implements OnInit {
   selectedUser: any;
   showEmojis: boolean = false;
   showEmojisMessage: boolean = false;
-  @ViewChild('chatContainer') chatContainer!: ElementRef;
   readonly emojiDialog = inject(MatDialog);
+  private shouldScrollToBottom = false;
+  private lastMessageCount = 0;
 
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
@@ -63,7 +65,7 @@ export class ChatSectionComponent implements OnInit {
       this.showCurrentUserData();
       this.showUserChannel();
       this.getUserData();
-      this.scrollToBottom();
+      this.shouldScrollToBottom = true;
     });
     /*     this.listenToMessages(this.route);
         console.log('test' + this.chatId);
@@ -75,6 +77,22 @@ export class ChatSectionComponent implements OnInit {
     // }, 2000);
   }
 
+  ngAfterViewInit(): void {
+    this.scrollToBottom();
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.chatService.messages.length > this.lastMessageCount) {
+      this.lastMessageCount = this.chatService.messages.length;
+      this.shouldScrollToBottom = true;
+    }
+    
+    if (this.shouldScrollToBottom) {
+      this.scrollToBottom();
+      this.shouldScrollToBottom = false;
+    }
+  }
+
   /*   ngOnChanges(changes: SimpleChanges) {
       if (changes[this.messageText]) {
         this.onInputChange();
@@ -84,7 +102,9 @@ export class ChatSectionComponent implements OnInit {
 
   getUserData() {
     this.channelService.isChecked$.subscribe(user => {
-      this.selectedUser = user
+      this.selectedUser = user;
+      this.shouldScrollToBottom = true;
+      this.lastMessageCount = 0;
     })
   }
 
@@ -110,9 +130,16 @@ export class ChatSectionComponent implements OnInit {
     );
   }
 
-  scrollToBottom(): void {
-    if (this.chatContainer) {
-      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+  private scrollToBottom(): void {
+    try {
+      if (this.chatContainer?.nativeElement) {
+        setTimeout(() => {
+          const element = this.chatContainer.nativeElement;
+          element.scrollTop = element.scrollHeight;
+        }, 200);
+      }
+    } catch (err) {
+      console.error('Error scrolling to bottom:', err);
     }
   }
 
