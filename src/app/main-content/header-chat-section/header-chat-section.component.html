@@ -16,7 +16,7 @@
                 <img class="avatar" [src]="'avatar/' + user">
             }
             <span class="number-of-users">{{ (dataUser.userAvatarInChannel$ | async)?.length }}</span>
-            <span #btnIcon class="add-user-to-channel" (click)="addUserToChannel(btnIcon)"></span>
+            <span #btnIcon class="add-user-to-channel standard-transition" (click)="addUserToChannel(btnIcon)"></span>
         </div>
     </div>
     <div *ngIf="dataUser.showChatPartnerHeader" class="header-user-content">
