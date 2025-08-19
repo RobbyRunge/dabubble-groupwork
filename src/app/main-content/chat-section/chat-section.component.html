@@ -28,9 +28,9 @@
                         </span>und dir statt</p>
                 </div>
                 <div *ngFor="let msg of chatService.messages; let i = index">
-                    <div *ngIf="chatService.isFirstMessageOfDay(msg.timestamp, i)">
+                    <div *ngIf="chatService.isFirstMessageOfDay(msg.timestamp, i, chatService.messages)">
                         <div class="date-divider">
-                            <span class="date-label">{{ chatService.getDateLabel(msg.timestamp, i) }}</span>
+                            <span class="date-label">{{ chatService.getDateLabel(msg.timestamp, i, chatService.messages) }}</span>
                         </div>
                     </div>
                     <div class="sent-message">

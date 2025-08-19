@@ -207,13 +207,16 @@ export class ChatService {
         });
     }
 
-    isFirstMessageOfDay(timestamp: any, index: number): boolean {
+    isFirstMessageOfDay(timestamp: any, index: number, messageArray?: any[]): boolean {
         const currentDate = this.getDateWithoutTime(timestamp?.toDate());
         if (!currentDate) return false;
 
         if (index === 0) return true;
 
-        const prevMsg = this.messages[index - 1];
+        const messages = messageArray || this.messages;
+        if (!messages || index >= messages.length || index < 1) return true;
+
+        const prevMsg = messages[index - 1];
         const prevDate = this.getDateWithoutTime(prevMsg?.timestamp?.toDate());
         if (!prevDate) return true;
 
@@ -225,11 +228,11 @@ export class ChatService {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate());
     }
 
-    getDateLabel(timestamp: any, messageIndex: number): string {
+    getDateLabel(timestamp: any, messageIndex: number, messageArray?: any[]): string {
         const date = timestamp?.toDate ? timestamp.toDate() : null;
         if (!date) return '';
 
-        if (!this.isFirstMessageOfDay(timestamp, messageIndex)) return '';
+        if (!this.isFirstMessageOfDay(timestamp, messageIndex, messageArray)) return '';
 
         const today = new Date();
         const yesterday = new Date();
