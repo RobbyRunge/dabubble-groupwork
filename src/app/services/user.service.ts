@@ -29,10 +29,14 @@ export class UserService {
   private pendingRegistrationId = new BehaviorSubject<string | null>(null);
   pendingRegistrationId$ = this.pendingRegistrationId.asObservable();
 
+  userNamesInChannel$ = new BehaviorSubject<string[]>([]);
+  userAvatarInChannel$ = new BehaviorSubject<string[]>([]);
+
   pendingUser: User | null = null;
 
   loginIsSucess = false;
   chatId: any = '';
+
 
   getUsersCollection(): CollectionReference {
     return runInInjectionContext(this.injector, () =>
@@ -308,8 +312,10 @@ export class UserService {
             getDoc(this.getSingleUserRef(id)));
           const dataName = nameSnap.data();
           if (dataName) {
-            this.userNamesInChannel.push(dataName['name']);
-            this.userAvatarInChannel.push(dataName['avatar']);
+            // this.userNamesInChannel.push(dataName['name']);
+            // this.userAvatarInChannel.push(dataName['avatar']);
+            this.userNamesInChannel$.next([...this.userNamesInChannel$.value, dataName['name']]);
+            this.userAvatarInChannel$.next([...this.userAvatarInChannel$.value, dataName['avatar']]);
           }
         }
       }
@@ -317,9 +323,9 @@ export class UserService {
   }
 
   clearUserInChannelsArray() {
-    this.userNamesInChannel = [];
-    this.userAvatarInChannel = [];
     this.usersIdsInChannel = [];
+    this.userNamesInChannel$.next([]);
+    this.userAvatarInChannel$.next([]);
   }
 
 }

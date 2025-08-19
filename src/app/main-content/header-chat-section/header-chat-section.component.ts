@@ -29,10 +29,6 @@ export class HeaderChatSectionComponent implements OnInit {
   onlineUser: string = 'Online.png';
   offlineUser: string = 'offline.png';
 
-  dataUserAvatar = {
-    userAvatarInChannel$: this.channelService.isChecked$
-  };
-
   ngOnInit(): void {
     this.getUserData();
   }

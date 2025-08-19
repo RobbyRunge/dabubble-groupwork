@@ -12,10 +12,10 @@
             </button>
         </div>
         <div class="user-avatar-channels">
-            @for (user of dataUserAvatar.userAvatarInChannel$ | async; track $index) {
+            @for (user of dataUser.userAvatarInChannel$ | async; track $index) {
                 <img class="avatar" [src]="'avatar/' + user">
             }
-            <span class="number-of-users">{{ dataUser.userAvatarInChannel.length }}</span>
+            <span class="number-of-users">{{ (dataUser.userAvatarInChannel$ | async)?.length }}</span>
             <span #btnIcon class="add-user-to-channel" (click)="addUserToChannel(btnIcon)"></span>
         </div>
     </div>
