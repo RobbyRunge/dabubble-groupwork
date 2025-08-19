@@ -104,6 +104,14 @@
 .message-hover-options {
     right: 45px;
     top: -25px;
+
+    >div {
+        color: black;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
 }
 
 .message-reaction-container {
