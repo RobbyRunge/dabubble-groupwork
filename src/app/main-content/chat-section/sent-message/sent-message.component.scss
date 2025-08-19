@@ -202,6 +202,10 @@ input {
     max-width: 750px;
     flex-wrap: wrap;
 
+    &:hover {
+        cursor: pointer;
+    }
+
     >div {
         @include dFlex();
         gap: 5px;
