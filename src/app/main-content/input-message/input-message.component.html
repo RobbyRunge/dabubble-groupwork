@@ -32,13 +32,13 @@
                 (keyup.enter)="sendMessage()">
             <div class="icons-container standard-transition">
                 <div>
-                    <div (click)="showAllEmojis($event)">
-                        <img [src]="imgSrcReaction" (mouseover)="imgSrcReaction = 'add_reaction_color.png'"
+                    <div class="standard-transition" (click)="showAllEmojis($event)" (mouseover)="imgSrcReaction = 'add_reaction_color.png'"
                             (mouseout)="imgSrcReaction = 'add reaction.png'">
+                        <img [src]="imgSrcReaction">
                     </div>
-                    <div (click)="userMention($event)">
-                        <img [src]="imgSrcMention" (mouseover)="imgSrcMention = 'mention_color.png'"
+                    <div class="standard-transition" (click)="userMention($event)" (mouseover)="imgSrcMention = 'mention_color.png'"
                             (mouseout)="imgSrcMention = 'mention.png'">
+                        <img [src]="imgSrcMention">
                     </div>
                 </div>
                 <div class="send-icon-container" (click)="sendMessage()">

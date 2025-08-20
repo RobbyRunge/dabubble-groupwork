@@ -46,6 +46,7 @@ mat-label {
 
         >div {
             @include dFlex();
+            border-radius: 20px;
 
             >div {
                 @include dFlex();
