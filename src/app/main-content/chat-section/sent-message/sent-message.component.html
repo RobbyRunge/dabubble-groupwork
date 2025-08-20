@@ -88,9 +88,9 @@
             (mouseout)="imgComment='img/comment.png'">
             <img [src]="imgComment">
         </div>
-        <div (click)="showAllEmojisMessage(index, $event)">
-            <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
+        <div (click)="showAllEmojisMessage(index, $event)" (mouseover)="imgReaction='img/add_reaction_color.png'"
                 (mouseout)="imgReaction='img/add_reaction.png'">
+            <img [src]="imgReaction">
         </div>
         <div *ngFor="let emoji of chatService.mostUsedEmojis let i = index">
             <div *ngIf="chatService.mostUsedEmojis.length > 0">
