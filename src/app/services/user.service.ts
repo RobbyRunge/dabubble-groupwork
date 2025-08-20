@@ -249,7 +249,6 @@ export class UserService {
       console.error('No user ID for registration');
       return false;
     }
-
     try {
       await runInInjectionContext(this.injector, () =>
         updateDoc(doc(this.firestore, 'users', userId), {
@@ -257,9 +256,7 @@ export class UserService {
           registrationComplete: true
         })
       );
-
       this.pendingRegistrationId.next(null);
-
       console.log('User registration completed successfully');
       return true;
     } catch (error) {
@@ -274,7 +271,6 @@ export class UserService {
       await runInInjectionContext(this.injector, () =>
         deleteDoc(doc(this.firestore, 'users', userId))
       );
-
       this.pendingRegistrationId.next(null);
       this.pendingUser = null;
     }
@@ -303,7 +299,7 @@ export class UserService {
     this.clearUserInChannelsArray();
     const snapshot = await runInInjectionContext(this.injector, () =>
       getDoc(this.channelService.getSingleChannelRef(docId)));
-    if (snapshot.exists()) {
+      if (snapshot.exists()) {
       const data = snapshot.data();
       if (data && Array.isArray(data['userId'])) {
         this.usersIdsInChannel.push(...data['userId']);
@@ -312,8 +308,6 @@ export class UserService {
             getDoc(this.getSingleUserRef(id)));
           const dataName = nameSnap.data();
           if (dataName) {
-            // this.userNamesInChannel.push(dataName['name']);
-            // this.userAvatarInChannel.push(dataName['avatar']);
             this.userNamesInChannel$.next([...this.userNamesInChannel$.value, dataName['name']]);
             this.userAvatarInChannel$.next([...this.userAvatarInChannel$.value, dataName['avatar']]);
           }

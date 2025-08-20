@@ -70,6 +70,11 @@ body {
     border-top-left-radius: 0;
 }
 
+.select-user-dialog-container .mat-mdc-dialog-surface {
+   background-color: #FFFFFF; 
+   padding: 40px;
+}
+
 .close-icon {
     padding: 5px;
     cursor: pointer;
@@ -406,4 +411,17 @@ mat-option {
 ::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(.mat-mdc-option-multiple)
 .mdc-list-item__primary-text {
     color: #000000 !important;
+}
+
+.add-user-header {
+    @include dFlex(space-between, center);
+    flex-direction: row;
+    font-size: 24px;
+    font-weight: 700;
+    >p {
+        cursor: default;
+    }
+    mat-icon {
+        cursor: pointer;
+    }
 }

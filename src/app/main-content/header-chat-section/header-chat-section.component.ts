@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { ChatService } from '../../services/chat.service';
-import { AddUserToChannelComponent } from './add-user-to-channel/add-user-to-channel.component';
+import { AddUserToChannelComponent } from '../channel-section/add-user-to-channel/add-user-to-channel.component';
 
 @Component({
   selector: 'app-header-chat-section',

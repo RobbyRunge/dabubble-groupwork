@@ -78,7 +78,6 @@ export class WorkSpaceSectionComponent implements OnInit {
     this.getUserData();
     this.unsubChannels = this.channelService.channelsLoaded$.subscribe(loaded => {
       if (loaded) {
-        console.log('channel route', this.channelService.userSubcollectionChannelId);
         this.loadSaveRoute();
       }
     });
@@ -118,7 +117,6 @@ export class WorkSpaceSectionComponent implements OnInit {
   }
 
   openChannel(channelName: string, channelId: string, channelDescription: string) {
-    console.log('channels by user', this.channelService.showChannelByUser);
     this.dataUser.showChannel = true;
     this.dataUser.showChatPartnerHeader = false;
     this.router.navigate(['mainpage', this.channelService.currentUserId, 'channel', channelId,]);

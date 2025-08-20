@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
 export class AddUserToChannelComponent {
 
   channelService = inject(ChannelService);
-  unserService = inject(UserService);
+  userService = inject(UserService);
   dialog = inject(MatDialogRef<AddUserToChannelComponent>);
   filterUserSubscription!: Subscription;
   router = inject(Router);
@@ -34,11 +34,9 @@ export class AddUserToChannelComponent {
   isEnabled = false;
 
   addUserToChannel() {
-  //  this.selectedUsers = [];
-    console.log('das ist die Channel Id', this.currentChannelId);
-    console.log('das ist die User Id', this.selectedUser.userId);
     if (this.currentChannelId && this.selectedUser?.userId) {
       this.channelService.addUserToCh(this.currentChannelId, this.selectedUser.userId);
+      this.userService.getUserIdsFromChannel(this.currentChannelId);
     }
     this.dialog.close();
   }
@@ -49,7 +47,7 @@ export class AddUserToChannelComponent {
     this.isEnabled = false;
     return;
   }
-  this.unserService.getAllUsers().subscribe(users => {
+  this.userService.getAllUsers().subscribe(users => {
     this.isEnabled = true;
     this.filteredUsers = users
       .filter(user =>
@@ -73,22 +71,8 @@ selectUser(user: any) {
   const parts = this.router.url.split('/').filter(Boolean);
   const channelId = parts[3];
   this.currentChannelId = channelId;
-  this.unserService.getUserIdsFromChannel(this.currentChannelId);
-  // if (!this.selectedUsers.some(u => u.userId === this.selectedUser.userId)) {
-  // this.selectedUsers.push(this.selectedUser);
-  // }
 }
 
-// showSearchInput() {
-//   this.showSelectedUser = false;
-// }
-
-// removeSelectedUser(i: number) {
-//   this.selectedUsers = this.selectedUsers.filter((_, index) => index !== i);
-//   // this.searchInput = '';
-//   console.log('Div anzeigen',this.showSelectedUser);
-//   this.showSelectedUser = true;
-// }
 
 removeSelectedUser() {
   this.selectedUser = null;

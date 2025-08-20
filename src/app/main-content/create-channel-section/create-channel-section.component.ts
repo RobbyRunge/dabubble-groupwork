@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogActions, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogActions, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Allchannels } from '../../../models/allchannels.class';
 import { ChannelService } from '../../services/channel.service';
+import { SelectUserToAddComponent } from '../channel-section/select-user-to-add/select-user-to-add.component';
 
 @Component({
   selector: 'app-create-channel-section',
@@ -23,9 +24,17 @@ export class CreateChannelSectionComponent {
   channelService = inject(ChannelService);
   newChannel = new Allchannels();
   currentUserId = this.channelService.currentUserId;
+  selectUserDialog = inject(MatDialog);
 
   async createChannel() {
-    await this.channelService.addNewChannel(this.newChannel.toJSON(),this.currentUserId,this.currentUserId); 
+    // await this.channelService.addNewChannel(this.newChannel.toJSON(),this.currentUserId,this.currentUserId); 
+    this.selectUserDialog.open(SelectUserToAddComponent, {
+      width: '710px',
+      height: '354px',
+      maxWidth: '710px',
+      maxHeight: '354px',
+      panelClass: 'select-user-dialog-container',
+    });
     this.dialogRef.close();
   }
 }
