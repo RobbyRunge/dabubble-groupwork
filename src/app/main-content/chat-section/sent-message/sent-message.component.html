@@ -40,11 +40,14 @@
                     <div *ngFor="let reaction of message.reactions; let i = index" class="reaction-wrapper"
                         (mouseenter)="showReactionUserName(i)" (mouseleave)="hideReactionUserName()">
 
-                        <div class="reaction-container" *ngIf="i < 20 || showAllMessageReactions">
+                        <div class="reaction-container" *ngIf="i < 20 && mode === 'chat' || showAllMessageReactions">
                             <span>{{ reaction.emoji }}</span>
                             <span>{{reaction.emojiCounter}}</span>
                         </div>
-
+                        <div class="reaction-container" *ngIf="i < 7 && mode === 'thread' || showAllMessageThreadReactions">
+                            <span>{{ reaction.emoji }}</span>
+                            <span>{{reaction.emojiCounter}}</span>
+                        </div>
                         <div class="reaction-user-container" *ngIf="hoveredReactionIndex === i">
                             <div>
                                 <p class="emoji">{{reaction.emoji}}</p>
@@ -55,9 +58,15 @@
                             <div><span>hat reagiert</span></div>
                         </div>
                     </div>
-                    <div class="reaction-container" *ngIf="message?.reactions?.length > 20">
-                        <p *ngIf="!showAllMessageReactions" (click)="showAllReactions()">{{message.reactions.length - 20}} weitere</p>
+                    <div class="reaction-container" *ngIf="message?.reactions?.length > 20 && mode === 'chat'">
+                        <p *ngIf="!showAllMessageReactions" (click)="showAllReactions()">{{message.reactions.length -
+                            20}} weitere</p>
                         <p *ngIf="showAllMessageReactions" (click)="hideAllReactions()">Weniger anzeigen</p>
+                    </div>
+                    <div class="reaction-container" *ngIf="message?.reactions?.length > 7 && mode === 'thread'">
+                        <p *ngIf="!showAllMessageThreadReactions" (click)="showAllReactions()">{{message.reactions.length -
+                            7}} weitere</p>
+                        <p *ngIf="showAllMessageThreadReactions" (click)="hideAllReactions()">Weniger anzeigen</p>
                     </div>
                     <div (click)="showAllEmojisMessage(index, $event)">
                         <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
@@ -75,8 +84,9 @@
             </div>
         </div>
     </div>
-    <div class="message-hover-options" >
-        <div [matMenuTriggerFor]="menu" (mouseover)="imgSrcMore = 'img/more_vert_color.png'" (mouseout)="imgSrcMore = 'img/more_vert.png'">
+    <div class="message-hover-options">
+        <div [matMenuTriggerFor]="menu" (mouseover)="imgSrcMore = 'img/more_vert_color.png'"
+            (mouseout)="imgSrcMore = 'img/more_vert.png'">
             <img [src]="imgSrcMore">
             <div>
                 <mat-menu #menu="matMenu">
@@ -84,8 +94,8 @@
                 </mat-menu>
             </div>
         </div>
-        <div *ngIf="mode !== 'thread'" (click)="chatService.answerOnMessage(message.id, message.text)" (mouseover)="imgComment='img/comment_color.png'"
-            (mouseout)="imgComment='img/comment.png'">
+        <div *ngIf="mode !== 'thread'" (click)="chatService.answerOnMessage(message.id, message.text)"
+            (mouseover)="imgComment='img/comment_color.png'" (mouseout)="imgComment='img/comment.png'">
             <img [src]="imgComment">
         </div>
         <div (click)="showAllEmojisMessage(index, $event)">
