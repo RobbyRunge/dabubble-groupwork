@@ -1,0 +1,29 @@
+@use '@angular/material' as mat;
+@use './../../../../styles.scss' as *;
+
+.selector {
+    @include dFlex(space-between, unset);
+    flex-direction: column;
+}
+
+.mat-mdc-radio-button ~ .mat-mdc-radio-button {
+  color: black;
+}
+
+
+
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+:root {
+  @include mat.radio-overrides((
+    disabled-selected-icon-color: #444DF2,  
+    disabled-unselected-icon-color: white,
+  ));
+}
+
+.selector {
+  // alle Radio-Buttons NUR in dieser Komponente überschreiben
+  @include mat.radio-overrides((
+    disabled-selected-icon-color: #444DF2,
+    disabled-unselected-icon-color: white,
+  ));
+}
