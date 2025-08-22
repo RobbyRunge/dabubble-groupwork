@@ -3,14 +3,14 @@
         <span class="standard-transition">
             {{ isDrawerOpen ? 'Workspace-Menü schließen' : 'Workspace-Menü öffnen' }}
         </span>
-        <img class="open-close-img standard-transition" [src]="isDrawerOpen ? 'Hide-menu.png' : 'Show-menu.png'" alt="" />
+        <img class="open-close-img standard-transition" [src]="isDrawerOpen ? 'work-space/hide-menu.png' : 'work-space/show-menu.png'" alt="" />
     </button>
 
     <mat-drawer-container class="example-container" autosize>
         <mat-drawer #drawer class="example-sidenav" mode="side" opened>
             <div class="channel-container">
                 <div class="channel-logo-name">
-                    <img src="devspace-logo.png" alt="">
+                    <img src="work-space/devspace-logo.png" alt="">
                     <h3>Devspace</h3>
                 </div>
                 <div class="div-edit-square standard-transition">
@@ -59,7 +59,7 @@
                     <mat-expansion-panel #myPaneltwo="matExpansionPanel">
                         <mat-expansion-panel-header>
                             <mat-panel-description class="standard-transition">
-                                <img class="account-img standard-transition" src="account_circle.png" alt="">
+                                <img class="account-img standard-transition" src="work-space/account-circle.png" alt="">
                                 Direktnachrichten
                             </mat-panel-description>
                         </mat-expansion-panel-header>
