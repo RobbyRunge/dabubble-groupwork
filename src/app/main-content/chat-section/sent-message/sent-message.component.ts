@@ -36,10 +36,10 @@ export class SentMessageComponent implements OnInit {
   showEmojis: boolean = false;
   messageReacton: string = '';
   constructor() { this.getUserData(); }
-  imgSrcMore: any = 'img/more_vert.png';
-  imgComment: any = 'img/comment.png';
-  imgReaction: any = 'img/add_reaction.png';
-  imgReactionInput: any = 'add reaction.png';
+  imgSrcMore: any = 'chat-section/more-vert.png';
+  imgComment: any = 'chat-section/comment.png';
+  imgReaction: any = 'chat-section/add-reaction.png';
+  imgReactionInput: any = 'chat-section/add-reaction.png';
   selectedUser: any;
   editMessageActive: boolean = false;
   editMessageText: string = '';

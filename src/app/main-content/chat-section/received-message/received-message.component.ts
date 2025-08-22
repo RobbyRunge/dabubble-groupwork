@@ -19,9 +19,9 @@ export class ReceivedMessageComponent implements OnInit {
   public chatService = inject(ChatService);
   hoveredReactionIndex: number | null = null;
   constructor() { this.getUserData(); }
-  imgSrcMore: any = 'img/more_vert.png';
-  imgComment: any = 'img/comment.png';
-  imgReaction: any = 'img/add_reaction.png';
+  imgSrcMore: any = 'chat-section/more-vert.png';
+  imgComment: any = 'chat-section/comment.png';
+  imgReaction: any = 'chat-section/add-reaction.png';
   selectedUser: any;
   showEmojisMessage: boolean = false;
   shiftContainer: boolean = false;

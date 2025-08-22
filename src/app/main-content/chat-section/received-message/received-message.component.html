@@ -50,12 +50,12 @@
         </div>
     </div>
     <div class="message-hover-options">
-        <div *ngIf="mode !== 'thread'" (click)="chatService.answerOnMessage(message.id, message.text)" (mouseover)="imgComment='img/comment_color.png'"
-                (mouseout)="imgComment='img/comment.png'">
+        <div *ngIf="mode !== 'thread'" (click)="chatService.answerOnMessage(message.id, message.text)" (mouseover)="imgComment='chat-section/comment-color.png'"
+                (mouseout)="imgComment='chat-section/comment.png'">
             <img [src]="imgComment">
         </div>
-        <div (click)="showAllEmojisMessage(index, $event)" (mouseover)="imgReaction='img/add_reaction_color.png'"
-                (mouseout)="imgReaction='img/add_reaction.png'">
+        <div (click)="showAllEmojisMessage(index, $event)" (mouseover)="imgReaction='chat-section/add-reaction-color.png'"
+                (mouseout)="imgReaction='chat-section/add-reaction.png'">
             <img [src]="imgReaction">
         </div>
         <div *ngFor="let emoji of chatService.mostUsedEmojis let i = index">

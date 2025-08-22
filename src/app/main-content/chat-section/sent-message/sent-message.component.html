@@ -69,8 +69,8 @@
                         <p *ngIf="showAllMessageThreadReactions" (click)="hideAllReactions()">Weniger anzeigen</p>
                     </div>
                     <div (click)="showAllEmojisMessage(index, $event)">
-                        <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
-                            (mouseout)="imgReaction='img/add_reaction.png'">
+                        <img [src]="imgReaction" (mouseover)="imgReaction='chat-section/add-reaction-color.png'"
+                            (mouseout)="imgReaction='chat-section/add-reaction.png'">
                     </div>
                 </div>
                 <div class="answer-date-container" (click)="chatService.answerOnMessage(message.id, message.text)">
@@ -85,8 +85,8 @@
         </div>
     </div>
     <div class="message-hover-options">
-        <div [matMenuTriggerFor]="menu" (mouseover)="imgSrcMore = 'img/more_vert_color.png'"
-            (mouseout)="imgSrcMore = 'img/more_vert.png'">
+        <div [matMenuTriggerFor]="menu" (mouseover)="imgSrcMore = 'chat-section/more-vert-color.png'"
+            (mouseout)="imgSrcMore = 'chat-section/more-vert.png'">
             <img [src]="imgSrcMore">
             <div>
                 <mat-menu #menu="matMenu">
@@ -95,11 +95,11 @@
             </div>
         </div>
         <div *ngIf="mode !== 'thread'" (click)="chatService.answerOnMessage(message.id, message.text)"
-            (mouseover)="imgComment='img/comment_color.png'" (mouseout)="imgComment='img/comment.png'">
+            (mouseover)="imgComment='chat-section/comment-color.png'" (mouseout)="imgComment='chat-section/comment.png'">
             <img [src]="imgComment">
         </div>
-        <div (click)="showAllEmojisMessage(index, $event)" (mouseover)="imgReaction='img/add_reaction_color.png'"
-                (mouseout)="imgReaction='img/add_reaction.png'">
+        <div (click)="showAllEmojisMessage(index, $event)" (mouseover)="imgReaction='chat-section/add-reaction-color.png'"
+                (mouseout)="imgReaction='chat-section/add-reaction.png'">
             <img [src]="imgReaction">
         </div>
         <div *ngFor="let emoji of chatService.mostUsedEmojis let i = index">

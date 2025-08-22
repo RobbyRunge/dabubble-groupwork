@@ -343,7 +343,7 @@ mat-dialog-content {
 }
 
 .add-user-to-channel {
-    background-image: url('/img/person_add_black.png');
+    background-image: url('/chat-section/person-add-black.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -353,7 +353,7 @@ mat-dialog-content {
     cursor: pointer;
 
     &:hover {
-        background-image: url('/img/person_add_purple.png');
+        background-image: url('/chat-section/person-add-purple.png');
         transform: scale(1.05);
     }
 }
