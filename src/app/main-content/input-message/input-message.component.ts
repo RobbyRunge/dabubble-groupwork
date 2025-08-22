@@ -37,9 +37,9 @@ export class InputMessageComponent implements OnInit {
   dataUser = inject(UserService)
   users$: Observable<User[]> | undefined;
   messageText: string = '';
-  imgSrcReaction: any = 'add reaction.png';
-  imgSrcMention: any = 'mention.png'
-  imgSrcSend: any = 'send.png';
+  imgSrcReaction: any = 'send-email/add-reaction.png';
+  imgSrcMention: any = 'send-email/mention.png';
+  imgSrcSend: any = 'send-email/send.png';
   selectedEmoji: any;
   onlineUser: string = 'Online.png';
   offlineUser: string = 'offline.png';

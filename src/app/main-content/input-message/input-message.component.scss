@@ -61,11 +61,11 @@ mat-label {
                 }
 
                 &.reaction-icon:hover img {
-                    content: url('./../../assets/add_reaction_color.png');
+                    content: url('./../../assets/send-email/send-icon-color.png');
                 }
 
                 &.mention-icon:hover img {
-                    content: url('./../../assets/mention_color.png');
+                    content: url('./../../assets/send-email/mention-color.png');
                 }
             }
         }
@@ -81,7 +81,7 @@ mat-label {
                 border-radius: 20px;
 
                 img {
-                    content: url('./../../assets/Send icon.png');
+                    content: url('./../../assets/send-email/send-icon-color.png');
                 }
             }
         }
