@@ -235,6 +235,9 @@ input {
         font-size: 18px;
         color: black;
     }
+    >p{
+        color: black;
+    }
 
 }
 
@@ -275,11 +278,4 @@ input {
             font-size: 22px;
         }
     }
-}
-
-.emoji-mart-container {
-    position: absolute;
-    top: -380px;
-    right: 150px;
-    z-index: 100;
 }

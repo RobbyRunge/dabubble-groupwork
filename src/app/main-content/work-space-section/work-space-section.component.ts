@@ -52,7 +52,7 @@ export class WorkSpaceSectionComponent implements OnInit {
   route = inject(ActivatedRoute);
   unsubChannels!: Subscription;
   newChannel = new Allchannels();
-  isDrawerOpen = false;
+  isDrawerOpen = true;
   selectedUser: any;
   urlUserId!: string;
   users$: Observable<User[]> | undefined;

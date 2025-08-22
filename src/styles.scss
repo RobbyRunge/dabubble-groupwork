@@ -401,16 +401,29 @@ app-input-message {
 mat-option {
     font-size: 18px;
     font-weight: 400;
-    color: #000000; 
+    color: #000000;
 }
 
 .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(.mat-mdc-option-multiple) {
     background-color: #ECEEFE;
 }
 
-::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(.mat-mdc-option-multiple)
-.mdc-list-item__primary-text {
+::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(.mat-mdc-option-multiple) .mdc-list-item__primary-text {
     color: #000000 !important;
+}
+
+.emoji-mart-container {
+    position: absolute;
+    top: -50px;
+    right: 100px;
+    z-index: 100;
+}
+
+app-main-content {
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    background-color: #ECEEFE;
 }
 
 .add-user-header {

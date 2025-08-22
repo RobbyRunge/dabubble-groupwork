@@ -44,6 +44,7 @@ export class InputMessageComponent implements OnInit {
   onlineUser: string = 'Online.png';
   offlineUser: string = 'offline.png';
   @Input() mode: 'chat' | 'thread' = 'chat';
+  showEmojis: boolean = false;
 
 
   ngOnInit(): void {
@@ -119,8 +120,9 @@ export class InputMessageComponent implements OnInit {
 
   addEmoji($event: any) {
     this.chatService.saveEmoji($event.emoji.native);
-    this.chatService.showEmojis = false;
+    this.showEmojis = false;
     this.messageText += $event.emoji.native;
+    this.chatService.loadMostUsedEmojis();
   }
 
   showAllEmojisMessage(index: number) {
@@ -129,11 +131,16 @@ export class InputMessageComponent implements OnInit {
 
   showAllEmojis(event: MouseEvent) {
     event.stopPropagation();
-    this.chatService.showEmojis = true;
+    this.showEmojis = true;
   }
 
   hideUserMentionList() {
     this.showUserList = false;
     this.showChanelList = false;
+    this.showEmojis = false;
   }
+
+/*   hideAllEmojis() {
+    this.showEmojis = false;
+  } */
 }

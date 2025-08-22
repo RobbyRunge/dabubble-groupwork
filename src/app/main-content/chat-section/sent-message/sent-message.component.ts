@@ -47,6 +47,7 @@ export class SentMessageComponent implements OnInit {
   shiftContainer: boolean = false;
   hoveredReactionIndex: number | null = null;
   showAllMessageReactions: boolean = false;
+  showAllMessageThreadReactions: boolean = false;
 
 
   ngOnInit() {
@@ -125,9 +126,14 @@ export class SentMessageComponent implements OnInit {
   }
 
   showAllReactions() {
-    this.showAllMessageReactions = true;
+    if (this.mode === 'thread') {
+      this.showAllMessageThreadReactions = true;
+    } else {
+      this.showAllMessageReactions = true;
+    }
   }
   hideAllReactions() {
     this.showAllMessageReactions = false;
+    this.showAllMessageThreadReactions = false;
   }
 }
