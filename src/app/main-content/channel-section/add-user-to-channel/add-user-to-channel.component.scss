@@ -7,19 +7,6 @@
     flex-direction: column
 }
 
-// .add-user-header {
-//     @include dFlex(space-between, center);
-//     flex-direction: row;
-//     font-size: 24px;
-//     font-weight: 700;
-//     >p {
-//         cursor: default;
-//     }
-//     mat-icon {
-//         cursor: pointer;
-//     }
-// }
-
 .current-channel-name-headline {
     margin-top: 5px;
     font-size: 18px;
@@ -118,15 +105,4 @@
     height: 49px;
     padding: 12px 25px 12px 25px;
     border-radius: 25px;
-}
-
-.btn-disabled {
-    border: solid 1px #686868;
-    background: #686868;
-    cursor: not-allowed;
-}
-
-.btn-enabled {
-    border: solid 1px #444DF2;
-    background: #444DF2;
 }

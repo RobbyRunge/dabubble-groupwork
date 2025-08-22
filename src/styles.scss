@@ -68,11 +68,13 @@ body {
     background-color: #FFFFFF;
     padding: 25px;
     border-top-left-radius: 0;
+    box-shadow: 0px 6px 10px 0px #00000033;
 }
 
 .select-user-dialog-container .mat-mdc-dialog-surface {
    background-color: #FFFFFF; 
    padding: 40px;
+   box-shadow: 0px 6px 10px 0px #00000033;
 }
 
 .close-icon {
@@ -426,4 +428,26 @@ mat-option {
 
 .mat-mdc-radio-button .mat-internal-form-field {
     color: black !important;
+}
+
+.mat-mdc-radio-button .mdc-radio__native-control:enabled:not(:checked)+.mdc-radio__background>.mdc-radio__outer-circle {
+    border-color: #ADB0D9 !important;  
+}
+
+.mat-mdc-radio-button .mdc-radio__native-control:enabled:checked+.mdc-radio__background>.mdc-radio__outer-circle, .mat-mdc-radio-button .mdc-radio__native-control:enabled:checked+.mdc-radio__background>.mdc-radio__inner-circle {
+  border-color: #444DF2 !important;   
+}
+
+.mat-mdc-radio-button {
+    -webkit-tap-highlight-color: whitesmoke !important;
+}
+
+.btn-disabled {
+    border: solid 1px #686868;
+    background: #686868;
+}
+
+.btn-enabled {
+    border: solid 1px #444DF2;
+    background: #444DF2;
 }

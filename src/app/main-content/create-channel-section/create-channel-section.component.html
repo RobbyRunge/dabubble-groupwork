@@ -13,6 +13,8 @@
     <p>Beschreibung<span class="text-optional"> (optional)</span></p>
         <input class="input-channel-name" [(ngModel)]="newChannel.description" placeholder="Dein Text hier"/>
     <mat-dialog-actions>
-        <div class="create-channel-btn"><button (click)="createChannel()" mat-flat-button>Erstellen</button></div>
+        <div class="create-channel-btn">
+            <button (click)="createChannel()" mat-flat-button>Erstellen</button>
+        </div>
     </mat-dialog-actions>
 </div>

@@ -3,10 +3,19 @@
         <p>Leute hinzufügen</p>
             <mat-icon class="close-icon" (click)="dialog.close()">close</mat-icon>
     </div>
-    <div>
-        <mat-radio-group class="selector" aria-label="Select an option">
-            <mat-radio-button value="1">Alle Mitglieder von #Variable hinzufügen</mat-radio-button>
-            <mat-radio-button value="2">Bestimmte leute hinzufügen</mat-radio-button>
+    <div class="selector">
+        <mat-radio-group aria-label="Select an option"  [(ngModel)]="selectAllUsersInChannel" (change)="checkboxValue()">
+            <mat-radio-button [value]="true">Alle Mitglieder von #Variable hinzufügen</mat-radio-button>
+            <mat-radio-button [value]="false">Bestimmte leute hinzufügen</mat-radio-button>
         </mat-radio-group>
+    </div>
+    <div class="create-channel-btn-cont">
+        <button 
+            class="create-channel-btn"
+            [disabled]="!isEnabled" 
+            [ngClass]="{'btn-enabled': isEnabled, 'btn-disabled': !isEnabled}"
+            (click)="createChannel()">
+            Erstellen
+        </button>
     </div>
 </div>

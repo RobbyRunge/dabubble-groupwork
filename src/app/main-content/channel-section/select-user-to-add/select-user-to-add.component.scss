@@ -1,29 +1,37 @@
-@use '@angular/material' as mat;
 @use './../../../../styles.scss' as *;
 
+.select-user-main-cont {
+  @include dFlex(space-between, unset);
+  flex-direction: column;
+  height: 100%;
+}
+
 .selector {
-    @include dFlex(space-between, unset);
+  >mat-radio-group {
+     @include dFlex(space-between, unset);
     flex-direction: column;
+  }
 }
 
-.mat-mdc-radio-button ~ .mat-mdc-radio-button {
-  color: black;
+// .mat-mdc-unelevated-button {
+//     width: 125px;
+//     height: 49px;
+//     background-color: #444DF2 !important; 
+//     color: #FFFFFF !important;
+//     font-size: 18px;
+//     font-weight: 700;
+// }
+
+.create-channel-btn-cont {
+    @include dFlex(end, unset);
 }
 
-
-
-// Customize the entire app. Change :root to your selector if you want to scope the styles.
-:root {
-  @include mat.radio-overrides((
-    disabled-selected-icon-color: #444DF2,  
-    disabled-unselected-icon-color: white,
-  ));
-}
-
-.selector {
-  // alle Radio-Buttons NUR in dieser Komponente überschreiben
-  @include mat.radio-overrides((
-    disabled-selected-icon-color: #444DF2,
-    disabled-unselected-icon-color: white,
-  ));
+.create-channel-btn {
+   color: whitesmoke;
+    font-size: 18px;
+    font-weight: 700;
+    width: 125px;
+    height: 49px;
+    padding: 12px 25px 12px 25px;
+    border-radius: 25px;
 }

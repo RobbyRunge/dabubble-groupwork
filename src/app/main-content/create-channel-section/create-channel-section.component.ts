@@ -28,12 +28,14 @@ export class CreateChannelSectionComponent {
 
   async createChannel() {
     // await this.channelService.addNewChannel(this.newChannel.toJSON(),this.currentUserId,this.currentUserId); 
-    this.selectUserDialog.open(SelectUserToAddComponent, {
+    (document.activeElement as HTMLElement)?.blur();
+    const dialogRef = this.selectUserDialog.open(SelectUserToAddComponent, {
       width: '710px',
-      height: '354px',
+      height: '279px',
       maxWidth: '710px',
       maxHeight: '354px',
       panelClass: 'select-user-dialog-container',
+      autoFocus: true
     });
     this.dialogRef.close();
   }
