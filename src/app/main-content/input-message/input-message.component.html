@@ -1,6 +1,6 @@
 <div class="write-message-container" (click)="hideUserMentionList()">
     <form class="example-form">
-        <div class="mention-container" *ngIf="showUserList || showChanelList || chatService.showEmojis">
+        <div class="mention-container" *ngIf="showUserList || showChanelList || showEmojis">
             <div *ngIf="showUserList">
                 <div class="user-chanel-list-container" *ngFor="let user of users$ | async; let index = index"
                     (click)="selecetedUserMention(user, index)">
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div>
-                <div *ngIf="chatService.showEmojis">
+                <div *ngIf="showEmojis">
                     <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
                 </div>
             </div>

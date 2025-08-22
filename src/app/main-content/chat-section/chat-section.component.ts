@@ -159,4 +159,8 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
     }
   }
 
+  hideAllEmojis(){
+    this.showEmojis = false;
+  }
+
 }

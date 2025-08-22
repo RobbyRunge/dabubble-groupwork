@@ -39,7 +39,6 @@ export class ChatService {
     hasMessagesThread: boolean = false;
     parentMessagesRef: any;
     batch: any;
-    showEmojis: boolean = false;
 
     async getOrCreateChatId(userId1: string, userId2: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
@@ -373,10 +372,6 @@ export class ChatService {
             console.log('[EMOJI path]', messagesRef.path);
             await this.checkIfEmojiExists(selectedEmoji, messageSnap, messagesRef);
         });
-    }
-
-    hideAllEmojis() {
-        this.showEmojis = false;
     }
 
     getLastThreadReplyTime(messageId: string): Date | null {
