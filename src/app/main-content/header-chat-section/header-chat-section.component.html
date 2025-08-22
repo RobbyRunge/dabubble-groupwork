@@ -25,7 +25,7 @@
                     }">
             <div class="standard-transition" (click)="openUserDialog()">
                 <img class="user-logo" src="avatar/{{selectedUser.avatar}}" alt="">
-                <img class="status-img" [src]="selectedUser.active ? 'Online.png' : 'offline.png'" alt="">
+                <img class="status-img" [src]="selectedUser.active ? 'status/online.png' : 'status/offline.png'" alt="">
                 <h2>{{selectedUser.name}}</h2>
             </div>
         </div>

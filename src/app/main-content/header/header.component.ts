@@ -29,8 +29,8 @@ export class HeaderComponent {
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
 
-  onlineUser: string = 'online-header.png';
-  offlineUser: string = 'offline.png';
+  onlineUser: string = 'status/online.png';
+  offlineUser: string = 'status/offline.png';
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(EditLogoutUserComponent, {

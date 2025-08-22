@@ -41,8 +41,8 @@ export class InputMessageComponent implements OnInit {
   imgSrcMention: any = 'send-email/mention.png';
   imgSrcSend: any = 'send-email/send.png';
   selectedEmoji: any;
-  onlineUser: string = 'Online.png';
-  offlineUser: string = 'offline.png';
+  onlineUser: string = 'status/online.png';
+  offlineUser: string = 'status/offline.png';
   @Input() mode: 'chat' | 'thread' = 'chat';
   showEmojis: boolean = false;
 

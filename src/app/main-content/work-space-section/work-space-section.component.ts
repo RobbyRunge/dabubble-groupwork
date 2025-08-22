@@ -59,8 +59,8 @@ export class WorkSpaceSectionComponent implements OnInit {
   myPanel: any = true;
 
   channels$: Observable<Allchannels[]> | undefined;
-  onlineUser: string = 'Online.png';
-  offlineUser: string = 'offline.png';
+  onlineUser: string = 'status/online.png';
+  offlineUser: string = 'status/offline.png';
 
   accordion = viewChild.required(MatAccordion);
   activeChannelId!: string;
