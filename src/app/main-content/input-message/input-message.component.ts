@@ -121,6 +121,7 @@ export class InputMessageComponent implements OnInit {
     this.chatService.saveEmoji($event.emoji.native);
     this.chatService.showEmojis = false;
     this.messageText += $event.emoji.native;
+    this.chatService.loadMostUsedEmojis();
   }
 
   showAllEmojisMessage(index: number) {
