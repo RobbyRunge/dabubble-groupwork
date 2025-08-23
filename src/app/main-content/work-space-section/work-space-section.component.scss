@@ -285,7 +285,6 @@ button {
 
 .selected-user {
     cursor: pointer;
-    background-color: #ECEEFE;
     border-radius: 30px;
 }
 
@@ -341,5 +340,6 @@ button {
     >span,
     h2 {
         color: #535AF1;
+        font-weight: bold;
     }
 }

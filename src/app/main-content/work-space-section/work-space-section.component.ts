@@ -87,6 +87,9 @@ export class WorkSpaceSectionComponent implements OnInit {
     this.channelService.isChecked$.subscribe(user => {
       this.selectedUser = user;
       this.activeUserId = user?.userId || '';
+      if (user?.userId) {
+        this.activeChannelId = '';
+      }
     })
   }
 
@@ -120,6 +123,7 @@ export class WorkSpaceSectionComponent implements OnInit {
   openChannel(channelName: string, channelId: string, channelDescription: string) {
     this.dataUser.showChannel = true;
     this.dataUser.showChatPartnerHeader = false;
+    this.activeUserId = '';
     this.router.navigate(['mainpage', this.channelService.currentUserId, 'channel', channelId,]);
     this.newChannel.channelname = channelName;
     this.newChannel.channelId = channelId;
