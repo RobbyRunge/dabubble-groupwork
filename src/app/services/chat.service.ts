@@ -304,6 +304,7 @@ export class ChatService {
     async onUserClick(index: number, user: any) {
         this.selectedUser = user;
         this.channelService.setCheckdValue(user);
+        this.close();
         this.dataUser.chatId = await this.getOrCreateChatId(this.channelService.currentUserId, user.userId);
         this.router.navigate(['/mainpage', this.channelService.currentUserId, 'chats', this.dataUser.chatId]);
         this.listenToMessages();
