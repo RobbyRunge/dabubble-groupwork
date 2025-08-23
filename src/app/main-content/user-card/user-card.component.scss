@@ -40,6 +40,8 @@ p {
 
 .user-avatar {
     @include dFlex();
+    width: 100%;
+    height: 200px;
 
     >img {
         height: 200px;
