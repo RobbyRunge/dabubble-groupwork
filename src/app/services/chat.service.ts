@@ -108,14 +108,14 @@ export class ChatService {
         return existing.empty ? null : existing.docs[0].id;
     }
 
-    private createThreadDocument(batch: WriteBatch, chatId: string, parentMessageId: string, senderId: string, text: string, threadId?: string): string {
+    private createThreadDocument(batch: WriteBatch, chatId: string, parentMessageId: string, senderId: string, text: string, threadId?: string, parentTimestamp?: any): string {
         const threadsCol = collection(this.firestore, `chats/${chatId}/message/${parentMessageId}/threads`);
         const newThreadRef = threadId ? doc(threadsCol, threadId) : doc(threadsCol);
 
         batch.set(newThreadRef, {
             senderId,
             text,
-            timestamp: serverTimestamp()
+            timestamp: parentTimestamp || serverTimestamp()
         });
 
         return newThreadRef.id;
@@ -126,20 +126,24 @@ export class ChatService {
             const existingId = await this.getExistingThreadId(chatId, parentMessageId);
             if (existingId) return existingId;
 
+            const parentMsgRef = doc(this.firestore, `chats/${chatId}/message/${parentMessageId}`);
+            const parentMsgSnap = await getDoc(parentMsgRef);
+            const parentTimestamp = parentMsgSnap.exists() ? parentMsgSnap.data()?.['timestamp'] : null;
+
             const batch = writeBatch(this.firestore);
-            const newThreadId = this.createThreadDocument(batch, chatId, parentMessageId, senderId, text, threadId);
-            this.incrementThreadCount(batch, chatId, parentMessageId);
+            const newThreadId = this.createThreadDocument(batch, chatId, parentMessageId, senderId, text, threadId, parentTimestamp);
+            this.incrementThreadCount(batch, chatId, parentMessageId, parentTimestamp);
 
             await batch.commit();
             return newThreadId;
         });
     }
 
-    private incrementThreadCount(batch: WriteBatch, chatId: string, parentMessageId: string): void {
+    private incrementThreadCount(batch: WriteBatch, chatId: string, parentMessageId: string, lastReplyTimestamp?: any): void {
         const parentMsgRef = doc(this.firestore, `chats/${chatId}/message/${parentMessageId}`);
         batch.update(parentMsgRef, {
             threadCount: increment(1),
-            lastThreadReply: serverTimestamp()
+            lastThreadReply: lastReplyTimestamp || serverTimestamp()
         });
     }
 
@@ -158,11 +162,8 @@ export class ChatService {
     async sendThreadMessage(chatId: string, rootId: string, senderId: string, text: string) {
         return runInInjectionContext(this.injector, async () => {
             const batch = writeBatch(this.firestore);
-
-            this.createThreadDocument(batch, chatId, rootId, senderId, text);
-
-            this.incrementThreadCount(batch, chatId, rootId);
-
+            this.createThreadDocument(batch, chatId, rootId, senderId, text, undefined, undefined);
+            this.incrementThreadCount(batch, chatId, rootId, serverTimestamp());
             await batch.commit();
         });
     }
