@@ -98,6 +98,7 @@ export class WorkSpaceSectionComponent implements OnInit {
   readonly dialog = inject(MatDialog);
 
   createChannel() {
+    (document.activeElement as HTMLElement)?.blur();
     this.dialog.open(CreateChannelSectionComponent, {
       width: '872px',
       height: '539px',

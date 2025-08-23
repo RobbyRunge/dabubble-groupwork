@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { ChatSectionComponent } from "./chat-section/chat-section.component";
-import { UserService } from '../services/user.service';
 import { CommonModule } from '@angular/common';
 
 @Component({

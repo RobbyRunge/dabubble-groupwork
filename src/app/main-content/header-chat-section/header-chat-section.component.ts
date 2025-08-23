@@ -40,6 +40,7 @@ export class HeaderChatSectionComponent implements OnInit {
   }
 
   openDialog(button: HTMLElement) {
+     (document.activeElement as HTMLElement)?.blur();
     const rect = button.getBoundingClientRect();
     const width = window.innerWidth < 1080 ? '800px' : '872px';
     const height = window.innerHeight < 700 ? '500px' : '612px';
@@ -63,6 +64,7 @@ export class HeaderChatSectionComponent implements OnInit {
   }
 
   addUserToChannel(button: HTMLElement) {
+    (document.activeElement as HTMLElement)?.blur();
     const rect = button.getBoundingClientRect();
     const dialogWidth = 514;
     this.dialog.open(AddUserToChannelComponent, {

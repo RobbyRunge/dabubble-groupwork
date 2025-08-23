@@ -1,5 +1,5 @@
 <div class="select-user-main-cont">
-    <div class="add-user-header">
+    <div class="add-user-header marg-bot">
         <p>Leute hinzufügen</p>
             <mat-icon class="close-icon" (click)="dialog.close()">close</mat-icon>
     </div>
@@ -9,6 +9,25 @@
             <mat-radio-button [value]="false">Bestimmte leute hinzufügen</mat-radio-button>
         </mat-radio-group>
     </div>
+    @if (showUserSearchBar) {
+        <div class="search-user-cont">
+            <input 
+                type="text" 
+                class="search-user"
+                (input)="showfilterUsers()"
+                [(ngModel)]="searchInput"
+                [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" panelClass="user-name-avatar" [displayWith]="displayUser" (optionSelected)="selectUser($event.option.value)">
+            @for (user of filteredUsers; track $index) {
+                <mat-option [value]="user">
+                    <div class="user-avatar-name">
+                        <img class="user-avatar" src="avatar/{{user.avatar}}"> {{ user.name }}
+                    </div>
+                </mat-option>
+                }
+            </mat-autocomplete>
+        </div>
+    }
     <div class="create-channel-btn-cont">
         <button 
             class="create-channel-btn"

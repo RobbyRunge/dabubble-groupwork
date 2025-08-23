@@ -464,3 +464,25 @@ app-main-content {
     border: solid 1px #444DF2;
     background: #444DF2;
 }
+
+.user-name-avatar {
+    background-color: white;
+}
+
+.user-avatar-name {
+    @include dFlex(center, center);
+    flex-direction: row;
+    gap: 15px;
+    padding: 4px 20px 4px 20px;
+    &:hover {
+        cursor: pointer;
+        background: #ECEEFE;
+        border-radius: 35px;
+    }
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}

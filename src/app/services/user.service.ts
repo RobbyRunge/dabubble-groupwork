@@ -1,7 +1,7 @@
 import { Injectable, inject, Injector, runInInjectionContext, OnInit } from '@angular/core';
 import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData, getDoc, updateDoc, deleteDoc, docData } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -321,5 +321,15 @@ export class UserService {
     this.userNamesInChannel$.next([]);
     this.userAvatarInChannel$.next([]);
   }
+
+showFilteredUsers(input: string): Observable<User[]> {
+  return this.getAllUsers().pipe(
+    map((users: User[]) =>   
+      users.filter((user: User) =>
+        user.name.toLowerCase().startsWith(input.toLowerCase())
+      )
+    )
+  );
+}
 
 }

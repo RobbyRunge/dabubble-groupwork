@@ -99,6 +99,7 @@ export class ThreadSectionComponent implements AfterViewInit, OnInit, AfterViewC
   }
 
   openDialog(button: HTMLElement) {
+    (document.activeElement as HTMLElement)?.blur();
     const rect = button.getBoundingClientRect();
     const dialog = this.dialog.open(ChannelSectionComponent, {
       position: {

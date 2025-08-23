@@ -5,16 +5,13 @@ import { MatIcon } from '@angular/material/icon';
 import { ChannelService } from '../../../services/channel.service';
 import { MatButtonModule } from '@angular/material/button';
 import { UserService } from '../../../services/user.service';
-import { Subscription } from 'rxjs';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatListModule } from '@angular/material/list';
 import { CommonModule } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-user-to-channel',
-  imports: [MatIcon, FormsModule, MatButtonModule, MatListModule, MatDividerModule, CommonModule, MatAutocompleteModule],
+  imports: [MatIcon, FormsModule, MatButtonModule, CommonModule, MatAutocompleteModule],
   templateUrl: './add-user-to-channel.component.html',
   styleUrl: './add-user-to-channel.component.scss'
 })
@@ -23,12 +20,10 @@ export class AddUserToChannelComponent {
   channelService = inject(ChannelService);
   userService = inject(UserService);
   dialog = inject(MatDialogRef<AddUserToChannelComponent>);
-  filterUserSubscription!: Subscription;
   router = inject(Router);
   searchInput: string = '';
   selectedUser: any;
   filteredUsers: { name: string; avatar: string; userId: string }[] = [];
-  selectedUsers: { name: string; avatar: string; userId: string }[] = [];
   currentChannelId?: string;
   showSelectedUser = false;
   isEnabled = false;
@@ -47,17 +42,9 @@ export class AddUserToChannelComponent {
     this.isEnabled = false;
     return;
   }
-  this.userService.getAllUsers().subscribe(users => {
-    this.isEnabled = true;
-    this.filteredUsers = users
-      .filter(user =>
-        user.name.toLowerCase().startsWith(this.searchInput.toLowerCase())
-      )
-      .map(user => ({
-        name: user.name,
-        avatar: user.avatar,
-        userId: user.userId
-      }));
+  this.isEnabled = true;
+  this.userService.showFilteredUsers(this.searchInput).subscribe((users) => {
+    this.filteredUsers = users;
   });
 }
 
@@ -73,7 +60,6 @@ selectUser(user: any) {
   this.currentChannelId = channelId;
 }
 
-
 removeSelectedUser() {
   this.selectedUser = null;
   this.searchInput = '';
@@ -82,9 +68,4 @@ removeSelectedUser() {
   this.isEnabled = false;
 }
 
-ngOnDestroy() {
-  if (this.filterUserSubscription) {
-    this.filterUserSubscription.unsubscribe();
-    }
-  }
 }

@@ -31,11 +31,10 @@ export class CreateChannelSectionComponent {
     (document.activeElement as HTMLElement)?.blur();
     const dialogRef = this.selectUserDialog.open(SelectUserToAddComponent, {
       width: '710px',
-      height: '279px',
+      height: '',
       maxWidth: '710px',
       maxHeight: '354px',
       panelClass: 'select-user-dialog-container',
-      autoFocus: true
     });
     this.dialogRef.close();
   }

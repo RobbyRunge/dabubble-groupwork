@@ -6,21 +6,16 @@
   height: 100%;
 }
 
+.marg-bot {
+  margin-bottom: 10px
+}
+
 .selector {
   >mat-radio-group {
      @include dFlex(space-between, unset);
     flex-direction: column;
   }
 }
-
-// .mat-mdc-unelevated-button {
-//     width: 125px;
-//     height: 49px;
-//     background-color: #444DF2 !important; 
-//     color: #FFFFFF !important;
-//     font-size: 18px;
-//     font-weight: 700;
-// }
 
 .create-channel-btn-cont {
     @include dFlex(end, unset);
@@ -34,4 +29,29 @@
     height: 49px;
     padding: 12px 25px 12px 25px;
     border-radius: 25px;
+}
+
+.search-user-cont {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.search-user {
+  width: 630px;
+  height: 55px;
+  border: 1px solid #ADB0D9; 
+  border-radius: 30px;
+  padding: 15px 20px 15px 20px;
+  box-sizing: border-box;
+  font-size: 18px;
+  font-weight: 400;
+    &::placeholder {
+        font-size: 18px;
+        font-weight: 400;
+        color: #686868;  
+    }
+    &:focus {
+    border: 1px solid #ADB0D9; 
+    outline: none;                      
+  }
 }
