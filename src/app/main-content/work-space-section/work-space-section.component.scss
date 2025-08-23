@@ -202,10 +202,11 @@ button {
     flex-direction: row;
     gap: 10px;
     cursor: pointer;
+    border-radius: 20px;
 
     &:hover {
         background-color: #ECEEFE;
-        border-radius: 20px;
+        background-color: #ECEEFE;
 
         >span,
         h2 {

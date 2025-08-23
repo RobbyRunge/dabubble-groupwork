@@ -33,7 +33,7 @@
                             </mat-expansion-panel-header>
                             <div class="list-channels-container" *ngIf="channelService.showChannelByUser">
                                 @for (channel of channelService.showChannelByUser$ | async; track $index) {
-                                <div class="current-channel-name"
+                                <div class="current-channel-name standard-transition"
                                     (click)="openChannel(channel.channelname, channel.channelId, channel.description || '')"
                                     [ngClass]="{'active-channel': activeChannelId === channel.channelId}">
                                     <span>#</span>
