@@ -92,6 +92,7 @@
 
 .chat-info-container {
     padding-left: 20px;
+    transition: all 125ms ease-in-out;
 
     >p {
         margin: 0;
@@ -104,6 +105,10 @@
             color: #535AF1;
             font-weight: 400;
             cursor: pointer;
+
+            &:hover {
+                font-weight: bold;
+            }
         }
     }
 }
