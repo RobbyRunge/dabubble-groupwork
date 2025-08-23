@@ -162,6 +162,12 @@ mat-label {
             cursor: pointer;
             border-radius: 100px;
 
+            .channel-row {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
             &:hover {
                 background-color: #ECEEFE;
 

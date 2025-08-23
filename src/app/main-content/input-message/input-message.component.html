@@ -2,7 +2,7 @@
     <form class="example-form">
         <div class="mention-container" *ngIf="showUserList || showChanelList || showEmojis">
             <div *ngIf="showUserList">
-                <div class="user-chanel-list-container" *ngFor="let user of users$ | async; let index = index"
+                <div class="user-chanel-list-container standard-transition" *ngFor="let user of users$ | async; let index = index"
                     (click)="selecetedUserMention(user, index)">
                     <div>
                         <img class="user-logo" src="avatar/{{user.avatar}}" alt="">
@@ -12,9 +12,9 @@
                 </div>
             </div>
             <div *ngIf="showChanelList">
-                <div *ngFor="let channel of channelService.showChannelByUser$ | async; let index = index"
+                <div class="user-chanel-list-container standard-transition" *ngFor="let channel of channelService.showChannelByUser$ | async; let index = index"
                     (click)="selecetedChannelMention(channel, index)">
-                    <div class="user-chanel-list-container" *ngIf="showChanelList">
+                    <div class="channel-row" *ngIf="showChanelList">
                         <p>#</p>
                         <span>{{channel.channelname}}</span>
                     </div>
