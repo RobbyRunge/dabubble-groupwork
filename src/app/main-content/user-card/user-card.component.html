@@ -7,7 +7,7 @@
 </div>
 <div [ngClass]="userUpdateNameAktiv ? 'active' : 'notactive'">
     <div class="user-name-aktiv-container">
-        <div class="user-name">
+        <div class="user-name standard-transition">
             <h3>{{data.user.name}}</h3>
             <span *ngIf="isCurrentUser()" (click)="changeName()">Bearbeiten</span>
         </div>
