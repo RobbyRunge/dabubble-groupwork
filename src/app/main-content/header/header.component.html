@@ -3,12 +3,10 @@
         <img src="logo/logo-with-text.png" alt="">
     </div>
     <mat-form-field class="search-container">
-        <input matInput type="text" [(ngModel)]="value">
-        @if (value) {
-        <button matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+        <input matInput type="text" [(ngModel)]="value" placeholder="Search or start new chat">
+        <button matSuffix mat-icon-button aria-label="Clear">
             <mat-icon>search</mat-icon>
         </button>
-        }
     </mat-form-field>
     <div class="user-container" (click)="openDialog('0ms', '0ms')">
         <div>

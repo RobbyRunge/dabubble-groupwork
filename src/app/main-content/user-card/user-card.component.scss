@@ -71,6 +71,10 @@ p {
             font-size: 18px;
             font-family: 'Nunito';
             cursor: pointer;
+
+            &:hover {
+                font-weight: bold;
+            }
         }
     }
 
@@ -100,6 +104,10 @@ p {
     >a {
         padding-top: 15px;
         padding-left: 40px;
+
+        &:hover {
+            font-weight: bold;
+        }
     }
 }
 
