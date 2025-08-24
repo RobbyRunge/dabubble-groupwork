@@ -3,8 +3,9 @@
         <img src="logo/logo-with-text.png" alt="">
     </div>
     <mat-form-field class="search-container">
-        <input matInput type="text" placeholder="Devspace durchsuchen">
-        <button matSuffix mat-icon-button aria-label="Clear">
+        <input matInput type="text" placeholder="Devspace durchsuchen" [(ngModel)]="searchTerm"
+    (input)="onSearchInput()" (keyup.enter)="onSearch()">
+        <button matSuffix mat-icon-button aria-label="Clear" (click)="onSearch()">
             <mat-icon>search</mat-icon>
         </button>
     </mat-form-field>
@@ -18,6 +19,11 @@
         </div>
         <div>
             <mat-icon class="arrow-down">keyboard_arrow_down</mat-icon>
+        </div>
+    </div>
+    <div class="search-results" *ngIf="searchTerm && searchResults.length > 0">
+        <div *ngFor="let result of searchResults">
+            {{ result.text }}
         </div>
     </div>
 </header>

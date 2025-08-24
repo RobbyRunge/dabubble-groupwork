@@ -34,6 +34,23 @@ header {
     }
 }
 
+.search-results {
+    position: absolute;
+    top: 76%;
+    left: 29%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 100;
+    padding: 24px;
+    background-color: white;
+    border: 1px solid #ADB0D9;
+    border-radius: 0px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 370px;
+}
+
 .user-container {
     @include dFlex();
     gap: 20px;
