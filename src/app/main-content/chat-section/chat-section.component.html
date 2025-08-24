@@ -1,7 +1,7 @@
 <app-header class="header"></app-header>
 <div class="main-content" (click)="hideAllEmojis()">
     <app-work-space-section class="work-space-section"></app-work-space-section>
-    <div class="chat-section">
+    <div #chatContainer class="chat-section">
         <app-header-chat-section></app-header-chat-section>
         <div class="chat-container" *ngIf="channelService.isChecked$ | async as selectedUser" [ngClass]="{
                 'other-user' :selectedUser.userId !== channelService.currentUserId
@@ -37,17 +37,21 @@
                         </div>
                     </div>
                     <div class="sent-message">
-                        <app-sent-message [mode]="'chat'" *ngIf="msg.senderId === channelService.currentUserId"
-                            [message]="msg" [index]="i">
+                        <app-sent-message [mode]="'chat'"
+                            *ngIf="msg.senderId === channelService.currentUserId" [message]="msg" [index]="i" (emojiPickerRequested)="openEmojiPicker($event)">
                         </app-sent-message>
                     </div>
-                    <app-received-message [mode]="'chat'" *ngIf="msg.senderId !== channelService.currentUserId"
-                        [message]="msg">
+                    <app-received-message [mode]="'chat'"
+                        *ngIf="msg.senderId !== channelService.currentUserId" [message]="msg" (emojiPickerRequested)="openEmojiPicker($event)">
                     </app-received-message>
                 </div>
             </div>
             <app-input-message [mode]="'chat'">
             </app-input-message>
+        </div>
+        <div #emojiPickerTpl class="emoji-mart-container" *ngIf="picker.visible"
+            [ngStyle]="{ top: picker.top + 'px', left: picker.left + 'px' }" (click)="$event.stopPropagation()">
+            <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
         </div>
     </div>
     <app-thread-section class="thread-section"></app-thread-section>

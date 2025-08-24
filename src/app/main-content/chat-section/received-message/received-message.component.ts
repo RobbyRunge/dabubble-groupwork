@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { ChatService } from '../../../services/chat.service';
 import { ChannelService } from '../../../services/channel.service';
@@ -6,7 +6,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 
 @Component({
   selector: 'app-received-message',
-  imports: [NgIf, DatePipe, NgFor, PickerComponent],
+  imports: [NgIf, DatePipe, NgFor],
   templateUrl: './received-message.component.html',
   styleUrl: './received-message.component.scss'
 })
@@ -14,8 +14,13 @@ export class ReceivedMessageComponent implements OnInit {
 
   dataUser = inject(ChannelService);
   @Input() message: any;
-  @Input() index: number | undefined
+  @Input() index!: number;
   @Input() mode: string = '';
+  @Output() emojiPickerRequested = new EventEmitter<{
+    anchor: HTMLElement;
+    message: any;
+    index: number;
+  }>();
   public chatService = inject(ChatService);
   hoveredReactionIndex: number | null = null;
   constructor() { this.getUserData(); }
@@ -81,5 +86,14 @@ export class ReceivedMessageComponent implements OnInit {
 
   getLastThreadReplyTime(): Date | null {
     return this.chatService.getLastThreadReplyTime(this.message.id);
+  }
+
+  openEmojiPicker(btn: HTMLElement, e: MouseEvent) {
+    e.stopPropagation();
+    this.emojiPickerRequested.emit({
+      anchor: btn,
+      message: this.message,
+      index: this.index
+    }); // btn ist das Anker-Element
   }
 }

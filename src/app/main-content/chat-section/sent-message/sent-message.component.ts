@@ -31,8 +31,13 @@ export class SentMessageComponent implements OnInit {
   userService = inject(UserService);
   channelService = inject(ChannelService);
   @Input() message: any;
-  @Input() index: number | undefined
+  @Input() index!: number
   @Input() mode: string = '';
+  @Output() emojiPickerRequested = new EventEmitter<{
+    anchor: HTMLElement;
+    message: any;
+    index: number;
+  }>();
   showEmojis: boolean = false;
   messageReacton: string = '';
   constructor() { this.getUserData(); }
@@ -136,4 +141,12 @@ export class SentMessageComponent implements OnInit {
     this.showAllMessageReactions = false;
     this.showAllMessageThreadReactions = false;
   }
+  openEmojiPicker(btn: HTMLElement, e: MouseEvent) {
+  e.stopPropagation();
+  this.emojiPickerRequested.emit({
+    anchor: btn,
+    message: this.message,
+    index: this.index
+  }); // btn ist das Anker-Element
+}
 }

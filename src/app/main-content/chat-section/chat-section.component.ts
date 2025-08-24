@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, Injector, OnInit, runInInjectionContext, SimpleChanges, ViewChild, AfterViewInit, AfterViewChecked, OnDestroy } from '@angular/core';
+import { Component, ElementRef, inject, Injector, OnInit, runInInjectionContext, SimpleChanges, ViewChild, AfterViewInit, AfterViewChecked, OnDestroy, HostListener, ViewContainerRef } from '@angular/core';
 import { WorkSpaceSectionComponent } from "../work-space-section/work-space-section.component";
 import { ThreadSectionComponent } from "../thread-section/thread-section.component";
 import { HeaderComponent } from "../header/header.component";
@@ -8,7 +8,7 @@ import { docData, onSnapshot } from '@angular/fire/firestore';
 import { User } from '../../../models/user.class';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { ReceivedMessageComponent } from './received-message/received-message.component';
 import { SentMessageComponent } from "./sent-message/sent-message.component";
@@ -16,6 +16,7 @@ import { ChatService } from '../../services/chat.service';
 import { ChannelService } from '../../services/channel.service';
 import { InputMessageComponent } from '../input-message/input-message.component';
 import { HeaderChatSectionComponent } from "../header-chat-section/header-chat-section.component";
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 
 @Component({
   selector: 'app-chat-section',
@@ -32,13 +33,17 @@ import { HeaderChatSectionComponent } from "../header-chat-section/header-chat-s
     InputMessageComponent,
     HeaderChatSectionComponent,
     SentMessageComponent,
+    NgStyle,
+    PickerComponent
   ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
 })
 
 export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
-  @ViewChild('chatContainer') chatContainer!: ElementRef;
+  @ViewChild('chatContainer', { static: false })
+  chatContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('emojiPicker') emojiPicker?: ElementRef<HTMLDivElement>;
 
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
@@ -58,6 +63,11 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
   readonly emojiDialog = inject(MatDialog);
   private shouldScrollToBottom = false;
   private lastMessageCount = 0;
+  picker = { visible: false, top: 0, left: 0 };
+  private anchorEl?: HTMLElement;
+  currentMessage?: any;
+  currentMessageIndex?: number;
+
 
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
@@ -67,14 +77,6 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
       this.getUserData();
       this.shouldScrollToBottom = true;
     });
-    /*     this.listenToMessages(this.route);
-        console.log('test' + this.chatId);
-      }); */
-    // setTimeout(() => {
-    //   this.checkChannel();
-    //   console.log('Channels by user', this.dataUser.showChannelByUser);
-
-    // }, 2000);
   }
 
   ngAfterViewInit(): void {
@@ -86,19 +88,12 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
       this.lastMessageCount = this.chatService.messages.length;
       this.shouldScrollToBottom = true;
     }
-    
+
     if (this.shouldScrollToBottom) {
       this.scrollToBottom();
       this.shouldScrollToBottom = false;
     }
   }
-
-  /*   ngOnChanges(changes: SimpleChanges) {
-      if (changes[this.messageText]) {
-        this.onInputChange();
-        console.log('input feld is changed');
-      }
-    } */
 
   getUserData() {
     this.channelService.isChecked$.subscribe(user => {
@@ -114,7 +109,7 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
       this.channelService.currentUser = new User(data);
     }));
   }
-  
+
   showUserChannel() {
     const channelRef = this.channelService.getChannelRef();
     this.unsubscribeUserChannels = runInInjectionContext(this.injector, () =>
@@ -149,18 +144,57 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
     })
   }
 
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.routeSub?.unsubscribe();
     if (this.unsubscribeUserChannels) {
       this.unsubscribeUserChannels()
     }
     if (this.unsubscribeUserChannels) {
-      this.unsubscribeUserChannels(); 
+      this.unsubscribeUserChannels();
     }
   }
 
-  hideAllEmojis(){
+  hideAllEmojis() {
     this.showEmojis = false;
+    this.picker.visible = false;
+  }
+
+  openEmojiPicker(ev: { anchor: HTMLElement; message: any; index: number }) {
+    this.anchorEl = ev.anchor;
+    this.currentMessage = ev.message;
+    this.currentMessageIndex = ev.index;
+
+    this.repositionPicker();
+    this.picker.visible = true;
+  }
+
+  repositionPicker() {
+    if (!this.anchorEl) return;
+    const container = this.chatContainer.nativeElement;
+    const containerRect = container.getBoundingClientRect();
+    const anchorRect = this.anchorEl.getBoundingClientRect();
+    const pickerWidth = this.emojiPicker?.nativeElement.offsetWidth ?? 320;
+    const anchorTopInContainer = anchorRect.top - containerRect.top + container.scrollTop;
+    const anchorLeftInContainer = anchorRect.left - containerRect.left + container.scrollLeft;
+    const estimatedH = 347;
+
+    let top = anchorTopInContainer - estimatedH;
+    if (top < container.scrollTop) {
+      top = anchorTopInContainer + anchorRect.height;
+    }
+
+    let left = anchorLeftInContainer + anchorRect.width - pickerWidth + 50;
+
+    this.picker.top = top;
+    this.picker.left = left;
+  }
+
+  addEmoji(event: any) {
+    if (!this.currentMessage) return;
+    const emoji = event.emoji.native;
+    this.chatService.saveEmojisInDatabase(emoji, this.currentMessage.id,);
+
+    this.picker.visible = false;
   }
 
 }

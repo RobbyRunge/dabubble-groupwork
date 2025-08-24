@@ -98,7 +98,7 @@
             (mouseover)="imgComment='img/comment_color.png'" (mouseout)="imgComment='img/comment.png'">
             <img [src]="imgComment">
         </div>
-        <div (click)="showAllEmojisMessage(index, $event)">
+        <div #reactBtn (click)="openEmojiPicker(reactBtn, $event)">
             <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
                 (mouseout)="imgReaction='img/add_reaction.png'">
         </div>
@@ -108,7 +108,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="showEmojisMessage" class="emoji-mart-container">
+<!--     <div *ngIf="showEmojisMessage" class="emoji-mart-container">
         <emoji-mart (emojiClick)="addEmojiMessage($event)"></emoji-mart>
-    </div>
+    </div> -->
 </div>
