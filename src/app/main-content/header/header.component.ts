@@ -24,7 +24,6 @@ import { ChannelService } from '../../services/channel.service';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  value = '';
   readonly dialog = inject(MatDialog);
   dataUser = inject(UserService);
   channelService = inject(ChannelService);

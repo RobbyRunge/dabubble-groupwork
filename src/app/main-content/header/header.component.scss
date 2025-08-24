@@ -20,8 +20,18 @@ header {
 }
 
 .search-container {
-    height: 100%;
     @include dFlex(unset, center);
+    color: black;
+
+    ::ng-deep input {
+        color: black !important;
+        font-size: 20px;
+    }
+
+    ::ng-deep ::placeholder {
+        color: black !important;
+        font-size: 20px;
+    }
 }
 
 .user-container {
@@ -63,8 +73,10 @@ mat-form-field {
 }
 
 mat-icon {
+    display: flex;
     width: 35px;
     height: 35px;
+    color: black;
 }
 
 .avatar-container {
