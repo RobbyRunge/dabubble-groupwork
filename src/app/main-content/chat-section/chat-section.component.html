@@ -1,5 +1,5 @@
 <app-header class="header"></app-header>
-<div class="main-content" (click)="hideAllEmojis()">
+<div class="main-content" (click)="pickerService.hide('chat')" (scroll)="pickerService.reposition('chat')">
     <app-work-space-section class="work-space-section"></app-work-space-section>
     <div #chatContainer class="chat-section">
         <app-header-chat-section></app-header-chat-section>
@@ -37,20 +37,22 @@
                         </div>
                     </div>
                     <div class="sent-message">
-                        <app-sent-message [mode]="'chat'"
-                            *ngIf="msg.senderId === channelService.currentUserId" [message]="msg" [index]="i" (emojiPickerRequested)="openEmojiPicker($event)">
+                        <app-sent-message [mode]="'chat'" *ngIf="msg.senderId === channelService.currentUserId"
+                            [message]="msg" [index]="i" (emojiPickerRequested)="openEmojiPicker($event)">
                         </app-sent-message>
                     </div>
-                    <app-received-message [mode]="'chat'"
-                        *ngIf="msg.senderId !== channelService.currentUserId" [message]="msg" (emojiPickerRequested)="openEmojiPicker($event)">
+                    <app-received-message [mode]="'chat'" *ngIf="msg.senderId !== channelService.currentUserId"
+                        [message]="msg" (emojiPickerRequested)="openEmojiPicker($event)">
                     </app-received-message>
                 </div>
             </div>
             <app-input-message [mode]="'chat'">
             </app-input-message>
         </div>
-        <div #emojiPickerTpl class="emoji-mart-container" *ngIf="picker.visible"
-            [ngStyle]="{ top: picker.top + 'px', left: picker.left + 'px' }" (click)="$event.stopPropagation()">
+        <div #emojiPickerChat class="emoji-mart-container"
+            [style.display]="pickerService.state.chat.visible ? 'block' : 'none'"
+            [ngStyle]="{ top: pickerService.state.chat.top + 'px', left: pickerService.state.chat.left + 'px' }"
+            (click)="$event.stopPropagation()">
             <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
         </div>
     </div>

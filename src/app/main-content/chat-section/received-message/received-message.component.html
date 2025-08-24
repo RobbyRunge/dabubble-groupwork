@@ -1,4 +1,4 @@
-<div class="messages-container" (click)="hideAllEmojis()">
+<div class="messages-container" (click)="hideAllEmojis()" #reactBtn>
     <div class="users-message-container"
         *ngIf="message.senderId === selectedUser.userId && message.senderId !== dataUser.currentUserId">
         <div class="message-container">
@@ -54,7 +54,7 @@
                 (mouseout)="imgComment='img/comment.png'">
             <img [src]="imgComment">
         </div>
-        <div #reactBtn (click)="openEmojiPicker(reactBtn, $event)" (mouseover)="imgReaction='img/add_reaction_color.png'"
+        <div (click)="openEmojiPicker(reactBtn, $event)" (mouseover)="imgReaction='img/add_reaction_color.png'"
                 (mouseout)="imgReaction='img/add_reaction.png'">
             <img [src]="imgReaction">
         </div>

@@ -17,6 +17,7 @@ import { ChannelService } from '../../services/channel.service';
 import { InputMessageComponent } from '../input-message/input-message.component';
 import { HeaderChatSectionComponent } from "../header-chat-section/header-chat-section.component";
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { EmojiPickerService } from '../../services/emojiPicker.service';
 
 @Component({
   selector: 'app-chat-section',
@@ -41,9 +42,9 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 })
 
 export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
-  @ViewChild('chatContainer', { static: false })
-  chatContainer!: ElementRef<HTMLDivElement>;
-  @ViewChild('emojiPicker') emojiPicker?: ElementRef<HTMLDivElement>;
+  constructor(public pickerService: EmojiPickerService) { }
+  @ViewChild('chatContainer', { static: false }) chatContainer!: ElementRef<HTMLElement>;
+  @ViewChild('emojiPickerChat', { static: false }) emojiPickerChat!: ElementRef<HTMLElement>;
 
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
@@ -63,10 +64,9 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
   readonly emojiDialog = inject(MatDialog);
   private shouldScrollToBottom = false;
   private lastMessageCount = 0;
-  picker = { visible: false, top: 0, left: 0 };
-  private anchorEl?: HTMLElement;
   currentMessage?: any;
   currentMessageIndex?: number;
+  anchorSide: 'left' | 'right' = 'left';
 
 
   ngOnInit(): void {
@@ -81,6 +81,7 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
 
   ngAfterViewInit(): void {
     this.scrollToBottom();
+    setTimeout(() => this.pickerService.bindElements('chat', this.chatContainer, this.emojiPickerChat));
   }
 
   ngAfterViewChecked(): void {
@@ -154,47 +155,20 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
     }
   }
 
-  hideAllEmojis() {
-    this.showEmojis = false;
-    this.picker.visible = false;
+  openEmojiPicker(ev: { anchor: HTMLElement; side: 'left' | 'right'; message: any; index: number; context: 'chat' | 'thread' }) {
+    this.pickerService.open(ev);
   }
 
-  openEmojiPicker(ev: { anchor: HTMLElement; message: any; index: number }) {
-    this.anchorEl = ev.anchor;
-    this.currentMessage = ev.message;
-    this.currentMessageIndex = ev.index;
+  @HostListener('window:resize')
+  onResize() { this.pickerService.reposition('chat'); }
 
-    this.repositionPicker();
-    this.picker.visible = true;
+  onScroll() { this.pickerService.reposition('chat'); }
+
+  addEmoji(e: any) {
+    const s = this.pickerService.state.chat;
+    if (!s.currentMessage) return;
+    const emoji = e?.emoji?.native ?? e?.emoji ?? e;
+    this.chatService.saveEmojisInDatabase(emoji, s.currentMessage.id);
+    this.pickerService.hide('chat');
   }
-
-  repositionPicker() {
-    if (!this.anchorEl) return;
-    const container = this.chatContainer.nativeElement;
-    const containerRect = container.getBoundingClientRect();
-    const anchorRect = this.anchorEl.getBoundingClientRect();
-    const pickerWidth = this.emojiPicker?.nativeElement.offsetWidth ?? 320;
-    const anchorTopInContainer = anchorRect.top - containerRect.top + container.scrollTop;
-    const anchorLeftInContainer = anchorRect.left - containerRect.left + container.scrollLeft;
-    const estimatedH = 347;
-
-    let top = anchorTopInContainer - estimatedH;
-    if (top < container.scrollTop) {
-      top = anchorTopInContainer + anchorRect.height;
-    }
-
-    let left = anchorLeftInContainer + anchorRect.width - pickerWidth + 50;
-
-    this.picker.top = top;
-    this.picker.left = left;
-  }
-
-  addEmoji(event: any) {
-    if (!this.currentMessage) return;
-    const emoji = event.emoji.native;
-    this.chatService.saveEmojisInDatabase(emoji, this.currentMessage.id,);
-
-    this.picker.visible = false;
-  }
-
 }

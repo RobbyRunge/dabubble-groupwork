@@ -8,6 +8,8 @@ import { MatFormField, MatLabel } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { FormsModule } from '@angular/forms';
+import { EmojiPickerService } from '../../../services/emojiPicker.service';
+type PickerSide = 'left' | 'right';
 
 @Component({
   selector: 'app-sent-message',
@@ -37,10 +39,12 @@ export class SentMessageComponent implements OnInit {
     anchor: HTMLElement;
     message: any;
     index: number;
+    side: 'left' | 'right';
+    context: 'chat' | 'thread';
   }>();
   showEmojis: boolean = false;
   messageReacton: string = '';
-  constructor() { this.getUserData(); }
+  constructor(public emojiPickerService: EmojiPickerService) { this.getUserData(); }
   imgSrcMore: any = 'img/more_vert.png';
   imgComment: any = 'img/comment.png';
   imgReaction: any = 'img/add_reaction.png';
@@ -91,18 +95,6 @@ export class SentMessageComponent implements OnInit {
     event.stopPropagation();
     this.showEmojisMessage = true;
   }
-  addEmojiMessage($event: any) {
-    this.messageReacton += $event.emoji.native;
-    this.showEmojisMessage = false;
-    this.chatService.loadMostUsedEmojis();
-    if (this.mode === 'thread') {
-      this.chatService.saveEmojisThreadInDatabase($event.emoji.native, this.message.id, this.chatService.parentMessageId)
-    } else {
-      this.chatService.saveEmojisInDatabase($event.emoji.native, this.message.id);
-    }
-    this.shiftContainer = true;
-    setTimeout(() => (this.shiftContainer = false), 300);
-  }
 
   addMostUsedEmojiMessage(emoji: any, index: number) {
     this.messageReacton += emoji;
@@ -137,16 +129,20 @@ export class SentMessageComponent implements OnInit {
       this.showAllMessageReactions = true;
     }
   }
+  
   hideAllReactions() {
     this.showAllMessageReactions = false;
     this.showAllMessageThreadReactions = false;
   }
+
   openEmojiPicker(btn: HTMLElement, e: MouseEvent) {
-  e.stopPropagation();
-  this.emojiPickerRequested.emit({
-    anchor: btn,
-    message: this.message,
-    index: this.index
-  }); // btn ist das Anker-Element
-}
+    e.stopPropagation();
+    this.emojiPickerRequested.emit({
+      anchor: btn,
+      side: 'left',
+      message: this.message,
+      index: this.index,
+      context: this.mode === 'thread' ? 'thread' : 'chat',
+    });
+  }
 }
