@@ -21,6 +21,7 @@ export class SelectUserToAddComponent {
   selectAllUsersInChannel: boolean | null = null;
   isEnabled = false;
   showUserSearchBar = false;
+  showSelectedUser = false;
   filteredUsers: { name: string; avatar: string; userId: string }[] = [];
   selectedUsers: { name: string; avatar: string; userId: string }[] = [];
   searchInput: string = '';
@@ -28,7 +29,7 @@ export class SelectUserToAddComponent {
   currentChannelId?: string;
 
   createChannel() {
-    console.log('select number', this.selectAllUsersInChannel);
+    console.log('selected users', this.selectedUsers);
   }
 
   checkboxValue() {
@@ -50,7 +51,6 @@ export class SelectUserToAddComponent {
       this.isEnabled = false;
       return;
     }
-      this.isEnabled = true;
       this.userService.showFilteredUsers(this.searchInput).subscribe((users) => {
       this.filteredUsers = users;
     });
@@ -61,11 +61,24 @@ export class SelectUserToAddComponent {
   }
 
   selectUser(user: any) {
-  this.selectedUsers = user;
-  // this.showSelectedUser = true;
-  const parts = this.router.url.split('/').filter(Boolean);
-  const channelId = parts[3];
-  this.currentChannelId = channelId;
+    if (!this.selectedUsers.some(u => u.userId === user.userId)) {
+      this.selectedUsers.push(user);
+    }
+    this.showSelectedUser = true;
+    this.isEnabled = true;
+    console.log('selected user', this.showSelectedUser);
+    console.log('show searchbar', this.showUserSearchBar);
+      // this.showSelectedUser = true;
+    // const parts = this.router.url.split('/').filter(Boolean);
+    // const channelId = parts[3];
+    // this.currentChannelId = channelId;
   }
 
+  removeSelectedUser() {
+
+  }
+
+  showSearchBar() {
+    this.showSelectedUser = false;
+  }
 }

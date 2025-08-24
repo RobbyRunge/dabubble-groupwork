@@ -10,24 +10,36 @@
         </mat-radio-group>
     </div>
     @if (showUserSearchBar) {
-        <div class="search-user-cont">
-            <input 
-                type="text" 
-                class="search-user"
-                (input)="showfilterUsers()"
-                [(ngModel)]="searchInput"
-                [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete" panelClass="user-name-avatar" [displayWith]="displayUser" (optionSelected)="selectUser($event.option.value)">
-            @for (user of filteredUsers; track $index) {
-                <mat-option [value]="user">
-                    <div class="user-avatar-name">
-                        <img class="user-avatar" src="avatar/{{user.avatar}}"> {{ user.name }}
+        @if (!showSelectedUser) {
+            <div class="search-user-cont">
+                <input 
+                    type="text" 
+                    class="search-user"
+                    (input)="showfilterUsers()"
+                    [(ngModel)]="searchInput"
+                    [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete" panelClass="user-name-avatar" [displayWith]="displayUser" (optionSelected)="selectUser($event.option.value)">
+                @for (user of filteredUsers; track $index) {
+                    <mat-option [value]="user">
+                        <div class="user-avatar-name">
+                            <img class="user-avatar" src="avatar/{{user.avatar}}"> {{ user.name }}
+                        </div>
+                    </mat-option>
+                    }
+                    </mat-autocomplete>
+                </div>
+            }
+         @else if (showSelectedUser) {
+            <div class="selected-users-cont" (click)="showSearchBar()">
+                @for (user of selectedUsers; track $index) {
+                    <div class="selected-users">
+                        <img class="user-avatar" src="avatar/{{user.avatar}}">
+                        <span>{{ user.name }}</span>
+                        <mat-icon class="selceted-user-remove-icon" (click)="removeSelectedUser()">close</mat-icon>
                     </div>
-                </mat-option>
-                }
-            </mat-autocomplete>
-        </div>
-    }
+                    }
+            </div>
+        }}
     <div class="create-channel-btn-cont">
         <button 
             class="create-channel-btn"

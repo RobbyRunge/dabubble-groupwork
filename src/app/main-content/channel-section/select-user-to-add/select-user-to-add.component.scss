@@ -34,11 +34,14 @@
 .search-user-cont {
   margin-top: 10px;
   margin-bottom: 10px;
+  width: 630px;
+  height: 55px;
 }
 
 .search-user {
-  width: 630px;
-  height: 55px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
   border: 1px solid #ADB0D9; 
   border-radius: 30px;
   padding: 15px 20px 15px 20px;
@@ -53,5 +56,29 @@
     &:focus {
     border: 1px solid #ADB0D9; 
     outline: none;                      
+  }
+}
+
+.selected-users-cont {
+  width: 630px;
+  height: 55px;
+  border-radius: 30px;
+  border: solid 1px #ADB0D9;  
+  @include dFlex(flex-start, center);
+  flex-direction: row; 
+}  
+
+.selected-users {
+  height: 40px;
+  @include dFlex(unset, center);
+  flex-direction: row;
+  background: #ECEEFE;
+  border-radius: 35px;
+  gap: 10px;
+  box-sizing: border-box;
+  padding: 3px 20px 3px 20px;
+  >img {
+    width: 34px;
+    height: 34px;
   }
 }
