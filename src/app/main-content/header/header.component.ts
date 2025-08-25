@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditLogoutUserComponent } from './edit-logout-user/edit-logout-user.component';
 import { ChannelService } from '../../services/channel.service';
 import { SearchService, SearchResult } from '../../services/search.service';
+import { ChatService } from '../../services/chat.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 
@@ -31,6 +32,7 @@ export class HeaderComponent {
   private dataUser = inject(UserService);
   public channelService = inject(ChannelService);
   private searchService = inject(SearchService);
+  private chatService = inject(ChatService);
 
   onlineUser: string = 'status/online.png';
   offlineUser: string = 'status/offline.png';
@@ -157,25 +159,57 @@ export class HeaderComponent {
   }
 
   selectChannelResult(channel: SearchResult) {
-    // Ersetze das # und den Suchbegriff mit dem ausgewählten Channel
-    const beforeHash = this.searchTerm.substring(0, this.searchTerm.lastIndexOf('#'));
-    this.searchTerm = beforeHash + '#' + channel.name + ' ';
+    // Schließe das Dropdown
     this.showDropdown = false;
     this.dropdownType = 'normal';
+    this.searchTerm = '';
 
-    // Hier kannst du zusätzliche Logik für Channel-Auswahl hinzufügen
-    console.log('Channel ausgewählt:', channel);
+    // Öffne den ausgewählten Channel
+    this.openChannel(channel);
+  }
+
+  private openChannel(channel: SearchResult) {
+    try {
+      // Setze den aktuellen Channel im ChannelService
+      this.channelService.currentChannelId = channel.id;
+      this.channelService.currentChannelName = channel.name;
+      
+      // Navigiere zum Channel (du musst eventuell die Router-Navigation anpassen)
+      console.log('Channel geöffnet:', channel.name);
+      
+      // Hier kannst du die Navigation zum Channel implementieren
+      // Beispiel: this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channels', channel.id]);
+    } catch (error) {
+      console.error('Fehler beim Öffnen des Channels:', error);
+    }
   }
 
   selectUserResult(user: SearchResult) {
-    // Ersetze das @ und den Suchbegriff mit dem ausgewählten User
-    const beforeAt = this.searchTerm.substring(0, this.searchTerm.lastIndexOf('@'));
-    this.searchTerm = beforeAt + '@' + user.name + ' ';
+    // Schließe das Dropdown
     this.showDropdown = false;
     this.dropdownType = 'normal';
+    this.searchTerm = '';
+    
+    // Öffne den privaten Chat mit dem ausgewählten User
+    this.openPrivateChat(user);
+  }
 
-    // Hier kannst du zusätzliche Logik für User-Auswahl hinzufügen
-    console.log('User ausgewählt:', user);
+  private async openPrivateChat(user: SearchResult) {
+    try {
+      // Erstelle User-Objekt im erwarteten Format für den ChatService
+      const userForChat = {
+        userId: user.id,
+        name: user.name,
+        avatar: user.avatar,
+        active: user.description === 'Online'
+      };
+
+      // Verwende die ChatService onUserClick Methode
+      await this.chatService.onUserClick(0, userForChat);
+      
+    } catch (error) {
+      console.error('Fehler beim Öffnen des privaten Chats:', error);
+    }
   }
 
   selectMessageResult(result: any) {
