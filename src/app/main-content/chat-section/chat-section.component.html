@@ -6,7 +6,7 @@
         <div class="chat-container" *ngIf="channelService.isChecked$ | async as selectedUser" [ngClass]="{
                 'other-user' :selectedUser.userId !== channelService.currentUserId
                     }">
-            <div #chatContainer class="chat-messages-container">
+            <div #messagesContainer class="chat-messages-container">
                 <div *ngIf="!chatService.hasMessages" class="user-logo-name-container">
                     <div class="user-logo-big" *ngIf="selectedUser">
                         <img src="avatar/{{selectedUser.avatar}}" alt="">

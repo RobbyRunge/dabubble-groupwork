@@ -45,6 +45,7 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
   constructor(public pickerService: EmojiPickerService) { }
   @ViewChild('chatContainer', { static: false }) chatContainer!: ElementRef<HTMLElement>;
   @ViewChild('emojiPickerChat', { static: false }) emojiPickerChat!: ElementRef<HTMLElement>;
+  @ViewChild('messagesContainer', { static: false }) messagesContainer!: ElementRef<HTMLElement>;
 
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
@@ -128,9 +129,9 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
 
   private scrollToBottom(): void {
     try {
-      if (this.chatContainer?.nativeElement) {
+      if (this.messagesContainer?.nativeElement) {
         setTimeout(() => {
-          const element = this.chatContainer.nativeElement;
+          const element = this.messagesContainer.nativeElement;
           element.scrollTop = element.scrollHeight;
         }, 200);
       }
@@ -162,7 +163,7 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
   @HostListener('window:resize')
   onResize() { this.pickerService.reposition('chat'); }
 
-  onScroll() { this.pickerService.reposition('chat'); }
+  /* onScroll() { this.pickerService.reposition('chat'); } */
 
   addEmoji(e: any) {
     const s = this.pickerService.state.chat;
