@@ -13,10 +13,13 @@
                 'editMessageActive' :editMessageActive, }">
                     <h3 *ngIf="!editMessageActive">{{message.text}}</h3>
                     <mat-form-field *ngIf="editMessageActive" class="example-full-width">
-                        <input [(ngModel)]="editMessageText" matInput name="message" value="{{message.text}}">
+                        <textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="2" cdkAutosizeMaxRows="6"
+                            [(ngModel)]="editMessageText" name="message">
+                            {{ message.text }}
+                        </textarea>
                         <div class="icons-container">
                             <div>
-                                <div (click)="showAllEmojisMessage(index, $event)">
+                                <div (click)="showAllEmojis($event)">
                                     <img [src]="imgReactionInput"
                                         (mouseover)="imgReactionInput = 'add_reaction_color.png'"
                                         (mouseout)="imgReactionInput = 'add reaction.png'">
@@ -31,10 +34,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
-                        </div>
                     </mat-form-field>
+                </div>
+                <div *ngIf="showEmojis" class="emoji-mart-container-input">
+                    <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
                 </div>
                 <div class="message-reaction-container" [class.shifted]="shiftContainer">
                     <div *ngFor="let reaction of message.reactions; let i = index" class="reaction-wrapper"
@@ -44,7 +47,8 @@
                             <span>{{ reaction.emoji }}</span>
                             <span>{{reaction.emojiCounter}}</span>
                         </div>
-                        <div class="reaction-container" *ngIf="i < 7 && mode === 'thread' || showAllMessageThreadReactions">
+                        <div class="reaction-container"
+                            *ngIf="i < 7 && mode === 'thread' || showAllMessageThreadReactions">
                             <span>{{ reaction.emoji }}</span>
                             <span>{{reaction.emojiCounter}}</span>
                         </div>
@@ -64,11 +68,12 @@
                         <p *ngIf="showAllMessageReactions" (click)="hideAllReactions()">Weniger anzeigen</p>
                     </div>
                     <div class="reaction-container" *ngIf="message?.reactions?.length > 7 && mode === 'thread'">
-                        <p *ngIf="!showAllMessageThreadReactions" (click)="showAllReactions()">{{message.reactions.length -
+                        <p *ngIf="!showAllMessageThreadReactions" (click)="showAllReactions()">
+                            {{message.reactions.length -
                             7}} weitere</p>
                         <p *ngIf="showAllMessageThreadReactions" (click)="hideAllReactions()">Weniger anzeigen</p>
                     </div>
-                    <div (click)="showAllEmojisMessage(index, $event)">
+                    <div (click)="openEmojiPicker(reactBtn, $event)">
                         <img [src]="imgReaction" (mouseover)="imgReaction='img/add_reaction_color.png'"
                             (mouseout)="imgReaction='img/add_reaction.png'">
                     </div>
@@ -108,7 +113,4 @@
             </div>
         </div>
     </div>
-<!--     <div *ngIf="showEmojisMessage" class="emoji-mart-container">
-        <emoji-mart (emojiClick)="addEmojiMessage($event)"></emoji-mart>
-    </div> -->
 </div>

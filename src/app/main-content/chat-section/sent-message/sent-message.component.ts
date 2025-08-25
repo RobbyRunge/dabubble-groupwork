@@ -72,7 +72,8 @@ export class SentMessageComponent implements OnInit {
     this.editMessageText = this.message.text;
     this.editMessageActive = true;
   }
-  showAllEmojis() {
+  showAllEmojis(event: MouseEvent) {
+    event.stopPropagation();
     this.showEmojis = true;
   }
   discardEditMessage() {
@@ -115,7 +116,7 @@ export class SentMessageComponent implements OnInit {
 
 
   hideAllEmojis() {
-    this.showEmojisMessage = false;
+    this.showEmojis = false;
   }
 
   getLastThreadReplyTime(): Date | null {
@@ -129,7 +130,7 @@ export class SentMessageComponent implements OnInit {
       this.showAllMessageReactions = true;
     }
   }
-  
+
   hideAllReactions() {
     this.showAllMessageReactions = false;
     this.showAllMessageThreadReactions = false;
