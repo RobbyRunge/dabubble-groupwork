@@ -21,9 +21,78 @@
             <mat-icon class="arrow-down">keyboard_arrow_down</mat-icon>
         </div>
     </div>
-    <div class="search-results" *ngIf="searchTerm && searchResults.length > 0">
-        <div *ngFor="let result of searchResults">
-            {{ result.text }}
+    
+    <!-- Dropdown für Suchergebnisse -->
+    <div class="search-results" *ngIf="showDropdown">
+        
+        <!-- Channel-Dropdown -->
+        <div *ngIf="dropdownType === 'channel'" class="dropdown-section">
+            <div class="dropdown-header">
+                <mat-icon>tag</mat-icon>
+                <span>Channels</span>
+            </div>
+            <div *ngFor="let channel of channelResults" 
+                 class="search-result-item channel-item"
+                 (click)="selectChannelResult(channel)">
+                <div class="result-icon">
+                    <mat-icon>tag</mat-icon>
+                </div>
+                <div class="result-content">
+                    <div class="result-name">&#64; {{channel.name}}</div>
+                    <div class="result-description">{{channel.description}}</div>
+                </div>
+            </div>
+            <div *ngIf="channelResults.length === 0" class="no-results">
+                Keine Channels gefunden
+            </div>
         </div>
+
+        <!-- User-Dropdown -->
+        <div *ngIf="dropdownType === 'user'" class="dropdown-section">
+            <div class="dropdown-header">
+                <mat-icon>person</mat-icon>
+                <span>Personen</span>
+            </div>
+            <div *ngFor="let user of userResults" 
+                 class="search-result-item user-item"
+                 (click)="selectUserResult(user)">
+                <div class="result-icon">
+                    <img *ngIf="user.avatar" [src]="'/avatar/' + user.avatar" 
+                         class="user-avatar" alt="">
+                    <div *ngIf="!user.avatar" class="default-avatar">
+                        <mat-icon>person</mat-icon>
+                    </div>
+                </div>
+                <div class="result-content">
+                    <div class="result-name"> {{user.name}}</div>
+                    <div class="result-description">{{user.description}}</div>
+                </div>
+            </div>
+            <div *ngIf="userResults.length === 0" class="no-results">
+                Keine Personen gefunden
+            </div>
+        </div>
+
+        <!-- Normale Nachrichten-Suche -->
+        <div *ngIf="dropdownType === 'normal'" class="dropdown-section">
+            <div class="dropdown-header">
+                <mat-icon>search</mat-icon>
+                <span>Nachrichten</span>
+            </div>
+            <div *ngFor="let result of searchResults" 
+                 class="search-result-item message-item standard-transition"
+                 (click)="selectMessageResult(result)">
+                <div class="result-icon">
+                    <mat-icon>message</mat-icon>
+                </div>
+                <div class="result-content">
+                    <div class="result-name">{{ result.text }}</div>
+                </div>
+            </div>
+            <div *ngIf="searchResults.length === 0" class="no-results">
+                Keine Nachrichten gefunden
+            </div>
+        </div>
+
     </div>
 </header>
