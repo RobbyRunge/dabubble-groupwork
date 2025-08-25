@@ -47,9 +47,27 @@ header {
   border-radius: 0px 20px 20px 20px;
   display: flex;
   flex-direction: column;
-  max-height: 370px;
-  min-width: 400px;
+  max-height: 300px;
+  min-width: 300px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 10px 0;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ADB0D9;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #535AF1;
+  }
 }
 
 .dropdown-section {
