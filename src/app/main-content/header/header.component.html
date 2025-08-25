@@ -54,7 +54,7 @@
                 <span>Personen</span>
             </div>
             <div *ngFor="let user of userResults" 
-                 class="search-result-item user-item"
+                 class="search-result-item user-item standard-transition"
                  (click)="selectUserResult(user)">
                 <div class="result-icon">
                     <img *ngIf="user.avatar" [src]="'/avatar/' + user.avatar" 
@@ -65,7 +65,11 @@
                 </div>
                 <div class="result-content">
                     <div class="result-name"> {{user.name}}</div>
-                    <div class="result-description">{{user.description}}</div>
+                    <div class="result-description" 
+                         [class.online]="user.description === 'Online'"
+                         [class.offline]="user.description === 'Offline'">
+                        {{user.description}}
+                    </div>
                 </div>
             </div>
             <div *ngIf="userResults.length === 0" class="no-results">

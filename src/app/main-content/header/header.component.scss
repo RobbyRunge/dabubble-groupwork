@@ -85,19 +85,19 @@ header {
     cursor: pointer;
 
     &:hover {
-        background-color: #ADB0D9;
+        background-color: #ECEEFE;
     }
 
     &.channel-item:hover {
-        background-color: #ADB0D9;
+        background-color: #ECEEFE;
     }
 
     &.user-item:hover {
-        background-color: #ADB0D9;
+        background-color: #ECEEFE;
     }
 
     &.message-item:hover {
-        background-color: #ADB0D9;
+        background-color: #ECEEFE;
     }
 }
 
@@ -180,6 +180,15 @@ header {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    &.online {
+        color: #92C83E;
+        font-weight: 600;
+    }
+
+    &.offline {
+        color: #686868;
+    }
 }
 
 .no-results {

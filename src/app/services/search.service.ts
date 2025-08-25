@@ -71,6 +71,7 @@ export class SearchService {
         avatar: user.avatar,
         description: user.active ? 'Online' : 'Offline'
       }))
+      .slice(0, 10); // Limitiere auf 10 Ergebnisse
 
     return of(filteredUsers);
   }
