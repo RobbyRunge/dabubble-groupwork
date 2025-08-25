@@ -64,16 +64,16 @@ header {
   @include dFlex(flex-start, center);
   gap: 8px;
   padding: 8px 24px 12px 24px;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 600;
   color: #686868;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 
   mat-icon {
-    width: 18px;
-    height: 18px;
-    font-size: 18px;
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
     color: #686868;
   }
 }
