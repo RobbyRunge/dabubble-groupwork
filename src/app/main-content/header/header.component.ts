@@ -38,11 +38,11 @@ export class HeaderComponent {
   searchResults: any[] = [];
   channelResults: SearchResult[] = [];
   userResults: SearchResult[] = [];
-  
+
   // Dropdown-Steuerung
   showDropdown: boolean = false;
   dropdownType: 'normal' | 'channel' | 'user' = 'normal';
-  
+
   private searchSubject = new Subject<string>();
   private searchSub?: Subscription;
 
@@ -51,7 +51,7 @@ export class HeaderComponent {
     const target = event.target as HTMLElement;
     const searchContainer = target.closest('.search-container');
     const searchResults = target.closest('.search-results');
-    
+
     // Schließe Dropdown nur wenn außerhalb der Suchkomponente geklickt wird
     if (!searchContainer && !searchResults) {
       this.showDropdown = false;
@@ -77,7 +77,7 @@ export class HeaderComponent {
 
   onSearchInput() {
     const term = this.searchTerm;
-    
+
     // Prüfe auf spezielle Zeichen am Anfang oder nach einem Leerzeichen
     if (this.isChannelSearch(term)) {
       this.dropdownType = 'channel';
@@ -91,7 +91,7 @@ export class HeaderComponent {
       this.dropdownType = 'normal';
       this.searchSubject.next(term);
     }
-    
+
     this.showDropdown = term.length > 0;
   }
 
@@ -109,7 +109,7 @@ export class HeaderComponent {
     // Extrahiere das Keyword nach dem letzten Vorkommen des Prefix
     const lastIndex = term.lastIndexOf(prefix);
     if (lastIndex === -1) return '';
-    
+
     const afterPrefix = term.substring(lastIndex + 1);
     // Nimm alles bis zum nächsten Leerzeichen oder Ende
     const match = afterPrefix.match(/^([^\s]*)/);
@@ -162,7 +162,7 @@ export class HeaderComponent {
     this.searchTerm = beforeHash + '#' + channel.name + ' ';
     this.showDropdown = false;
     this.dropdownType = 'normal';
-    
+
     // Hier kannst du zusätzliche Logik für Channel-Auswahl hinzufügen
     console.log('Channel ausgewählt:', channel);
   }
@@ -173,7 +173,7 @@ export class HeaderComponent {
     this.searchTerm = beforeAt + '@' + user.name + ' ';
     this.showDropdown = false;
     this.dropdownType = 'normal';
-    
+
     // Hier kannst du zusätzliche Logik für User-Auswahl hinzufügen
     console.log('User ausgewählt:', user);
   }

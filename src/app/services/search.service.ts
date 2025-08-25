@@ -36,10 +36,10 @@ export class SearchService {
   searchChannels(keyword: string): Observable<SearchResult[]> {
     // Hole alle Channels, in denen der aktuelle User Mitglied ist
     const userChannels = this.channelService.showChannelByUser || [];
-    
+
     // Filtere Channels basierend auf dem Suchbegriff
     const filteredChannels = userChannels
-      .filter((channel: any) => 
+      .filter((channel: any) =>
         channel.name && channel.name.toLowerCase().includes(keyword.toLowerCase())
       )
       .map((channel: any) => ({
@@ -61,7 +61,7 @@ export class SearchService {
         const hasName = user.name && typeof user.name === 'string';
         const matchesKeyword = !keyword || (hasName && user.name.toLowerCase().includes(keyword.toLowerCase()));
         const notCurrentUser = user.userId !== this.channelService.currentUser?.userId;
-        
+
         return hasName && matchesKeyword && notCurrentUser;
       })
       .map((user: any) => ({
@@ -80,7 +80,7 @@ export class SearchService {
     try {
       const usersCollection = collection(this.firestore, 'users');
       const usersSnapshot = await getDocs(usersCollection);
-      
+
       this.allUsersCache = [];
       usersSnapshot.forEach((doc) => {
         const userData = doc.data();
