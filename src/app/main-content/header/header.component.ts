@@ -154,10 +154,6 @@ export class HeaderComponent {
     }
   }
 
-  onSearch() {
-    this.searchSubject.next(this.searchTerm);
-  }
-
   selectChannelResult(channel: SearchResult) {
     // Schließe das Dropdown
     this.showDropdown = false;

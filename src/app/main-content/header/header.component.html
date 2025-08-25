@@ -3,9 +3,8 @@
     <img src="logo/logo-with-text.png" alt="">
   </div>
   <mat-form-field class="search-container">
-    <input matInput type="text" placeholder="Devspace durchsuchen" [(ngModel)]="searchTerm" (input)="onSearchInput()"
-      (keyup.enter)="onSearch()">
-    <button matSuffix mat-icon-button aria-label="Clear" (click)="onSearch()">
+    <input matInput type="text" placeholder="Devspace durchsuchen" [(ngModel)]="searchTerm" (input)="onSearchInput()">
+    <button matSuffix mat-icon-button aria-label="Clear">
       <mat-icon>search</mat-icon>
     </button>
   </mat-form-field>
