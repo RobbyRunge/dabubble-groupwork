@@ -55,17 +55,18 @@
       <div *ngFor="let user of userResults" class="search-result-item user-item standard-transition"
         (click)="selectUserResult(user)">
         <div class="result-icon">
-          <img *ngIf="user.avatar" [src]="'/avatar/' + user.avatar" class="user-avatar" alt="">
-          <div *ngIf="!user.avatar" class="default-avatar">
-            <mat-icon>person</mat-icon>
+          <div class="avatar-wrapper">
+            <img *ngIf="user.avatar" [src]="'/avatar/' + user.avatar" class="user-avatar" alt="">
+            <div *ngIf="!user.avatar" class="default-avatar">
+              <mat-icon>person</mat-icon>
+            </div>
+            <img class="status-img-search" 
+                 [src]="user.description === 'Online' ? 'status/online.png' : 'status/offline.png'" 
+                 alt="">
           </div>
         </div>
         <div class="result-content">
-          <div class="result-name"> {{user.name}}</div>
-          <div class="result-description" [class.online]="user.description === 'Online'"
-            [class.offline]="user.description === 'Offline'">
-            {{user.description}}
-          </div>
+          <div class="result-name">{{user.name}}</div>
         </div>
       </div>
       <div *ngIf="userResults.length === 0" class="no-results">
