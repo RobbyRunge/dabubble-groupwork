@@ -1,46 +1,46 @@
 <div class="header-container">
-    <p>Profil</p>
-    <button class="close-icon" (click)="closeDialog()"><mat-icon >close_small</mat-icon></button>
+  <p>Profil</p>
+  <button class="close-icon" (click)="closeDialog()"><mat-icon>close_small</mat-icon></button>
 </div>
 <div class="user-avatar">
-    <img class="avatar-img" src="avatar/{{data.user.avatar}}" alt="">
+  <img class="avatar-img" src="avatar/{{data.user.avatar}}" alt="">
 </div>
 <div [ngClass]="userUpdateNameAktiv ? 'active' : 'notactive'">
-    <div class="user-name-aktiv-container">
-        <div class="user-name standard-transition">
-            <h3>{{data.user.name}}</h3>
-            <span *ngIf="isCurrentUser()" (click)="changeName()">Bearbeiten</span>
-        </div>
-        <div [ngClass]="data.user.active ? 'aktiv' : 'inaktiv'">
-            <mat-icon>fiber_manual_record</mat-icon>
-            <p>{{data.user.active ? 'Aktiv' : 'Abwesend'}}</p>
-        </div>
+  <div class="user-name-online-container">
+    <div class="user-name standard-transition">
+      <h3>{{data.user.name}}</h3>
+      <span *ngIf="isCurrentUser()" (click)="changeName()">Bearbeiten</span>
     </div>
-    <div class="email-container">
-        <div>
-            <mat-icon>mail_outline</mat-icon>
-            <p>E-Mail-Adresse</p>
-        </div>
-        <div class="email-adress">
-            <a href="mailto:{{data.user.email}}">{{data.user.email}}</a>
-        </div>
+    <div [ngClass]="data.user.active ? 'online' : 'offline'">
+      <mat-icon>fiber_manual_record</mat-icon>
+      <p>{{data.user.active ? 'Online' : 'Offline'}}</p>
     </div>
-    <div class="button-container" *ngIf="!isCurrentUser()">
-        <button (click)="closeDialog()"><mat-icon>chat_bubble_outline</mat-icon>Nachricht</button>
+  </div>
+  <div class="email-container">
+    <div>
+      <mat-icon>mail_outline</mat-icon>
+      <p>E-Mail-Adresse</p>
     </div>
+    <div class="email-adress">
+      <a href="mailto:{{data.user.email}}">{{data.user.email}}</a>
+    </div>
+  </div>
+  <div class="button-container" *ngIf="!isCurrentUser()">
+    <button (click)="closeDialog()"><mat-icon>chat_bubble_outline</mat-icon>Nachricht</button>
+  </div>
 </div>
 <div [ngClass]="!userUpdateNameAktiv ? 'active' : 'user-change-name-container'">
-    <div>
-        <div class="input-title">
-            <img src="work-space/account-circle.png" alt="">
-            <h2>Vollständiger Name</h2>
-        </div>
-        <div>
-            <input [(ngModel)]="newName" placeholder={{data.user.name}}>
-        </div>
-        <div class="buttons-container">
-            <button class="discard-btn" (click)="discardChangeName()">Abbrechen</button>
-            <button (click)="updateName()">Speichern</button>
-        </div>
+  <div>
+    <div class="input-title">
+      <img src="work-space/account-circle.png" alt="">
+      <h2>Vollständiger Name</h2>
     </div>
+    <div>
+      <input [(ngModel)]="newName" placeholder={{data.user.name}}>
+    </div>
+    <div class="buttons-container">
+      <button class="discard-btn" (click)="discardChangeName()">Abbrechen</button>
+      <button (click)="updateName()">Speichern</button>
+    </div>
+  </div>
 </div>
