@@ -68,14 +68,26 @@ export class SelectUserToAddComponent {
     this.isEnabled = true;
     console.log('selected user', this.showSelectedUser);
     console.log('show searchbar', this.showUserSearchBar);
+    console.log('array filtered users', this.filteredUsers);
       // this.showSelectedUser = true;
     // const parts = this.router.url.split('/').filter(Boolean);
     // const channelId = parts[3];
     // this.currentChannelId = channelId;
   }
 
-  removeSelectedUser() {
+   private updateBtnStatus() {
+    const count = this.selectedUsers.length;
+    this.showSelectedUser = count > 0;
+    this.isEnabled = count > 0;
+  }
 
+  removeSelectedUser(userId: string, event: MouseEvent) {
+    event.stopPropagation();
+    this.selectedUsers = this.selectedUsers.filter(u => u.userId !== userId);
+    this.searchInput = '';
+    this.filteredUsers = [];
+    this.updateBtnStatus();
+    console.log('benutzer in array', this.selectedUsers);
   }
 
   showSearchBar() {

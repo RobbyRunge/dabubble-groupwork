@@ -66,6 +66,7 @@
   border: solid 1px #ADB0D9;  
   @include dFlex(flex-start, center);
   flex-direction: row; 
+  margin-bottom: 12px;
 }  
 
 .selected-users {
