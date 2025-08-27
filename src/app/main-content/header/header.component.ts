@@ -169,10 +169,10 @@ export class HeaderComponent {
       // Setze den aktuellen Channel im ChannelService
       this.channelService.currentChannelId = channel.id;
       this.channelService.currentChannelName = channel.name;
-      
+
       // Navigiere zum Channel (du musst eventuell die Router-Navigation anpassen)
       console.log('Channel geöffnet:', channel.name);
-      
+
       // Hier kannst du die Navigation zum Channel implementieren
       // Beispiel: this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channels', channel.id]);
     } catch (error) {
@@ -185,7 +185,7 @@ export class HeaderComponent {
     this.showDropdown = false;
     this.dropdownType = 'normal';
     this.searchTerm = '';
-    
+
     // Öffne den privaten Chat mit dem ausgewählten User
     this.openPrivateChat(user);
   }
@@ -202,7 +202,7 @@ export class HeaderComponent {
 
       // Verwende die ChatService onUserClick Methode
       await this.chatService.onUserClick(0, userForChat);
-      
+
     } catch (error) {
       console.error('Fehler beim Öffnen des privaten Chats:', error);
     }

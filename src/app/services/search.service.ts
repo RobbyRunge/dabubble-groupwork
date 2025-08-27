@@ -34,17 +34,14 @@ export class SearchService {
   }
 
   searchChannels(keyword: string): Observable<SearchResult[]> {
-    // Hole alle Channels, in denen der aktuelle User Mitglied ist
     const userChannels = this.channelService.showChannelByUser || [];
-
-    // Filtere Channels basierend auf dem Suchbegriff
     const filteredChannels = userChannels
       .filter((channel: any) =>
-        channel.name && channel.name.toLowerCase().includes(keyword.toLowerCase())
+        channel.channelname && channel.channelname.toLowerCase().includes(keyword.toLowerCase())
       )
       .map((channel: any) => ({
         id: channel.channelId || channel.id,
-        name: channel.name,
+        name: channel.channelname,
         type: 'channel' as const,
         description: channel.description || `${channel.userId?.length || 0} Mitglieder`
       }))

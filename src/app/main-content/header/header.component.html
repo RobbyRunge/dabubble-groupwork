@@ -30,13 +30,13 @@
         <mat-icon>tag</mat-icon>
         <span>Channels</span>
       </div>
-      <div *ngFor="let channel of channelResults" class="search-result-item channel-item"
+      <div *ngFor="let channel of channelResults" class="search-result-item channel-item standard-transition"
         (click)="selectChannelResult(channel)">
         <div class="result-icon">
           <mat-icon>tag</mat-icon>
         </div>
         <div class="result-content">
-          <div class="result-name">&#64; {{channel.name}}</div>
+          <div class="result-name"><strong>{{channel.name}}</strong></div>
           <div class="result-description">{{channel.description}}</div>
         </div>
       </div>
