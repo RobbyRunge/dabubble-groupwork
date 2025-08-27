@@ -154,6 +154,7 @@ export class HeaderComponent {
     try {
       this.channelService.currentChannelId = channel.id;
       this.channelService.currentChannelName = channel.name;
+      this.dataUser.getUserIdsFromChannel(channel.id);
       this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channel', channel.id]);
     } catch (error) {
       console.error('Fehler beim Öffnen des Channels:', error);

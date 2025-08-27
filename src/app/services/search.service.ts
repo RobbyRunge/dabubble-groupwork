@@ -42,7 +42,7 @@ export class SearchService {
         id: channel.channelId || channel.id,
         name: channel.channelname,
         type: 'channel' as const,
-        description: channel.description || `${channel.userId?.length || 0} Mitglieder`
+        description: channel.description
       }))
       .slice(0, 10);
 
