@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { ChannelService } from './channel.service';
-import { collection, getDocs, Firestore } from '@angular/fire/firestore';
+import { collection, Firestore, onSnapshot, getDocs } from '@angular/fire/firestore';
 
 export interface SearchResult {
   id: string;
@@ -18,9 +18,10 @@ export class SearchService {
   private channelService = inject(ChannelService);
   private firestore = inject(Firestore);
   private allUsersCache: any[] = [];
+  private usersSubject = new BehaviorSubject<any[]>([]);
 
   constructor() {
-    this.loadAllUsers();
+    this.setupUsersListener();
   }
 
   searchMessages(keyword: string): Observable<any[]> {
@@ -69,12 +70,11 @@ export class SearchService {
     return of(filteredUsers);
   }
 
-  private async loadAllUsers() {
-    try {
-      const usersCollection = collection(this.firestore, 'users');
-      const usersSnapshot = await getDocs(usersCollection);
+  private setupUsersListener() {
+    const usersCollection = collection(this.firestore, 'users');
+    onSnapshot(usersCollection, (snapshot) => {
       this.allUsersCache = [];
-      usersSnapshot.forEach((doc) => {
+      snapshot.forEach((doc) => {
         const userData = doc.data();
         this.allUsersCache.push({
           userId: doc.id,
@@ -84,12 +84,38 @@ export class SearchService {
           active: userData['active'] || false
         });
       });
-    } catch (error) {
-      console.error('Error loading users from Firebase:', error);
-    }
+      this.usersSubject.next(this.allUsersCache);
+    }, (error) => {
+      console.error('Error setting up users listener:', error);
+    });
   }
 
   getAllUsersFromCache(): any[] {
     return this.allUsersCache;
+  }
+
+  getUsersObservable(): Observable<any[]> {
+    return this.usersSubject.asObservable();
+  }
+
+  async refreshUsersCache(): Promise<void> {
+    const usersCollection = collection(this.firestore, 'users');
+    try {
+      const snapshot = await getDocs(usersCollection);
+      this.allUsersCache = [];
+      snapshot.forEach((doc) => {
+        const userData = doc.data();
+        this.allUsersCache.push({
+          userId: doc.id,
+          name: userData['name'],
+          email: userData['email'],
+          avatar: userData['avatar'],
+          active: userData['active'] || false
+        });
+      });
+      this.usersSubject.next(this.allUsersCache);
+    } catch (error) {
+      console.error('Error refreshing users cache:', error);
+    }
   }
 }

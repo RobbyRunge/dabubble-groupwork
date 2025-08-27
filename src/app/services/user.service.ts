@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { BehaviorSubject } from 'rxjs';
 import { ChannelService } from './channel.service';
+import { SearchService } from './search.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,7 @@ export class UserService {
   private router = inject(Router);
   private auth = inject(Auth);
   private injector = inject(Injector);
+  private searchService = inject(SearchService);
 
   showChannel = true;
   showChatPartnerHeader = true;
@@ -184,6 +186,7 @@ export class UserService {
         })
       );
       const userStorageId = userStorageDocRef.id;
+      await this.searchService.refreshUsersCache();
       console.log('user id ist', userId);
       console.log('user storage id ist', userStorageId);
       return {
@@ -257,6 +260,7 @@ export class UserService {
         })
       );
       this.pendingRegistrationId.next(null);
+      await this.searchService.refreshUsersCache();
       console.log('User registration completed successfully');
       return true;
     } catch (error) {
