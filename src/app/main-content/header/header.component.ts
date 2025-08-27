@@ -41,7 +41,6 @@ export class HeaderComponent {
   channelResults: SearchResult[] = [];
   userResults: SearchResult[] = [];
 
-  // Dropdown-Steuerung
   showDropdown: boolean = false;
   dropdownType: 'normal' | 'channel' | 'user' = 'normal';
 
@@ -53,8 +52,6 @@ export class HeaderComponent {
     const target = event.target as HTMLElement;
     const searchContainer = target.closest('.search-container');
     const searchResults = target.closest('.search-results');
-
-    // Schließe Dropdown nur wenn außerhalb der Suchkomponente geklickt wird
     if (!searchContainer && !searchResults) {
       this.showDropdown = false;
     }
@@ -79,8 +76,6 @@ export class HeaderComponent {
 
   onSearchInput() {
     const term = this.searchTerm;
-
-    // Prüfe auf spezielle Zeichen am Anfang oder nach einem Leerzeichen
     if (this.isChannelSearch(term)) {
       this.dropdownType = 'channel';
       const channelKeyword = this.extractKeyword(term, '#');
@@ -93,27 +88,21 @@ export class HeaderComponent {
       this.dropdownType = 'normal';
       this.searchSubject.next(term);
     }
-
     this.showDropdown = term.length > 0;
   }
 
   private isChannelSearch(term: string): boolean {
-    // Prüfe ob # am Anfang steht oder nach einem Leerzeichen
     return /(?:^|[\s])#/.test(term);
   }
 
   private isUserSearch(term: string): boolean {
-    // Prüfe ob @ am Anfang steht oder nach einem Leerzeichen
     return /(?:^|[\s])@/.test(term);
   }
 
   private extractKeyword(term: string, prefix: string): string {
-    // Extrahiere das Keyword nach dem letzten Vorkommen des Prefix
     const lastIndex = term.lastIndexOf(prefix);
     if (lastIndex === -1) return '';
-
     const afterPrefix = term.substring(lastIndex + 1);
-    // Nimm alles bis zum nächsten Leerzeichen oder Ende
     const match = afterPrefix.match(/^([^\s]*)/);
     return match ? match[1] : '';
   }
@@ -134,7 +123,6 @@ export class HeaderComponent {
         this.channelResults = results;
       });
     } else {
-      // Zeige alle verfügbaren Channels
       this.searchService.searchChannels('').subscribe(results => {
         this.channelResults = results;
       });
@@ -147,7 +135,6 @@ export class HeaderComponent {
         this.userResults = results;
       });
     } else {
-      // Zeige alle verfügbaren User
       this.searchService.searchUsers('').subscribe(results => {
         this.userResults = results;
       });
@@ -155,62 +142,45 @@ export class HeaderComponent {
   }
 
   selectChannelResult(channel: SearchResult) {
-    // Schließe das Dropdown
     this.showDropdown = false;
     this.dropdownType = 'normal';
     this.searchTerm = '';
-
-    // Öffne den ausgewählten Channel
     this.openChannel(channel);
   }
 
   private openChannel(channel: SearchResult) {
     try {
-      // Setze den aktuellen Channel im ChannelService
       this.channelService.currentChannelId = channel.id;
       this.channelService.currentChannelName = channel.name;
-
-      // Navigiere zum Channel (du musst eventuell die Router-Navigation anpassen)
-      console.log('Channel geöffnet:', channel.name);
-
       // Hier kannst du die Navigation zum Channel implementieren
-      // Beispiel: this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channels', channel.id]);
+      // this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channels', channel.id]);
     } catch (error) {
       console.error('Fehler beim Öffnen des Channels:', error);
     }
   }
 
   selectUserResult(user: SearchResult) {
-    // Schließe das Dropdown
     this.showDropdown = false;
     this.dropdownType = 'normal';
     this.searchTerm = '';
-
-    // Öffne den privaten Chat mit dem ausgewählten User
     this.openPrivateChat(user);
   }
 
   private async openPrivateChat(user: SearchResult) {
     try {
-      // Erstelle User-Objekt im erwarteten Format für den ChatService
       const userForChat = {
         userId: user.id,
         name: user.name,
         avatar: user.avatar,
         active: user.description === 'Online'
       };
-
-      // Verwende die ChatService onUserClick Methode
       await this.chatService.onUserClick(0, userForChat);
-
     } catch (error) {
       console.error('Fehler beim Öffnen des privaten Chats:', error);
     }
   }
 
   selectMessageResult(result: any) {
-    // Logik für normale Suchergebnisse
-    console.log('Nachricht ausgewählt:', result);
     this.showDropdown = false;
   }
 

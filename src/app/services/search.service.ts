@@ -20,12 +20,10 @@ export class SearchService {
   private allUsersCache: any[] = [];
 
   constructor() {
-    // Lade alle User beim Start des Services
     this.loadAllUsers();
   }
 
   searchMessages(keyword: string): Observable<any[]> {
-    // Beispiel-Daten, später durch echte Suche ersetzen
     const dummyResults = [
       { text: 'Nachricht mit ' + '"' + keyword + '"' },
       { text: 'Noch eine Nachricht mit ' + '"' + keyword + '"' }
@@ -45,20 +43,18 @@ export class SearchService {
         type: 'channel' as const,
         description: channel.description || `${channel.userId?.length || 0} Mitglieder`
       }))
-      .slice(0, 10); // Limitiere auf 10 Ergebnisse
+      .slice(0, 10);
 
     return of(filteredChannels);
   }
 
   searchUsers(keyword: string): Observable<SearchResult[]> {
     const allUsers = this.getAllUsersFromCache();
-    // Filtere User basierend auf dem Suchbegriff
     const filteredUsers = Array.from(allUsers)
       .filter((user: any) => {
         const hasName = user.name && typeof user.name === 'string';
         const matchesKeyword = !keyword || (hasName && user.name.toLowerCase().includes(keyword.toLowerCase()));
         const notCurrentUser = user.userId !== this.channelService.currentUser?.userId;
-
         return hasName && matchesKeyword && notCurrentUser;
       })
       .map((user: any) => ({
@@ -68,7 +64,7 @@ export class SearchService {
         avatar: user.avatar,
         description: user.active ? 'Online' : 'Offline'
       }))
-      .slice(0, 10); // Limitiere auf 10 Ergebnisse
+      .slice(0, 10);
 
     return of(filteredUsers);
   }
@@ -77,7 +73,6 @@ export class SearchService {
     try {
       const usersCollection = collection(this.firestore, 'users');
       const usersSnapshot = await getDocs(usersCollection);
-
       this.allUsersCache = [];
       usersSnapshot.forEach((doc) => {
         const userData = doc.data();
