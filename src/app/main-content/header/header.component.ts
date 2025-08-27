@@ -13,6 +13,7 @@ import { SearchService, SearchResult } from '../../services/search.service';
 import { ChatService } from '../../services/chat.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -33,6 +34,7 @@ export class HeaderComponent {
   public channelService = inject(ChannelService);
   private searchService = inject(SearchService);
   private chatService = inject(ChatService);
+  private router = inject(Router);
 
   onlineUser: string = 'status/online.png';
   offlineUser: string = 'status/offline.png';
@@ -152,8 +154,7 @@ export class HeaderComponent {
     try {
       this.channelService.currentChannelId = channel.id;
       this.channelService.currentChannelName = channel.name;
-      // Hier kannst du die Navigation zum Channel implementieren
-      // this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channels', channel.id]);
+      this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channel', channel.id]);
     } catch (error) {
       console.error('Fehler beim Öffnen des Channels:', error);
     }
