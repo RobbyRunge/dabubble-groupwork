@@ -97,25 +97,4 @@ export class SearchService {
   getUsersObservable(): Observable<any[]> {
     return this.usersSubject.asObservable();
   }
-
-  async refreshUsersCache(): Promise<void> {
-    const usersCollection = collection(this.firestore, 'users');
-    try {
-      const snapshot = await getDocs(usersCollection);
-      this.allUsersCache = [];
-      snapshot.forEach((doc) => {
-        const userData = doc.data();
-        this.allUsersCache.push({
-          userId: doc.id,
-          name: userData['name'],
-          email: userData['email'],
-          avatar: userData['avatar'],
-          active: userData['active'] || false
-        });
-      });
-      this.usersSubject.next(this.allUsersCache);
-    } catch (error) {
-      console.error('Error refreshing users cache:', error);
-    }
-  }
 }

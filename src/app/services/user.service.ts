@@ -186,7 +186,6 @@ export class UserService {
         })
       );
       const userStorageId = userStorageDocRef.id;
-      await this.searchService.refreshUsersCache();
       console.log('user id ist', userId);
       console.log('user storage id ist', userStorageId);
       return {
@@ -260,7 +259,6 @@ export class UserService {
         })
       );
       this.pendingRegistrationId.next(null);
-      await this.searchService.refreshUsersCache();
       console.log('User registration completed successfully');
       return true;
     } catch (error) {
