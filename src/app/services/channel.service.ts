@@ -39,6 +39,9 @@ export class ChannelService {
   private isCheckedSubject = new BehaviorSubject<any>(null);
   public isChecked$ = this.isCheckedSubject.asObservable();
 
+  private activeChannelIdSubject = new BehaviorSubject<string>('');
+  public activeChannelId$ = this.activeChannelIdSubject.asObservable();
+
   userData: User[] = [];
   currentUser?: User;
   currentUserId!: string;
@@ -225,6 +228,11 @@ export class ChannelService {
 
   setCheckdValue(user: string) {
     this.isCheckedSubject.next(user)
+  }
+
+  setActiveChannelId(channelId: string) {
+    this.activeChannelIdSubject.next(channelId);
+    this.currentChannelId = channelId;
   }
 
   getUserData() {

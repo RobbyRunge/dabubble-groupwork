@@ -55,6 +55,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef);
   unsubChannels!: Subscription;
   private userDataSub?: Subscription;
+  private channelDataSub?: Subscription;
   newChannel = new Allchannels();
   isDrawerOpen = true;
   selectedUser: any;
@@ -80,6 +81,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.users$ = this.dataUser.getAllUsers();
     this.channelService.showCurrentUserData();
     this.getUserData();
+    this.getChannelData();
     this.unsubChannels = this.channelService.channelsLoaded$.subscribe(loaded => {
       if (loaded) {
         this.loadSaveRoute();
@@ -95,7 +97,16 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
       if (user?.userId) {
         this.activeChannelId = '';
       }
-      // Trigger change detection to update UI
+      this.cdr.detectChanges();
+    })
+  }
+
+  getChannelData() {
+    this.channelDataSub = this.channelService.activeChannelId$.subscribe(channelId => {
+      this.activeChannelId = channelId;
+      if (channelId) {
+        this.activeUserId = '';
+      }
       this.cdr.detectChanges();
     })
   }
@@ -136,6 +147,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.newChannel.channelId = channelId;
     this.newChannel.description = channelDescription;
     this.getChannelNameandId(channelName, channelId, channelDescription);
+    this.channelService.setActiveChannelId(channelId);
     this.channelService.updateUserStorage(this.channelService.currentUserId, this.channelService.userSubcollectionId, this.newChannel.toJSON())
   }
 
@@ -151,5 +163,6 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubChannels.unsubscribe();
     this.userDataSub?.unsubscribe();
+    this.channelDataSub?.unsubscribe();
   }
 }
