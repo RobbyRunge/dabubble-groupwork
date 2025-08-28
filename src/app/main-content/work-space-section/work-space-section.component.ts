@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   inject,
+  OnDestroy,
   OnInit,
   viewChild,
 } from '@angular/core';
@@ -43,14 +45,16 @@ import { ChatService } from '../../services/chat.service';
   templateUrl: './work-space-section.component.html',
   styleUrl: './work-space-section.component.scss',
 })
-export class WorkSpaceSectionComponent implements OnInit {
+export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
 
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
   chatService = inject(ChatService);
   private router = inject(Router);
   route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
   unsubChannels!: Subscription;
+  private userDataSub?: Subscription;
   newChannel = new Allchannels();
   isDrawerOpen = true;
   selectedUser: any;
@@ -84,12 +88,15 @@ export class WorkSpaceSectionComponent implements OnInit {
   }
 
   getUserData() {
-    this.channelService.isChecked$.subscribe(user => {
+    this.userDataSub = this.channelService.isChecked$.subscribe(user => {
+      console.log('WorkSpace: User selection changed:', user);
       this.selectedUser = user;
       this.activeUserId = user?.userId || '';
       if (user?.userId) {
         this.activeChannelId = '';
       }
+      // Trigger change detection to update UI
+      this.cdr.detectChanges();
     })
   }
 
@@ -143,5 +150,6 @@ export class WorkSpaceSectionComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.unsubChannels.unsubscribe();
+    this.userDataSub?.unsubscribe();
   }
 }
