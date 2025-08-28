@@ -98,7 +98,7 @@ export class ChannelService {
     dateNow.setHours(0, 0, 0, 0);
     const channelWithUser = {
       ...allChannels,
-      userId: [userId],
+      userId: [...userId],
       createdBy: user,
     };
     const docRef = await runInInjectionContext(this.injector, () =>

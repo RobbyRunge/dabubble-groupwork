@@ -25,9 +25,14 @@ export class CreateChannelSectionComponent {
   newChannel = new Allchannels();
   currentUserId = this.channelService.currentUserId;
   selectUserDialog = inject(MatDialog);
+  isEnabled = false;
 
-  async createChannel() {
-    // await this.channelService.addNewChannel(this.newChannel.toJSON(),this.currentUserId,this.currentUserId); 
+  checkChannelName() {
+  const value = this.newChannel.channelname || '';
+  this.isEnabled = /[a-zA-Z]/.test(value);
+}
+
+  async createChannel() { 
     (document.activeElement as HTMLElement)?.blur();
     const dialogRef = this.selectUserDialog.open(SelectUserToAddComponent, {
       width: '710px',
@@ -36,6 +41,8 @@ export class CreateChannelSectionComponent {
       maxHeight: '354px',
       panelClass: 'select-user-dialog-container',
     });
+    dialogRef.componentInstance.channelName = this.newChannel.channelname;
+    dialogRef.componentInstance.channelDescription = this.newChannel.description
     this.dialogRef.close();
   }
 }

@@ -32,16 +32,25 @@ export class SelectUserToAddComponent {
   searchInput: string = '';
   router = inject(Router);
   currentChannelId?: string;   
+  channelName?: string;
+  channelDescription?: string;
   @ViewChild('searchUserInput') searchUserInput!: ElementRef<HTMLInputElement>;
 
   async createChannel() {
-    console.log('selected users', this.selectedUsers);
+    this.addUserId = [];
+    this.addUserId.push(this.channelService.currentUserId);
+    if (this.newChannel) {
+      this.newChannel.channelname = this.channelName ?? '';
+      this.newChannel.description = this.channelDescription ?? '';
+    }
     this.selectedUsers.forEach(user => {
       this.addUserId.push(user.userId);
     });
-    console.log('selected users ids', this.addUserId);
-    console.log('current User id', this.channelService.currentUserId);
-    // await this.channelService.addNewChannel(this.newChannel.toJSON(),this.addUserId,this.channelService.currentUserId);
+    await this.channelService.addNewChannel(this.newChannel.toJSON(),this.addUserId,this.channelService.currentUserId).then(() => {
+      this.dialog.close();
+      this.addUserId = [];
+      this.filteredUsers = [];
+    });
   }
 
   setFocusInput() {
@@ -60,8 +69,6 @@ export class SelectUserToAddComponent {
       this.isEnabled = false;
       this.showUserSearchBar = true;
     }
-    console.log('select users', this.selectAllUsersInChannel);
-    console.log('show seearchbar', this.showUserSearchBar);
     this.updateBtnStatus();
   }
 
@@ -87,15 +94,6 @@ export class SelectUserToAddComponent {
     this.showSelectedUser = true;
     this.isEnabled = true;
     this.filteredUsers = [];
-    console.log('selected user', this.showSelectedUser);
-    console.log('show searchbar', this.showUserSearchBar);
-    console.log('array filtered users', this.filteredUsers);
-    console.log('array selectedUsers', this.selectedUsers);
-    console.log('array lenght', this.selectedUsers.length);
-      // this.showSelectedUser = true;
-    // const parts = this.router.url.split('/').filter(Boolean);
-    // const channelId = parts[3];
-    // this.currentChannelId = channelId;
   }
 
    private updateBtnStatus() {
@@ -110,7 +108,6 @@ export class SelectUserToAddComponent {
     this.searchInput = '';
     this.filteredUsers = [];
     this.updateBtnStatus();
-    console.log('benutzer in array', this.selectedUsers);
   }
 
   showSearchBar() {

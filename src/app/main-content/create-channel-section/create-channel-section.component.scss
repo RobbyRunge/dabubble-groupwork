@@ -61,7 +61,3 @@ input:focus {
     font-size: 18px;
     font-weight: 700;
 }
-
-.create-channel-btn {
-    @include dFlex(end, unset);
-}

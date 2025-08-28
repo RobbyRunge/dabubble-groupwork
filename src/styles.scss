@@ -485,3 +485,17 @@ app-main-content {
 .selected-user-remove-icon {
     cursor: pointer;
 }
+
+.create-channel-btn-cont {
+    @include dFlex(end, unset);
+}
+
+.create-channel-btn {
+   color: whitesmoke;
+    font-size: 18px;
+    font-weight: 700;
+    width: 125px;
+    height: 49px;
+    padding: 12px 25px 12px 25px;
+    border-radius: 25px;
+}

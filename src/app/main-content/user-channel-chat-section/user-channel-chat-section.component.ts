@@ -52,15 +52,6 @@ export class UserChannelChatSectionComponent implements OnInit {
     });
   }
 
-  createChannel() {
-    this.userCreateChannel();  
-  }
-
-  userCreateChannel() {
-     this.channelService.addNewChannel(this.newChannel.toJSON(),this.currentUserId,this.currentUserId).then(() => {
-    });
-  }
-
   ngOnDestroy(): void {
     this.routeSub?.unsubscribe();
   }
