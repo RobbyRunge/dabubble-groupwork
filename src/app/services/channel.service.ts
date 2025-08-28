@@ -93,7 +93,7 @@ export class ChannelService {
     );
   }
 
-  async addNewChannel(allChannels: {}, userId: string, user: string) {
+  async addNewChannel(allChannels: {}, userId: string[], user: string) {
     const dateNow = new Date();
     dateNow.setHours(0, 0, 0, 0);
     const channelWithUser = {

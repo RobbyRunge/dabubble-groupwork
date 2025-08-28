@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -8,6 +8,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { UserService } from '../../../services/user.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
+import { ChannelService } from '../../../services/channel.service';
+import { Allchannels } from '../../../../models/allchannels.class';
 
 @Component({
   selector: 'app-select-user-to-add',
@@ -18,18 +20,36 @@ import { Router } from '@angular/router';
 export class SelectUserToAddComponent {
   dialog = inject(MatDialogRef<SelectUserToAddComponent>);
   userService = inject(UserService);
+  channelService = inject(ChannelService);
+  newChannel = new Allchannels();
   selectAllUsersInChannel: boolean | null = null;
   isEnabled = false;
   showUserSearchBar = false;
   showSelectedUser = false;
   filteredUsers: { name: string; avatar: string; userId: string }[] = [];
   selectedUsers: { name: string; avatar: string; userId: string }[] = [];
+  addUserId: string[] = [];
   searchInput: string = '';
   router = inject(Router);
-  currentChannelId?: string;
+  currentChannelId?: string;   
+  @ViewChild('searchUserInput') searchUserInput!: ElementRef<HTMLInputElement>;
 
-  createChannel() {
+  async createChannel() {
     console.log('selected users', this.selectedUsers);
+    this.selectedUsers.forEach(user => {
+      this.addUserId.push(user.userId);
+    });
+    console.log('selected users ids', this.addUserId);
+    console.log('current User id', this.channelService.currentUserId);
+    // await this.channelService.addNewChannel(this.newChannel.toJSON(),this.addUserId,this.channelService.currentUserId);
+  }
+
+  setFocusInput() {
+    if (this.showUserSearchBar) {
+      setTimeout(() => {
+        this.searchUserInput?.nativeElement.focus();
+      });
+    }
   }
 
   checkboxValue() {
@@ -42,7 +62,7 @@ export class SelectUserToAddComponent {
     }
     console.log('select users', this.selectAllUsersInChannel);
     console.log('show seearchbar', this.showUserSearchBar);
-    
+    this.updateBtnStatus();
   }
 
   showfilterUsers() {
@@ -61,14 +81,17 @@ export class SelectUserToAddComponent {
   }
 
   selectUser(user: any) {
-    if (!this.selectedUsers.some(u => u.userId === user.userId)) {
+    if (!this.selectedUsers.some(u => u.userId === user.userId) && this.selectedUsers.length < 2 ) {
       this.selectedUsers.push(user);
     }
     this.showSelectedUser = true;
     this.isEnabled = true;
+    this.filteredUsers = [];
     console.log('selected user', this.showSelectedUser);
     console.log('show searchbar', this.showUserSearchBar);
     console.log('array filtered users', this.filteredUsers);
+    console.log('array selectedUsers', this.selectedUsers);
+    console.log('array lenght', this.selectedUsers.length);
       // this.showSelectedUser = true;
     // const parts = this.router.url.split('/').filter(Boolean);
     // const channelId = parts[3];
@@ -91,6 +114,9 @@ export class SelectUserToAddComponent {
   }
 
   showSearchBar() {
+    this.searchInput = '';
+    this.filteredUsers = [];
     this.showSelectedUser = false;
+    this.setFocusInput();
   }
 }
