@@ -302,6 +302,15 @@ export class HeaderComponent {
     this.searchSub?.unsubscribe();
   }
 
+  truncateDescription(text: string, maxWords: number = 6): string {
+    if (!text) return '';
+    const words = text.split(' ');
+    if (words.length <= maxWords) {
+      return text;
+    }
+    return words.slice(0, maxWords).join(' ') + '...';
+  }
+
   private async getChatDocument(chatId: string): Promise<any> {
     try {
       const chatSnap = await runInInjectionContext(this.injector, async () => {

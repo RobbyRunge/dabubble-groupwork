@@ -86,7 +86,7 @@
         </div>
         <div class="result-content">
           <div class="result-name">{{ result.name }}</div>
-          <div class="result-description" *ngIf="result.description">{{ result.description }}</div>
+          <div class="result-description" *ngIf="result.description">{{ truncateDescription(result.description) }}</div>
           <div class="result-meta" *ngIf="result.senderName">
             <span class="timestamp" *ngIf="result.timestamp">{{ result.timestamp?.toDate() | date:'dd.MM.yyyy HH:mm' }}</span>
           </div>
