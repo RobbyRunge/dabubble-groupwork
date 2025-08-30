@@ -14,6 +14,7 @@ import { ChatService } from '../../services/chat.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { Firestore, doc, getDoc, collection } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-header',
@@ -36,6 +37,7 @@ export class HeaderComponent {
   private searchService = inject(SearchService);
   private chatService = inject(ChatService);
   private router = inject(Router);
+  private firestore = inject(Firestore);
 
   onlineUser: string = 'status/online.png';
   offlineUser: string = 'status/offline.png';
@@ -210,14 +212,41 @@ export class HeaderComponent {
     }
   }
 
-  private navigateToDirectMessage(messageResult: SearchResult) {
+  private async navigateToDirectMessage(messageResult: SearchResult) {
     // Extract chat ID from message ID (format: chat-{chatId}-{messageId})
     const idParts = messageResult.id.split('-');
     if (idParts.length >= 3 && idParts[0] === 'chat') {
       const chatId = idParts[1];
-      // Navigate to chat - this would need to be implemented based on your routing structure
-      console.log('Navigate to chat:', chatId, 'message:', messageResult.messageText);
-      // You might need to set the appropriate user and navigate to chat
+      
+      try {
+        // Get the chat document to find the other user
+        const chatDoc = await this.getChatDocument(chatId);
+        if (chatDoc) {
+          const chatUsers = chatDoc['user'] || [];
+          const otherUserId = chatUsers.find((userId: string) => userId !== this.channelService.currentUserId);
+          
+          if (otherUserId) {
+            // Get user information
+            const otherUser = await this.getUserById(otherUserId);
+            if (otherUser) {
+              // Use the existing chat service method to open the chat
+              await this.chatService.onUserClick(0, {
+                userId: otherUser.userId,
+                name: otherUser.name,
+                avatar: otherUser.avatar,
+                active: otherUser.active || false
+              });
+              
+              // Navigate to the chat
+              this.dataUser.showChannel = false;
+              this.dataUser.showChatPartnerHeader = true;
+              this.router.navigate(['/mainpage', this.channelService.currentUserId]);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Fehler beim Öffnen des Chats:', error);
+      }
     }
   }
 
@@ -244,5 +273,36 @@ export class HeaderComponent {
 
   ngOnDestroy() {
     this.searchSub?.unsubscribe();
+  }
+
+  private async getChatDocument(chatId: string): Promise<any> {
+    try {
+      const chatDocRef = doc(this.firestore, 'chats', chatId);
+      const chatSnap = await getDoc(chatDocRef);
+      return chatSnap.exists() ? chatSnap.data() : null;
+    } catch (error) {
+      console.error('Error getting chat document:', error);
+      return null;
+    }
+  }
+
+  private async getUserById(userId: string): Promise<any> {
+    try {
+      const userDocRef = doc(this.firestore, 'users', userId);
+      const userSnap = await getDoc(userDocRef);
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        return {
+          userId: userSnap.id,
+          name: userData['name'],
+          avatar: userData['avatar'],
+          active: userData['active'] || false
+        };
+      }
+      return null;
+    } catch (error) {
+      console.error('Error getting user by ID:', error);
+      return null;
+    }
   }
 }
