@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, HostListener, runInInjectionContext, Injector } from '@angular/core';
+import { Component, inject, HostListener, runInInjectionContext, Injector } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +15,7 @@ import { NavigationService } from '../../services/navigation.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { Firestore, doc, getDoc, collection } from '@angular/fire/firestore';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-header',
@@ -48,7 +48,6 @@ export class HeaderComponent {
   searchResults: any[] = [];
   channelResults: SearchResult[] = [];
   userResults: SearchResult[] = [];
-
   showDropdown: boolean = false;
   dropdownType: 'normal' | 'channel' | 'user' = 'normal';
 
