@@ -204,10 +204,8 @@ export class HeaderComponent {
   private navigateToMessage(messageResult: SearchResult) {
     try {
       if (messageResult.isDirectMessage) {
-        // Navigate to direct message/chat
         this.navigateToDirectMessage(messageResult);
       } else if (messageResult.channelName) {
-        // Navigate to channel message
         this.navigateToChannelMessage(messageResult);
       }
     } catch (error) {
@@ -216,40 +214,30 @@ export class HeaderComponent {
   }
 
   private async navigateToDirectMessage(messageResult: SearchResult) {
-    // Extract chat ID and message ID from search result ID (format: chat-{chatId}-{messageId})
     const idParts = messageResult.id.split('-');
     if (idParts.length >= 3 && idParts[0] === 'chat') {
       const chatId = idParts[1];
-      const messageId = idParts.slice(2).join('-'); // Join remaining parts in case message ID contains dashes
-
+      const messageId = idParts.slice(2).join('-');
       try {
-        // Get the chat document to find the other user
         const chatDoc = await this.getChatDocument(chatId);
         if (chatDoc) {
           const chatUsers = chatDoc['user'] || [];
           const otherUserId = chatUsers.find((userId: string) => userId !== this.channelService.currentUserId);
-
           if (otherUserId) {
-            // Get user information
             const otherUser = await this.getUserById(otherUserId);
             if (otherUser) {
-              // Use the existing chat service method to open the chat
               await this.chatService.onUserClick(0, {
                 userId: otherUser.userId,
                 name: otherUser.name,
                 avatar: otherUser.avatar,
                 active: otherUser.active || false
               });
-
-              // Navigate to the chat
               this.dataUser.showChannel = false;
               this.dataUser.showChatPartnerHeader = true;
               this.router.navigate(['/mainpage', this.channelService.currentUserId]);
-
-              // After navigation, trigger scroll to the specific message
               setTimeout(() => {
                 this.navigationService.navigateToMessage(messageId, true);
-              }, 500); // Wait for chat to load
+              }, 500);
             }
           }
         }
@@ -260,13 +248,10 @@ export class HeaderComponent {
   }
 
   private navigateToChannelMessage(messageResult: SearchResult) {
-    // Extract channel ID and message ID from search result ID (format: channel-{channelId}-{messageId})
     const idParts = messageResult.id.split('-');
     if (idParts.length >= 3 && idParts[0] === 'channel') {
       const channelId = idParts[1];
-      const messageId = idParts.slice(2).join('-'); // Join remaining parts in case message ID contains dashes
-
-      // Find the channel by ID and navigate to it
+      const messageId = idParts.slice(2).join('-');
       const channel = this.channelService.showChannelByUser.find(ch => ch.channelId === channelId);
       if (channel) {
         this.openChannel({
@@ -275,11 +260,9 @@ export class HeaderComponent {
           type: 'channel',
           description: channel.description
         });
-
-        // After navigation, trigger scroll to the specific message
         setTimeout(() => {
           this.navigationService.navigateToMessage(messageId, true);
-        }, 500); // Wait for channel to load
+        }, 500);
       } else {
         console.log('Channel not found or user not a member');
       }
