@@ -1,4 +1,4 @@
-<div class="messages-container" (click)="hideAllEmojis()" [attr.data-message-id]="message.id">
+<div class="messages-container standard-transition" (click)="hideAllEmojis()" [attr.data-message-id]="message.id">
     <div class="users-message-container" *ngIf="message.senderId == channelService.currentUserId">
         <div class="message-container">
             <div>
