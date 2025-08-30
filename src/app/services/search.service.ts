@@ -35,70 +35,134 @@ export class SearchService {
     if (!keyword.trim()) {
       return of([]);
     }
+    return this.performMessageSearch(keyword);
+  }
 
+  private performMessageSearch(keyword: string): Observable<SearchResult[]> {
     return runInInjectionContext(this.injector, () => {
-      const chatMessages$ = from(this.searchMessagesInChats(keyword));
-      const channelMessages$ = from(this.searchMessagesInChannels(keyword));
-
-      return forkJoin([chatMessages$, channelMessages$]).pipe(
-        map(([chatMessages, channelMessages]) => [...chatMessages, ...channelMessages]),
-        catchError(error => {
-          console.error('Error searching messages:', error);
-          return of([]);
-        })
-      );
+      const searchStreams = this.createSearchStreams(keyword);
+      return this.combineSearchResults(searchStreams);
     });
+  }
+
+  private createSearchStreams(keyword: string) {
+    return {
+      chatMessages$: from(this.searchMessagesInChats(keyword)),
+      channelMessages$: from(this.searchMessagesInChannels(keyword))
+    };
+  }
+
+  private combineSearchResults(streams: { chatMessages$: Observable<SearchResult[]>, channelMessages$: Observable<SearchResult[]> }) {
+    return forkJoin([streams.chatMessages$, streams.channelMessages$]).pipe(
+      map(([chatMessages, channelMessages]) => [...chatMessages, ...channelMessages]),
+      catchError(error => {
+        console.error('Error searching messages:', error);
+        return of([]);
+      })
+    );
   }
 
   private async searchMessagesInChats(keyword: string): Promise<SearchResult[]> {
     try {
-      const chatsRef = collection(this.firestore, 'chats');
-      const chatsSnapshot = await getDocs(chatsRef);
+      const chatsSnapshot = await this.getChatDocuments();
       const results: SearchResult[] = [];
 
       for (const chatDoc of chatsSnapshot.docs) {
-        const chatId = chatDoc.id;
-        const chatData = chatDoc.data();
-        const chatUsers = chatData['user'] || [];
-
-        // Prüfe, ob der aktuelle User Mitglied des Chats ist
-        if (!chatUsers.includes(this.channelService.currentUserId)) {
-          continue; // Skip chats the user is not a member of
-        }
-
-        const messagesSnapshot = await runInInjectionContext(this.injector, async () => {
-          const messagesRef = collection(this.firestore, `chats/${chatId}/message`);
-          const messagesSnapshot = await getDocs(messagesRef);
-          return messagesSnapshot;
-        });
-
-        for (const messageDoc of messagesSnapshot.docs) {
-          const messageData = messageDoc.data();
-          const messageText = messageData['text'] || '';
-
-          if (messageText.toLowerCase().includes(keyword.toLowerCase())) {
-            const senderName = await this.getSenderName(messageData['senderId']);
-
-            results.push({
-              id: `chat-${chatId}-${messageDoc.id}`,
-              name: `von ${senderName}`,
-              type: 'message',
-              description: this.truncateText(messageText, 100),
-              messageText: messageText,
-              senderName: senderName,
-              timestamp: messageData['timestamp'],
-              isDirectMessage: true
-            });
-          }
-        }
+        const chatResults = await this.processChatDocument(chatDoc, keyword);
+        results.push(...chatResults);
       }
 
-      return results.slice(0, 10); // Limitiere auf 10 Ergebnisse
+      return results.slice(0, 10);
     } catch (error) {
       console.error('Error searching chat messages:', error);
       return [];
     }
   }
+
+  private async getChatDocuments() {
+    return runInInjectionContext(this.injector, async () => {
+      const chatsRef = collection(this.firestore, 'chats');
+      return await getDocs(chatsRef);
+    });
+  }
+
+  private async processChatDocument(chatDoc: any, keyword: string): Promise<SearchResult[]> {
+    const chatId = chatDoc.id;
+    const chatData = chatDoc.data();
+    const chatUsers = chatData['user'] || [];
+    if (!this.isUserChatMember(chatUsers)) {
+      return [];
+    }
+    const messagesSnapshot = await this.getChatMessages(chatId);
+    return this.extractMatchingMessages(messagesSnapshot, chatId, keyword, true);
+  }
+
+  private isUserChatMember(chatUsers: string[]): boolean {
+    return chatUsers.includes(this.channelService.currentUserId);
+  }
+
+  private async getChatMessages(chatId: string) {
+    return runInInjectionContext(this.injector, async () => {
+      const messagesRef = collection(this.firestore, `chats/${chatId}/message`);
+      return await getDocs(messagesRef);
+    });
+  }
+
+  private async extractMatchingMessages(
+    messagesSnapshot: any,
+    containerId: string,
+    keyword: string,
+    isDirectMessage: boolean,
+    containerName?: string
+  ): Promise<SearchResult[]> {
+    const results: SearchResult[] = [];
+    for (const messageDoc of messagesSnapshot.docs) {
+      const messageData = messageDoc.data();
+      const messageText = messageData['text'] || '';
+      if (this.messageMatchesKeyword(messageText, keyword)) {
+        const result = await this.createMessageResult(
+          messageDoc,
+          messageData,
+          containerId,
+          isDirectMessage,
+          containerName
+        );
+        results.push(result);
+      }
+    }
+    return results;
+  }
+
+  private messageMatchesKeyword(messageText: string, keyword: string): boolean {
+    return messageText.toLowerCase().includes(keyword.toLowerCase());
+  }
+
+  private async createMessageResult(
+    messageDoc: any,
+    messageData: any,
+    containerId: string,
+    isDirectMessage: boolean,
+    containerName?: string
+  ): Promise<SearchResult> {
+    const senderName = await this.getSenderName(messageData['senderId']);
+    const prefix = isDirectMessage ? 'chat' : 'channel';
+    const displayName = isDirectMessage
+      ? `von ${senderName}`
+      : `Nachricht in #${containerName}`;
+    return {
+      id: `${prefix}-${containerId}-${messageDoc.id}`,
+      name: displayName,
+      type: 'message',
+      description: this.truncateText(messageData['text'], 100),
+      messageText: messageData['text'],
+      senderName: senderName,
+      timestamp: messageData['timestamp'],
+      isDirectMessage: isDirectMessage,
+      ...(containerName && { channelName: containerName })
+    };
+  }
+
+  // vvv Hier weiter machen mit Funktionen kürzen
 
   private async searchMessagesInChannels(keyword: string): Promise<SearchResult[]> {
     try {
