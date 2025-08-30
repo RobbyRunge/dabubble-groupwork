@@ -214,59 +214,89 @@ export class HeaderComponent {
   }
 
   private async navigateToDirectMessage(messageResult: SearchResult) {
-    const idParts = messageResult.id.split('-');
-    if (idParts.length >= 3 && idParts[0] === 'chat') {
-      const chatId = idParts[1];
-      const messageId = idParts.slice(2).join('-');
-      try {
-        const chatDoc = await this.getChatDocument(chatId);
-        if (chatDoc) {
-          const chatUsers = chatDoc['user'] || [];
-          const otherUserId = chatUsers.find((userId: string) => userId !== this.channelService.currentUserId);
-          if (otherUserId) {
-            const otherUser = await this.getUserById(otherUserId);
-            if (otherUser) {
-              await this.chatService.onUserClick(0, {
-                userId: otherUser.userId,
-                name: otherUser.name,
-                avatar: otherUser.avatar,
-                active: otherUser.active || false
-              });
-              this.dataUser.showChannel = false;
-              this.dataUser.showChatPartnerHeader = true;
-              this.router.navigate(['/mainpage', this.channelService.currentUserId]);
-              setTimeout(() => {
-                this.navigationService.navigateToMessage(messageId, true);
-              }, 500);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Fehler beim Öffnen des Chats:', error);
+    const { chatId, messageId } = this.parseMessageId(messageResult.id);
+    if (!chatId || !messageId) return;
+    try {
+      const otherUser = await this.findChatPartner(chatId);
+      if (otherUser) {
+        await this.openDirectChat(otherUser, messageId);
       }
+    } catch (error) {
+      console.error('Fehler beim Öffnen des Chats:', error);
     }
   }
 
-  private navigateToChannelMessage(messageResult: SearchResult) {
-    const idParts = messageResult.id.split('-');
-    if (idParts.length >= 3 && idParts[0] === 'channel') {
-      const channelId = idParts[1];
-      const messageId = idParts.slice(2).join('-');
-      const channel = this.channelService.showChannelByUser.find(ch => ch.channelId === channelId);
-      if (channel) {
-        this.openChannel({
-          id: channelId,
-          name: channel.channelname,
-          type: 'channel',
-          description: channel.description
-        });
-        setTimeout(() => {
-          this.navigationService.navigateToMessage(messageId, true);
-        }, 500);
-      } else {
-        console.log('Channel not found or user not a member');
-      }
+  private parseMessageId(id: string): { chatId: string | null, messageId: string | null } {
+    const idParts = id.split('-');
+    if (idParts.length >= 3 && idParts[0] === 'chat') {
+      return {
+        chatId: idParts[1],
+        messageId: idParts.slice(2).join('-')
+      };
     }
+    return { chatId: null, messageId: null };
+  }
+
+  private async findChatPartner(chatId: string): Promise<any> {
+    const chatDoc = await this.getChatDocument(chatId);
+    if (!chatDoc) return null;
+    const chatUsers = chatDoc['user'] || [];
+    const otherUserId = chatUsers.find((userId: string) => userId !== this.channelService.currentUserId);
+    return otherUserId ? await this.getUserById(otherUserId) : null;
+  }
+
+  private async openDirectChat(otherUser: any, messageId: string) {
+    await this.chatService.onUserClick(0, {
+      userId: otherUser.userId,
+      name: otherUser.name,
+      avatar: otherUser.avatar,
+      active: otherUser.active || false
+    });
+    this.dataUser.showChannel = false;
+    this.dataUser.showChatPartnerHeader = true;
+    this.router.navigate(['/mainpage', this.channelService.currentUserId]);
+    setTimeout(() => {
+      this.navigationService.navigateToMessage(messageId, true);
+    }, 500);
+  }
+
+  private navigateToChannelMessage(messageResult: SearchResult) {
+    const { channelId, messageId } = this.parseChannelMessageId(messageResult.id);
+    if (!channelId || !messageId) return;
+
+    const channel = this.findUserChannel(channelId);
+    if (channel) {
+      this.openChannelAndNavigateToMessage(channel, channelId, messageId);
+    } else {
+      console.log('Channel not found or user not a member');
+    }
+  }
+
+  private parseChannelMessageId(id: string): { channelId: string | null, messageId: string | null } {
+    const idParts = id.split('-');
+    if (idParts.length >= 3 && idParts[0] === 'channel') {
+      return {
+        channelId: idParts[1],
+        messageId: idParts.slice(2).join('-')
+      };
+    }
+    return { channelId: null, messageId: null };
+  }
+
+  private findUserChannel(channelId: string): any {
+    return this.channelService.showChannelByUser.find(ch => ch.channelId === channelId);
+  }
+
+  private openChannelAndNavigateToMessage(channel: any, channelId: string, messageId: string) {
+    this.openChannel({
+      id: channelId,
+      name: channel.channelname,
+      type: 'channel',
+      description: channel.description
+    });
+    setTimeout(() => {
+      this.navigationService.navigateToMessage(messageId, true);
+    }, 500);
   }
 
   ngOnDestroy() {
@@ -288,23 +318,28 @@ export class HeaderComponent {
 
   private async getUserById(userId: string): Promise<any> {
     try {
-      const userSnap = await runInInjectionContext(this.injector, async () => {
-        const userDocRef = doc(this.firestore, 'users', userId);
-        return await getDoc(userDocRef);
-      });
-      if (userSnap.exists()) {
-        const userData = userSnap.data();
-        return {
-          userId: userSnap.id,
-          name: userData['name'],
-          avatar: userData['avatar'],
-          active: userData['active'] || false
-        };
-      }
-      return null;
+      const userSnap = await this.getUserSnapshot(userId);
+      return userSnap?.exists() ? this.mapUserData(userSnap) : null;
     } catch (error) {
       console.error('Error getting user by ID:', error);
       return null;
     }
+  }
+
+  private async getUserSnapshot(userId: string) {
+    return await runInInjectionContext(this.injector, async () => {
+      const userDocRef = doc(this.firestore, 'users', userId);
+      return await getDoc(userDocRef);
+    });
+  }
+
+  private mapUserData(userSnap: any) {
+    const userData = userSnap.data();
+    return {
+      userId: userSnap.id,
+      name: userData['name'],
+      avatar: userData['avatar'],
+      active: userData['active'] || false
+    };
   }
 }
