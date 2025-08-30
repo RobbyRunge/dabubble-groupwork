@@ -1,10 +1,30 @@
-import { Injectable, inject, Injector, runInInjectionContext, OnInit } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, doc, CollectionReference, collectionData, getDoc, updateDoc, deleteDoc, docData } from '@angular/fire/firestore';
+import {
+  Injectable,
+  inject,
+  Injector,
+  runInInjectionContext,
+  OnInit,
+} from '@angular/core';
+import {
+  Firestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  onSnapshot,
+  doc,
+  CollectionReference,
+  collectionData,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+  docData,
+} from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { map, Observable } from 'rxjs';
 import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/internal/Subscription';
 import { BehaviorSubject } from 'rxjs';
 import { ChannelService } from './channel.service';
 
@@ -12,7 +32,6 @@ import { ChannelService } from './channel.service';
   providedIn: 'root',
 })
 export class UserService {
-
   private firestore = inject(Firestore);
   channelService = inject(ChannelService);
   private router = inject(Router);
@@ -37,7 +56,6 @@ export class UserService {
   loginIsSucess = false;
   chatId: any = '';
 
-
   getUsersCollection(): CollectionReference {
     return runInInjectionContext(this.injector, () =>
       collection(this.firestore, 'users')
@@ -51,7 +69,7 @@ export class UserService {
   }
 
   getUserRefsByIds() {
-    return this.usersIdsInChannel.map(id =>
+    return this.usersIdsInChannel.map((id) =>
       runInInjectionContext(this.injector, () =>
         doc(this.getUsersCollection(), id)
       )
@@ -80,10 +98,14 @@ export class UserService {
     if (!result.empty) {
       const userDoc = result.docs[0];
       this.channelService.currentUserId = userDoc.id;
-      await this.updateUserDocument(this.channelService.currentUserId, { active: true });
+      await this.updateUserDocument(this.channelService.currentUserId, {
+        active: true,
+      });
     }
     const userStorageSnapshot = await runInInjectionContext(this.injector, () =>
-      getDocs(this.channelService.getUserSubCol(this.channelService.currentUserId))
+      getDocs(
+        this.channelService.getUserSubCol(this.channelService.currentUserId)
+      )
     );
     if (!userStorageSnapshot.empty) {
       const userStorage = userStorageSnapshot.docs[0];
@@ -101,10 +123,7 @@ export class UserService {
       const user = credential.user;
 
       const userQuery = runInInjectionContext(this.injector, () =>
-        query(
-          this.getUsersCollection(),
-          where('email', '==', user.email)
-        )
+        query(this.getUsersCollection(), where('email', '==', user.email))
       );
 
       const result = await runInInjectionContext(this.injector, () =>
@@ -115,8 +134,9 @@ export class UserService {
         const newUser = new User();
         newUser.email = user.email || '';
         newUser.name = user.displayName || user.email?.split('@')[0] || '';
-        newUser.avatar = "empty-avatar.png";
-        const { userId, userStorageId } = await this.createUserBySignInWithGoogle(newUser);
+        newUser.avatar = 'empty-avatar.png';
+        const { userId, userStorageId } =
+          await this.createUserBySignInWithGoogle(newUser);
         this.channelService.currentUserId = userId;
         this.channelService.userSubcollectionId = userStorageId;
       } else {
@@ -136,10 +156,7 @@ export class UserService {
   async signInWithGuest() {
     const guestEmail = 'guestemail@gmail.com';
     const userQuery = runInInjectionContext(this.injector, () =>
-      query(
-        this.getUsersCollection(),
-        where('email', '==', guestEmail)
-      )
+      query(this.getUsersCollection(), where('email', '==', guestEmail))
     );
 
     const result = await runInInjectionContext(this.injector, () =>
@@ -151,7 +168,9 @@ export class UserService {
         const userDoc = result.docs[0];
         this.channelService.currentUserId = userDoc.id;
         this.channelService.currentUser = new User(userDoc.data());
-        await this.updateUserDocument(this.channelService.currentUserId, { active: true });
+        await this.updateUserDocument(this.channelService.currentUserId, {
+          active: true,
+        });
         this.loginIsSucess = true;
       }
     } else {
@@ -159,13 +178,15 @@ export class UserService {
     }
   }
 
-  async createUserBySignInWithGoogle(user: User): Promise<{ userId: string; userStorageId: string }> {
+  async createUserBySignInWithGoogle(
+    user: User
+  ): Promise<{ userId: string; userStorageId: string }> {
     try {
       const userData: any = {
         active: true,
         name: user.name,
         email: user.email,
-        avatar: user.avatar
+        avatar: user.avatar,
       };
       if (user.password) {
         userData.password = user.password;
@@ -188,7 +209,7 @@ export class UserService {
       console.log('user storage id ist', userStorageId);
       return {
         userId,
-        userStorageId
+        userStorageId,
       };
     } catch (error) {
       throw error;
@@ -202,7 +223,9 @@ export class UserService {
     });
   }
 
-  async createInitialUser(user: User): Promise<{ userId: string; userStorageId: string }> {
+  async createInitialUser(
+    user: User
+  ): Promise<{ userId: string; userStorageId: string }> {
     try {
       const userData: any = {
         active: false,
@@ -210,7 +233,7 @@ export class UserService {
         email: user.email,
         password: user.password,
         avatar: 'empty-avatar.png',
-        registrationComplete: false
+        registrationComplete: false,
       };
 
       const userRef = await runInInjectionContext(this.injector, () =>
@@ -223,15 +246,14 @@ export class UserService {
       );
 
       const userStorageDocRef = await runInInjectionContext(this.injector, () =>
-        addDoc(userStorageColRef, {
-        })
+        addDoc(userStorageColRef, {})
       );
       const userStorageId = userStorageDocRef.id;
       this.pendingRegistrationId.next(userId);
       this.pendingUser = user;
       return {
         userId,
-        userStorageId
+        userStorageId,
       };
     } catch (error) {
       console.error('Error creating initial user:', error);
@@ -253,7 +275,7 @@ export class UserService {
       await runInInjectionContext(this.injector, () =>
         updateDoc(doc(this.firestore, 'users', userId), {
           avatar: avatarPath,
-          registrationComplete: true
+          registrationComplete: true,
         })
       );
       this.pendingRegistrationId.next(null);
@@ -298,22 +320,54 @@ export class UserService {
   async getUserIdsFromChannel(docId: string) {
     this.clearUserInChannelsArray();
     const snapshot = await runInInjectionContext(this.injector, () =>
-      getDoc(this.channelService.getSingleChannelRef(docId)));
-      if (snapshot.exists()) {
+      getDoc(this.channelService.getSingleChannelRef(docId))
+    );
+    if (snapshot.exists()) {
       const data = snapshot.data();
       if (data && Array.isArray(data['userId'])) {
         this.usersIdsInChannel.push(...data['userId']);
         for (const id of this.usersIdsInChannel) {
           const nameSnap = await runInInjectionContext(this.injector, () =>
-            getDoc(this.getSingleUserRef(id)));
+            getDoc(this.getSingleUserRef(id))
+          );
           const dataName = nameSnap.data();
           if (dataName) {
-            this.userNamesInChannel$.next([...this.userNamesInChannel$.value, dataName['name']]);
-            this.userAvatarInChannel$.next([...this.userAvatarInChannel$.value, dataName['avatar']]);
+            this.userNamesInChannel$.next([
+              ...this.userNamesInChannel$.value,
+              dataName['name'],
+            ]);
+            this.userAvatarInChannel$.next([
+              ...this.userAvatarInChannel$.value,
+              dataName['avatar'],
+            ]);
           }
         }
       }
     }
+  }
+
+  async showCurrentUserData() {
+    const userRef = this.getSingleUserRef(this.channelService.currentUserId);
+    this.channelService.unsubscribeUserData = runInInjectionContext(
+      this.injector,
+      () => docData(userRef)
+    ).subscribe((data) => {
+      this.channelService.currentUser = new User(data);
+    });
+    const storageRef = this.channelService.getUserSubCol(
+      this.channelService.currentUserId
+    );
+    const storageSnapshot = await runInInjectionContext(this.injector, () =>
+      getDocs(storageRef)
+    );
+    storageSnapshot.forEach((doc) => {
+      const data = doc.data();
+      this.channelService.userSubcollectionChannelId = data['channelId'];
+      this.channelService.userSubcollectionId = doc.id;
+      this.channelService.getChannelName(this.channelService.userSubcollectionChannelId);
+    });
+    this.getUserIdsFromChannel(this.channelService.userSubcollectionChannelId);
+    this.channelService.showUserChannel();
   }
 
   clearUserInChannelsArray() {
@@ -322,14 +376,13 @@ export class UserService {
     this.userAvatarInChannel$.next([]);
   }
 
-showFilteredUsers(input: string): Observable<User[]> {
-  return this.getAllUsers().pipe(
-    map((users: User[]) =>   
-      users.filter((user: User) =>
-        user.name.toLowerCase().startsWith(input.toLowerCase())
+  showFilteredUsers(input: string): Observable<User[]> {
+    return this.getAllUsers().pipe(
+      map((users: User[]) =>
+        users.filter((user: User) =>
+          user.name.toLowerCase().startsWith(input.toLowerCase())
+        )
       )
-    )
-  );
-}
-
+    );
+  }
 }

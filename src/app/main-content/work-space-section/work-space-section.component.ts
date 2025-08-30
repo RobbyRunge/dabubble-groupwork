@@ -23,6 +23,7 @@ import { User } from '../../../models/user.class';
 import { Allchannels } from '../../../models/allchannels.class';
 import { ChannelService } from '../../services/channel.service';
 import { ChatService } from '../../services/chat.service';
+import { Userstorage } from '../../../models/userStorage.class';
 
 @Component({
   selector: 'app-work-space-section',
@@ -52,6 +53,7 @@ export class WorkSpaceSectionComponent implements OnInit {
   route = inject(ActivatedRoute);
   unsubChannels!: Subscription;
   newChannel = new Allchannels();
+  userstorage = new Userstorage();
   isDrawerOpen = true;
   selectedUser: any;
   urlUserId!: string;
@@ -74,7 +76,7 @@ export class WorkSpaceSectionComponent implements OnInit {
   ngOnInit(): void {
     this.channels$ = this.channelService.showChannelByUser$;
     this.users$ = this.dataUser.getAllUsers();
-    this.channelService.showCurrentUserData();
+    this.dataUser.showCurrentUserData();
     this.getUserData();
     this.unsubChannels = this.channelService.channelsLoaded$.subscribe(loaded => {
       if (loaded) {
@@ -125,11 +127,10 @@ export class WorkSpaceSectionComponent implements OnInit {
     this.dataUser.showChatPartnerHeader = false;
     this.activeUserId = '';
     this.router.navigate(['mainpage', this.channelService.currentUserId, 'channel', channelId,]);
-    this.newChannel.channelname = channelName;
-    this.newChannel.channelId = channelId;
-    this.newChannel.description = channelDescription;
-    this.getChannelNameandId(channelName, channelId, channelDescription);
-    this.channelService.updateUserStorage(this.channelService.currentUserId, this.channelService.userSubcollectionId, this.newChannel.toJSON())
+    this.userstorage.channelId = channelId;
+    this.userstorage.showChannel = true;
+    this.getChannelNameandId(channelName, channelId, channelDescription);  
+    this.channelService.updateUserStorage(this.channelService.currentUserId, this.channelService.userSubcollectionId, this.userstorage.toJSON(['channelId', 'showChannel']));
   }
 
   getChannelNameandId(channelName: string, channelId: string, channelDescription: string) {

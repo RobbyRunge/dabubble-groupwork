@@ -4,8 +4,8 @@ export class User {
   password!: string;
   avatar!: string;
   userId!: string;
-
-  userstorage!: string; active: any;
+  userstorage!: string; 
+  active: any;
 
   constructor(obj?: any) {
 

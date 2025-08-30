@@ -139,26 +139,37 @@ export class ChannelService {
     );
   }
 
-  async showCurrentUserData() {
-    const userRef = this.getSingleUserRef(this.currentUserId);
-    this.unsubscribeUserData = runInInjectionContext(this.injector, () =>
-      docData(userRef)
-    ).subscribe((data) => {
-      this.currentUser = new User(data);
-    });
-    const storageRef = this.getUserSubCol(this.currentUserId);
-    const storageSnapshot = await runInInjectionContext(this.injector, () =>
-      getDocs(storageRef)
+  getChannelName(docId: string) {
+    const channelRef = this.getSingleChannelRef(docId);
+    runInInjectionContext(this.injector, () =>
+      onSnapshot(channelRef, (element) => {
+        const data = element.data();
+        if (data) {
+          this.userSubcollectionChannelName = data['channelname'];
+        }
+      }) 
     );
-    storageSnapshot.forEach((doc) => {
-      const data = doc.data();
-      this.userSubcollectionChannelId = data['channelId'];
-      this.userSubcollectionId = doc.id;
-      this.userSubcollectionChannelName = data['channelname'];
-      this.userSubcollectionDescription = data['description'];
-    });
-    this.showUserChannel();
   }
+
+  // async showCurrentUserData() {
+  //   const userRef = this.getSingleUserRef(this.currentUserId);
+  //   this.unsubscribeUserData = runInInjectionContext(this.injector, () =>
+  //     docData(userRef)
+  //   ).subscribe((data) => {
+  //     this.currentUser = new User(data);
+  //   });
+  //   const storageRef = this.getUserSubCol(this.currentUserId);
+  //   const storageSnapshot = await runInInjectionContext(this.injector, () =>
+  //     getDocs(storageRef)
+  //   );
+  //   storageSnapshot.forEach((doc) => {
+  //     const data = doc.data();
+  //     this.userSubcollectionChannelId = data['channelId'];
+  //     this.userSubcollectionId = doc.id;
+  //     this.getChannelName(this.userSubcollectionChannelId);
+  //   });
+  //   this.showUserChannel();
+  // }
 
   showUserChannel() {
     const channelRef = this.getChannelRef();
