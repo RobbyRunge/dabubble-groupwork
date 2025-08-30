@@ -81,7 +81,7 @@ export class SearchService {
             
             results.push({
               id: `chat-${chatId}-${messageDoc.id}`,
-              name: `${senderName}`,
+              name: `von ${senderName}`,
               type: 'message',
               description: this.truncateText(messageText, 100),
               messageText: messageText,

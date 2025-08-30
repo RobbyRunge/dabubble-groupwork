@@ -11,6 +11,7 @@ import { EditLogoutUserComponent } from './edit-logout-user/edit-logout-user.com
 import { ChannelService } from '../../services/channel.service';
 import { SearchService, SearchResult } from '../../services/search.service';
 import { ChatService } from '../../services/chat.service';
+import { NavigationService } from '../../services/navigation.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
@@ -36,6 +37,7 @@ export class HeaderComponent {
   public channelService = inject(ChannelService);
   private searchService = inject(SearchService);
   private chatService = inject(ChatService);
+  private navigationService = inject(NavigationService);
   private router = inject(Router);
   private firestore = inject(Firestore);
 
@@ -213,10 +215,11 @@ export class HeaderComponent {
   }
 
   private async navigateToDirectMessage(messageResult: SearchResult) {
-    // Extract chat ID from message ID (format: chat-{chatId}-{messageId})
+    // Extract chat ID and message ID from search result ID (format: chat-{chatId}-{messageId})
     const idParts = messageResult.id.split('-');
     if (idParts.length >= 3 && idParts[0] === 'chat') {
       const chatId = idParts[1];
+      const messageId = idParts.slice(2).join('-'); // Join remaining parts in case message ID contains dashes
       
       try {
         // Get the chat document to find the other user
@@ -241,6 +244,11 @@ export class HeaderComponent {
               this.dataUser.showChannel = false;
               this.dataUser.showChatPartnerHeader = true;
               this.router.navigate(['/mainpage', this.channelService.currentUserId]);
+              
+              // After navigation, trigger scroll to the specific message
+              setTimeout(() => {
+                this.navigationService.navigateToMessage(messageId, true);
+              }, 500); // Wait for chat to load
             }
           }
         }
@@ -251,10 +259,11 @@ export class HeaderComponent {
   }
 
   private navigateToChannelMessage(messageResult: SearchResult) {
-    // Extract channel ID from message ID (format: channel-{channelId}-{messageId})
+    // Extract channel ID and message ID from search result ID (format: channel-{channelId}-{messageId})
     const idParts = messageResult.id.split('-');
     if (idParts.length >= 3 && idParts[0] === 'channel') {
       const channelId = idParts[1];
+      const messageId = idParts.slice(2).join('-'); // Join remaining parts in case message ID contains dashes
       
       // Find the channel by ID and navigate to it
       const channel = this.channelService.showChannelByUser.find(ch => ch.channelId === channelId);
@@ -265,6 +274,11 @@ export class HeaderComponent {
           type: 'channel',
           description: channel.description
         });
+        
+        // After navigation, trigger scroll to the specific message
+        setTimeout(() => {
+          this.navigationService.navigateToMessage(messageId, true);
+        }, 500); // Wait for channel to load
       } else {
         console.log('Channel not found or user not a member');
       }

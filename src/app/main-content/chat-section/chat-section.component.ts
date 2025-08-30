@@ -3,6 +3,7 @@ import { WorkSpaceSectionComponent } from "../work-space-section/work-space-sect
 import { ThreadSectionComponent } from "../thread-section/thread-section.component";
 import { HeaderComponent } from "../header/header.component";
 import { UserService } from '../../services/user.service';
+import { NavigationService } from '../../services/navigation.service';
 import { ActivatedRoute } from '@angular/router';
 import { docData, onSnapshot } from '@angular/fire/firestore';
 import { User } from '../../../models/user.class';
@@ -44,11 +45,13 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
   channelService = inject(ChannelService);
   private injector = inject(Injector);
   chatService = inject(ChatService);
+  navigationService = inject(NavigationService);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
   readonly userDialog = inject(MatDialog);
   unsubscribeUserData!: Subscription;
   private routeSub?: Subscription;
+  private navigationSub?: Subscription;
   unsubscribeUserChannels?: () => void;
   users$: Observable<User[]> | undefined;
   users: any;
@@ -66,6 +69,15 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
       this.showUserChannel();
       this.getUserData();
       this.shouldScrollToBottom = true;
+    });
+
+    // Subscribe to navigation service for message scrolling
+    this.navigationSub = this.navigationService.scrollToMessage$.subscribe(scrollTarget => {
+      if (scrollTarget) {
+        setTimeout(() => {
+          this.scrollToMessage(scrollTarget.messageId, scrollTarget.highlight);
+        }, 100);
+      }
     });
     /*     this.listenToMessages(this.route);
         console.log('test' + this.chatId);
@@ -151,11 +163,53 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
 
    ngOnDestroy(): void {
     this.routeSub?.unsubscribe();
+    this.navigationSub?.unsubscribe();
     if (this.unsubscribeUserChannels) {
       this.unsubscribeUserChannels()
     }
     if (this.unsubscribeUserChannels) {
       this.unsubscribeUserChannels(); 
+    }
+  }
+
+  // Method to scroll to a specific message and optionally highlight it
+  private scrollToMessage(messageId: string, highlight: boolean = true): void {
+    try {
+      // Find the message element by looking for elements with data-message-id attribute
+      const messageElements = document.querySelectorAll('[data-message-id]');
+      let targetElement: Element | null = null;
+      
+      for (const element of messageElements) {
+        if (element.getAttribute('data-message-id') === messageId) {
+          targetElement = element;
+          break;
+        }
+      }
+      
+      if (targetElement) {
+        // Scroll to the message
+        targetElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+        
+        // Highlight the message if requested
+        if (highlight) {
+          targetElement.classList.add('highlighted-message');
+          
+          // Remove highlight after 3 seconds
+          setTimeout(() => {
+            targetElement?.classList.remove('highlighted-message');
+          }, 3000);
+        }
+        
+        // Clear the navigation target
+        this.navigationService.clearScrollTarget();
+      } else {
+        console.log('Message not found:', messageId);
+      }
+    } catch (error) {
+      console.error('Error scrolling to message:', error);
     }
   }
 
