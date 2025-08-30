@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { UserService } from '../../services/user.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { EditLogoutUserComponent } from './edit-logout-user/edit-logout-user.component';
 import { ChannelService } from '../../services/channel.service';
@@ -23,7 +23,8 @@ import { Router } from '@angular/router';
     FormsModule,
     MatInputModule,
     MatFormFieldModule,
-    CommonModule
+    CommonModule,
+    DatePipe
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -185,8 +186,60 @@ export class HeaderComponent {
     }
   }
 
-  selectMessageResult(result: any) {
+  selectMessageResult(result: SearchResult) {
     this.showDropdown = false;
+    this.dropdownType = 'normal';
+    this.searchTerm = '';
+    
+    if (result.type === 'message') {
+      this.navigateToMessage(result);
+    }
+  }
+
+  private navigateToMessage(messageResult: SearchResult) {
+    try {
+      if (messageResult.isDirectMessage) {
+        // Navigate to direct message/chat
+        this.navigateToDirectMessage(messageResult);
+      } else if (messageResult.channelName) {
+        // Navigate to channel message
+        this.navigateToChannelMessage(messageResult);
+      }
+    } catch (error) {
+      console.error('Fehler beim Navigieren zur Nachricht:', error);
+    }
+  }
+
+  private navigateToDirectMessage(messageResult: SearchResult) {
+    // Extract chat ID from message ID (format: chat-{chatId}-{messageId})
+    const idParts = messageResult.id.split('-');
+    if (idParts.length >= 3 && idParts[0] === 'chat') {
+      const chatId = idParts[1];
+      // Navigate to chat - this would need to be implemented based on your routing structure
+      console.log('Navigate to chat:', chatId, 'message:', messageResult.messageText);
+      // You might need to set the appropriate user and navigate to chat
+    }
+  }
+
+  private navigateToChannelMessage(messageResult: SearchResult) {
+    // Extract channel ID from message ID (format: channel-{channelId}-{messageId})
+    const idParts = messageResult.id.split('-');
+    if (idParts.length >= 3 && idParts[0] === 'channel') {
+      const channelId = idParts[1];
+      
+      // Find the channel by ID and navigate to it
+      const channel = this.channelService.showChannelByUser.find(ch => ch.channelId === channelId);
+      if (channel) {
+        this.openChannel({
+          id: channelId,
+          name: channel.channelname,
+          type: 'channel',
+          description: channel.description
+        });
+      } else {
+        console.log('Channel not found or user not a member');
+      }
+    }
   }
 
   ngOnDestroy() {

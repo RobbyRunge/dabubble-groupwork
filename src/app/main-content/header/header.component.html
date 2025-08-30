@@ -82,10 +82,14 @@
       <div *ngFor="let result of searchResults" class="search-result-item message-item standard-transition"
         (click)="selectMessageResult(result)">
         <div class="result-icon">
-          <mat-icon>message</mat-icon>
+          <mat-icon>{{ result.isDirectMessage ? 'message' : 'tag' }}</mat-icon>
         </div>
         <div class="result-content">
-          <div class="result-name">{{ result.text }}</div>
+          <div class="result-name">{{ result.name }}</div>
+          <div class="result-description" *ngIf="result.description">{{ result.description }}</div>
+          <div class="result-meta" *ngIf="result.senderName">
+            <span class="timestamp" *ngIf="result.timestamp">{{ result.timestamp?.toDate() | date:'dd.MM.yyyy HH:mm' }}</span>
+          </div>
         </div>
       </div>
       <div *ngIf="searchResults.length === 0" class="no-results">

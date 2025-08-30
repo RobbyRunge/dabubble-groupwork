@@ -215,6 +215,36 @@ header {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.result-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #999;
+
+  .sender {
+    color: #666;
+    font-weight: 500;
+  }
+
+  .timestamp {
+    color: #999;
+  }
+}
+
+.message-item {
+  .result-content {
+    flex: 1;
+    min-width: 0; // Allow text to truncate properly
+  }
+
+  .result-name {
+    font-weight: 600;
+    color: #444;
+  }
 }
 
 .no-results {

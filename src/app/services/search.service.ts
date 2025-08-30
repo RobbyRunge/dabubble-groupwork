@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { ChannelService } from './channel.service';
-import { collection, Firestore, onSnapshot, getDocs } from '@angular/fire/firestore';
+import { collection, Firestore, onSnapshot, getDocs, query, collectionGroup, where } from '@angular/fire/firestore';
 
 export interface SearchResult {
   id: string;
@@ -9,6 +9,11 @@ export interface SearchResult {
   type: 'channel' | 'user' | 'message';
   avatar?: string;
   description?: string;
+  messageText?: string;
+  senderName?: string;
+  timestamp?: any;
+  channelName?: string;
+  isDirectMessage?: boolean;
 }
 
 @Injectable({
@@ -24,12 +29,145 @@ export class SearchService {
     this.setupUsersListener();
   }
 
-  searchMessages(keyword: string): Observable<any[]> {
-    const dummyResults = [
-      { text: 'Nachricht mit ' + '"' + keyword + '"' },
-      { text: 'Noch eine Nachricht mit ' + '"' + keyword + '"' }
-    ];
-    return of(dummyResults);
+  searchMessages(keyword: string): Observable<SearchResult[]> {
+    if (!keyword.trim()) {
+      return of([]);
+    }
+
+    return new Observable(observer => {
+      this.searchMessagesInChats(keyword).then(chatMessages => {
+        this.searchMessagesInChannels(keyword).then(channelMessages => {
+          const allMessages = [...chatMessages, ...channelMessages];
+          observer.next(allMessages);
+          observer.complete();
+        }).catch(error => {
+          console.error('Error searching channel messages:', error);
+          observer.next(chatMessages);
+          observer.complete();
+        });
+      }).catch(error => {
+        console.error('Error searching chat messages:', error);
+        observer.next([]);
+        observer.complete();
+      });
+    });
+  }
+
+  private async searchMessagesInChats(keyword: string): Promise<SearchResult[]> {
+    try {
+      const chatsRef = collection(this.firestore, 'chats');
+      const chatsSnapshot = await getDocs(chatsRef);
+      const results: SearchResult[] = [];
+
+      for (const chatDoc of chatsSnapshot.docs) {
+        const chatId = chatDoc.id;
+        const chatData = chatDoc.data();
+        const chatUsers = chatData['user'] || [];
+        
+        // Prüfe, ob der aktuelle User Mitglied des Chats ist
+        if (!chatUsers.includes(this.channelService.currentUserId)) {
+          continue; // Skip chats the user is not a member of
+        }
+
+        const messagesRef = collection(this.firestore, `chats/${chatId}/message`);
+        const messagesSnapshot = await getDocs(messagesRef);
+
+        for (const messageDoc of messagesSnapshot.docs) {
+          const messageData = messageDoc.data();
+          const messageText = messageData['text'] || '';
+          
+          if (messageText.toLowerCase().includes(keyword.toLowerCase())) {
+            const senderName = await this.getSenderName(messageData['senderId']);
+            
+            results.push({
+              id: `chat-${chatId}-${messageDoc.id}`,
+              name: `${senderName}`,
+              type: 'message',
+              description: this.truncateText(messageText, 100),
+              messageText: messageText,
+              senderName: senderName,
+              timestamp: messageData['timestamp'],
+              isDirectMessage: true
+            });
+          }
+        }
+      }
+
+      return results.slice(0, 10); // Limitiere auf 10 Ergebnisse
+    } catch (error) {
+      console.error('Error searching chat messages:', error);
+      return [];
+    }
+  }
+
+  private async searchMessagesInChannels(keyword: string): Promise<SearchResult[]> {
+    try {
+      const channelsRef = collection(this.firestore, 'channels');
+      const channelsSnapshot = await getDocs(channelsRef);
+      const results: SearchResult[] = [];
+
+      for (const channelDoc of channelsSnapshot.docs) {
+        const channelId = channelDoc.id;
+        const channelData = channelDoc.data();
+        const channelName = channelData['channelname'] || 'Unbekannter Channel';
+        
+        // Prüfe, ob der User Mitglied des Channels ist
+        const userIds = channelData['userId'] || [];
+        if (!userIds.includes(this.channelService.currentUserId)) {
+          continue; // Skip channels the user is not a member of
+        }
+
+        try {
+          const messagesRef = collection(this.firestore, `channels/${channelId}/message`);
+          const messagesSnapshot = await getDocs(messagesRef);
+
+          for (const messageDoc of messagesSnapshot.docs) {
+            const messageData = messageDoc.data();
+            const messageText = messageData['text'] || '';
+            
+            if (messageText.toLowerCase().includes(keyword.toLowerCase())) {
+              const senderName = await this.getSenderName(messageData['senderId']);
+              
+              results.push({
+                id: `channel-${channelId}-${messageDoc.id}`,
+                name: `Nachricht in #${channelName}`,
+                type: 'message',
+                description: this.truncateText(messageText, 100),
+                messageText: messageText,
+                senderName: senderName,
+                timestamp: messageData['timestamp'],
+                channelName: channelName,
+                isDirectMessage: false
+              });
+            }
+          }
+        } catch (error) {
+          // Channel might not have messages collection yet
+          console.log(`No messages found in channel ${channelId}`);
+        }
+      }
+
+      return results.slice(0, 10); // Limitiere auf 10 Ergebnisse
+    } catch (error) {
+      console.error('Error searching channel messages:', error);
+      return [];
+    }
+  }
+
+  private async getSenderName(senderId: string): Promise<string> {
+    try {
+      const user = this.allUsersCache.find(u => u.userId === senderId);
+      return user?.name || 'Unbekannter User';
+    } catch (error) {
+      return 'Unbekannter User';
+    }
+  }
+
+  private truncateText(text: string, maxLength: number): string {
+    if (text.length <= maxLength) {
+      return text;
+    }
+    return text.substring(0, maxLength) + '...';
   }
 
   searchChannels(keyword: string): Observable<SearchResult[]> {
