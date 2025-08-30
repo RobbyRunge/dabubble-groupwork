@@ -238,7 +238,7 @@ header {
 .message-item {
   .result-content {
     flex: 1;
-    min-width: 0; // Allow text to truncate properly
+    min-width: 0;
   }
 
   .result-name {
