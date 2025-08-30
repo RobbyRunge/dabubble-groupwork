@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, HostListener } from '@angular/core';
+import { Component, inject, OnInit, HostListener, runInInjectionContext, Injector } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
@@ -40,6 +40,7 @@ export class HeaderComponent {
   private navigationService = inject(NavigationService);
   private router = inject(Router);
   private firestore = inject(Firestore);
+  private injector = inject(Injector);
 
   onlineUser: string = 'status/online.png';
   offlineUser: string = 'status/offline.png';
@@ -194,7 +195,7 @@ export class HeaderComponent {
     this.showDropdown = false;
     this.dropdownType = 'normal';
     this.searchTerm = '';
-    
+
     if (result.type === 'message') {
       this.navigateToMessage(result);
     }
@@ -220,14 +221,14 @@ export class HeaderComponent {
     if (idParts.length >= 3 && idParts[0] === 'chat') {
       const chatId = idParts[1];
       const messageId = idParts.slice(2).join('-'); // Join remaining parts in case message ID contains dashes
-      
+
       try {
         // Get the chat document to find the other user
         const chatDoc = await this.getChatDocument(chatId);
         if (chatDoc) {
           const chatUsers = chatDoc['user'] || [];
           const otherUserId = chatUsers.find((userId: string) => userId !== this.channelService.currentUserId);
-          
+
           if (otherUserId) {
             // Get user information
             const otherUser = await this.getUserById(otherUserId);
@@ -239,12 +240,12 @@ export class HeaderComponent {
                 avatar: otherUser.avatar,
                 active: otherUser.active || false
               });
-              
+
               // Navigate to the chat
               this.dataUser.showChannel = false;
               this.dataUser.showChatPartnerHeader = true;
               this.router.navigate(['/mainpage', this.channelService.currentUserId]);
-              
+
               // After navigation, trigger scroll to the specific message
               setTimeout(() => {
                 this.navigationService.navigateToMessage(messageId, true);
@@ -264,7 +265,7 @@ export class HeaderComponent {
     if (idParts.length >= 3 && idParts[0] === 'channel') {
       const channelId = idParts[1];
       const messageId = idParts.slice(2).join('-'); // Join remaining parts in case message ID contains dashes
-      
+
       // Find the channel by ID and navigate to it
       const channel = this.channelService.showChannelByUser.find(ch => ch.channelId === channelId);
       if (channel) {
@@ -274,7 +275,7 @@ export class HeaderComponent {
           type: 'channel',
           description: channel.description
         });
-        
+
         // After navigation, trigger scroll to the specific message
         setTimeout(() => {
           this.navigationService.navigateToMessage(messageId, true);
@@ -291,8 +292,10 @@ export class HeaderComponent {
 
   private async getChatDocument(chatId: string): Promise<any> {
     try {
-      const chatDocRef = doc(this.firestore, 'chats', chatId);
-      const chatSnap = await getDoc(chatDocRef);
+      const chatSnap = await runInInjectionContext(this.injector, async () => {
+        const chatDocRef = doc(this.firestore, 'chats', chatId);
+        return await getDoc(chatDocRef);
+      });
       return chatSnap.exists() ? chatSnap.data() : null;
     } catch (error) {
       console.error('Error getting chat document:', error);
@@ -302,8 +305,10 @@ export class HeaderComponent {
 
   private async getUserById(userId: string): Promise<any> {
     try {
-      const userDocRef = doc(this.firestore, 'users', userId);
-      const userSnap = await getDoc(userDocRef);
+      const userSnap = await runInInjectionContext(this.injector, async () => {
+        const userDocRef = doc(this.firestore, 'users', userId);
+        return await getDoc(userDocRef);
+      });
       if (userSnap.exists()) {
         const userData = userSnap.data();
         return {

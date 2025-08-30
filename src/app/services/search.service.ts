@@ -1,5 +1,6 @@
-import { Injectable, inject } from '@angular/core';
-import { Observable, of, BehaviorSubject } from 'rxjs';
+import { Injectable, inject, Injector, runInInjectionContext } from '@angular/core';
+import { Observable, of, BehaviorSubject, from, forkJoin } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { ChannelService } from './channel.service';
 import { collection, Firestore, onSnapshot, getDocs, query, collectionGroup, where } from '@angular/fire/firestore';
 
@@ -22,6 +23,7 @@ export interface SearchResult {
 export class SearchService {
   private channelService = inject(ChannelService);
   private firestore = inject(Firestore);
+  private injector = inject(Injector);
   private allUsersCache: any[] = [];
   private usersSubject = new BehaviorSubject<any[]>([]);
 
@@ -34,22 +36,17 @@ export class SearchService {
       return of([]);
     }
 
-    return new Observable(observer => {
-      this.searchMessagesInChats(keyword).then(chatMessages => {
-        this.searchMessagesInChannels(keyword).then(channelMessages => {
-          const allMessages = [...chatMessages, ...channelMessages];
-          observer.next(allMessages);
-          observer.complete();
-        }).catch(error => {
-          console.error('Error searching channel messages:', error);
-          observer.next(chatMessages);
-          observer.complete();
-        });
-      }).catch(error => {
-        console.error('Error searching chat messages:', error);
-        observer.next([]);
-        observer.complete();
-      });
+    return runInInjectionContext(this.injector, () => {
+      const chatMessages$ = from(this.searchMessagesInChats(keyword));
+      const channelMessages$ = from(this.searchMessagesInChannels(keyword));
+
+      return forkJoin([chatMessages$, channelMessages$]).pipe(
+        map(([chatMessages, channelMessages]) => [...chatMessages, ...channelMessages]),
+        catchError(error => {
+          console.error('Error searching messages:', error);
+          return of([]);
+        })
+      );
     });
   }
 
@@ -63,22 +60,25 @@ export class SearchService {
         const chatId = chatDoc.id;
         const chatData = chatDoc.data();
         const chatUsers = chatData['user'] || [];
-        
+
         // Prüfe, ob der aktuelle User Mitglied des Chats ist
         if (!chatUsers.includes(this.channelService.currentUserId)) {
           continue; // Skip chats the user is not a member of
         }
 
-        const messagesRef = collection(this.firestore, `chats/${chatId}/message`);
-        const messagesSnapshot = await getDocs(messagesRef);
+        const messagesSnapshot = await runInInjectionContext(this.injector, async () => {
+          const messagesRef = collection(this.firestore, `chats/${chatId}/message`);
+          const messagesSnapshot = await getDocs(messagesRef);
+          return messagesSnapshot;
+        });
 
         for (const messageDoc of messagesSnapshot.docs) {
           const messageData = messageDoc.data();
           const messageText = messageData['text'] || '';
-          
+
           if (messageText.toLowerCase().includes(keyword.toLowerCase())) {
             const senderName = await this.getSenderName(messageData['senderId']);
-            
+
             results.push({
               id: `chat-${chatId}-${messageDoc.id}`,
               name: `von ${senderName}`,
@@ -110,7 +110,7 @@ export class SearchService {
         const channelId = channelDoc.id;
         const channelData = channelDoc.data();
         const channelName = channelData['channelname'] || 'Unbekannter Channel';
-        
+
         // Prüfe, ob der User Mitglied des Channels ist
         const userIds = channelData['userId'] || [];
         if (!userIds.includes(this.channelService.currentUserId)) {
@@ -118,16 +118,19 @@ export class SearchService {
         }
 
         try {
-          const messagesRef = collection(this.firestore, `channels/${channelId}/message`);
-          const messagesSnapshot = await getDocs(messagesRef);
+          const messagesSnapshot = await runInInjectionContext(this.injector, async () => {
+            const messagesRef = collection(this.firestore, `channels/${channelId}/message`);
+            const messagesSnapshot = await getDocs(messagesRef);
+            return messagesSnapshot;
+          });
 
           for (const messageDoc of messagesSnapshot.docs) {
             const messageData = messageDoc.data();
             const messageText = messageData['text'] || '';
-            
+
             if (messageText.toLowerCase().includes(keyword.toLowerCase())) {
               const senderName = await this.getSenderName(messageData['senderId']);
-              
+
               results.push({
                 id: `channel-${channelId}-${messageDoc.id}`,
                 name: `Nachricht in #${channelName}`,
