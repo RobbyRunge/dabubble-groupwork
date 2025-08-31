@@ -49,7 +49,7 @@ p {
     }
 }
 
-.user-name-aktiv-container {
+.user-name-online-container {
     @include dFlex(center, flex-start);
     flex-direction: column;
     padding: 40px 45px;
@@ -78,7 +78,7 @@ p {
         }
     }
 
-    >.aktiv {
+    >.online {
         @include dFlex();
     }
 
@@ -126,7 +126,7 @@ p {
     }
 }
 
-.aktiv {
+.online {
     >p {
         color: #92C83E;
         font-size: 20px;
@@ -141,7 +141,7 @@ p {
     }
 }
 
-.inaktiv {
+.offline {
     @include dFlex();
 
     >p {

@@ -1,102 +1,324 @@
 @use './../../../styles.scss' as *;
 
 header {
-    width: 100%;
-    height: 70px;
-    @include dFlex(space-between, center);
-    position: relative;
+  width: 100%;
+  height: 70px;
+  @include dFlex(space-between, center);
+  position: relative;
 }
 
 ::ng-deep .mat-mdc-text-field-wrapper {
-    --mdc-filled-text-field-container-color: white;
+  --mdc-filled-text-field-container-color: white;
 }
 
 ::ng-deep .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
-    border-radius: 42px;
+  border-radius: 42px;
 }
 
 .logo-container {
-    padding-left: 45px
+  padding-left: 45px
 }
 
 .search-container {
-    @include dFlex(unset, center);
-    color: black;
+  @include dFlex(unset, center);
+  color: black;
 
-    ::ng-deep input {
-        color: black !important;
-        font-size: 20px;
-    }
+  ::ng-deep input {
+    color: black !important;
+    font-size: 20px;
+  }
 
-    ::ng-deep ::placeholder {
-        color: black !important;
-        font-size: 20px;
+  ::ng-deep ::placeholder {
+    color: black !important;
+    font-size: 20px;
+  }
+}
+
+.search-results {
+  position: absolute;
+  top: 76%;
+  left: 29%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 100;
+  padding: 0;
+  background-color: white;
+  border: 1px solid #ADB0D9;
+  border-radius: 0px 20px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  max-height: 300px;
+  min-width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 10px 0;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ADB0D9;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #535AF1;
+  }
+}
+
+.dropdown-section {
+  padding: 16px 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #f0f0f0;
+  }
+}
+
+.dropdown-header {
+  @include dFlex(flex-start, center);
+  gap: 8px;
+  padding: 8px 24px 12px 24px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #686868;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  mat-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+    color: #686868;
+  }
+}
+
+.search-result-item {
+  @include dFlex(flex-start, center);
+  gap: 12px;
+  padding: 12px 24px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #ECEEFE;
+  }
+
+  &.channel-item:hover {
+    background-color: #ECEEFE;
+  }
+
+  &.user-item:hover {
+    background-color: #ECEEFE;
+  }
+
+  &.message-item:hover {
+    background-color: #ECEEFE;
+  }
+}
+
+.result-icon {
+  @include dFlex(center, center);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  flex-shrink: 0;
+  position: relative;
+
+  mat-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    color: #535AF1;
+  }
+
+  .channel-item & {
+    background-color: #444df2;
+
+    mat-icon {
+      color: #ADB0D9;
     }
+  }
+
+  .user-item & {
+    background-color: transparent;
+
+    mat-icon {
+      color: #ADB0D9;
+    }
+  }
+
+  .message-item & {
+    background-color: #444df2;
+
+    mat-icon {
+      color: #ADB0D9;
+    }
+  }
+}
+
+.avatar-wrapper {
+  position: relative;
+  @include dFlex(center, center);
+  width: 40px;
+  height: 40px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.default-avatar {
+  @include dFlex(center, center);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+
+  mat-icon {
+    color: #757575;
+  }
+}
+
+.status-img-search {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.result-content {
+  flex: 1;
+}
+
+.result-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-description {
+  font-size: 13px;
+  color: #686868;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.result-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #999;
+
+  .sender {
+    color: #666;
+    font-weight: 500;
+  }
+
+  .timestamp {
+    color: #999;
+  }
+}
+
+.message-item {
+  .result-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .result-name {
+    font-weight: 600;
+    color: #444;
+  }
+}
+
+.no-results {
+  padding: 16px 24px;
+  text-align: center;
+  color: #686868;
+  font-style: italic;
+  font-size: 14px;
 }
 
 .user-container {
-    @include dFlex();
-    gap: 20px;
-    padding-right: 35px;
-    min-width: 342px;
+  @include dFlex();
+  gap: 20px;
+  padding-right: 35px;
+  min-width: 342px;
+
+  >div {
+    >span {
+      font-size: 32px;
+      color: black;
+      font-weight: 700;
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
 
     >div {
-        >span {
-            font-size: 32px;
-            color: black;
-            font-weight: 700;
-        }
-    }
-
-    &:hover {
-        cursor: pointer;
-
-        >div {
-            >span {
-                color: #535AF1 !important;
-            }
-        }
-
+      >span {
         color: #535AF1 !important;
+      }
     }
+
+    color: #535AF1 !important;
+  }
 }
 
 mat-form-field {
-    width: 100%;
-    padding-left: 114px;
-    padding-right: 149px;
+  width: 100%;
+  padding-left: 114px;
+  padding-right: 149px;
 }
 
 ::ng-deep .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
-    padding-right: 45px !important;
-    padding-left: 45px;
+  padding-right: 45px !important;
+  padding-left: 45px;
 }
 
 mat-icon {
-    display: flex;
-    width: 35px;
-    height: 35px;
-    color: black;
+  display: flex;
+  width: 35px;
+  height: 35px;
+  color: black;
 }
 
 .avatar-container {
-    position: relative;
-    >img {
-        height: 70px;
-        width: 70px;
-        border-radius: 42px;
-    }
+  position: relative;
 
-    .status-img {
-        position: absolute;
-        top: 56px;
-        left: 48px;
-        width: 18px;
-        height: 18px;
-    }
+  >img {
+    height: 70px;
+    width: 70px;
+    border-radius: 42px;
+  }
+
+  .status-img {
+    position: absolute;
+    top: 56px;
+    left: 48px;
+    width: 18px;
+    height: 18px;
+  }
 }
 
 .arrow-down {
-    @include dFlex(flex-start);
-    cursor: pointer;
+  @include dFlex(flex-start);
+  cursor: pointer;
 }

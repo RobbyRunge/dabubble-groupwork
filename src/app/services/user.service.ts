@@ -27,6 +27,7 @@ import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ChannelService } from './channel.service';
+import { SearchService } from './search.service';
 
 @Injectable({
   providedIn: 'root',
@@ -37,6 +38,7 @@ export class UserService {
   private router = inject(Router);
   private auth = inject(Auth);
   private injector = inject(Injector);
+  private searchService = inject(SearchService);
 
   showChannel = true;
   showChatPartnerHeader = true;

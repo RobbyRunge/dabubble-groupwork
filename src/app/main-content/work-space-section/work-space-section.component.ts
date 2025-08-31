@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   inject,
+  OnDestroy,
   OnInit,
   viewChild,
 } from '@angular/core';
@@ -44,14 +46,17 @@ import { Userstorage } from '../../../models/userStorage.class';
   templateUrl: './work-space-section.component.html',
   styleUrl: './work-space-section.component.scss',
 })
-export class WorkSpaceSectionComponent implements OnInit {
+export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
 
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
   chatService = inject(ChatService);
   private router = inject(Router);
   route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
   unsubChannels!: Subscription;
+  private userDataSub?: Subscription;
+  private channelDataSub?: Subscription;
   newChannel = new Allchannels();
   userstorage = new Userstorage();
   isDrawerOpen = true;
@@ -78,6 +83,7 @@ export class WorkSpaceSectionComponent implements OnInit {
     this.users$ = this.dataUser.getAllUsers();
     this.dataUser.showCurrentUserData();
     this.getUserData();
+    this.getChannelData();
     this.unsubChannels = this.channelService.channelsLoaded$.subscribe(loaded => {
       if (loaded) {
         this.loadSaveRoute();
@@ -86,12 +92,24 @@ export class WorkSpaceSectionComponent implements OnInit {
   }
 
   getUserData() {
-    this.channelService.isChecked$.subscribe(user => {
+    this.userDataSub = this.channelService.isChecked$.subscribe(user => {
+      console.log('WorkSpace: User selection changed:', user);
       this.selectedUser = user;
       this.activeUserId = user?.userId || '';
       if (user?.userId) {
         this.activeChannelId = '';
       }
+      this.cdr.detectChanges();
+    })
+  }
+
+  getChannelData() {
+    this.channelDataSub = this.channelService.activeChannelId$.subscribe(channelId => {
+      this.activeChannelId = channelId;
+      if (channelId) {
+        this.activeUserId = '';
+      }
+      this.cdr.detectChanges();
     })
   }
 
@@ -144,5 +162,7 @@ export class WorkSpaceSectionComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.unsubChannels.unsubscribe();
+    this.userDataSub?.unsubscribe();
+    this.channelDataSub?.unsubscribe();
   }
 }
