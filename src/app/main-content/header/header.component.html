@@ -21,10 +21,8 @@
     </div>
   </div>
 
-  <!-- Dropdown für Suchergebnisse -->
   <div class="search-results" *ngIf="showDropdown">
 
-    <!-- Channel-Dropdown -->
     <div *ngIf="dropdownType === 'channel'" class="dropdown-section">
       <div class="dropdown-header">
         <mat-icon>tag</mat-icon>
@@ -45,7 +43,6 @@
       </div>
     </div>
 
-    <!-- User-Dropdown -->
     <div *ngIf="dropdownType === 'user'" class="dropdown-section">
       <div class="dropdown-header">
         <mat-icon>person</mat-icon>
@@ -73,7 +70,6 @@
       </div>
     </div>
 
-    <!-- Normale Nachrichten-Suche -->
     <div *ngIf="dropdownType === 'normal'" class="dropdown-section">
       <div class="dropdown-header">
         <mat-icon>search</mat-icon>
@@ -96,6 +92,6 @@
         Keine Nachrichten gefunden
       </div>
     </div>
-
+    
   </div>
 </header>
