@@ -66,12 +66,10 @@ export class SearchService {
     try {
       const chatsSnapshot = await this.getChatDocuments();
       const results: SearchResult[] = [];
-
       for (const chatDoc of chatsSnapshot.docs) {
         const chatResults = await this.processChatDocument(chatDoc, keyword);
         results.push(...chatResults);
       }
-
       return results.slice(0, 10);
     } catch (error) {
       console.error('Error searching chat messages:', error);
@@ -162,64 +160,56 @@ export class SearchService {
     };
   }
 
-  // vvv Hier weiter machen mit Funktionen kürzen
-
   private async searchMessagesInChannels(keyword: string): Promise<SearchResult[]> {
     try {
-      const channelsRef = collection(this.firestore, 'channels');
-      const channelsSnapshot = await getDocs(channelsRef);
+      const channelsSnapshot = await this.getChannelDocuments();
       const results: SearchResult[] = [];
-
       for (const channelDoc of channelsSnapshot.docs) {
-        const channelId = channelDoc.id;
-        const channelData = channelDoc.data();
-        const channelName = channelData['channelname'] || 'Unbekannter Channel';
-
-        // Prüfe, ob der User Mitglied des Channels ist
-        const userIds = channelData['userId'] || [];
-        if (!userIds.includes(this.channelService.currentUserId)) {
-          continue; // Skip channels the user is not a member of
-        }
-
-        try {
-          const messagesSnapshot = await runInInjectionContext(this.injector, async () => {
-            const messagesRef = collection(this.firestore, `channels/${channelId}/message`);
-            const messagesSnapshot = await getDocs(messagesRef);
-            return messagesSnapshot;
-          });
-
-          for (const messageDoc of messagesSnapshot.docs) {
-            const messageData = messageDoc.data();
-            const messageText = messageData['text'] || '';
-
-            if (messageText.toLowerCase().includes(keyword.toLowerCase())) {
-              const senderName = await this.getSenderName(messageData['senderId']);
-
-              results.push({
-                id: `channel-${channelId}-${messageDoc.id}`,
-                name: `Nachricht in #${channelName}`,
-                type: 'message',
-                description: this.truncateText(messageText, 100),
-                messageText: messageText,
-                senderName: senderName,
-                timestamp: messageData['timestamp'],
-                channelName: channelName,
-                isDirectMessage: false
-              });
-            }
-          }
-        } catch (error) {
-          // Channel might not have messages collection yet
-          console.log(`No messages found in channel ${channelId}`);
-        }
+        const channelResults = await this.processChannelDocument(channelDoc, keyword);
+        results.push(...channelResults);
       }
-
-      return results.slice(0, 10); // Limitiere auf 10 Ergebnisse
+      return results.slice(0, 10);
     } catch (error) {
       console.error('Error searching channel messages:', error);
       return [];
     }
   }
+
+  private async getChannelDocuments() {
+    return runInInjectionContext(this.injector, async () => {
+      const channelsRef = collection(this.firestore, 'channels');
+      return await getDocs(channelsRef);
+    });
+  }
+
+  private async processChannelDocument(channelDoc: any, keyword: string): Promise<SearchResult[]> {
+    const channelId = channelDoc.id;
+    const channelData = channelDoc.data();
+    const channelName = channelData['channelname'] || 'Unbekannter Channel';
+    if (!this.isUserChannelMember(channelData)) {
+      return [];
+    }
+    try {
+      const messagesSnapshot = await this.getChannelMessages(channelId);
+      return this.extractMatchingMessages(messagesSnapshot, channelId, keyword, false, channelName);
+    } catch (error) {
+      console.log(`No messages found in channel ${channelId}`);
+      return [];
+    }
+  }
+
+  private isUserChannelMember(channelData: any): boolean {
+    const userIds = channelData['userId'] || [];
+    return userIds.includes(this.channelService.currentUserId);
+  }
+
+  private async getChannelMessages(channelId: string) {
+    return runInInjectionContext(this.injector, async () => {
+      const messagesRef = collection(this.firestore, `channels/${channelId}/message`);
+      return await getDocs(messagesRef);
+    });
+  }
+
 
   private async getSenderName(senderId: string): Promise<string> {
     try {
@@ -238,61 +228,123 @@ export class SearchService {
   }
 
   searchChannels(keyword: string): Observable<SearchResult[]> {
-    const userChannels = this.channelService.showChannelByUser || [];
-    const filteredChannels = userChannels
-      .filter((channel: any) =>
-        channel.channelname && channel.channelname.toLowerCase().includes(keyword.toLowerCase())
-      )
-      .map((channel: any) => ({
-        id: channel.channelId || channel.id,
-        name: channel.channelname,
-        type: 'channel' as const,
-        description: channel.description
-      }))
-      .slice(0, 10);
-
+    const userChannels = this.getUserChannels();
+    const filteredChannels = this.filterAndMapChannels(userChannels, keyword);
     return of(filteredChannels);
+  }
+
+  private getUserChannels(): any[] {
+    return this.channelService.showChannelByUser || [];
+  }
+
+  private filterAndMapChannels(channels: any[], keyword: string): SearchResult[] {
+    return channels
+      .filter(channel => this.channelMatchesKeyword(channel, keyword))
+      .map(channel => this.mapChannelToSearchResult(channel))
+      .slice(0, 10);
+  }
+
+  private channelMatchesKeyword(channel: any, keyword: string): boolean {
+    return channel.channelname &&
+      channel.channelname.toLowerCase().includes(keyword.toLowerCase());
+  }
+
+  private mapChannelToSearchResult(channel: any): SearchResult {
+    return {
+      id: channel.channelId || channel.id,
+      name: channel.channelname,
+      type: 'channel' as const,
+      description: channel.description
+    };
   }
 
   searchUsers(keyword: string): Observable<SearchResult[]> {
     const allUsers = this.getAllUsersFromCache();
-    const filteredUsers = Array.from(allUsers)
-      .filter((user: any) => {
-        const hasName = user.name && typeof user.name === 'string';
-        const matchesKeyword = !keyword || (hasName && user.name.toLowerCase().includes(keyword.toLowerCase()));
-        const notCurrentUser = user.userId !== this.channelService.currentUser?.userId;
-        return hasName && matchesKeyword && notCurrentUser;
-      })
-      .map((user: any) => ({
-        id: user.userId || user.id,
-        name: user.name,
-        type: 'user' as const,
-        avatar: user.avatar,
-        description: user.active ? 'Online' : 'Offline'
-      }))
-      .slice(0, 10);
-
+    const filteredUsers = this.filterAndMapUsers(allUsers, keyword);
     return of(filteredUsers);
+  }
+
+  private filterAndMapUsers(users: any[], keyword: string): SearchResult[] {
+    return Array.from(users)
+      .filter(user => this.isValidUser(user, keyword))
+      .map(user => this.mapUserToSearchResult(user))
+      .slice(0, 10);
+  }
+
+  private isValidUser(user: any, keyword: string): boolean {
+    const hasName = this.hasValidName(user);
+    const matchesKeyword = this.userMatchesKeyword(user, keyword);
+    const notCurrentUser = this.isNotCurrentUser(user);
+
+    return hasName && matchesKeyword && notCurrentUser;
+  }
+
+  private hasValidName(user: any): boolean {
+    return user.name && typeof user.name === 'string';
+  }
+
+  private userMatchesKeyword(user: any, keyword: string): boolean {
+    if (!keyword) return true;
+    return this.hasValidName(user) &&
+      user.name.toLowerCase().includes(keyword.toLowerCase());
+  }
+
+  private isNotCurrentUser(user: any): boolean {
+    return user.userId !== this.channelService.currentUser?.userId;
+  }
+
+  private mapUserToSearchResult(user: any): SearchResult {
+    return {
+      id: user.userId || user.id,
+      name: user.name,
+      type: 'user' as const,
+      avatar: user.avatar,
+      description: user.active ? 'Online' : 'Offline'
+    };
   }
 
   private setupUsersListener() {
     const usersCollection = collection(this.firestore, 'users');
-    onSnapshot(usersCollection, (snapshot) => {
-      this.allUsersCache = [];
-      snapshot.forEach((doc) => {
-        const userData = doc.data();
-        this.allUsersCache.push({
-          userId: doc.id,
-          name: userData['name'],
-          email: userData['email'],
-          avatar: userData['avatar'],
-          active: userData['active'] || false
-        });
-      });
-      this.usersSubject.next(this.allUsersCache);
-    }, (error) => {
-      console.error('Error setting up users listener:', error);
+    onSnapshot(usersCollection,
+      (snapshot) => this.handleUsersSnapshot(snapshot),
+      (error) => this.handleUsersListenerError(error)
+    );
+  }
+
+  private handleUsersSnapshot(snapshot: any) {
+    this.clearUsersCache();
+    this.populateUsersCache(snapshot);
+    this.notifyUsersUpdate();
+  }
+
+  private clearUsersCache() {
+    this.allUsersCache = [];
+  }
+
+  private populateUsersCache(snapshot: any) {
+    snapshot.forEach((doc: any) => {
+      const userDoc = this.createUserFromDocument(doc);
+      this.allUsersCache.push(userDoc);
     });
+  }
+
+  private createUserFromDocument(doc: any) {
+    const userData = doc.data();
+    return {
+      userId: doc.id,
+      name: userData['name'],
+      email: userData['email'],
+      avatar: userData['avatar'],
+      active: userData['active'] || false
+    };
+  }
+
+  private notifyUsersUpdate() {
+    this.usersSubject.next(this.allUsersCache);
+  }
+
+  private handleUsersListenerError(error: any) {
+    console.error('Error setting up users listener:', error);
   }
 
   getAllUsersFromCache(): any[] {
