@@ -15,6 +15,7 @@
     @include dFlex(flex-start);
     width: 100%;
     padding-left: 45px;
+    overflow-wrap: anywhere
 }
 
 .user-logo {
@@ -104,6 +105,7 @@
 .message-hover-options {
     right: 45px;
     top: -25px;
+    z-index: 10;
 
     >div {
         color: black;

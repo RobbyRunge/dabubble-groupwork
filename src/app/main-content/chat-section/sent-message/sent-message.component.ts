@@ -8,6 +8,8 @@ import { MatFormField, MatLabel } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { FormsModule } from '@angular/forms';
+import { EmojiPickerService } from '../../../services/emojiPicker.service';
+type PickerSide = 'left' | 'right';
 
 @Component({
   selector: 'app-sent-message',
@@ -31,11 +33,18 @@ export class SentMessageComponent implements OnInit {
   userService = inject(UserService);
   channelService = inject(ChannelService);
   @Input() message: any;
-  @Input() index: number | undefined
+  @Input() index!: number
   @Input() mode: string = '';
+  @Output() emojiPickerRequested = new EventEmitter<{
+    anchor: HTMLElement;
+    message: any;
+    index: number;
+    side: 'left' | 'right';
+    context: 'chat' | 'thread';
+  }>();
   showEmojis: boolean = false;
   messageReacton: string = '';
-  constructor() { this.getUserData(); }
+  constructor(public emojiPickerService: EmojiPickerService) { this.getUserData(); }
   imgSrcMore: any = 'chat-section/more-vert.png';
   imgComment: any = 'chat-section/comment.png';
   imgReaction: any = 'chat-section/add-reaction.png';
@@ -63,7 +72,8 @@ export class SentMessageComponent implements OnInit {
     this.editMessageText = this.message.text;
     this.editMessageActive = true;
   }
-  showAllEmojis() {
+  showAllEmojis(event: MouseEvent) {
+    event.stopPropagation();
     this.showEmojis = true;
   }
   discardEditMessage() {
@@ -86,18 +96,6 @@ export class SentMessageComponent implements OnInit {
     event.stopPropagation();
     this.showEmojisMessage = true;
   }
-  addEmojiMessage($event: any) {
-    this.messageReacton += $event.emoji.native;
-    this.showEmojisMessage = false;
-    this.chatService.loadMostUsedEmojis();
-    if (this.mode === 'thread') {
-      this.chatService.saveEmojisThreadInDatabase($event.emoji.native, this.message.id, this.chatService.parentMessageId)
-    } else {
-      this.chatService.saveEmojisInDatabase($event.emoji.native, this.message.id);
-    }
-    this.shiftContainer = true;
-    setTimeout(() => (this.shiftContainer = false), 300);
-  }
 
   addMostUsedEmojiMessage(emoji: any, index: number) {
     this.messageReacton += emoji;
@@ -118,7 +116,7 @@ export class SentMessageComponent implements OnInit {
 
 
   hideAllEmojis() {
-    this.showEmojisMessage = false;
+    this.showEmojis = false;
   }
 
   getLastThreadReplyTime(): Date | null {
@@ -132,8 +130,20 @@ export class SentMessageComponent implements OnInit {
       this.showAllMessageReactions = true;
     }
   }
+
   hideAllReactions() {
     this.showAllMessageReactions = false;
     this.showAllMessageThreadReactions = false;
+  }
+
+  openEmojiPicker(btn: HTMLElement, e: MouseEvent) {
+    e.stopPropagation();
+    this.emojiPickerRequested.emit({
+      anchor: btn,
+      side: 'left',
+      message: this.message,
+      index: this.index,
+      context: this.mode === 'thread' ? 'thread' : 'chat',
+    });
   }
 }

@@ -1,4 +1,4 @@
-<div class="sidenav-wrapper">
+<div class="sidenav-wrapper" #chatContainer (click)="hideAllEmojis()">
   <mat-drawer-container class="example-container" autosize>
     <mat-drawer #drawer class="example-sidenav" mode="side">
       <div>
@@ -14,17 +14,17 @@
           <div *ngFor="let msg of chatService.messagesThread; let i = index">
             <div *ngIf="chatService.isFirstMessageOfDay(msg.timestamp, i, chatService.messagesThread)">
               <div class="date-divider">
-                <span class="date-label">{{ chatService.getDateLabel(msg.timestamp, i, chatService.messagesThread) }}</span>
+                <span class="date-label">{{ chatService.getDateLabel(msg.timestamp, i, chatService.messagesThread)
+                  }}</span>
               </div>
             </div>
             <div class="sent-message">
-              <app-sent-message [mode]="'thread'" *ngIf="msg.senderId === channelService.currentUserId" [message]="msg" [index]="i">
+              <app-sent-message [mode]="'thread'" *ngIf="msg.senderId === channelService.currentUserId" [message]="msg"
+                [index]="i" (emojiPickerRequested)="openEmojiPicker($event)">
               </app-sent-message>
-              <!--           <div *ngIf="selectedEmoji === i" class="emoji-container">
-            <emoji-mart (emojiClick)="addEmojiMessage($event)"></emoji-mart>
-          </div> -->
             </div>
-            <app-received-message [mode]="'thread'" *ngIf="msg.senderId !== channelService.currentUserId" [message]="msg" [index]="i">
+            <app-received-message [mode]="'thread'" *ngIf="msg.senderId !== channelService.currentUserId"
+              [message]="msg" [index]="i" (emojiPickerRequested)="openEmojiPicker($event)">
             </app-received-message>
           </div>
         </div>
@@ -32,6 +32,10 @@
       <div>
         <app-input-message [mode]="'thread'">
         </app-input-message>
+      </div>
+      <div #emojiPickerThread class="emoji-mart-container" [style.display]="emojiPickerService.state.thread.visible ? 'block' : 'none'"
+        [ngStyle]="{ top: emojiPickerService.state.thread.top + 'px', left: emojiPickerService.state.thread.left + 'px' }" (click)="$event.stopPropagation()">
+        <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
       </div>
     </mat-drawer>
   </mat-drawer-container>

@@ -1,24 +1,33 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { ChatService } from '../../../services/chat.service';
 import { ChannelService } from '../../../services/channel.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
-
+import { EmojiPickerService } from '../../../services/emojiPicker.service';
+type PickerSide = 'left' | 'right';
 @Component({
   selector: 'app-received-message',
-  imports: [NgIf, DatePipe, NgFor, PickerComponent],
+  imports: [NgIf, DatePipe, NgFor],
   templateUrl: './received-message.component.html',
-  styleUrl: './received-message.component.scss'
+  styleUrl: './received-message.component.scss',
 })
 export class ReceivedMessageComponent implements OnInit {
 
   dataUser = inject(ChannelService);
   @Input() message: any;
-  @Input() index: number | undefined
+  @Input() index!: number;
   @Input() mode: string = '';
+  @Output() emojiPickerRequested = new EventEmitter<{
+    anchor: HTMLElement;
+    message: any;
+    index: number;
+    side: 'left' | 'right';
+    context: 'chat' | 'thread';
+  }>();
   public chatService = inject(ChatService);
+  channelService = inject(ChannelService);
   hoveredReactionIndex: number | null = null;
-  constructor() { this.getUserData(); }
+  constructor(public emojiPickerService: EmojiPickerService) { this.getUserData(); }
   imgSrcMore: any = 'chat-section/more-vert.png';
   imgComment: any = 'chat-section/comment.png';
   imgReaction: any = 'chat-section/add-reaction.png';
@@ -81,5 +90,17 @@ export class ReceivedMessageComponent implements OnInit {
 
   getLastThreadReplyTime(): Date | null {
     return this.chatService.getLastThreadReplyTime(this.message.id);
+  }
+
+  openEmojiPicker(btn: HTMLElement, e: MouseEvent) {
+    e.stopPropagation();
+
+    this.emojiPickerRequested.emit({
+      anchor: btn,
+      side: 'right',
+      message: this.message,
+      index: this.index,
+      context: this.mode === 'thread' ? 'thread' : 'chat',
+    });
   }
 }

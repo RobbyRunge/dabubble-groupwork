@@ -7,20 +7,23 @@
 }
 
 .main-content {
-    width: 100%;
+    width: 100vw;
     gap: 20px;
     position: relative;
     @include dFlex(center, flex-start);
 }
 
 .chat-section {
-    width: 100%;
+    width: calc(100vw - 445px);
+    min-width: 500px;
+    max-width: 1920px;
     height: calc(100vh - 100px);
     background-color: white;
     border-radius: 30px;
     @include dFlex(space-between, flex-start);
     flex-direction: column;
     --mat-sys-primary: #686868;
+    position: relative;
 }
 
 .work-space-section {
@@ -50,6 +53,7 @@
         padding-top: 32px;
         padding-bottom: 16px;
         scroll-behavior: smooth;
+        position: relative;
     }
 
     >div:not(.chat-messages-container) {

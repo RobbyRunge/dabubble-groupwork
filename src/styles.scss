@@ -373,7 +373,7 @@ app-input-message {
     border-bottom-left-radius: 30px;
     border-top-left-radius: 30px;
     border-bottom-right-radius: 30px;
-    max-width: 95%;
+/*     max-width: 95%; */
 
     >h3 {
         font-family: 'Nunito';
@@ -410,8 +410,8 @@ mat-option {
 
 .emoji-mart-container {
     position: absolute;
-    top: -50px;
-    right: 100px;
+/*     top: -50px;
+    right: 100px; */
     z-index: 100;
 }
 

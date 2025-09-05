@@ -1,4 +1,4 @@
-<div class="messages-container standard-transition" (click)="hideAllEmojis()" [attr.data-message-id]="message.id">
+<div class="messages-container standard-transition" (click)="hideAllEmojis()" [attr.data-message-id]="message.id" #reactBtn>
     <div class="users-message-container"
         *ngIf="message.senderId === selectedUser.userId && message.senderId !== dataUser.currentUserId">
         <div class="message-container">
@@ -54,7 +54,7 @@
                 (mouseout)="imgComment='chat-section/comment.png'">
             <img [src]="imgComment">
         </div>
-        <div (click)="showAllEmojisMessage(index, $event)" (mouseover)="imgReaction='chat-section/add-reaction-color.png'"
+        <div (click)="openEmojiPicker(reactBtn, $event)" (mouseover)="imgReaction='chat-section/add-reaction-color.png'"
                 (mouseout)="imgReaction='chat-section/add-reaction.png'">
             <img [src]="imgReaction">
         </div>
@@ -64,7 +64,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="showEmojisMessage" class="emoji-mart-container">
+<!--     <div *ngIf="showEmojisMessage" class="emoji-mart-container">
         <emoji-mart (emojiClick)="addEmojiMessage($event)"></emoji-mart>
-    </div>
+    </div> -->
 </div>

@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { ChatService } from '../../services/chat.service';
 import { MatIcon } from '@angular/material/icon';
-import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf, NgStyle } from '@angular/common';
 import { ChannelService } from '../../services/channel.service';
 import { SentMessageComponent } from '../chat-section/sent-message/sent-message.component';
 import { ReceivedMessageComponent } from '../chat-section/received-message/received-message.component';
@@ -13,6 +13,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 import { InputMessageComponent } from "../input-message/input-message.component";
 import { HeaderChatSectionComponent } from '../header-chat-section/header-chat-section.component';
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { EmojiPickerService } from '../../services/emojiPicker.service';
 
 @Component({
   selector: 'app-thread-section',
@@ -25,7 +27,9 @@ import { HeaderChatSectionComponent } from '../header-chat-section/header-chat-s
     ReceivedMessageComponent,
     InputMessageComponent,
     HeaderChatSectionComponent,
-    MatIcon
+    MatIcon,
+    NgStyle,
+    PickerComponent
   ],
   templateUrl: './thread-section.component.html',
   styleUrl: './thread-section.component.scss'
@@ -34,6 +38,9 @@ export class ThreadSectionComponent implements AfterViewInit, OnInit, AfterViewC
 
   @ViewChild('drawer') drawer!: MatDrawer;
   @ViewChild('threadContainer') threadContainer!: ElementRef;
+  @ViewChild('chatContainer', { static: false })
+  chatContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('emojiPickerThread', { static: false }) emojiPickerThread!: ElementRef<HTMLElement>;
   dataUser = inject(UserService);
   chatService = inject(ChatService);
   channelService = inject(ChannelService);
@@ -43,12 +50,15 @@ export class ThreadSectionComponent implements AfterViewInit, OnInit, AfterViewC
   parentMessageId: string | undefined;
   private shouldScrollToBottom = false;
   private lastThreadMessageCount = 0;
+  currentMessage?: any;
+  currentMessageIndex?: number;
 
-  constructor(private chatServices: ChatService) { }
+  constructor(private chatServices: ChatService, public emojiPickerService: EmojiPickerService) { }
 
   ngAfterViewInit() {
     this.chatServices.setDrawer(this.drawer);
     this.scrollToBottom();
+    setTimeout(() => this.emojiPickerService.bindElements('thread', this.threadContainer, this.emojiPickerThread));
   }
 
   ngAfterViewChecked(): void {
@@ -56,7 +66,7 @@ export class ThreadSectionComponent implements AfterViewInit, OnInit, AfterViewC
       this.lastThreadMessageCount = this.chatService.messagesThread.length;
       this.shouldScrollToBottom = true;
     }
-    
+
     if (this.shouldScrollToBottom) {
       this.scrollToBottom();
       this.shouldScrollToBottom = false;
@@ -112,5 +122,21 @@ export class ThreadSectionComponent implements AfterViewInit, OnInit, AfterViewC
       maxHeight: '612px',
       panelClass: 'channel-dialog-container'
     });
+  }
+
+  openEmojiPicker(ev: { anchor: HTMLElement; side: 'left' | 'right'; message: any; index: number; context: 'chat' | 'thread' }) {
+    this.emojiPickerService.open(ev);
+  }
+
+  hideAllEmojis() {
+    this.emojiPickerService.hide('thread');
+  }
+  addEmoji(e: any) {
+    const msg = this.emojiPickerService.state.thread;
+    if (!msg) return;
+    const emoji = e?.emoji?.native ?? e?.emoji ?? e;
+    this.chatService.saveEmojisThreadInDatabase(emoji, this.currentMessage.id, this.chatService.parentMessageId);
+    this.emojiPickerService.hide('thread');
+    this.chatService.loadMostUsedEmojis();
   }
 }

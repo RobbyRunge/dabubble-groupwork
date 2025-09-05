@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, Injector, OnInit, runInInjectionContext, SimpleChanges, ViewChild, AfterViewInit, AfterViewChecked, OnDestroy } from '@angular/core';
+import { Component, ElementRef, inject, Injector, OnInit, runInInjectionContext, SimpleChanges, ViewChild, AfterViewInit, AfterViewChecked, OnDestroy, HostListener, ViewContainerRef } from '@angular/core';
 import { WorkSpaceSectionComponent } from "../work-space-section/work-space-section.component";
 import { ThreadSectionComponent } from "../thread-section/thread-section.component";
 import { HeaderComponent } from "../header/header.component";
@@ -9,7 +9,7 @@ import { docData, onSnapshot } from '@angular/fire/firestore';
 import { User } from '../../../models/user.class';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { ReceivedMessageComponent } from './received-message/received-message.component';
 import { SentMessageComponent } from "./sent-message/sent-message.component";
@@ -17,6 +17,8 @@ import { ChatService } from '../../services/chat.service';
 import { ChannelService } from '../../services/channel.service';
 import { InputMessageComponent } from '../input-message/input-message.component';
 import { HeaderChatSectionComponent } from "../header-chat-section/header-chat-section.component";
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { EmojiPickerService } from '../../services/emojiPicker.service';
 
 @Component({
   selector: 'app-chat-section',
@@ -33,13 +35,18 @@ import { HeaderChatSectionComponent } from "../header-chat-section/header-chat-s
     InputMessageComponent,
     HeaderChatSectionComponent,
     SentMessageComponent,
+    NgStyle,
+    PickerComponent
   ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
 })
 
 export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
-  @ViewChild('chatContainer') chatContainer!: ElementRef;
+  constructor(public pickerService: EmojiPickerService) { }
+  @ViewChild('chatContainer', { static: false }) chatContainer!: ElementRef<HTMLElement>;
+  @ViewChild('emojiPickerChat', { static: false }) emojiPickerChat!: ElementRef<HTMLElement>;
+  @ViewChild('messagesContainer', { static: false }) messagesContainer!: ElementRef<HTMLElement>;
 
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
@@ -61,6 +68,10 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
   readonly emojiDialog = inject(MatDialog);
   private shouldScrollToBottom = false;
   private lastMessageCount = 0;
+  currentMessage?: any;
+  currentMessageIndex?: number;
+  anchorSide: 'left' | 'right' = 'left';
+
 
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
@@ -79,18 +90,11 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
         }, 100);
       }
     });
-    /*     this.listenToMessages(this.route);
-        console.log('test' + this.chatId);
-      }); */
-    // setTimeout(() => {
-    //   this.checkChannel();
-    //   console.log('Channels by user', this.dataUser.showChannelByUser);
-
-    // }, 2000);
   }
 
   ngAfterViewInit(): void {
     this.scrollToBottom();
+    setTimeout(() => this.pickerService.bindElements('chat', this.chatContainer, this.emojiPickerChat));
   }
 
   ngAfterViewChecked(): void {
@@ -98,19 +102,12 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
       this.lastMessageCount = this.chatService.messages.length;
       this.shouldScrollToBottom = true;
     }
-    
+
     if (this.shouldScrollToBottom) {
       this.scrollToBottom();
       this.shouldScrollToBottom = false;
     }
   }
-
-  /*   ngOnChanges(changes: SimpleChanges) {
-      if (changes[this.messageText]) {
-        this.onInputChange();
-        console.log('input feld is changed');
-      }
-    } */
 
   getUserData() {
     this.channelService.isChecked$.subscribe(user => {
@@ -126,7 +123,7 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
       this.channelService.currentUser = new User(data);
     }));
   }
-  
+
   showUserChannel() {
     const channelRef = this.channelService.getChannelRef();
     this.unsubscribeUserChannels = runInInjectionContext(this.injector, () =>
@@ -144,9 +141,9 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
 
   private scrollToBottom(): void {
     try {
-      if (this.chatContainer?.nativeElement) {
+      if (this.messagesContainer?.nativeElement) {
         setTimeout(() => {
-          const element = this.chatContainer.nativeElement;
+          const element = this.messagesContainer.nativeElement;
           element.scrollTop = element.scrollHeight;
         }, 200);
       }
@@ -161,14 +158,14 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
     })
   }
 
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.routeSub?.unsubscribe();
     this.navigationSub?.unsubscribe();
     if (this.unsubscribeUserChannels) {
       this.unsubscribeUserChannels()
     }
     if (this.unsubscribeUserChannels) {
-      this.unsubscribeUserChannels(); 
+      this.unsubscribeUserChannels();
     }
   }
 
@@ -216,5 +213,20 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
   hideAllEmojis(){
     this.showEmojis = false;
   }
+  openEmojiPicker(ev: { anchor: HTMLElement; side: 'left' | 'right'; message: any; index: number; context: 'chat' | 'thread' }) {
+    this.pickerService.open(ev);
+  }
 
+  @HostListener('window:resize')
+  onResize() { this.pickerService.reposition('chat'); }
+
+  /* onScroll() { this.pickerService.reposition('chat'); } */
+
+  addEmoji(e: any) {
+    const s = this.pickerService.state.chat;
+    if (!s.currentMessage) return;
+    const emoji = e?.emoji?.native ?? e?.emoji ?? e;
+    this.chatService.saveEmojisInDatabase(emoji, s.currentMessage.id);
+    this.pickerService.hide('chat');
+  }
 }
