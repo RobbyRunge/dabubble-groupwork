@@ -132,7 +132,7 @@
 
 ::ng-deep .example-full-width .mat-mdc-text-field-wrapper {
     height: unset !important;
-    min-width: 400px !important;
+    min-width: 360px !important;
 }
 
 .mat-mdc-form-field-infix {
@@ -192,15 +192,6 @@
 input {
     color: #686868 !important;
 }
-
-/* emoji-mart {
-
-    position: absolute;
-    top: -400px;
-    left: 40px;
-    z-index: 1000;
-
-} */
 
 .message-reaction-container {
     @include dFlex();

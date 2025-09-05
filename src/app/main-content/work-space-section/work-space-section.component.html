@@ -14,8 +14,8 @@
                     <h3>Devspace</h3>
                 </div>
                 <div class="div-edit-square standard-transition">
-                    <!-- <img src="edit_square.png" alt=""> -->
-                    <mat-icon>edit_square</mat-icon>
+                    <img [src]="imgSrc" (mouseenter)="imgSrc = 'work-space/edit_square_color.png'" (mouseleave)="imgSrc = 'work-space/edit-square.png'">
+                    <!-- <mat-icon>edit_square</mat-icon> -->
                 </div>
             </div>
             <div class="add-channels-container">

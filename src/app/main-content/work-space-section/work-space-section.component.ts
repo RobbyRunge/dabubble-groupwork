@@ -68,6 +68,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   channels$: Observable<Allchannels[]> | undefined;
   onlineUser: string = 'status/online.png';
   offlineUser: string = 'status/offline.png';
+  imgSrc: string = 'work-space/edit-square.png';
 
   accordion = viewChild.required(MatAccordion);
   activeChannelId!: string;
@@ -147,7 +148,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.router.navigate(['mainpage', this.channelService.currentUserId, 'channel', channelId,]);
     this.userstorage.channelId = channelId;
     this.userstorage.showChannel = true;
-    this.getChannelNameandId(channelName, channelId, channelDescription);  
+    this.getChannelNameandId(channelName, channelId, channelDescription);
     this.channelService.updateUserStorage(this.channelService.currentUserId, this.channelService.userSubcollectionId, this.userstorage.toJSON(['channelId', 'showChannel']));
   }
 
