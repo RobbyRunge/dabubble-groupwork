@@ -5,7 +5,14 @@
     </div>
     <div class="selector">
         <mat-radio-group aria-label="Select an option"  [(ngModel)]="selectAllUsersInChannel" (change)="checkboxValue()">
-            <mat-radio-button [value]="true">Alle Mitglieder von #Variable hinzufügen</mat-radio-button>
+            <mat-radio-button [value]="true">Alle Mitglieder von 
+                <span class="channel-name">
+                    @if (channelService.currentChannelName) {
+                        {{channelService.currentChannelName}}
+                    } @else {
+                        {{channelService.userSubcollectionChannelName}}
+                    }</span>  
+            </mat-radio-button>
             <mat-radio-button [value]="false">Bestimmte leute hinzufügen</mat-radio-button>
         </mat-radio-group>
     </div>

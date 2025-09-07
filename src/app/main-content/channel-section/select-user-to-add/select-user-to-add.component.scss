@@ -12,8 +12,14 @@
 
 .selector {
   >mat-radio-group {
-     @include dFlex(space-between, unset);
+    font-size: 18px;
+    font-weight: 400;
+    @include dFlex(space-between, unset);
     flex-direction: column;
+  }
+  >mat-radio-button {
+    font-size: 18px;
+    font-weight: 400;
   }
 }
 
@@ -68,4 +74,8 @@
     width: 34px;
     height: 34px;
   }
+}
+
+.channel-name {
+  color: #797EF3;   
 }

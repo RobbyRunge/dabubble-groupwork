@@ -37,15 +37,15 @@ export class SelectUserToAddComponent {
   @ViewChild('searchUserInput') searchUserInput!: ElementRef<HTMLInputElement>;
 
   async createChannel() {
-    this.addUserId = [];
-    this.addUserId.push(this.channelService.currentUserId);
     if (this.newChannel) {
       this.newChannel.channelname = this.channelName ?? '';
       this.newChannel.description = this.channelDescription ?? '';
     }
-    this.selectedUsers.forEach(user => {
-      this.addUserId.push(user.userId);
-    });
+    if(!this.selectAllUsersInChannel) {
+      this.createChannelWithNewUsernames();
+    } else if (this.selectAllUsersInChannel) {
+      this.createChannelWithUsersInChannel();
+    }
     await this.channelService.addNewChannel(this.newChannel.toJSON(),this.addUserId,this.channelService.currentUserId).then(() => {
       this.dialog.close();
       this.addUserId = [];
@@ -97,9 +97,11 @@ export class SelectUserToAddComponent {
   }
 
    private updateBtnStatus() {
-    const count = this.selectedUsers.length;
+    if(!this.selectAllUsersInChannel) {
+       const count = this.selectedUsers.length;
     this.showSelectedUser = count > 0;
     this.isEnabled = count > 0;
+    }
   }
 
   removeSelectedUser(userId: string, event: MouseEvent) {
@@ -116,4 +118,22 @@ export class SelectUserToAddComponent {
     this.showSelectedUser = false;
     this.setFocusInput();
   }
+
+  createChannelWithNewUsernames() {
+    this.addUserId = [];
+    this.addUserId.push(this.channelService.currentUserId);
+    this.selectedUsers.forEach(user => {
+      this.addUserId.push(user.userId);
+    });
+  }
+
+  createChannelWithUsersInChannel() {
+    this.addUserId = [];
+    this.userService.userAvatarInChannel$.subscribe(users => {
+        users.forEach(element => {
+            this.addUserId.push(element.userId);
+        });
+    });
+  }
+
 }
