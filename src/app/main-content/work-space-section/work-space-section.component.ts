@@ -66,8 +66,6 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   myPanel: any = true;
 
   channels$: Observable<Allchannels[]> | undefined;
-  onlineUser: string = 'status/online.png';
-  offlineUser: string = 'status/offline.png';
 
   accordion = viewChild.required(MatAccordion);
   activeChannelId!: string;

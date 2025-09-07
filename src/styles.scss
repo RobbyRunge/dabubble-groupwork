@@ -343,6 +343,7 @@ mat-dialog-content {
 }
 
 .add-user-to-channel {
+    display: flex;
     background-image: url('/chat-section/person-add-black.png');
     background-size: cover;
     background-position: center;
@@ -498,4 +499,11 @@ app-main-content {
     height: 49px;
     padding: 12px 25px 12px 25px;
     border-radius: 25px;
+}
+
+.user-in-channel .mat-mdc-dialog-surface {
+    background-color: #FFFFFF;
+    padding: 40px;
+    border-top-right-radius: 0;
+    box-shadow: 0px 6px 10px 0px #00000033;
 }

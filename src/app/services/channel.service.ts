@@ -12,9 +12,7 @@ import {
   collectionData,
   CollectionReference,
   doc,
-  docData,
   Firestore,
-  getDocs,
   onSnapshot,
   updateDoc,
 } from '@angular/fire/firestore';
@@ -42,6 +40,17 @@ export class ChannelService {
   private activeChannelIdSubject = new BehaviorSubject<string>('');
   public activeChannelId$ = this.activeChannelIdSubject.asObservable();
 
+  private buttonRectSubject = new BehaviorSubject<DOMRect | null>(null);
+  buttonRect$ = this.buttonRectSubject.asObservable();
+
+  setButtonRect(rect: DOMRect) {
+    this.buttonRectSubject.next(rect);
+  }
+
+  getButtonRect(): DOMRect | null {
+    return this.buttonRectSubject.value;
+  }
+
   userData: User[] = [];
   currentUser?: User;
   currentUserId!: string;
@@ -57,7 +66,6 @@ export class ChannelService {
   userSubcollectionChannelName: string = '';
   userSubcollectionDescription: string = '';
   selectedUser: any
-
 
   unsubscribeUserData!: Subscription;
   unsubscribeUserChannels!: Subscription;
@@ -153,26 +161,6 @@ export class ChannelService {
       }) 
     );
   }
-
-  // async showCurrentUserData() {
-  //   const userRef = this.getSingleUserRef(this.currentUserId);
-  //   this.unsubscribeUserData = runInInjectionContext(this.injector, () =>
-  //     docData(userRef)
-  //   ).subscribe((data) => {
-  //     this.currentUser = new User(data);
-  //   });
-  //   const storageRef = this.getUserSubCol(this.currentUserId);
-  //   const storageSnapshot = await runInInjectionContext(this.injector, () =>
-  //     getDocs(storageRef)
-  //   );
-  //   storageSnapshot.forEach((doc) => {
-  //     const data = doc.data();
-  //     this.userSubcollectionChannelId = data['channelId'];
-  //     this.userSubcollectionId = doc.id;
-  //     this.getChannelName(this.userSubcollectionChannelId);
-  //   });
-  //   this.showUserChannel();
-  // }
 
   showUserChannel() {
     const channelRef = this.getChannelRef();

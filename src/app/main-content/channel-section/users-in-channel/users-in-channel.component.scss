@@ -1,0 +1,69 @@
+@use './../../../../styles.scss' as *;
+
+.users-in-channel-main-cont {
+    height: 100%;
+    @include dFlex(space-between, unset);
+    flex-direction: column;
+}
+
+.users-in-channel {
+    @include dFlex(unset, unset);
+    flex-direction: column;
+    gap: 13px;
+    padding: 16px 8px;
+}
+
+.users-avatar-and-name {
+    @include dFlex(unset, center);
+    flex-direction: row;
+    gap: 15px;
+}
+
+.user-name {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.add-user-to-channel-cont {
+    @include dFlex(unset, center);
+    flex-direction: row;
+    gap: 20px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 400;
+    padding: 12px 20px;
+    box-sizing: border-box;
+}
+
+.add-user-to-channel-span {
+    display: flex;
+    background-image: url('/chat-section/add-user-black.png');   
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 32px;
+    width: 32px;
+}
+
+.add-user-to-channel-cont {
+    &:hover {
+        background-color: #ECEEFE;  
+        border-radius: 100px;
+        color: #535AF1;
+        .add-user-to-channel-span {
+            background-image: url('/chat-section/add-user-purple.png');  
+        }
+    }
+}
+
+.user-status {
+    position: relative;
+}
+
+.user-status-on-off {
+    position: absolute;
+    top: 30px;
+    left: 20px;
+    width: 14px;
+    height: 14px;
+}

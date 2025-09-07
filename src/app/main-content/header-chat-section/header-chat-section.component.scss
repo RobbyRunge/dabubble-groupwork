@@ -1,3 +1,5 @@
+@use "./../../../styles.scss" as *;
+
 .other-user {
     .chat-info-container {
         >p {
@@ -17,4 +19,23 @@
 
 .button-container:hover img {
     filter: brightness(0) saturate(100%) invert(34%) sepia(68%) saturate(3151%) hue-rotate(225deg) brightness(96%) contrast(91%);
+}
+
+.show-users-avatar {
+    @include dFlex(center, center);
+    padding: 3px 10px 3px 10px;
+    &:hover {
+        cursor: pointer;
+        background: #ECEEFE;
+        border-radius: 30px;
+        .number-of-users {
+            color: #535AF1; 
+        }
+    }
+}
+
+.number-of-users {
+    &:hover {
+        cursor: pointer;
+    }
 }

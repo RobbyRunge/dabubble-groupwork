@@ -70,7 +70,7 @@
                                 (click)="chatService.onUserClick(index, user)">
                                 <div>
                                     <img class="avatar-small-img" src="avatar/{{user.avatar}}" alt="">
-                                    <img class="status-img" src="{{ user.active ? onlineUser : offlineUser }}" alt="">
+                                    <img class="status-img" src="{{ user.active ? dataUser.onlineUser : dataUser.offlineUser }}" alt="">
                                 </div>
                                 <div>
                                     <h2>{{ user.name }}

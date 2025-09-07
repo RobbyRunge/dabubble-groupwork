@@ -40,6 +40,9 @@ export class UserService {
   private injector = inject(Injector);
   private searchService = inject(SearchService);
 
+  onlineUser: string = 'status/online.png';
+  offlineUser: string = 'status/offline.png';
+
   showChannel = true;
   showChatPartnerHeader = true;
 
@@ -50,8 +53,7 @@ export class UserService {
   private pendingRegistrationId = new BehaviorSubject<string | null>(null);
   pendingRegistrationId$ = this.pendingRegistrationId.asObservable();
 
-  userNamesInChannel$ = new BehaviorSubject<string[]>([]);
-  userAvatarInChannel$ = new BehaviorSubject<string[]>([]);
+  userAvatarInChannel$ = new BehaviorSubject<{ name: string; avatar: string; userId: string, userActive: boolean }[]>([]);
 
   pendingUser: User | null = null;
 
@@ -207,8 +209,6 @@ export class UserService {
         })
       );
       const userStorageId = userStorageDocRef.id;
-      console.log('user id ist', userId);
-      console.log('user storage id ist', userStorageId);
       return {
         userId,
         userStorageId,
@@ -334,13 +334,9 @@ export class UserService {
           );
           const dataName = nameSnap.data();
           if (dataName) {
-            this.userNamesInChannel$.next([
-              ...this.userNamesInChannel$.value,
-              dataName['name'],
-            ]);
             this.userAvatarInChannel$.next([
               ...this.userAvatarInChannel$.value,
-              dataName['avatar'],
+              { avatar: dataName['avatar'], name: dataName['name'], userId: id, userActive: dataName['active'] }   
             ]);
           }
         }
@@ -374,7 +370,6 @@ export class UserService {
 
   clearUserInChannelsArray() {
     this.usersIdsInChannel = [];
-    this.userNamesInChannel$.next([]);
     this.userAvatarInChannel$.next([]);
   }
 
