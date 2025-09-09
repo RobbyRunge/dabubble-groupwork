@@ -3,7 +3,7 @@
 .chat-section{
     @include dFlex(flex-start);
     flex-direction: column;
-    max-width: 1920px;
+    /* max-width: 1920px; */
     gap: 12px;
     background-color: #ECEEFE;
     height: 100vh;

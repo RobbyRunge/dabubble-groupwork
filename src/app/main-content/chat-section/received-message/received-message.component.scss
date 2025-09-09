@@ -70,10 +70,12 @@
 
 .answer-date-container {
     @include dFlex(flex-start);
+    flex-wrap: wrap;
 
     >div {
         @include dFlex();
         gap: 20px;
+        flex-wrap: wrap;
         flex-direction: row-reverse;
 
         .last-reply-time {

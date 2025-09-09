@@ -49,6 +49,10 @@
 
 .mat-drawer {
     background-color: white;
+    display: flex;
+    width: clamp(220px, 24vw, 100%);
+    /*     flex: 0 1 clamp(240px, 24vw, 300px);
+    min-width: 200px; */
 }
 
 .channel-container {
@@ -343,3 +347,12 @@ button {
         font-weight: bold;
     }
 }
+
+/* @media (max-width: 1280px){
+    .example-container{
+        width: 300px;
+    }
+    .mat-drawer.mat-drawer-opened.mat-drawer-opened{
+        width: 300px;
+    }
+} */

@@ -72,9 +72,9 @@ body {
 }
 
 .select-user-dialog-container .mat-mdc-dialog-surface {
-   background-color: #FFFFFF; 
-   padding: 40px;
-   box-shadow: 0px 6px 10px 0px #00000033;
+    background-color: #FFFFFF;
+    padding: 40px;
+    box-shadow: 0px 6px 10px 0px #00000033;
 }
 
 .close-icon {
@@ -373,7 +373,7 @@ app-input-message {
     border-bottom-left-radius: 30px;
     border-top-left-radius: 30px;
     border-bottom-right-radius: 30px;
-/*     max-width: 95%; */
+    /*     max-width: 95%; */
 
     >h3 {
         font-family: 'Nunito';
@@ -410,12 +410,13 @@ mat-option {
 
 .emoji-mart-container {
     position: absolute;
-/*     top: -50px;
-    right: 100px; */
     z-index: 100;
 }
 
 app-main-content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     width: 100vw;
     background-color: #ECEEFE;
 }
@@ -425,9 +426,11 @@ app-main-content {
     flex-direction: row;
     font-size: 24px;
     font-weight: 700;
+
     >p {
         cursor: default;
     }
+
     mat-icon {
         cursor: pointer;
         border-radius: 50%;
@@ -439,11 +442,12 @@ app-main-content {
 }
 
 .mat-mdc-radio-button .mdc-radio__native-control:enabled:not(:checked)+.mdc-radio__background>.mdc-radio__outer-circle {
-    border-color: #ADB0D9 !important;  
+    border-color: #ADB0D9 !important;
 }
 
-.mat-mdc-radio-button .mdc-radio__native-control:enabled:checked+.mdc-radio__background>.mdc-radio__outer-circle, .mat-mdc-radio-button .mdc-radio__native-control:enabled:checked+.mdc-radio__background>.mdc-radio__inner-circle {
-  border-color: #444DF2 !important;   
+.mat-mdc-radio-button .mdc-radio__native-control:enabled:checked+.mdc-radio__background>.mdc-radio__outer-circle,
+.mat-mdc-radio-button .mdc-radio__native-control:enabled:checked+.mdc-radio__background>.mdc-radio__inner-circle {
+    border-color: #444DF2 !important;
 }
 
 .mat-mdc-radio-button {
@@ -469,6 +473,7 @@ app-main-content {
     flex-direction: row;
     gap: 15px;
     padding: 4px 20px 4px 20px;
+
     &:hover {
         cursor: pointer;
         background: #ECEEFE;
@@ -491,7 +496,7 @@ app-main-content {
 }
 
 .create-channel-btn {
-   color: whitesmoke;
+    color: whitesmoke;
     font-size: 18px;
     font-weight: 700;
     width: 125px;
