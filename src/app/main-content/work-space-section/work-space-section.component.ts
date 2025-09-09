@@ -26,6 +26,7 @@ import { Allchannels } from '../../../models/allchannels.class';
 import { ChannelService } from '../../services/channel.service';
 import { ChatService } from '../../services/chat.service';
 import { Userstorage } from '../../../models/userStorage.class';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-work-space-section',
@@ -41,6 +42,7 @@ import { Userstorage } from '../../../models/userStorage.class';
     NgFor,
     AsyncPipe,
     CommonModule,
+    FormsModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './work-space-section.component.html',
@@ -73,6 +75,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   accordion = viewChild.required(MatAccordion);
   activeChannelId!: string;
   activeUserId!: string;
+  searchTerm: string = '';
 
 
   onChange(user: any) {
@@ -165,5 +168,22 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.unsubChannels.unsubscribe();
     this.userDataSub?.unsubscribe();
     this.channelDataSub?.unsubscribe();
+  }
+
+  onSearchInput() {
+    const term = this.searchTerm;
+/*     if (this.isChannelSearch(term)) {
+      this.dropdownType = 'channel';
+      const channelKeyword = this.extractKeyword(term, '#');
+      this.searchChannels(channelKeyword);
+    } else if (this.isUserSearch(term)) {
+      this.dropdownType = 'user';
+      const userKeyword = this.extractKeyword(term, '@');
+      this.searchUsers(userKeyword);
+    } else {
+      this.dropdownType = 'normal';
+      this.searchSubject.next(term);
+    }
+    this.showDropdown = term.length > 0; */
   }
 }

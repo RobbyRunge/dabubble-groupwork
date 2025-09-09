@@ -50,9 +50,8 @@
 .mat-drawer {
     background-color: white;
     display: flex;
-    width: clamp(220px, 24vw, 100%);
-    /*     flex: 0 1 clamp(240px, 24vw, 300px);
-    min-width: 200px; */
+    width: clamp(300px, 24vw, 100%);
+    min-width: 300px;
 }
 
 .channel-container {
@@ -348,11 +347,44 @@ button {
     }
 }
 
-/* @media (max-width: 1280px){
-    .example-container{
-        width: 300px;
+.search-container {
+    display: none;
+}
+
+:host ::ng-deep .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
+    border-radius: 42px;
+    border: 1px solid #ADB0D9;
+}
+
+:host ::ng-deep .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
+    padding-right: 24px !important;
+    padding-left: 24px;
+    height: 48px;
+    @include dFlex();
+}
+
+@media(max-width: 1000px) {
+
+    .channel-logo-name,
+    .div-edit-square {
+        display: none !important;
     }
-    .mat-drawer.mat-drawer-opened.mat-drawer-opened{
-        width: 300px;
+
+    .search-container {
+        display: flex;
     }
-} */
+
+    .channel-container {
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-top: 20px;
+    }
+
+    .add-channels-container {
+        padding-left: 15px;
+    }
+
+    .useres-list-container{
+        padding-left: 15px;
+    }
+}

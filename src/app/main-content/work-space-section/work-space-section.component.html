@@ -3,7 +3,8 @@
         <span class="standard-transition">
             {{ isDrawerOpen ? 'Workspace-Menü schließen' : 'Workspace-Menü öffnen' }}
         </span>
-        <img class="open-close-img standard-transition" [src]="isDrawerOpen ? 'work-space/hide-menu.png' : 'work-space/show-menu.png'" alt="" />
+        <img class="open-close-img standard-transition"
+            [src]="isDrawerOpen ? 'work-space/hide-menu.png' : 'work-space/show-menu.png'" alt="" />
     </button>
 
     <mat-drawer-container class="example-container" autosize>
@@ -13,9 +14,16 @@
                     <img src="work-space/devspace-logo.png" alt="">
                     <h3>Devspace</h3>
                 </div>
+                <mat-form-field class="search-container">
+                    <input matInput type="text" placeholder="Gehe zu..." [(ngModel)]="searchTerm"
+                        (input)="onSearchInput()">
+                    <button matSuffix mat-icon-button aria-label="Clear">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                </mat-form-field>
                 <div class="div-edit-square standard-transition">
-                    <img [src]="imgSrc" (mouseenter)="imgSrc = 'work-space/edit_square_color.png'" (mouseleave)="imgSrc = 'work-space/edit-square.png'">
-                    <!-- <mat-icon>edit_square</mat-icon> -->
+                    <img [src]="imgSrc" (mouseenter)="imgSrc = 'work-space/edit_square_color.png'"
+                        (mouseleave)="imgSrc = 'work-space/edit-square.png'">
                 </div>
             </div>
             <div class="add-channels-container">

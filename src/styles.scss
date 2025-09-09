@@ -504,3 +504,18 @@ app-main-content {
     padding: 12px 25px 12px 25px;
     border-radius: 25px;
 }
+
+.search-container {
+    @include dFlex(unset, center);
+    color: black;
+
+    ::ng-deep input {
+        color: black !important;
+        font-size: 20px;
+    }
+
+    ::ng-deep ::placeholder {
+        color: #686868 !important;
+        font-size: 20px;
+    }
+}
