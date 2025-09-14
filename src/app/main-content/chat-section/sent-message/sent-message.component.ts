@@ -89,7 +89,7 @@ export class SentMessageComponent implements OnInit {
     this.showEmojis = false;
   }
   async updateMessage() {
-    await this.chatService.updateUserMessage(this.message.id, this.editMessageText);
+    await this.chatService.updateUserMessage(this.mode, this.message.id, this.editMessageText);
   }
 
   showAllEmojisMessage(index: number | any, event: MouseEvent) {

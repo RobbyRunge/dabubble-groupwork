@@ -49,16 +49,15 @@
         <span>Personen</span>
       </div>
       <div *ngFor="let user of userResults" class="search-result-item user-item standard-transition"
-        (click)="selectUserResult(user)">
+        (click)="selectUserResult(dropdownType,user)">
         <div class="result-icon">
           <div class="avatar-wrapper">
             <img *ngIf="user.avatar" [src]="'/avatar/' + user.avatar" class="user-avatar" alt="">
             <div *ngIf="!user.avatar" class="default-avatar">
               <mat-icon>person</mat-icon>
             </div>
-            <img class="status-img-search" 
-                 [src]="user.description === 'Online' ? 'status/online.png' : 'status/offline.png'" 
-                 alt="">
+            <img class="status-img-search"
+              [src]="user.description === 'Online' ? 'status/online.png' : 'status/offline.png'" alt="">
           </div>
         </div>
         <div class="result-content">
@@ -76,7 +75,7 @@
         <span>Nachrichten</span>
       </div>
       <div *ngFor="let result of searchResults" class="search-result-item message-item standard-transition"
-        (click)="selectMessageResult(result)">
+        (click)="selectMessageResult(dropdownType,result)">
         <div class="result-icon">
           <mat-icon>{{ result.isDirectMessage ? 'message' : 'tag' }}</mat-icon>
         </div>
@@ -84,7 +83,8 @@
           <div class="result-name">{{ result.name }}</div>
           <div class="result-description" *ngIf="result.description">{{ truncateDescription(result.description) }}</div>
           <div class="result-meta" *ngIf="result.senderName">
-            <span class="timestamp" *ngIf="result.timestamp">{{ result.timestamp?.toDate() | date:'dd.MM.yyyy HH:mm' }}</span>
+            <span class="timestamp" *ngIf="result.timestamp">{{ result.timestamp?.toDate() | date:'dd.MM.yyyy HH:mm'
+              }}</span>
           </div>
         </div>
       </div>
@@ -92,6 +92,6 @@
         Keine Nachrichten gefunden
       </div>
     </div>
-    
+
   </div>
 </header>

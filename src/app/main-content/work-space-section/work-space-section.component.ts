@@ -144,7 +144,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     }
   }
 
-  openChannel(channelName: string, channelId: string, channelDescription: string) {
+  async openChannel(type: string, channelName: string, channelId: string, channelDescription: string) {
     this.dataUser.showChannel = true;
     this.dataUser.showChatPartnerHeader = false;
     this.activeUserId = '';
@@ -153,6 +153,9 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.userstorage.showChannel = true;
     this.getChannelNameandId(channelName, channelId, channelDescription);
     this.channelService.updateUserStorage(this.channelService.currentUserId, this.channelService.userSubcollectionId, this.userstorage.toJSON(['channelId', 'showChannel']));
+    this.chatService.checkIfChatOrChannel(type);
+    this.chatService.listenToMessages(type);
+    /* await this.chatService.getOrCreateChatId(this.dataUser.usersIdsInChannel, this.channelService.currentUserId); */
   }
 
   getChannelNameandId(channelName: string, channelId: string, channelDescription: string) {
@@ -172,18 +175,18 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
 
   onSearchInput() {
     const term = this.searchTerm;
-/*     if (this.isChannelSearch(term)) {
-      this.dropdownType = 'channel';
-      const channelKeyword = this.extractKeyword(term, '#');
-      this.searchChannels(channelKeyword);
-    } else if (this.isUserSearch(term)) {
-      this.dropdownType = 'user';
-      const userKeyword = this.extractKeyword(term, '@');
-      this.searchUsers(userKeyword);
-    } else {
-      this.dropdownType = 'normal';
-      this.searchSubject.next(term);
-    }
-    this.showDropdown = term.length > 0; */
+    /*     if (this.isChannelSearch(term)) {
+          this.dropdownType = 'channel';
+          const channelKeyword = this.extractKeyword(term, '#');
+          this.searchChannels(channelKeyword);
+        } else if (this.isUserSearch(term)) {
+          this.dropdownType = 'user';
+          const userKeyword = this.extractKeyword(term, '@');
+          this.searchUsers(userKeyword);
+        } else {
+          this.dropdownType = 'normal';
+          this.searchSubject.next(term);
+        }
+        this.showDropdown = term.length > 0; */
   }
 }

@@ -25,7 +25,8 @@
                     </p>
                 </div>
                 <div class="chat-info-container">
-                    <p class="standard-transition" *ngIf="selectedUser.userId !== channelService.currentUserId && !chatService.hasMessages">Diese
+                    <p class="standard-transition"
+                        *ngIf="selectedUser.userId !== channelService.currentUserId && !chatService.hasMessages">Diese
                         Unterhaltung findet nur zwischen <span (click)="openUserDialog()">&#64;{{selectedUser.name}}
                         </span>und dir statt</p>
                 </div>
@@ -46,7 +47,7 @@
                     </app-received-message>
                 </div>
             </div>
-            <app-input-message [mode]="'chat'">
+            <app-input-message [mode]="'chats'">
             </app-input-message>
         </div>
         <div #emojiPickerChat class="emoji-mart-container"
