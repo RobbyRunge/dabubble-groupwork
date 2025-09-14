@@ -56,23 +56,23 @@ export class ChatService {
     }
 
     private async getOrCreateSelfChat(chatsRef: CollectionReference, userId: string): Promise<string> {
-        const selfQuery = query(chatsRef, where('user', '==', [userId]));
+        const selfQuery = query(chatsRef, where('userId', '==', [userId]));
         const selfSnapshot = await getDocs(selfQuery);
 
         if (!selfSnapshot.empty) {
             return selfSnapshot.docs[0].id;
         }
 
-        const newSelfChat = await addDoc(chatsRef, { user: [userId] });
+        const newSelfChat = await addDoc(chatsRef, { userId: [userId] });
         return newSelfChat.id;
     }
 
     private async findExistingChatBetweenUsers(chatsRef: CollectionReference, userId1: string, userId2: string): Promise<string | null> {
-        const q = query(chatsRef, where('user', 'array-contains', userId1));
+        const q = query(chatsRef, where('userId', 'array-contains', userId1));
         const snapshot = await getDocs(q);
 
         for (const doc of snapshot.docs) {
-            const users = doc.data()['user'];
+            const users = doc.data()['userId'];
             if (Array.isArray(users) && users.includes(userId2) && users.length === 2) {
                 return doc.id;
             }
@@ -83,7 +83,7 @@ export class ChatService {
 
     private async createNewChat(chatsRef: CollectionReference, users: string[]): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
-            const newChat = await addDoc(chatsRef, { user: users });
+            const newChat = await addDoc(chatsRef, { userId: users });
             return newChat.id;
         })
     };

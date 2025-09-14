@@ -51,7 +51,6 @@ h6,
 p,
 span {
     margin: 0;
-    color: black;
 }
 
 body {
@@ -344,7 +343,6 @@ mat-dialog-content {
 }
 
 .add-user-to-channel {
-    display: flex;
     background-image: url('/chat-section/person-add-black.png');
     background-size: cover;
     background-position: center;
@@ -450,8 +448,6 @@ app-main-content {
 .mat-mdc-radio-button .mdc-radio__native-control:enabled:checked+.mdc-radio__background>.mdc-radio__outer-circle,
 .mat-mdc-radio-button .mdc-radio__native-control:enabled:checked+.mdc-radio__background>.mdc-radio__inner-circle {
     border-color: #444DF2 !important;
-.mat-mdc-radio-button .mdc-radio__native-control:enabled:checked+.mdc-radio__background>.mdc-radio__outer-circle, .mat-mdc-radio-button .mdc-radio__native-control:enabled:checked+.mdc-radio__background>.mdc-radio__inner-circle {
-    border-color: #444DF2 !important;   
 }
 
 .mat-mdc-radio-button {
