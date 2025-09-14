@@ -67,8 +67,6 @@ export class ReceivedMessageComponent implements OnInit {
     this.chatService.saveEmojisInDatabase(emoji, this.message.id)
   }
 
-
-
   hideAllEmojis() {
     this.showEmojisMessage = false;
   }

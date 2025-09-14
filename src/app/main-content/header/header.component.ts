@@ -169,14 +169,14 @@ export class HeaderComponent {
     }
   }
 
-  selectUserResult(user: SearchResult) {
+  selectUserResult(type: string, user: SearchResult) {
     this.showDropdown = false;
     this.dropdownType = 'normal';
     this.searchTerm = '';
-    this.openPrivateChat(user);
+    this.openPrivateChat(type, user);
   }
 
-  private async openPrivateChat(user: SearchResult) {
+  private async openPrivateChat(type: string, user: SearchResult) {
     try {
       const userForChat = {
         userId: user.id,
@@ -184,26 +184,26 @@ export class HeaderComponent {
         avatar: user.avatar,
         active: user.description === 'Online'
       };
-      await this.chatService.onUserClick(0, userForChat);
+      await this.chatService.onUserClick(type, 0, userForChat);
     } catch (error) {
       console.error('Fehler beim Öffnen des privaten Chats:', error);
     }
   }
 
-  selectMessageResult(result: SearchResult) {
+  selectMessageResult(type: string, result: SearchResult) {
     this.showDropdown = false;
     this.dropdownType = 'normal';
     this.searchTerm = '';
 
     if (result.type === 'message') {
-      this.navigateToMessage(result);
+      this.navigateToMessage(type,result);
     }
   }
 
-  private navigateToMessage(messageResult: SearchResult) {
+  private navigateToMessage(type: string, messageResult: SearchResult) {
     try {
       if (messageResult.isDirectMessage) {
-        this.navigateToDirectMessage(messageResult);
+        this.navigateToDirectMessage(type, messageResult);
       } else if (messageResult.channelName) {
         this.navigateToChannelMessage(messageResult);
       }
@@ -212,13 +212,13 @@ export class HeaderComponent {
     }
   }
 
-  private async navigateToDirectMessage(messageResult: SearchResult) {
+  private async navigateToDirectMessage(type: string, messageResult: SearchResult) {
     const { chatId, messageId } = this.parseMessageId(messageResult.id);
     if (!chatId || !messageId) return;
     try {
       const otherUser = await this.findChatPartner(chatId);
       if (otherUser) {
-        await this.openDirectChat(otherUser, messageId);
+        await this.openDirectChat(type, otherUser, messageId);
       }
     } catch (error) {
       console.error('Fehler beim Öffnen des Chats:', error);
@@ -244,8 +244,8 @@ export class HeaderComponent {
     return otherUserId ? await this.getUserById(otherUserId) : null;
   }
 
-  private async openDirectChat(otherUser: any, messageId: string) {
-    await this.chatService.onUserClick(0, {
+  private async openDirectChat(type: string, otherUser: any, messageId: string) {
+    await this.chatService.onUserClick(type, 0, {
       userId: otherUser.userId,
       name: otherUser.name,
       avatar: otherUser.avatar,

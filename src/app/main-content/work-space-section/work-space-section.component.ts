@@ -26,6 +26,7 @@ import { Allchannels } from '../../../models/allchannels.class';
 import { ChannelService } from '../../services/channel.service';
 import { ChatService } from '../../services/chat.service';
 import { Userstorage } from '../../../models/userStorage.class';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-work-space-section',
@@ -41,6 +42,7 @@ import { Userstorage } from '../../../models/userStorage.class';
     NgFor,
     AsyncPipe,
     CommonModule,
+    FormsModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './work-space-section.component.html',
@@ -66,10 +68,14 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   myPanel: any = true;
 
   channels$: Observable<Allchannels[]> | undefined;
+  onlineUser: string = 'status/online.png';
+  offlineUser: string = 'status/offline.png';
+  imgSrc: string = 'work-space/edit-square.png';
 
   accordion = viewChild.required(MatAccordion);
   activeChannelId!: string;
   activeUserId!: string;
+  searchTerm: string = '';
 
 
   onChange(user: any) {
@@ -138,15 +144,18 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     }
   }
 
-  openChannel(channelName: string, channelId: string, channelDescription: string) {
+  async openChannel(type: string, channelName: string, channelId: string, channelDescription: string) {
     this.dataUser.showChannel = true;
     this.dataUser.showChatPartnerHeader = false;
     this.activeUserId = '';
     this.router.navigate(['mainpage', this.channelService.currentUserId, 'channel', channelId,]);
     this.userstorage.channelId = channelId;
     this.userstorage.showChannel = true;
-    this.getChannelNameandId(channelName, channelId, channelDescription);  
+    this.getChannelNameandId(channelName, channelId, channelDescription);
     this.channelService.updateUserStorage(this.channelService.currentUserId, this.channelService.userSubcollectionId, this.userstorage.toJSON(['channelId', 'showChannel']));
+    this.chatService.checkIfChatOrChannel(type);
+    this.chatService.listenToMessages(type);
+    /* await this.chatService.getOrCreateChatId(this.dataUser.usersIdsInChannel, this.channelService.currentUserId); */
   }
 
   getChannelNameandId(channelName: string, channelId: string, channelDescription: string) {
@@ -162,5 +171,22 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.unsubChannels.unsubscribe();
     this.userDataSub?.unsubscribe();
     this.channelDataSub?.unsubscribe();
+  }
+
+  onSearchInput() {
+    const term = this.searchTerm;
+    /*     if (this.isChannelSearch(term)) {
+          this.dropdownType = 'channel';
+          const channelKeyword = this.extractKeyword(term, '#');
+          this.searchChannels(channelKeyword);
+        } else if (this.isUserSearch(term)) {
+          this.dropdownType = 'user';
+          const userKeyword = this.extractKeyword(term, '@');
+          this.searchUsers(userKeyword);
+        } else {
+          this.dropdownType = 'normal';
+          this.searchSubject.next(term);
+        }
+        this.showDropdown = term.length > 0; */
   }
 }

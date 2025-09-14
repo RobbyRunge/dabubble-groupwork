@@ -220,8 +220,6 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
   @HostListener('window:resize')
   onResize() { this.pickerService.reposition('chat'); }
 
-  /* onScroll() { this.pickerService.reposition('chat'); } */
-
   addEmoji(e: any) {
     const s = this.pickerService.state.chat;
     if (!s.currentMessage) return;

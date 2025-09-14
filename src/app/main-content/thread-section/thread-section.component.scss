@@ -1,7 +1,8 @@
 @use './../../../styles.scss' as *;
 
-.sidenav-wrapper{
+.sidenav-wrapper {
     position: relative;
+    width: 100%;
 }
 
 .example-container {
@@ -21,7 +22,14 @@
 
 .mat-drawer {
     background-color: white;
-    width: 485px;
+    width: 100%;
+}
+
+@media (max-width: 1920px) {
+    .mat-drawer {
+        width: 100%;
+        min-width: 350px;
+    }
 }
 
 :host ::ng-deep .mat-drawer-inner-container {
@@ -71,3 +79,10 @@ mat-icon {
         border-radius: 100px;
     }
 }
+
+/* @media (max-width: 1370px) {
+    .mat-drawer {
+        width: 100%;
+        min-width: 400px;
+    }
+} */
