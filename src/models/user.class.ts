@@ -5,7 +5,7 @@ export class User {
   avatar!: string;
   userId!: string;
   userstorage!: string; 
-  active: any;
+  active: boolean;
 
   constructor(obj?: any) {
 

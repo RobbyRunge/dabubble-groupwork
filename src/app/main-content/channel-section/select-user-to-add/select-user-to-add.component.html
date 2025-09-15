@@ -30,9 +30,9 @@
                 @for (user of filteredUsers; track $index) {
                     <mat-option [value]="user">
                         <div class="user-avatar-name">
-                            <div>
+                            <div class="user-status">
                                 <img class="user-avatar" src="avatar/{{user.avatar}}">
-                                <!-- <img class="user-status-on-off" src="{{ user.userActive ? userService.onlineUser : userService.offlineUser }}"> -->
+                                <img class="user-status-on-off" src="{{ user.active ? userService.onlineUser : userService.offlineUser }}">
                             </div>
                             <span>{{ user.name }}</span> 
                         </div>

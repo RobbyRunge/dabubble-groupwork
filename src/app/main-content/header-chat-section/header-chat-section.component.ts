@@ -1,5 +1,12 @@
 import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ChannelService } from '../../services/channel.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,16 +18,11 @@ import { UsersInChannelComponent } from '../channel-section/users-in-channel/use
 
 @Component({
   selector: 'app-header-chat-section',
-  imports: [
-    NgIf,
-    NgClass,
-    AsyncPipe,
-  ],
+  imports: [NgIf, NgClass, AsyncPipe],
   templateUrl: './header-chat-section.component.html',
-  styleUrl: './header-chat-section.component.scss'
+  styleUrl: './header-chat-section.component.scss',
 })
 export class HeaderChatSectionComponent implements OnInit, AfterViewInit {
-
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
   chatService = inject(ChatService);
@@ -42,13 +44,13 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit {
   }
 
   getUserData() {
-    this.channelService.isChecked$.subscribe(user => {
-      this.chatService.selectedUser = user
-    })
+    this.channelService.isChecked$.subscribe((user) => {
+      this.chatService.selectedUser = user;
+    });
   }
 
   openDialog(button: HTMLElement) {
-     (document.activeElement as HTMLElement)?.blur();
+    (document.activeElement as HTMLElement)?.blur();
     const rect = button.getBoundingClientRect();
     const width = window.innerWidth < 1080 ? '800px' : '872px';
     const height = window.innerHeight < 700 ? '500px' : '612px';
@@ -61,48 +63,34 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit {
       height,
       maxWidth: '872px',
       maxHeight: '612px',
-      panelClass: 'channel-dialog-container'
+      panelClass: 'channel-dialog-container',
     });
   }
 
   openUserDialog() {
     this.userDialog.open(UserCardComponent, {
-      data: { user: this.chatService.selectedUser }
-    })
+      data: { user: this.chatService.selectedUser },
+    });
   }
 
   addUserToChannel() {
     (document.activeElement as HTMLElement)?.blur();
-    this.channelService.buttonRect$.subscribe(rect => { 
-    if (!rect) return; 
-    const dialogWidth = 514;
-    this.dialog.open(AddUserToChannelComponent, {
-      autoFocus: false,
-      position: {
-        top: `${rect.bottom + window.scrollY}px`,
-        left: `${rect.right + window.scrollX - dialogWidth}px`,
-      },
-    width: '514px',
-    height: '294px',
-    maxWidth: '514px',
-    maxHeight: '294px',
-    panelClass: 'add-user'
+    this.channelService.buttonRect$.subscribe((rect) => {
+      if (!rect) return;
+      const dialogWidth = 514;
+      this.dialog.open(AddUserToChannelComponent, {
+        autoFocus: false,
+        position: {
+          top: `${rect.bottom + window.scrollY}px`,
+          left: `${rect.right + window.scrollX - dialogWidth}px`,
+        },
+        width: '514px',
+        height: '294px',
+        maxWidth: '514px',
+        maxHeight: '294px',
+        panelClass: 'add-user',
+      });
     });
-  });
-    // const rect = button.getBoundingClientRect();
-    // const dialogWidth = 514;
-    // this.dialog.open(AddUserToChannelComponent, {
-    //   autoFocus: false,
-    //   position: {
-    //     top: `${rect.bottom + window.scrollY}px`,
-    //     left: `${rect.right + window.scrollX - dialogWidth}px`,
-    //   },
-    // width: '514px',
-    // height: '294px',
-    // maxWidth: '514px',
-    // maxHeight: '294px',
-    // panelClass: 'add-user'
-    // });
   }
 
   showUsersInChannel(div: HTMLElement) {
@@ -119,7 +107,7 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit {
       height: '411px',
       maxWidth: '415px',
       maxHeight: '415px',
-      panelClass: 'user-in-channel'
+      panelClass: 'user-in-channel',
     });
   }
 }

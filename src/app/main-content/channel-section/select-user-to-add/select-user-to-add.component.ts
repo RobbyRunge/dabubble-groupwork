@@ -26,7 +26,7 @@ export class SelectUserToAddComponent {
   isEnabled = false;
   showUserSearchBar = false;
   showSelectedUser = false;
-  filteredUsers: { name: string; avatar: string; userId: string }[] = [];
+  filteredUsers: { name: string; avatar: string; userId: string; active: boolean }[] = [];
   selectedUsers: { name: string; avatar: string; userId: string }[] = [];
   addUserId: string[] = [];
   searchInput: string = '';
@@ -81,8 +81,6 @@ export class SelectUserToAddComponent {
       this.userService.showFilteredUsers(this.searchInput).subscribe((users) => {
       this.filteredUsers = users;
     });
-    console.log(this.filteredUsers);
-    
   }
 
   displayUser(user: any): string {

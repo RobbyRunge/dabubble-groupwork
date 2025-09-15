@@ -23,7 +23,7 @@ export class AddUserToChannelComponent {
   router = inject(Router);
   searchInput: string = '';
   selectedUser: any;
-  filteredUsers: { name: string; avatar: string; userId: string }[] = [];
+  filteredUsers: { name: string; avatar: string; userId: string; active: boolean }[] = [];
   currentChannelId?: string;
   showSelectedUser = false;
   isEnabled = false;
