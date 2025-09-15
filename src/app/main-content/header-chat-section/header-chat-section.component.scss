@@ -24,10 +24,10 @@
 .show-users-avatar {
     @include dFlex(center, center);
     padding: 3px 10px 3px 10px;
+    border-radius: 30px;
     &:hover {
         cursor: pointer;
         background: #ECEEFE;
-        border-radius: 30px;
         .number-of-users {
             color: #535AF1; 
         }
