@@ -81,6 +81,8 @@ export class SelectUserToAddComponent {
       this.userService.showFilteredUsers(this.searchInput).subscribe((users) => {
       this.filteredUsers = users;
     });
+    console.log(this.filteredUsers);
+    
   }
 
   displayUser(user: any): string {
