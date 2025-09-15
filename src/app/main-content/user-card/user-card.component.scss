@@ -1,5 +1,4 @@
 @use './../../../styles.scss' as *;
-// @import url(../../signup/avatar/avatar.component.scss);
 
 p {
     color: black;
@@ -55,9 +54,14 @@ p {
     flex-direction: column;
     margin: 24px 0;
 
+    p {
+        padding-left: 40px;
+    }
+
     .avatar-list-imgs {
         display: flex;
         justify-content: space-between;
+        padding-right: 40px;
 
         img {
             cursor: pointer;
@@ -190,7 +194,7 @@ p {
 .user-change-name-container {
 
     >div {
-        @include dFlex();
+        @include dFlex(center, stretch);
         flex-direction: column;
         width: 100%;
 
@@ -232,19 +236,25 @@ p {
         }
 
         >div {
+            padding: 0 40px;
+
             >input {
                 width: 100%;
                 height: 52px;
                 border-radius: 30px;
                 border: 1px solid #ADB0D9;
-                padding-left: 20px;
+                margin-top: 8px;
                 font-size: 18px;
                 color: #686868;
 
                 &:focus {
                     outline: none;
-                    border: 2px solid #ADB0D9;
+                    border: 1px solid #ADB0D9;
                 }
+            }
+
+            input::placeholder {
+                padding-left: 20px;
             }
         }
     }
