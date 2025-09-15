@@ -313,6 +313,19 @@ export class UserService {
     }
   }
 
+  async updateUserAvatar(newAvatar: string): Promise<void> {
+    if (!this.channelService.currentUserId) {
+      throw new Error('Kein eingeloggter Benutzer');
+    }
+    const userRef = this.getSingleUserRef(this.channelService.currentUserId);
+    await runInInjectionContext(this.injector, () =>
+      updateDoc(userRef, { avatar: newAvatar })
+    );
+    if (this.channelService.currentUser) {
+      this.channelService.currentUser.avatar = newAvatar;
+    }
+  }
+
   getAllUsers(): Observable<User[]> {
     return runInInjectionContext(this.injector, () =>
       collectionData(this.getUsersCollection(), { idField: 'userId' })

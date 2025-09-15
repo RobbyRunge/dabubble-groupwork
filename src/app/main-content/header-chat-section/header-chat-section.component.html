@@ -12,7 +12,7 @@
             </button>
         </div>
         <div class="user-avatar-channels">
-            <div #div class="show-users-avatar" (click)="showUsersInChannel(div)">
+            <div #div class="show-users-avatar standard-transition" (click)="showUsersInChannel(div)">
                 @for (user of dataUser.userAvatarInChannel$ | async; track $index) {
                 <img class="avatar" [src]="'avatar/' + user.avatar"> 
                 }

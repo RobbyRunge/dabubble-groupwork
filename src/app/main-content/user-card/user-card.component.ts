@@ -23,16 +23,29 @@ export class UserCardComponent implements OnInit {
   newName = '';
   urlUserId: string;
   dataUser = inject(UserService);
-  chatService = inject (ChatService);
+  chatService = inject(ChatService);
   channelService = inject(ChannelService);
   userUpdateNameAktiv: boolean = false;
+
+  selectedAvatar: string;
+  items = [
+    '/avatar/empty-avatar.png',
+    '/avatar/woman1.png',
+    '/avatar/men1.png',
+    '/avatar/men2.png',
+    '/avatar/men3.png',
+    '/avatar/woman2.png',
+    '/avatar/men4.png',
+  ];
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { user: User, urlUserId: string }, private dialogRef: MatDialogRef<UserCardComponent>,
     private userService: UserService,
     private route: ActivatedRoute
   ) {
     this.urlUserId = data.urlUserId;
+    this.selectedAvatar = `/avatar/${data.user.avatar || 'empty-avatar.png'}`;
   }
+
   ngOnInit(): void {
     this.checkUserId();
   }
@@ -43,10 +56,14 @@ export class UserCardComponent implements OnInit {
 
   async updateName() {
     try {
-      await this.userService.updateUserName(this.newName);
-      alert('Name erfolgreich geändert!');
+      if (this.newName && this.newName.trim() !== '') {
+        await this.userService.updateUserName(this.newName);
+      }
+      await this.updateAvatar();
+      alert('Profil erfolgreich geändert!');
+      this.userUpdateNameAktiv = false;
     } catch (err) {
-      console.error('Fehler beim Aktualisieren des Namens:', err);
+      console.error('Fehler beim Aktualisieren des Profils:', err);
     }
   }
 
@@ -60,9 +77,11 @@ export class UserCardComponent implements OnInit {
 
   discardChangeName() {
     this.userUpdateNameAktiv = false;
+    this.selectedAvatar = `/avatar/${this.data.user.avatar || 'empty-avatar.png'}`;
+    this.newName = '';
   }
 
-    getUserIdFromUrl() {
+  getUserIdFromUrl() {
     this.route.params.subscribe(parms => {
       this.urlUserId = parms['id'];
     })
@@ -73,6 +92,21 @@ export class UserCardComponent implements OnInit {
       return this.checkUserId();
     }
     return this.data.user === this.channelService.currentUser;
+  }
+
+  selectAvatar(avatarSrc: string) {
+    this.selectedAvatar = avatarSrc;
+  }
+
+  async updateAvatar() {
+    try {
+      const avatarFileName = this.selectedAvatar.replace('/avatar/', '');
+      await this.userService.updateUserAvatar(avatarFileName);
+      this.data.user.avatar = avatarFileName;
+    } catch (err) {
+      console.error('Fehler beim Aktualisieren des Avatars:', err);
+      throw err;
+    }
   }
 }
 
