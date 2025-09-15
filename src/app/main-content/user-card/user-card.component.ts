@@ -9,13 +9,12 @@ import { ActivatedRoute } from '@angular/router';
 import { ChannelService } from '../../services/channel.service';
 import { Observable } from 'rxjs';
 import { ChatService } from '../../services/chat.service';
-import { AvatarComponent } from '../../signup/avatar/avatar.component';
 
 
 @Component({
   selector: 'app-user-card',
   standalone: true,
-  imports: [MatIcon, NgClass, FormsModule, NgIf, AvatarComponent],
+  imports: [MatIcon, NgClass, FormsModule, NgIf],
   templateUrl: './user-card.component.html',
   styleUrl: './user-card.component.scss'
 })
@@ -30,6 +29,7 @@ export class UserCardComponent implements OnInit {
 
   selectedAvatar: string;
   items = [
+    '/avatar/empty-avatar.png',
     '/avatar/woman1.png',
     '/avatar/men1.png',
     '/avatar/men2.png',
@@ -43,7 +43,7 @@ export class UserCardComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.urlUserId = data.urlUserId;
-    this.selectedAvatar = `avatar/${data.user.avatar || 'empty-avatar.png'}`;
+    this.selectedAvatar = `/avatar/${data.user.avatar || 'empty-avatar.png'}`;
   }
 
   ngOnInit(): void {
@@ -56,10 +56,14 @@ export class UserCardComponent implements OnInit {
 
   async updateName() {
     try {
-      await this.userService.updateUserName(this.newName);
-      alert('Name erfolgreich geändert!');
+      if (this.newName && this.newName.trim() !== '') {
+        await this.userService.updateUserName(this.newName);
+      }
+      await this.updateAvatar();
+      alert('Profil erfolgreich geändert!');
+      this.userUpdateNameAktiv = false;
     } catch (err) {
-      console.error('Fehler beim Aktualisieren des Namens:', err);
+      console.error('Fehler beim Aktualisieren des Profils:', err);
     }
   }
 
@@ -73,6 +77,8 @@ export class UserCardComponent implements OnInit {
 
   discardChangeName() {
     this.userUpdateNameAktiv = false;
+    this.selectedAvatar = `/avatar/${this.data.user.avatar || 'empty-avatar.png'}`;
+    this.newName = '';
   }
 
   getUserIdFromUrl() {
@@ -90,7 +96,17 @@ export class UserCardComponent implements OnInit {
 
   selectAvatar(avatarSrc: string) {
     this.selectedAvatar = avatarSrc;
-    const filename = avatarSrc.replace('/avatar/', '');
+  }
+
+  async updateAvatar() {
+    try {
+      const avatarFileName = this.selectedAvatar.replace('/avatar/', '');
+      await this.userService.updateUserAvatar(avatarFileName);
+      this.data.user.avatar = avatarFileName;
+    } catch (err) {
+      console.error('Fehler beim Aktualisieren des Avatars:', err);
+      throw err;
+    }
   }
 }
 

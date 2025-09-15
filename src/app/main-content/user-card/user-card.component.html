@@ -1,9 +1,9 @@
 <div class="header-container">
-  <p>Profil</p>
+  <p>{{ userUpdateNameAktiv ? 'Dein Profil bearbeiten' : 'Profil' }}</p>
   <button class="close-icon" (click)="closeDialog()"><mat-icon>close_small</mat-icon></button>
 </div>
 <div class="user-avatar">
-  <img class="avatar-img" src="avatar/{{data.user.avatar}}" alt="">
+  <img class="avatar-img" [src]="userUpdateNameAktiv ? selectedAvatar : 'avatar/' + data.user.avatar" alt="">
 </div>
 <div [ngClass]="userUpdateNameAktiv ? 'active' : 'notactive'">
   <div class="user-name-online-container">
