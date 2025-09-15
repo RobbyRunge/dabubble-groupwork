@@ -39,8 +39,8 @@
       <input [(ngModel)]="newName" placeholder={{data.user.name}}>
     </div>
     <div class="buttons-container">
-      <button class="discard-btn" (click)="discardChangeName()">Abbrechen</button>
-      <button (click)="updateName()">Speichern</button>
+      <button class="discard-btn standard-transition" (click)="discardChangeName()">Abbrechen</button>
+      <button class="save-btn standard-transition" (click)="updateName()">Speichern</button>
     </div>
   </div>
 </div>
