@@ -9,12 +9,13 @@ import { ActivatedRoute } from '@angular/router';
 import { ChannelService } from '../../services/channel.service';
 import { Observable } from 'rxjs';
 import { ChatService } from '../../services/chat.service';
+import { AvatarComponent } from '../../signup/avatar/avatar.component';
 
 
 @Component({
   selector: 'app-user-card',
   standalone: true,
-  imports: [MatIcon, NgClass, FormsModule, NgIf],
+  imports: [MatIcon, NgClass, FormsModule, NgIf, AvatarComponent],
   templateUrl: './user-card.component.html',
   styleUrl: './user-card.component.scss'
 })
@@ -23,16 +24,28 @@ export class UserCardComponent implements OnInit {
   newName = '';
   urlUserId: string;
   dataUser = inject(UserService);
-  chatService = inject (ChatService);
+  chatService = inject(ChatService);
   channelService = inject(ChannelService);
   userUpdateNameAktiv: boolean = false;
+
+  selectedAvatar: string;
+  items = [
+    '/avatar/woman1.png',
+    '/avatar/men1.png',
+    '/avatar/men2.png',
+    '/avatar/men3.png',
+    '/avatar/woman2.png',
+    '/avatar/men4.png',
+  ];
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { user: User, urlUserId: string }, private dialogRef: MatDialogRef<UserCardComponent>,
     private userService: UserService,
     private route: ActivatedRoute
   ) {
     this.urlUserId = data.urlUserId;
+    this.selectedAvatar = `avatar/${data.user.avatar || 'empty-avatar.png'}`;
   }
+
   ngOnInit(): void {
     this.checkUserId();
   }
@@ -62,7 +75,7 @@ export class UserCardComponent implements OnInit {
     this.userUpdateNameAktiv = false;
   }
 
-    getUserIdFromUrl() {
+  getUserIdFromUrl() {
     this.route.params.subscribe(parms => {
       this.urlUserId = parms['id'];
     })
@@ -73,6 +86,11 @@ export class UserCardComponent implements OnInit {
       return this.checkUserId();
     }
     return this.data.user === this.channelService.currentUser;
+  }
+
+  selectAvatar(avatarSrc: string) {
+    this.selectedAvatar = avatarSrc;
+    const filename = avatarSrc.replace('/avatar/', '');
   }
 }
 
