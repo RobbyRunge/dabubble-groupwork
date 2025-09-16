@@ -60,8 +60,8 @@ export class UserCardComponent implements OnInit {
         await this.userService.updateUserName(this.newName);
       }
       await this.updateAvatar();
-      alert('Profil erfolgreich geändert!');
       this.userUpdateNameAktiv = false;
+      this.closeDialog();
     } catch (err) {
       console.error('Fehler beim Aktualisieren des Profils:', err);
     }
