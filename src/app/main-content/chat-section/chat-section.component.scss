@@ -157,11 +157,15 @@ app-header-chat-section {
     width: 100%;
 }
 
-// Highlighted message styles
 ::ng-deep .highlighted-message {
     background-color: rgba(68, 77, 242, 0.1) !important;
     transition: all 0.3s ease-in-out;
     animation: pulseHighlight 0.8s ease-in-out;
+
+    h4 {
+        background-color: white !important;
+        border-radius: 30px;
+    }
 }
 
 @keyframes pulseHighlight {
