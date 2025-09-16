@@ -190,20 +190,19 @@ export class HeaderComponent {
     }
   }
 
-  selectMessageResult(type: string, result: SearchResult) {
+  selectMessageResult(result: SearchResult) {
     this.showDropdown = false;
     this.dropdownType = 'normal';
     this.searchTerm = '';
-
     if (result.type === 'message') {
-      this.navigateToMessage(type,result);
+      this.navigateToMessage(result);
     }
   }
 
-  private navigateToMessage(type: string, messageResult: SearchResult) {
+  private navigateToMessage(messageResult: SearchResult) {
     try {
       if (messageResult.isDirectMessage) {
-        this.navigateToDirectMessage(type, messageResult);
+        this.navigateToDirectMessage(messageResult);
       } else if (messageResult.channelName) {
         this.navigateToChannelMessage(messageResult);
       }
@@ -212,13 +211,13 @@ export class HeaderComponent {
     }
   }
 
-  private async navigateToDirectMessage(type: string, messageResult: SearchResult) {
+  private async navigateToDirectMessage(messageResult: SearchResult) {
     const { chatId, messageId } = this.parseMessageId(messageResult.id);
     if (!chatId || !messageId) return;
     try {
       const otherUser = await this.findChatPartner(chatId);
       if (otherUser) {
-        await this.openDirectChat(type, otherUser, messageId);
+        await this.openDirectChat('chats', otherUser, messageId);
       }
     } catch (error) {
       console.error('Fehler beim Öffnen des Chats:', error);
@@ -239,7 +238,7 @@ export class HeaderComponent {
   private async findChatPartner(chatId: string): Promise<any> {
     const chatDoc = await this.getChatDocument(chatId);
     if (!chatDoc) return null;
-    const chatUsers = chatDoc['user'] || [];
+    const chatUsers = chatDoc['userId'] || [];
     const otherUserId = chatUsers.find((userId: string) => userId !== this.channelService.currentUserId);
     return otherUserId ? await this.getUserById(otherUserId) : null;
   }
