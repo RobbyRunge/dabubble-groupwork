@@ -152,6 +152,10 @@ p {
         border-radius: 30px;
         color: white;
         padding: 12px 25px;
+
+        &:hover {
+            background-color: #797EF3;
+        }
     }
 }
 

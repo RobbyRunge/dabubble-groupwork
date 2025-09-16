@@ -26,7 +26,7 @@
     </div>
   </div>
   <div class="button-container" *ngIf="!isCurrentUser()">
-    <button (click)="closeDialog()"><mat-icon>chat_bubble_outline</mat-icon>Nachricht</button>
+    <button class="standard-transition" (click)="closeDialog()"><mat-icon>chat_bubble_outline</mat-icon>Nachricht</button>
   </div>
 </div>
 <div [ngClass]="!userUpdateNameAktiv ? 'active' : 'user-change-name-container'">
