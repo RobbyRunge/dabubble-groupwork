@@ -222,7 +222,7 @@ mat-dialog-content {
 .channel-user-content {
     @include dFlex(space-between);
     flex-direction: row;
-    min-height: 110px;
+    min-height: 80px;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     width: 100%;
@@ -240,7 +240,6 @@ mat-dialog-content {
 .header-channel-content {
     @include dFlex(space-between);
     flex-direction: row;
-    height: 110px;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     width: 100%;

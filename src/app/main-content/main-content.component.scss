@@ -8,3 +8,16 @@
     background-color: #ECEEFE;
     height: 100vh;
 }
+
+.main-content-chat-header {
+    height: 100vh;
+    @include dFlex(unset, unset);
+    flex-direction: column;
+}
+
+.header {
+    width: 100%;
+    padding-top: 12px;
+    padding-bottom: 10px;
+    @include dFlex();
+}
