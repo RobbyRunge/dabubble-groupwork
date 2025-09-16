@@ -64,8 +64,8 @@ export class SearchService {
 
   private async searchMessagesInChats(keyword: string): Promise<SearchResult[]> {
     try {
-      const chatsSnapshot = await this.getChatDocuments();
-      const results: SearchResult[] = [];
+      const chatsSnapshot = await this.getChatDocuments();     
+      const results: SearchResult[] = [];      
       for (const chatDoc of chatsSnapshot.docs) {
         const chatResults = await this.processChatDocument(chatDoc, keyword);
         results.push(...chatResults);
@@ -87,7 +87,7 @@ export class SearchService {
   private async processChatDocument(chatDoc: any, keyword: string): Promise<SearchResult[]> {
     const chatId = chatDoc.id;
     const chatData = chatDoc.data();
-    const chatUsers = chatData['user'] || [];
+    const chatUsers = chatData['userId'] || [];
     if (!this.isUserChatMember(chatUsers)) {
       return [];
     }
@@ -96,7 +96,8 @@ export class SearchService {
   }
 
   private isUserChatMember(chatUsers: string[]): boolean {
-    return chatUsers.includes(this.channelService.currentUserId);
+    const isMember = chatUsers.includes(this.channelService.currentUserId);
+    return isMember;
   }
 
   private async getChatMessages(chatId: string) {
@@ -161,8 +162,8 @@ export class SearchService {
   }
 
   private async searchMessagesInChannels(keyword: string): Promise<SearchResult[]> {
-    try {
-      const channelsSnapshot = await this.getChannelDocuments();
+    try {      
+      const channelsSnapshot = await this.getChannelDocuments();      
       const results: SearchResult[] = [];
       for (const channelDoc of channelsSnapshot.docs) {
         const channelResults = await this.processChannelDocument(channelDoc, keyword);
@@ -193,7 +194,6 @@ export class SearchService {
       const messagesSnapshot = await this.getChannelMessages(channelId);
       return this.extractMatchingMessages(messagesSnapshot, channelId, keyword, false, channelName);
     } catch (error) {
-      console.log(`No messages found in channel ${channelId}`);
       return [];
     }
   }

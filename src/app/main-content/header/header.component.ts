@@ -82,7 +82,7 @@ export class HeaderComponent {
   }
 
   onSearchInput() {
-    const term = this.searchTerm;
+    const term = this.searchTerm;    
     if (this.isChannelSearch(term)) {
       this.dropdownType = 'channel';
       const channelKeyword = this.extractKeyword(term, '#');
