@@ -6,13 +6,13 @@
 //     @include dFlex();
 // }
 
-.main-content {
-    width: 100vw;
-    max-width: 1920px;
-    min-width: 0;
-    position: relative;
-    @include dFlex(center, flex-start);
-}
+// .main-content {
+//     width: 100vw;
+//     max-width: 1920px;
+//     min-width: 0;
+//     position: relative;
+//     @include dFlex(center, flex-start);
+// }
 
 .chat-section {
     width: calc(100vw - 445px);
@@ -29,13 +29,13 @@
     position: relative;
 }
 
-.work-space-section {
-    padding-left: 20px;
-    padding-right: 20px;
-    flex: 0 1 clamp(100px, 24vw, 400px);
-    min-width: 300px;
-    height: 100%;
-}
+// .work-space-section {
+//     padding-left: 20px;
+//     padding-right: 20px;
+//     flex: 0 1 clamp(100px, 24vw, 400px);
+//     min-width: 300px;
+//     height: 100%;
+// }
 
 .thread-section {
     display: none;

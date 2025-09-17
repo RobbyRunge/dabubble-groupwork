@@ -86,6 +86,12 @@ export class ChannelService {
     );
   }
 
+  getChannelRef() {
+    return runInInjectionContext(this.injector, () =>
+      collection(this.firestore, 'channels')
+    );
+  }
+
   getSingleChannelRef(docId: string) {
     return runInInjectionContext(this.injector, () =>
       doc(this.getChannelRef(), docId)
@@ -95,12 +101,6 @@ export class ChannelService {
   getSingleUserRef(docId: string) {
     return runInInjectionContext(this.injector, () =>
       doc(this.getUsersCollection(), docId)
-    );
-  }
-
-  getChannelRef() {
-    return runInInjectionContext(this.injector, () =>
-      collection(this.firestore, 'channels')
     );
   }
 

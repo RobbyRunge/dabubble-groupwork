@@ -66,6 +66,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   urlUserId!: string;
   users$: Observable<User[]> | undefined;
   myPanel: any = true;
+  showChatSectionMobile = false;
 
   channels$: Observable<Allchannels[]> | undefined;
   onlineUser: string = 'status/online.png';
