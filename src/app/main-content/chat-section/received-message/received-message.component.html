@@ -10,7 +10,7 @@
                     <span>{{selectedUser.name}}</span>
                     <p>{{message.timestamp?.toDate() | date:'HH:mm'}}</p>
                 </div>
-                <div class="message-content">
+                <div class="message-content standard-transition">
                     <h4>{{message.text}}</h4>
                 </div>
                 <div class="message-reaction-container" [class.shifted]="shiftContainer">
