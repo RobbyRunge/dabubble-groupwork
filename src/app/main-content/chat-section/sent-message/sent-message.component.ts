@@ -100,9 +100,9 @@ export class SentMessageComponent implements OnInit {
   addMostUsedEmojiMessage(emoji: any, index: number) {
     this.messageReacton += emoji;
     if (this.mode === 'thread') {
-      this.chatService.saveEmojisThreadInDatabase(emoji, this.message.id, this.chatService.parentMessageId)
+      this.chatService.saveEmojisThreadInDatabase(this.mode, emoji, this.message.id, this.chatService.parentMessageId)
     } else {
-      this.chatService.saveEmojisInDatabase(emoji, this.message.id)
+      this.chatService.saveEmojisInDatabase(this.mode, emoji, this.message.id)
     }
   }
 

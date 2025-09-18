@@ -135,7 +135,7 @@ export class ThreadSectionComponent implements AfterViewInit, OnInit, AfterViewC
     const msg = this.emojiPickerService.state.thread;
     if (!msg) return;
     const emoji = e?.emoji?.native ?? e?.emoji ?? e;
-    this.chatService.saveEmojisThreadInDatabase(emoji, this.currentMessage.id, this.chatService.parentMessageId);
+    this.chatService.saveEmojisThreadInDatabase('thread',emoji, this.currentMessage.id, this.chatService.parentMessageId);
     this.emojiPickerService.hide('thread');
     this.chatService.loadMostUsedEmojis();
   }

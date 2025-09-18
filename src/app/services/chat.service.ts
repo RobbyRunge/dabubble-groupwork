@@ -56,7 +56,7 @@ export class ChatService {
     }
 
     private async getOrCreateSelfChat(chatsRef: CollectionReference, userId: string): Promise<string> {
-        const selfQuery = query(chatsRef, where('user', '==', [userId]));
+        const selfQuery = query(chatsRef, where('userId', '==', [userId]));
         const selfSnapshot = await getDocs(selfQuery);
 
         if (!selfSnapshot.empty) {
@@ -68,11 +68,11 @@ export class ChatService {
     }
 
     private async findExistingChatBetweenUsers(chatsRef: CollectionReference, userId1: string, userId2: string): Promise<string | null> {
-        const q = query(chatsRef, where('user', 'array-contains', userId1));
+        const q = query(chatsRef, where('userId', 'array-contains', userId1));
         const snapshot = await getDocs(q);
 
         for (const doc of snapshot.docs) {
-            const users = doc.data()['user'];
+            const users = doc.data()['userId'];
             if (Array.isArray(users) && users.includes(userId2) && users.length === 2) {
                 return doc.id;
             }
@@ -83,7 +83,7 @@ export class ChatService {
 
     private async createNewChat(chatsRef: CollectionReference, users: string[]): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
-            const newChat = await addDoc(chatsRef, { user: users });
+            const newChat = await addDoc(chatsRef, { userId: users });
             return newChat.id;
         })
     };
@@ -326,6 +326,7 @@ export class ChatService {
         this.listenToMessages(type);
         this.dataUser.showChannel = false;
         this.dataUser.showChatPartnerHeader = true;
+        console.log(this.messages);
     }
 
     ngOnDestroy() {
@@ -374,7 +375,7 @@ export class ChatService {
             this.router.navigate([
                 '/mainpage',
                 this.channelService.currentUserId,
-                'chats',
+                type,
                 this.dataUser.chatId,
                 'threads',
                 this.threadId
@@ -383,9 +384,9 @@ export class ChatService {
         });
     }
 
-    saveEmojisThreadInDatabase(selectedEmoji: string, messageId: string, parentMessageId: string,) {
+    saveEmojisThreadInDatabase(type: string, selectedEmoji: string, messageId: string, parentMessageId: string,) {
         return runInInjectionContext(this.injector, async () => {
-            const messagesRef = doc(this.firestore, `chats/${this.dataUser.chatId}/message/${parentMessageId}/threads/${messageId}`);
+            const messagesRef = doc(this.firestore, `${type}/${this.dataUser.chatId}/message/${parentMessageId}/threads/${messageId}`);
             const messageSnap = await getDoc(messagesRef);
             console.log('[EMOJI]', { parentMessageId, messageId });
             console.log('[EMOJI path]', messagesRef.path);
@@ -401,9 +402,9 @@ export class ChatService {
         return null;
     }
 
-    async saveEmojisInDatabase(selectedEmoji: string, messageId: string) {
+    async saveEmojisInDatabase(type: string, selectedEmoji: string, messageId: string) {
         return runInInjectionContext(this.injector, async () => {
-            const messagesRef = doc(this.firestore, `chats/${this.dataUser.chatId}/message/${messageId}`);
+            const messagesRef = doc(this.firestore, `${type}/${this.dataUser.chatId}/message/${messageId}`);
             const messageSnap = await getDoc(messagesRef);
             await this.checkIfEmojiExists(selectedEmoji, messageSnap, messagesRef);
         });
@@ -435,10 +436,10 @@ export class ChatService {
 
     }
 
-    listenToEmojis(chatId: string, messageId: string) {
+    listenToEmojis(type: string, chatId: string, messageId: string) {
         const reactionsRef = collection(
             this.firestore,
-            `chats/${chatId}/message/${messageId}/reactions`
+            `${type}/${chatId}/message/${messageId}/reactions`
         );
         const q = query(reactionsRef, orderBy('createdAt', 'asc'));
 

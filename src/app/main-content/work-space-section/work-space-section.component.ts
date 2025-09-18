@@ -155,6 +155,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.channelService.updateUserStorage(this.channelService.currentUserId, this.channelService.userSubcollectionId, this.userstorage.toJSON(['channelId', 'showChannel']));
     this.chatService.checkIfChatOrChannel(type);
     this.chatService.listenToMessages(type);
+    console.log(this.dataUser.usersIdsInChannel);
     /* await this.chatService.getOrCreateChatId(this.dataUser.usersIdsInChannel, this.channelService.currentUserId); */
   }
 
