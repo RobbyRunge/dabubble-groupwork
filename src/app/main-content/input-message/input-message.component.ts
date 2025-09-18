@@ -44,7 +44,6 @@ export class InputMessageComponent implements OnInit {
   onlineUser: string = 'status/online.png';
   offlineUser: string = 'status/offline.png';
   @Input() mode: 'chats' | 'thread' = 'chats';
-  /* @Input() chatMode: string = ''; */
   @Input() chatMode: 'chats' | 'channel' = 'chats';
   showEmojis: boolean = false;
 

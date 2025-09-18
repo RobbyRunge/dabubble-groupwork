@@ -1,4 +1,4 @@
-import { Injectable, inject, Injector, runInInjectionContext, ViewChild, ElementRef } from '@angular/core';
+import { Injectable, inject, Injector, runInInjectionContext } from '@angular/core';
 import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc, CollectionReference, getDoc, limit, increment, writeBatch, WriteBatch, arrayUnion } from '@angular/fire/firestore';
 import { UserService } from './user.service';
 import { MatDrawer } from '@angular/material/sidenav';
@@ -99,6 +99,20 @@ export class ChatService {
         })
     }
 
+
+    async getChannelMessages(channelId: string): Promise<any[]> {
+        return runInInjectionContext(this.injector, async () => {
+            const messagesRef = collection(this.firestore, `channels/${channelId}/message`);
+            const q = query(messagesRef, orderBy('createdAt', 'asc'));
+
+            const snapshot = await getDocs(q);
+
+            return snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+        });
+    }
 
     private async getExistingThreadId(type: string, chatId: string, parentMessageId: string): Promise<string | null> {
         const threadsCol = collection(this.firestore, `${type}/${chatId}/message/${parentMessageId}/threads`);
@@ -326,7 +340,6 @@ export class ChatService {
         this.listenToMessages(type);
         this.dataUser.showChannel = false;
         this.dataUser.showChatPartnerHeader = true;
-        console.log(this.messages);
     }
 
     ngOnDestroy() {
