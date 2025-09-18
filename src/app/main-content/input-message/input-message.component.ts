@@ -44,7 +44,8 @@ export class InputMessageComponent implements OnInit {
   onlineUser: string = 'status/online.png';
   offlineUser: string = 'status/offline.png';
   @Input() mode: 'chats' | 'thread' = 'chats';
-  /* @Input() chatMode: 'chat' | 'channel' = 'chat'; */
+  /* @Input() chatMode: string = ''; */
+  @Input() chatMode: 'chats' | 'channel' = 'chats';
   showEmojis: boolean = false;
 
 
@@ -112,9 +113,9 @@ export class InputMessageComponent implements OnInit {
     if (!this.messageText.trim()) return;
 
     if (this.mode === 'thread') {
-      this.chatService.sendThreadMessage(this.mode, this.dataUser.chatId, this.chatService.parentMessageId, this.channelService.currentUserId, this.messageText);
+      this.chatService.sendThreadMessage(this.chatMode, this.dataUser.chatId, this.chatService.parentMessageId, this.channelService.currentUserId, this.messageText);
     } else {
-      this.chatService.sendChatMessage(this.mode, this.messageText, this.channelService.currentUserId);
+      this.chatService.sendChatMessage(this.chatMode, this.messageText, this.channelService.currentUserId);
     }
     this.messageText = ''
   }
@@ -141,7 +142,7 @@ export class InputMessageComponent implements OnInit {
     this.showEmojis = false;
   }
 
-/*   hideAllEmojis() {
-    this.showEmojis = false;
-  } */
+  /*   hideAllEmojis() {
+      this.showEmojis = false;
+    } */
 }

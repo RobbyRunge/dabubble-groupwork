@@ -38,16 +38,16 @@
                         </div>
                     </div>
                     <div class="sent-message">
-                        <app-sent-message [mode]="'chats'" *ngIf="msg.senderId === channelService.currentUserId"
+                        <app-sent-message [mode]="'chats'" [chatMode]="'chats'" *ngIf="msg.senderId === channelService.currentUserId"
                             [message]="msg" [index]="i" (emojiPickerRequested)="openEmojiPicker($event)">
                         </app-sent-message>
                     </div>
-                    <app-received-message [mode]="'chats'" *ngIf="msg.senderId !== channelService.currentUserId"
+                    <app-received-message [mode]="'chats'" [chatMode]="'chats'" *ngIf="msg.senderId !== channelService.currentUserId"
                         [message]="msg" (emojiPickerRequested)="openEmojiPicker($event)">
                     </app-received-message>
                 </div>
             </div>
-            <app-input-message [mode]="'chats'">
+            <app-input-message [mode]="'chats'" [chatMode]="'chats'">
             </app-input-message>
         </div>
         <div #emojiPickerChat class="emoji-mart-container"

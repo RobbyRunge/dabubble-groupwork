@@ -19,11 +19,11 @@
               </div>
             </div>
             <div class="sent-message">
-              <app-sent-message [mode]="'thread'" *ngIf="msg.senderId === channelService.currentUserId" [message]="msg"
+              <app-sent-message [mode]="'thread'" [chatMode]="'chats'" *ngIf="msg.senderId === channelService.currentUserId" [message]="msg"
                 [index]="i" (emojiPickerRequested)="openEmojiPicker($event)">
               </app-sent-message>
             </div>
-            <app-received-message [mode]="'thread'" *ngIf="msg.senderId !== channelService.currentUserId"
+            <app-received-message [mode]="'thread'" [chatMode]="'chats'" *ngIf="msg.senderId !== channelService.currentUserId"
               [message]="msg" [index]="i" (emojiPickerRequested)="openEmojiPicker($event)">
             </app-received-message>
           </div>
