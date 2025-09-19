@@ -14,7 +14,7 @@
                 'editMessageActive' :editMessageActive, }">
                     <h3 *ngIf="!editMessageActive">{{message.text}}</h3>
                     <mat-form-field *ngIf="editMessageActive" class="example-full-width">
-                        <textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="2" cdkAutosizeMaxRows="6"
+                        <textarea class="edit-textarea" matInput cdkTextareaAutosize cdkAutosizeMinRows="2" cdkAutosizeMaxRows="6"
                             [(ngModel)]="editMessageText" name="message">
                             {{ message.text }}
                         </textarea>
@@ -26,12 +26,12 @@
                                     <img [src]="imgReactionInput">
                                 </div>
                             </div>
-                            <div class="buttons-cotntainer">
+                            <div class="buttons-container">
                                 <div class="discard-btn-container">
-                                    <button (click)="discardEditMessage()">Abbrechen</button>
+                                    <button class="standard-transition" (click)="discardEditMessage()">Abbrechen</button>
                                 </div>
                                 <div class="save-btn-container">
-                                    <button (click)="updateMessage()">Speichern</button>
+                                    <button class="standard-transition" (click)="updateMessage()">Speichern</button>
                                 </div>
                             </div>
                         </div>

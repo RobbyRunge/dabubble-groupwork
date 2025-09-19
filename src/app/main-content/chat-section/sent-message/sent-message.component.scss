@@ -185,9 +185,19 @@
     background-color: unset;
 }
 
-.buttons-cotntainer {
+.message-content {
+    >mat-form-field {
+        width: calc(50vw - 100px) !important;
+    }
+}
+
+.edit-textarea {
+    color: black !important;
+}
+
+.buttons-container {
     @include dFlex(space-around !important);
-    width: 100%;
+    gap: 16px;
 
     >div {
         >button {
