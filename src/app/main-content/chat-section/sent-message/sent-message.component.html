@@ -1,4 +1,5 @@
-<div class="messages-container standard-transition" [class.menu-open]="showCustomMenu" (click)="hideAllEmojis()" [attr.data-message-id]="message.id" #reactBtn>
+<div class="messages-container standard-transition" [class.menu-open]="showCustomMenu" (click)="hideAllEmojis()"
+    [attr.data-message-id]="message.id" #reactBtn>
     <div class="users-message-container" *ngIf="message.senderId == channelService.currentUserId">
         <div class="message-container">
             <div>
@@ -19,10 +20,10 @@
                         </textarea>
                         <div class="icons-container">
                             <div>
-                                <div (click)="showAllEmojis($event)">
-                                    <img [src]="imgReactionInput"
-                                        (mouseover)="imgReactionInput = 'add_reaction_color.png'"
-                                        (mouseout)="imgReactionInput = 'add reaction.png'">
+                                <div (click)="showAllEmojis($event)" class="standard-transition"
+                                    (mouseover)="imgReactionInput = 'chat-section/add-reaction-color.png'"
+                                    (mouseout)="imgReactionInput = 'chat-section/add-reaction.png'">
+                                    <img [src]="imgReactionInput">
                                 </div>
                             </div>
                             <div class="buttons-cotntainer">
@@ -78,7 +79,8 @@
                             (mouseout)="imgReaction='chat-section/add-reaction.png'">
                     </div>
                 </div>
-                <div class="answer-date-container" (click)="chatService.answerOnMessage(mode, message.id, message.text)">
+                <div class="answer-date-container"
+                    (click)="chatService.answerOnMessage(mode, message.id, message.text)">
                     <div *ngIf="message.threadCount > 0">
                         <span *ngIf="getLastThreadReplyTime()" class="last-reply-time">Letzte Antwort
                             {{getLastThreadReplyTime() | date:'HH:mm'}}</span>
@@ -94,18 +96,19 @@
             (mouseenter)="imgSrcMore = 'chat-section/more-vert-color.png'; showCustomMenu = true"
             (mouseleave)="imgSrcMore = 'chat-section/more-vert.png'; showCustomMenu = false">
             <img [src]="imgSrcMore">
-            <div class="custom-menu-dropdown" *ngIf="showCustomMenu" 
-                (mouseenter)="showCustomMenu = true"
+            <div class="custom-menu-dropdown" *ngIf="showCustomMenu" (mouseenter)="showCustomMenu = true"
                 (mouseleave)="showCustomMenu = false">
-                <button class="standard-transition custom-menu-item" (click)="editMessage()">Nachricht bearbeiten</button>
+                <button class="standard-transition custom-menu-item" (click)="editMessage()">Nachricht
+                    bearbeiten</button>
             </div>
         </div>
         <div *ngIf="mode !== 'thread'" (click)="chatService.answerOnMessage(mode, message.id, message.text)"
-            (mouseover)="imgComment='chat-section/comment-color.png'" (mouseout)="imgComment='chat-section/comment.png'">
+            (mouseover)="imgComment='chat-section/comment-color.png'"
+            (mouseout)="imgComment='chat-section/comment.png'">
             <img [src]="imgComment">
         </div>
         <div (click)="openEmojiPicker(reactBtn, $event)" (mouseover)="imgReaction='chat-section/add-reaction-color.png'"
-                (mouseout)="imgReaction='chat-section/add-reaction.png'">
+            (mouseout)="imgReaction='chat-section/add-reaction.png'">
             <img [src]="imgReaction">
         </div>
         <div *ngFor="let emoji of chatService.mostUsedEmojis let i = index">
