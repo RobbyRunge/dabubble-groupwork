@@ -265,9 +265,12 @@ export class ChatService {
     }
 
     getMessageDoc(type: string, messageId: string): DocumentReference {
-        return runInInjectionContext(this.injector, () =>
-            doc(this.firestore, `${type}/${this.chatId}/message/${messageId}`)
-        );
+        return runInInjectionContext(this.injector, () => {
+            if (type === 'thread') {
+                return doc(this.firestore, `chats/${this.chatId}/message/${this.parentMessageId}/threads/${messageId}`);
+            }
+            return doc(this.firestore, `chats/${this.chatId}/message/${messageId}`);
+        });
     }
 
     saveEmoji(emoji: string) {
