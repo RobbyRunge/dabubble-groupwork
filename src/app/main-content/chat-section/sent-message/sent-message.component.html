@@ -1,4 +1,4 @@
-<div class="messages-container standard-transition" (click)="hideAllEmojis()" [attr.data-message-id]="message.id" #reactBtn>
+<div class="messages-container standard-transition" [class.menu-open]="showCustomMenu" (click)="hideAllEmojis()" [attr.data-message-id]="message.id" #reactBtn>
     <div class="users-message-container" *ngIf="message.senderId == channelService.currentUserId">
         <div class="message-container">
             <div>
@@ -89,14 +89,15 @@
             </div>
         </div>
     </div>
-    <div class="message-hover-options">
-        <div [matMenuTriggerFor]="menu" (mouseover)="imgSrcMore = 'chat-section/more-vert-color.png'"
-            (mouseout)="imgSrcMore = 'chat-section/more-vert.png'">
+    <div class="message-hover-options" [class.menu-open]="showCustomMenu">
+        <div class="custom-menu-trigger"
+            (mouseenter)="imgSrcMore = 'chat-section/more-vert-color.png'; showCustomMenu = true"
+            (mouseleave)="imgSrcMore = 'chat-section/more-vert.png'; showCustomMenu = false">
             <img [src]="imgSrcMore">
-            <div>
-                <mat-menu #menu="matMenu">
-                    <button class="standard-transition" mat-menu-item (click)="editMessage()">Nachricht bearbeiten</button>
-                </mat-menu>
+            <div class="custom-menu-dropdown" *ngIf="showCustomMenu" 
+                (mouseenter)="showCustomMenu = true"
+                (mouseleave)="showCustomMenu = false">
+                <button class="standard-transition custom-menu-item" (click)="editMessage()">Nachricht bearbeiten</button>
             </div>
         </div>
         <div *ngIf="mode !== 'thread'" (click)="chatService.answerOnMessage(mode, message.id, message.text)"

@@ -167,6 +167,22 @@ mat-dialog-content {
             @include dFlex();
         }
     }
+
+    &.menu-open {
+        background-color: #ECEEFE;
+
+        .message-hover-options {
+            @include dFlex();
+        }
+    }
+}
+
+.message-hover-options:hover {
+    @include dFlex();
+}
+
+.message-hover-options.menu-open {
+    @include dFlex();
 }
 
 .message-hover-options {

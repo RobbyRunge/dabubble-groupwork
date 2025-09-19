@@ -57,6 +57,8 @@ export class SentMessageComponent implements OnInit {
   hoveredReactionIndex: number | null = null;
   showAllMessageReactions: boolean = false;
   showAllMessageThreadReactions: boolean = false;
+  isMenuOpen: boolean = false;
+  showCustomMenu: boolean = false;
 
 
   ngOnInit() {
@@ -145,5 +147,13 @@ export class SentMessageComponent implements OnInit {
       index: this.index,
       context: this.mode === 'thread' ? 'thread' : 'chat',
     });
+  }
+
+  onMenuOpened() {
+    this.isMenuOpen = true;
+  }
+
+  onMenuClosed() {
+    this.isMenuOpen = false;
   }
 }
