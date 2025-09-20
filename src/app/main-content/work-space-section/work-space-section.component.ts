@@ -138,7 +138,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   loadSaveRoute() {
     const channelId = this.channelService.userSubcollectionChannelId;
     if (channelId) {
-      this.router.navigate(['mainpage', this.channelService.currentUserId, 'channel', channelId,]);
+      this.router.navigate(['mainpage', this.channelService.currentUserId, 'channels', channelId,]);
     } else {
       this.router.navigate(['mainpage', this.channelService.currentUserId]);
     }
@@ -149,7 +149,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.dataUser.showChannel = true;
     this.dataUser.showChatPartnerHeader = false;
     this.activeUserId = '';
-    this.router.navigate(['mainpage', this.channelService.currentUserId, 'channel', channelId,]);
+    this.router.navigate(['mainpage', this.channelService.currentUserId, 'channels', channelId,]);
     this.userstorage.channelId = channelId;
     this.userstorage.showChannel = true;
     this.getChannelNameandId(channelName, channelId, channelDescription);

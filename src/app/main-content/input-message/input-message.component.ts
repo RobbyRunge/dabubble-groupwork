@@ -112,7 +112,7 @@ export class InputMessageComponent implements OnInit {
     if (!this.messageText.trim()) return;
 
     if (this.mode === 'thread') {
-      this.chatService.sendThreadMessage(this.chatService.chatMode, this.dataUser.chatId, this.chatService.parentMessageId, this.channelService.currentUserId, this.messageText);
+      this.chatService.sendThreadMessage(this.chatService.chatMode, this.chatService.chatId, this.chatService.parentMessageId, this.channelService.currentUserId, this.messageText);
     } else {
       this.chatService.sendChatMessage(this.chatService.chatMode, this.messageText, this.channelService.currentUserId);
     }
@@ -140,8 +140,4 @@ export class InputMessageComponent implements OnInit {
     this.showChanelList = false;
     this.showEmojis = false;
   }
-
-  /*   hideAllEmojis() {
-      this.showEmojis = false;
-    } */
 }

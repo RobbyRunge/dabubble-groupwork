@@ -95,6 +95,8 @@ export class ChatService {
             await addDoc(messagesRef, {
                 text: messageText,
                 senderId: senderId,
+                senderName: this.channelService.currentUser?.name,
+                userAvatar: this.channelService.currentUser?.avatar,
                 timestamp: serverTimestamp(),
             });
         })

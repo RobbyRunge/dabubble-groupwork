@@ -21,11 +21,13 @@ export const routes: Routes = [
   { path: 'signup', component: SignupComponent },
   { path: 'avatar', component: AvatarComponent, canActivate: [avatarGuard] },
   {
-    path: 'mainpage/:id', component: MainContentComponent,
+    path: 'mainpage/:id',
+    component: MainContentComponent,
     children: [
-      { path: 'channel/:channelId', component: UserChannelChatSectionComponent },
       { path: 'chats/:chatId', component: ChatSectionComponent },
-      { path: 'chats/:chatId/threads/:threadId', component: ThreadSectionComponent }
-    ]
+      { path: 'chats/:chatId/threads/:threadId', component: ThreadSectionComponent },
+      { path: 'channels/:channelId', component: UserChannelChatSectionComponent },
+      { path: 'channels/:channelId/threads/:threadId', component: ThreadSectionComponent },
+    ],
   },
 ];

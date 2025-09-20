@@ -1,13 +1,13 @@
 <div class="messages-container standard-transition" (click)="hideAllEmojis()" [attr.data-message-id]="message.id" #reactBtn>
     <div class="users-message-container"
-        *ngIf="message.senderId === selectedUser.userId && message.senderId !== dataUser.currentUserId">
+        *ngIf="message.senderId !== channelService.currentUserId">
         <div class="message-container">
             <div>
-                <img class="user-logo" src="avatar/{{selectedUser.avatar}}" alt="">
+                <img class="user-logo" src="avatar/{{message.userAvatar}}" alt="">
             </div>
             <div class="message-info">
                 <div class="user-date-container">
-                    <span>{{selectedUser.name}}</span>
+                    <span>{{message.senderName}}</span>
                     <p>{{message.timestamp?.toDate() | date:'HH:mm'}}</p>
                 </div>
                 <div class="message-content">
