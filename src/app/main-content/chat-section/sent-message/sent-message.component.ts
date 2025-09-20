@@ -90,7 +90,7 @@ export class SentMessageComponent implements OnInit {
     this.showEmojis = false;
   }
   async updateMessage() {
-    await this.chatService.updateUserMessage(this.chatMode, this.message.id, this.editMessageText);
+    await this.chatService.updateUserMessage(this.chatService.chatMode, this.message.id, this.editMessageText);
   }
 
   showAllEmojisMessage(index: number | any, event: MouseEvent) {
@@ -101,9 +101,9 @@ export class SentMessageComponent implements OnInit {
   addMostUsedEmojiMessage(emoji: any, index: number) {
     this.messageReacton += emoji;
     if (this.mode === 'thread') {
-      this.chatService.saveEmojisThreadInDatabase(this.chatMode, emoji, this.message.id, this.chatService.parentMessageId)
+      this.chatService.saveEmojisThreadInDatabase(this.chatService.chatMode, emoji, this.message.id, this.chatService.parentMessageId)
     } else {
-      this.chatService.saveEmojisInDatabase(this.chatMode, emoji, this.message.id)
+      this.chatService.saveEmojisInDatabase(this.chatService.chatMode, emoji, this.message.id)
     }
   }
 

@@ -112,9 +112,9 @@ export class InputMessageComponent implements OnInit {
     if (!this.messageText.trim()) return;
 
     if (this.mode === 'thread') {
-      this.chatService.sendThreadMessage(this.chatMode, this.dataUser.chatId, this.chatService.parentMessageId, this.channelService.currentUserId, this.messageText);
+      this.chatService.sendThreadMessage(this.chatService.chatMode, this.dataUser.chatId, this.chatService.parentMessageId, this.channelService.currentUserId, this.messageText);
     } else {
-      this.chatService.sendChatMessage(this.chatMode, this.messageText, this.channelService.currentUserId);
+      this.chatService.sendChatMessage(this.chatService.chatMode, this.messageText, this.channelService.currentUserId);
     }
     this.messageText = ''
   }

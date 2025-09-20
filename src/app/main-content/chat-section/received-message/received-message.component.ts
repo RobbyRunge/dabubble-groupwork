@@ -56,7 +56,7 @@ export class ReceivedMessageComponent implements OnInit {
     this.messageReacton += $event.emoji.native;
     this.showEmojisMessage = false;
     this.chatService.loadMostUsedEmojis();
-    this.chatService.saveEmojisInDatabase(this.chatMode, $event.emoji.native, this.message.id);
+    this.chatService.saveEmojisInDatabase(this.chatService.chatMode, $event.emoji.native, this.message.id);
     this.shiftContainer = true;
     setTimeout(() => {
       this.shiftContainer = false;
@@ -66,9 +66,9 @@ export class ReceivedMessageComponent implements OnInit {
     addMostUsedEmojiMessage(emoji: any, index: number) {
     this.messageReacton += emoji;
     if (this.mode === 'thread') {
-      this.chatService.saveEmojisThreadInDatabase(this.chatMode, emoji, this.message.id, this.chatService.parentMessageId)
+      this.chatService.saveEmojisThreadInDatabase(this.chatService.chatMode, emoji, this.message.id, this.chatService.parentMessageId)
     } else {
-      this.chatService.saveEmojisInDatabase(this.chatMode, emoji, this.message.id)
+      this.chatService.saveEmojisInDatabase(this.chatService.chatMode, emoji, this.message.id)
     }
   }
 

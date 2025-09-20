@@ -145,6 +145,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   }
 
   async openChannel(type: string, channelName: string, channelId: string, channelDescription: string,) {
+    this.chatService.chatMode = 'channels';
     this.dataUser.showChannel = true;
     this.dataUser.showChatPartnerHeader = false;
     this.activeUserId = '';
@@ -153,7 +154,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.userstorage.showChannel = true;
     this.getChannelNameandId(channelName, channelId, channelDescription);
     this.channelService.updateUserStorage(this.channelService.currentUserId, this.channelService.userSubcollectionId, this.userstorage.toJSON(['channelId', 'showChannel']));
-    this.chatService.checkIfChatOrChannel(type);
+    this.chatService.checkIfChatOrChannel();
     this.chatService.listenToMessages(type);
     this.chatService.getChannelMessages(channelId);
     this.channelService.setCheckdValue(channelId);

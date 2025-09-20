@@ -78,7 +78,7 @@
                             (mouseout)="imgReaction='chat-section/add-reaction.png'">
                     </div>
                 </div>
-                <div class="answer-date-container" (click)="chatService.answerOnMessage(mode, message.id, message.text)">
+                <div class="answer-date-container" (click)="chatService.answerOnMessage(chatService.chatMode, message.id, message.text)">
                     <div *ngIf="message.threadCount > 0">
                         <span *ngIf="getLastThreadReplyTime()" class="last-reply-time">Letzte Antwort
                             {{getLastThreadReplyTime() | date:'HH:mm'}}</span>
