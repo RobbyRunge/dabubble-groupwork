@@ -110,11 +110,12 @@ export class InputMessageComponent implements OnInit {
 
   sendMessage() {
     if (!this.messageText.trim()) return;
-
+    const name = this.channelService.currentUser?.name;
+    const avatar = this.channelService.currentUser?.avatar;
     if (this.mode === 'thread') {
-      this.chatService.sendThreadMessage(this.chatService.chatMode, this.chatService.chatId, this.chatService.parentMessageId, this.channelService.currentUserId, this.messageText);
+      this.chatService.sendThreadMessage(this.chatService.chatMode, this.chatService.chatId, this.chatService.parentMessageId, this.channelService.currentUserId, this.messageText, name, avatar);
     } else {
-      this.chatService.sendChatMessage(this.chatService.chatMode, this.messageText, this.channelService.currentUserId);
+      this.chatService.sendChatMessage(this.chatService.chatMode, this.messageText, this.channelService.currentUserId, name, avatar);
     }
     this.messageText = ''
   }
