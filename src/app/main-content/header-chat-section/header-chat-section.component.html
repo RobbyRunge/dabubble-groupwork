@@ -89,6 +89,34 @@
                         Keine Personen gefunden
                     </div>
                 </div>
+
+                <div *ngIf="dropdownType === 'email'" class="dropdown-section">
+                    <div class="dropdown-header">
+                        <mat-icon>email</mat-icon>
+                        <span>E-Mail Adressen</span>
+                    </div>
+                    <div *ngFor="let user of emailResults" 
+                         class="search-result-item email-item standard-transition"
+                         (click)="selectEmailResult(user)">
+                        <div class="result-icon">
+                            <div class="avatar-wrapper">
+                                <img *ngIf="user.avatar" [src]="'/avatar/' + user.avatar" class="user-avatar" alt="">
+                                <div *ngIf="!user.avatar" class="default-avatar">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                                <img class="status-img-search"
+                                     [src]="user.description === 'Online' ? 'status/online.png' : 'status/offline.png'" alt="">
+                            </div>
+                        </div>
+                        <div class="result-content">
+                            <div class="result-name">{{user.name}}</div>
+                            <div class="result-email">{{getUserEmail(user.id)}}</div>
+                        </div>
+                    </div>
+                    <div *ngIf="emailResults.length === 0" class="no-results">
+                        Keine E-Mail Adressen gefunden
+                    </div>
+                </div>
             </div>
         </div>
     </div>

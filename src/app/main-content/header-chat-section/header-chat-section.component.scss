@@ -153,6 +153,10 @@
             background-color: #ECEEFE;
         }
 
+        &.email-item:hover {
+            background-color: #ECEEFE;
+        }
+
         &.message-item:hover {
             background-color: #ECEEFE;
         }
@@ -183,6 +187,14 @@
         }
 
         .user-item & {
+            background-color: transparent;
+
+            mat-icon {
+                color: #ADB0D9;
+            }
+        }
+
+        .email-item & {
             background-color: transparent;
 
             mat-icon {
@@ -232,6 +244,27 @@
         width: 12px;
         height: 12px;
         border-radius: 50%;
+    }
+
+    .result-content {
+        flex: 1;
+        
+        .result-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #000;
+            margin-bottom: 2px;
+        }
+
+        .result-email {
+            font-size: 14px;
+            color: #686868;
+        }
+
+        .result-description {
+            font-size: 14px;
+            color: #686868;
+        }
     }
 
     .no-results {

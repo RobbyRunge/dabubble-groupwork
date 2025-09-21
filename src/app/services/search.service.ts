@@ -264,9 +264,22 @@ export class SearchService {
     return of(filteredUsers);
   }
 
+  searchUsersByEmail(keyword: string): Observable<SearchResult[]> {
+    const allUsers = this.getAllUsersFromCache();
+    const filteredUsers = this.filterAndMapUsersByEmail(allUsers, keyword);
+    return of(filteredUsers);
+  }
+
   private filterAndMapUsers(users: any[], keyword: string): SearchResult[] {
     return Array.from(users)
       .filter(user => this.isValidUser(user, keyword))
+      .map(user => this.mapUserToSearchResult(user))
+      .slice(0, 10);
+  }
+
+  private filterAndMapUsersByEmail(users: any[], keyword: string): SearchResult[] {
+    return Array.from(users)
+      .filter(user => this.isValidUserForEmail(user, keyword))
       .map(user => this.mapUserToSearchResult(user))
       .slice(0, 10);
   }
@@ -279,14 +292,31 @@ export class SearchService {
     return hasName && matchesKeyword && notCurrentUser;
   }
 
+  private isValidUserForEmail(user: any, keyword: string): boolean {
+    const hasEmail = this.hasValidEmail(user);
+    const matchesKeyword = this.emailMatchesKeyword(user, keyword);
+    const notCurrentUser = this.isNotCurrentUser(user);
+    return hasEmail && matchesKeyword && notCurrentUser;
+  }
+
   private hasValidName(user: any): boolean {
     return user.name && typeof user.name === 'string';
+  }
+
+  private hasValidEmail(user: any): boolean {
+    return user.email && typeof user.email === 'string';
   }
 
   private userMatchesKeyword(user: any, keyword: string): boolean {
     if (!keyword) return true;
     return this.hasValidName(user) &&
       user.name.toLowerCase().includes(keyword.toLowerCase());
+  }
+
+  private emailMatchesKeyword(user: any, keyword: string): boolean {
+    if (!keyword) return true;
+    return this.hasValidEmail(user) &&
+      user.email.toLowerCase().includes(keyword.toLowerCase());
   }
 
   private isNotCurrentUser(user: any): boolean {

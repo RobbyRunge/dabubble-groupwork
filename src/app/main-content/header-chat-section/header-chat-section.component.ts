@@ -49,8 +49,9 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
   newMessageSearchTerm: string = '';
   channelResults: SearchResult[] = [];
   userResults: SearchResult[] = [];
+  emailResults: SearchResult[] = [];
   showDropdown: boolean = false;
-  dropdownType: 'channel' | 'user' = 'channel';
+  dropdownType: 'channel' | 'user' | 'email' = 'channel';
 
   @ViewChild('referenceButton') referenceButton!: ElementRef<HTMLButtonElement>;
 
@@ -89,6 +90,9 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
       this.dropdownType = 'user';
       const userKeyword = this.extractKeyword(term, '@');
       this.searchUsers(userKeyword);
+    } else if (this.isEmailSearch(term)) {
+      this.dropdownType = 'email';
+      this.searchEmails(term);
     } else {
       this.showDropdown = false;
       return;
@@ -102,6 +106,11 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
 
   private isUserSearch(term: string): boolean {
     return /(?:^|[\s])@/.test(term);
+  }
+
+  private isEmailSearch(term: string): boolean {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+/;
+    return emailPattern.test(term.trim()) && !term.trim().startsWith('@');
   }
 
   private extractKeyword(term: string, prefix: string): string {
@@ -136,6 +145,18 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
+  private searchEmails(keyword: string) {
+    if (keyword) {
+      this.searchService.searchUsersByEmail(keyword).subscribe(results => {
+        this.emailResults = results;
+      });
+    } else {
+      this.searchService.searchUsersByEmail('').subscribe(results => {
+        this.emailResults = results;
+      });
+    }
+  }
+
   selectChannelResult(channel: SearchResult) {
     this.showDropdown = false;
     this.newMessageSearchTerm = `#${channel.name}`;
@@ -144,6 +165,18 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
   selectUserResult(type: string, user: SearchResult) {
     this.showDropdown = false;
     this.newMessageSearchTerm = `@${user.name}`;
+  }
+
+  selectEmailResult(user: SearchResult) {
+    this.showDropdown = false;
+    const userEmail = this.getUserEmail(user.id);
+    this.newMessageSearchTerm = userEmail || user.name;
+  }
+
+  getUserEmail(userId: string): string {
+    const allUsers = this.searchService.getAllUsersFromCache();
+    const user = allUsers.find(u => u.userId === userId);
+    return user?.email || '';
   }
 
   truncateDescription(text: string, maxWords: number = 6): string {
