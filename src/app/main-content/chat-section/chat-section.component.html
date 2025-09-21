@@ -16,7 +16,7 @@
         </div>
 
         <!-- Chat Container -->
-        <div class="chat-container"  *ngIf="(channelService.isChecked$ | async) as selectedUser" [ngClass]="{
+        <div class="chat-container" *ngIf="!dataUser.showNewMessage && (channelService.isChecked$ | async) as selectedUser" [ngClass]="{
                 'other-user' :selectedUser.userId !== channelService.currentUserId
                     }">
             <div #messagesContainer class="chat-messages-container">
