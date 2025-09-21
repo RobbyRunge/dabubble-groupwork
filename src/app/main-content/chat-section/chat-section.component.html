@@ -3,7 +3,7 @@
     <!-- <app-work-space-section class="work-space-section"></app-work-space-section> -->
     <div #chatContainer class="chat-section">
         <app-header-chat-section></app-header-chat-section>
-        <div class="chat-container" *ngIf="channelService.isChecked$ | async as selectedUser" [ngClass]="{
+        <div class="chat-container"  *ngIf="(channelService.isChecked$ | async) as selectedUser" [ngClass]="{
                 'other-user' :selectedUser.userId !== channelService.currentUserId
                     }">
             <div #messagesContainer class="chat-messages-container">
@@ -38,11 +38,11 @@
                         </div>
                     </div>
                     <div class="sent-message">
-                        <app-sent-message [mode]="'chat'" *ngIf="msg.senderId === channelService.currentUserId"
+                        <app-sent-message [mode]="'chats'"  *ngIf="msg.senderId === channelService.currentUserId"
                             [message]="msg" [index]="i" (emojiPickerRequested)="openEmojiPicker($event)">
                         </app-sent-message>
                     </div>
-                    <app-received-message [mode]="'chat'" *ngIf="msg.senderId !== channelService.currentUserId"
+                    <app-received-message [mode]="'chats'" *ngIf="msg.senderId !== channelService.currentUserId"
                         [message]="msg" (emojiPickerRequested)="openEmojiPicker($event)">
                     </app-received-message>
                 </div>

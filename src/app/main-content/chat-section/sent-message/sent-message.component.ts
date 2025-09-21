@@ -35,6 +35,7 @@ export class SentMessageComponent implements OnInit {
   @Input() message: any;
   @Input() index!: number
   @Input() mode: string = '';
+  @Input() chatMode: string = '';
   @Output() emojiPickerRequested = new EventEmitter<{
     anchor: HTMLElement;
     message: any;
@@ -91,12 +92,7 @@ export class SentMessageComponent implements OnInit {
     this.showEmojis = false;
   }
   async updateMessage() {
-    try {
-      await this.chatService.updateUserMessage(this.mode, this.message.id, this.editMessageText);
-      this.editMessageActive = false;
-    } catch (error) {
-      console.error('Error updating message:', error);
-    }
+    await this.chatService.updateUserMessage(this.chatService.chatMode, this.message.id, this.editMessageText);
   }
 
   showAllEmojisMessage(index: number | any, event: MouseEvent) {
@@ -107,9 +103,9 @@ export class SentMessageComponent implements OnInit {
   addMostUsedEmojiMessage(emoji: any, index: number) {
     this.messageReacton += emoji;
     if (this.mode === 'thread') {
-      this.chatService.saveEmojisThreadInDatabase(emoji, this.message.id, this.chatService.parentMessageId)
+      this.chatService.saveEmojisThreadInDatabase(this.chatService.chatMode, emoji, this.message.id, this.chatService.parentMessageId)
     } else {
-      this.chatService.saveEmojisInDatabase(emoji, this.message.id)
+      this.chatService.saveEmojisInDatabase(this.chatService.chatMode, emoji, this.message.id)
     }
   }
 

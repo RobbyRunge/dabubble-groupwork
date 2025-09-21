@@ -175,31 +175,31 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
       // Find the message element by looking for elements with data-message-id attribute
       const messageElements = document.querySelectorAll('[data-message-id]');
       let targetElement: Element | null = null;
-      
+
       for (const element of messageElements) {
         if (element.getAttribute('data-message-id') === messageId) {
           targetElement = element;
           break;
         }
       }
-      
+
       if (targetElement) {
         // Scroll to the message
         targetElement.scrollIntoView({
           behavior: 'smooth',
           block: 'center'
         });
-        
+
         // Highlight the message if requested
         if (highlight) {
           targetElement.classList.add('highlighted-message');
-          
+
           // Remove highlight after 3 seconds
           setTimeout(() => {
             targetElement?.classList.remove('highlighted-message');
           }, 3000);
         }
-        
+
         // Clear the navigation target
         this.navigationService.clearScrollTarget();
       } else {
@@ -210,7 +210,7 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
     }
   }
 
-  hideAllEmojis(){
+  hideAllEmojis() {
     this.showEmojis = false;
   }
   openEmojiPicker(ev: { anchor: HTMLElement; side: 'left' | 'right'; message: any; index: number; context: 'chat' | 'thread' }) {
@@ -224,7 +224,7 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
     const s = this.pickerService.state.chat;
     if (!s.currentMessage) return;
     const emoji = e?.emoji?.native ?? e?.emoji ?? e;
-    this.chatService.saveEmojisInDatabase(emoji, s.currentMessage.id);
+    this.chatService.saveEmojisInDatabase('chats', emoji, s.currentMessage.id);
     this.pickerService.hide('chat');
   }
 }

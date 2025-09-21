@@ -44,7 +44,7 @@
                     <div *ngFor="let reaction of message.reactions; let i = index" class="reaction-wrapper"
                         (mouseenter)="showReactionUserName(i)" (mouseleave)="hideReactionUserName()">
 
-                        <div class="reaction-container" *ngIf="i < 20 && mode === 'chat' || showAllMessageReactions">
+                        <div class="reaction-container" *ngIf="i < 20 && mode === 'chats' || showAllMessageReactions">
                             <span>{{ reaction.emoji }}</span>
                             <span>{{reaction.emojiCounter}}</span>
                         </div>
@@ -79,8 +79,7 @@
                             (mouseout)="imgReaction='chat-section/add-reaction.png'">
                     </div>
                 </div>
-                <div class="answer-date-container"
-                    (click)="chatService.answerOnMessage(mode, message.id, message.text)">
+                <div class="answer-date-container" (click)="chatService.answerOnMessage(chatService.chatMode, message.id, message.text, message.senderName, message.userAvatar)">
                     <div *ngIf="message.threadCount > 0">
                         <span *ngIf="getLastThreadReplyTime()" class="last-reply-time">Letzte Antwort
                             {{getLastThreadReplyTime() | date:'HH:mm'}}</span>
@@ -102,9 +101,8 @@
                     bearbeiten</button>
             </div>
         </div>
-        <div *ngIf="mode !== 'thread'" (click)="chatService.answerOnMessage(mode, message.id, message.text)"
-            (mouseover)="imgComment='chat-section/comment-color.png'"
-            (mouseout)="imgComment='chat-section/comment.png'">
+        <div *ngIf="mode !== 'thread'" (click)="chatService.answerOnMessage(chatService.chatMode, message.id, message.text, message.senderName, message.userAvatar)"
+            (mouseover)="imgComment='chat-section/comment-color.png'" (mouseout)="imgComment='chat-section/comment.png'">
             <img [src]="imgComment">
         </div>
         <div (click)="openEmojiPicker(reactBtn, $event)" (mouseover)="imgReaction='chat-section/add-reaction-color.png'"

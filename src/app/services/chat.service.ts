@@ -1,4 +1,4 @@
-import { Injectable, inject, Injector, runInInjectionContext, ViewChild, ElementRef } from '@angular/core';
+import { Injectable, inject, Injector, runInInjectionContext } from '@angular/core';
 import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc, CollectionReference, getDoc, limit, increment, writeBatch, WriteBatch, arrayUnion } from '@angular/fire/firestore';
 import { UserService } from './user.service';
 import { MatDrawer } from '@angular/material/sidenav';
@@ -37,6 +37,7 @@ export class ChatService {
     hasMessagesThread: boolean = false;
     parentMessagesRef: any;
     batch: any;
+    chatMode: 'chats' | 'channels' = 'chats';
 
     async getOrCreateChatId(userId1: string, userId2: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
@@ -88,60 +89,78 @@ export class ChatService {
         })
     };
 
-    async sendChatMessage(type: string, messageText: string, senderId: any) {
+    async sendChatMessage(type: string, messageText: string, senderId: any, name?: string, avatar?: string) {
         return runInInjectionContext(this.injector, async () => {
-            const messagesRef = collection(this.firestore, `${type}/${this.chatId}/message`);
+            const messagesRef = collection(this.firestore, `${this.chatMode}/${this.chatId}/message`);
             await addDoc(messagesRef, {
                 text: messageText,
                 senderId: senderId,
+                senderName: name,
+                userAvatar: avatar,
                 timestamp: serverTimestamp(),
             });
         })
     }
 
 
+    async getChannelMessages(channelId: string): Promise<any[]> {
+        return runInInjectionContext(this.injector, async () => {
+            const messagesRef = collection(this.firestore, `channels/${channelId}/message`);
+            const q = query(messagesRef, orderBy('createdAt', 'asc'));
+
+            const snapshot = await getDocs(q);
+
+            return snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+        });
+    }
+
     private async getExistingThreadId(type: string, chatId: string, parentMessageId: string): Promise<string | null> {
-        const threadsCol = collection(this.firestore, `${type}/${chatId}/message/${parentMessageId}/threads`);
+        const threadsCol = collection(this.firestore, `${this.chatMode}/${chatId}/message/${parentMessageId}/threads`);
         const existing = await getDocs(query(threadsCol, limit(1)));
         return existing.empty ? null : existing.docs[0].id;
     }
-
-    private createThreadDocument(type: string, batch: WriteBatch, chatId: string, parentMessageId: string, senderId: string, text: string, threadId?: string, parentTimestamp?: any): string {
+    private createThreadDocument(type: string, batch: WriteBatch, chatId: string, parentMessageId: string, senderId: string, text: string, threadId?: string, parentTimestamp?: any, senderName?: string, userAvatar?: string,): string {
         return runInInjectionContext(this.injector, () => {
-            const threadsCol = collection(this.firestore, `${type}/${chatId}/message/${parentMessageId}/threads`);
+            const threadsCol = collection(this.firestore, `${this.chatMode}/${chatId}/message/${parentMessageId}/threads`);
             const newThreadRef = threadId ? doc(threadsCol, threadId) : doc(threadsCol);
 
             batch.set(newThreadRef, {
                 senderId,
                 text,
-                timestamp: parentTimestamp || serverTimestamp()
+                timestamp: parentTimestamp || serverTimestamp(),
+                senderName,
+                userAvatar: userAvatar,
             });
 
             return newThreadRef.id;
-        })
+        });
     }
 
-    async getOrCreateThread(type: string, chatId: string, parentMessageId: string, senderId: string, text: string, threadId?: string): Promise<string> {
+    async getOrCreateThread(type: string, chatId: string, parentMessageId: string, senderId: string, text: string, threadId?: string, name?: string, avatar?: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
-            const existingId = await this.getExistingThreadId(type, chatId, parentMessageId);
+            const existingId = await this.getExistingThreadId(this.chatMode, chatId, parentMessageId);
             if (existingId) return existingId;
 
-            const parentMsgRef = doc(this.firestore, `${type}/${chatId}/message/${parentMessageId}`);
+            const parentMsgRef = doc(this.firestore, `${this.chatMode}/${chatId}/message/${parentMessageId}`);
             const parentMsgSnap = await getDoc(parentMsgRef);
             const parentTimestamp = parentMsgSnap.exists() ? parentMsgSnap.data()?.['timestamp'] : null;
 
             const batch = writeBatch(this.firestore);
-            const newThreadId = this.createThreadDocument(type, batch, chatId, parentMessageId, senderId, text, threadId, parentTimestamp);
-            this.incrementThreadCount(type, batch, chatId, parentMessageId, parentTimestamp);
+            const newThreadId = this.createThreadDocument(this.chatMode, batch, chatId, parentMessageId, senderId, text, threadId, parentTimestamp, name, avatar);
+            this.incrementThreadCount(this.chatMode, batch, chatId, parentMessageId, parentTimestamp);
 
             await batch.commit();
             return newThreadId;
         });
     }
 
+
     private incrementThreadCount(type: string, batch: WriteBatch, chatId: string, parentMessageId: string, lastReplyTimestamp?: any): void {
         return runInInjectionContext(this.injector, () => {
-            const parentMsgRef = doc(this.firestore, `${type}/${chatId}/message/${parentMessageId}`);
+            const parentMsgRef = doc(this.firestore, `${this.chatMode}/${chatId}/message/${parentMessageId}`);
             batch.update(parentMsgRef, {
                 threadCount: increment(1),
                 lastThreadReply: lastReplyTimestamp || serverTimestamp()
@@ -152,9 +171,8 @@ export class ChatService {
 
     async getParrentMessageId(type: string) {
         return runInInjectionContext(this.injector, async () => {
-            this.parentMessagesRef = collection(this.firestore, `${type}/${this.chatId}/message`);
+            this.parentMessagesRef = collection(this.firestore, `${this.chatMode}/${this.chatId}/message`);
             const snapshot = await getDocs(this.parentMessagesRef);
-            console.log(this.parentMessagesRef);
             if (!snapshot.empty) {
                 return snapshot.docs[0].id;
             }
@@ -162,11 +180,30 @@ export class ChatService {
         });
     }
 
-    async sendThreadMessage(type: string, chatId: string, rootId: string, senderId: string, text: string) {
+    async sendThreadMessage(
+        type: string,
+        chatId: string,
+        rootId: string,
+        senderId: string,
+        text: string,
+        senderName: string | undefined,
+        userAvatar: string | undefined
+    ) {
         return runInInjectionContext(this.injector, async () => {
             const batch = writeBatch(this.firestore);
-            this.createThreadDocument(type, batch, chatId, rootId, senderId, text, undefined, undefined);
-            this.incrementThreadCount(type, batch, chatId, rootId, serverTimestamp());
+            this.createThreadDocument(
+                this.chatMode,
+                batch,
+                chatId,
+                rootId,
+                senderId,
+                text,
+                undefined,
+                undefined,
+                senderName,
+                userAvatar
+            );
+            this.incrementThreadCount(this.chatMode, batch, chatId, rootId, serverTimestamp());
             await batch.commit();
         });
     }
@@ -176,7 +213,7 @@ export class ChatService {
             this.unsubscribeMessagesThread();
         }
         return runInInjectionContext(this.injector, async () => {
-            const messagesRef = collection(this.firestore, `${type}/${this.chatId}/message/${this.parentMessageId}/threads`);
+            const messagesRef = collection(this.firestore, `${this.chatMode}/${this.chatId}/message/${this.parentMessageId}/threads`);
             const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
             this.unsubscribeMessagesThread = onSnapshot(messagesQuery, (snapshot) => {
                 this.messagesThread = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -188,7 +225,7 @@ export class ChatService {
     async checkIfMessageHasThreads(type: string, parentMessageId: string) {
         const threadsRef = collection(
             this.firestore,
-            `${type}/${this.chatId}/message/${parentMessageId}/threads`
+            `${this.chatMode}/${this.chatId}/message/${parentMessageId}/threads`
         );
 
         const threadsSnap = await getDocs(threadsRef);
@@ -201,13 +238,12 @@ export class ChatService {
         }
 
         return runInInjectionContext(this.injector, async () => {
-            const messagesRef = collection(this.firestore, `${type}/${this.chatId}/message`);
+            const messagesRef = collection(this.firestore, `${this.chatMode}/${this.chatId}/message`);
             const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
 
             this.unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
                 this.messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 this.hasMessages = this.messages.length !== 0;
-                console.log(this.messages);
             });
         });
     }
@@ -258,19 +294,16 @@ export class ChatService {
     }
 
     async updateUserMessage(type: string, messageId: string, newMessage: string): Promise<void> {
-        this.messageDocRef = this.getMessageDoc(type, messageId);
+        this.messageDocRef = this.getMessageDoc(this.chatMode, messageId);
         await runInInjectionContext(this.injector, () =>
             updateDoc(this.messageDocRef, { text: newMessage })
         );
     }
 
     getMessageDoc(type: string, messageId: string): DocumentReference {
-        return runInInjectionContext(this.injector, () => {
-            if (type === 'thread') {
-                return doc(this.firestore, `chats/${this.chatId}/message/${this.parentMessageId}/threads/${messageId}`);
-            }
-            return doc(this.firestore, `chats/${this.chatId}/message/${messageId}`);
-        });
+        return runInInjectionContext(this.injector, () =>
+            doc(this.firestore, `${this.chatMode}/${this.chatId}/message/${messageId}`)
+        );
     }
 
     saveEmoji(emoji: string) {
@@ -309,10 +342,10 @@ export class ChatService {
         return this.drawer?.opened || false;
     }
 
-    checkIfChatOrChannel(type: string) {
-        if (type === 'chats') {
+    checkIfChatOrChannel() {
+        if (this.chatMode === 'chats') {
             return this.chatId = this.dataUser.chatId;
-        } else if (type === 'channels') {
+        } else if (this.chatMode === 'channels') {
             return this.chatId = this.channelService.currentChannelId;
         } else {
             return null;
@@ -320,12 +353,13 @@ export class ChatService {
     }
 
     async onUserClick(type: string, index: number, user: any) {
+        this.chatMode = 'chats';
         this.selectedUser = user;
         this.channelService.setCheckdValue(user);
         this.close();
         this.dataUser.chatId = await this.getOrCreateChatId(this.channelService.currentUserId, user.userId);
-        this.router.navigate(['/mainpage', this.channelService.currentUserId, 'chats', this.dataUser.chatId]);
-        this.checkIfChatOrChannel(type);
+        this.router.navigate(['/mainpage', this.channelService.currentUserId, 'chats', this.chatId]);
+        this.checkIfChatOrChannel();
         this.listenToMessages(type);
         this.dataUser.showChannel = false;
         this.dataUser.showChatPartnerHeader = true;
@@ -343,7 +377,7 @@ export class ChatService {
 
     private async resolveThreadSenderId(parentMessageId: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
-            const parentMsgRef = doc(this.firestore, `chats/${this.dataUser.chatId}/message/${parentMessageId}`);
+            const parentMsgRef = doc(this.firestore, `${this.chatMode}/${this.chatId}/message/${parentMessageId}`);
             const snap = await getDoc(parentMsgRef);
 
             if (!snap.exists()) return this.channelService.currentUserId;
@@ -358,40 +392,41 @@ export class ChatService {
             return senderId;
         });
     }
-    async answerOnMessage(type: string, parentMessageId: string, parentText: string) {
+    async answerOnMessage(type: string, parentMessageId: string, parentText: string, name?: string, avatar?: string) {
         return runInInjectionContext(this.injector, async () => {
+            this.checkIfChatOrChannel();
             this.parentMessageId = parentMessageId;
 
             const senderIdForThread = await this.resolveThreadSenderId(parentMessageId);
 
             this.threadId = await this.getOrCreateThread(
-                type,
-                this.dataUser.chatId,
+                this.chatMode,
+                this.chatId,
                 parentMessageId,
                 senderIdForThread,
                 parentText,
-                this.threadId
+                this.threadId,
+                name,
+                avatar
             );
 
             this.open();
             this.router.navigate([
                 '/mainpage',
                 this.channelService.currentUserId,
-                'chats',
-                this.dataUser.chatId,
+                this.chatMode,
+                this.chatId,
                 'threads',
                 this.threadId
             ]);
-            this.listenToMessagesThread(type);
+            this.listenToMessagesThread(this.chatMode);
         });
     }
 
-    saveEmojisThreadInDatabase(selectedEmoji: string, messageId: string, parentMessageId: string,) {
+    saveEmojisThreadInDatabase(type: string, selectedEmoji: string, messageId: string, parentMessageId: string,) {
         return runInInjectionContext(this.injector, async () => {
-            const messagesRef = doc(this.firestore, `chats/${this.dataUser.chatId}/message/${parentMessageId}/threads/${messageId}`);
+            const messagesRef = doc(this.firestore, `${this.chatMode}/${this.chatId}/message/${parentMessageId}/threads/${messageId}`);
             const messageSnap = await getDoc(messagesRef);
-            console.log('[EMOJI]', { parentMessageId, messageId });
-            console.log('[EMOJI path]', messagesRef.path);
             await this.checkIfEmojiExists(selectedEmoji, messageSnap, messagesRef);
         });
     }
@@ -404,9 +439,9 @@ export class ChatService {
         return null;
     }
 
-    async saveEmojisInDatabase(selectedEmoji: string, messageId: string) {
+    async saveEmojisInDatabase(type: string, selectedEmoji: string, messageId: string) {
         return runInInjectionContext(this.injector, async () => {
-            const messagesRef = doc(this.firestore, `chats/${this.dataUser.chatId}/message/${messageId}`);
+            const messagesRef = doc(this.firestore, `${this.chatMode}/${this.chatId}/message/${messageId}`);
             const messageSnap = await getDoc(messagesRef);
             await this.checkIfEmojiExists(selectedEmoji, messageSnap, messagesRef);
         });
@@ -438,10 +473,10 @@ export class ChatService {
 
     }
 
-    listenToEmojis(chatId: string, messageId: string) {
+    listenToEmojis(type: string, chatId: string, messageId: string) {
         const reactionsRef = collection(
             this.firestore,
-            `chats/${chatId}/message/${messageId}/reactions`
+            `${this.chatMode}/${chatId}/message/${messageId}/reactions`
         );
         const q = query(reactionsRef, orderBy('createdAt', 'asc'));
 

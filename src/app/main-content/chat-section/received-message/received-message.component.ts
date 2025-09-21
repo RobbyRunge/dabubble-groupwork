@@ -17,6 +17,7 @@ export class ReceivedMessageComponent implements OnInit {
   @Input() message: any;
   @Input() index!: number;
   @Input() mode: string = '';
+  @Input() chatMode: string = '';
   @Output() emojiPickerRequested = new EventEmitter<{
     anchor: HTMLElement;
     message: any;
@@ -55,18 +56,22 @@ export class ReceivedMessageComponent implements OnInit {
     this.messageReacton += $event.emoji.native;
     this.showEmojisMessage = false;
     this.chatService.loadMostUsedEmojis();
-    this.chatService.saveEmojisInDatabase($event.emoji.native, this.message.id);
+    this.chatService.saveEmojisInDatabase(this.chatService.chatMode, $event.emoji.native, this.message.id);
     this.shiftContainer = true;
     setTimeout(() => {
       this.shiftContainer = false;
     }, 300);
   }
 
-  addMostUsedEmojiMessage(emoji: any, index: number) {
+    addMostUsedEmojiMessage(emoji: any, index: number) {
     this.messageReacton += emoji;
-    this.chatService.saveEmojisInDatabase(emoji, this.message.id)
+    if (this.mode === 'thread') {
+      this.chatService.saveEmojisThreadInDatabase(this.chatService.chatMode, emoji, this.message.id, this.chatService.parentMessageId)
+    } else {
+      this.chatService.saveEmojisInDatabase(this.chatService.chatMode, emoji, this.message.id)
+    }
   }
-
+  
   hideAllEmojis() {
     this.showEmojisMessage = false;
   }

@@ -44,7 +44,7 @@ export class InputMessageComponent implements OnInit {
   onlineUser: string = 'status/online.png';
   offlineUser: string = 'status/offline.png';
   @Input() mode: 'chats' | 'thread' = 'chats';
-  /* @Input() chatMode: 'chat' | 'channel' = 'chat'; */
+  @Input() chatMode: 'chats' | 'channel' = 'chats';
   showEmojis: boolean = false;
 
 
@@ -110,11 +110,12 @@ export class InputMessageComponent implements OnInit {
 
   sendMessage() {
     if (!this.messageText.trim()) return;
-
+    const name = this.channelService.currentUser?.name;
+    const avatar = this.channelService.currentUser?.avatar;
     if (this.mode === 'thread') {
-      this.chatService.sendThreadMessage(this.mode, this.dataUser.chatId, this.chatService.parentMessageId, this.channelService.currentUserId, this.messageText);
+      this.chatService.sendThreadMessage(this.chatService.chatMode, this.chatService.chatId, this.chatService.parentMessageId, this.channelService.currentUserId, this.messageText, name, avatar);
     } else {
-      this.chatService.sendChatMessage(this.mode, this.messageText, this.channelService.currentUserId);
+      this.chatService.sendChatMessage(this.chatService.chatMode, this.messageText, this.channelService.currentUserId, name, avatar);
     }
     this.messageText = ''
   }
@@ -140,8 +141,4 @@ export class InputMessageComponent implements OnInit {
     this.showChanelList = false;
     this.showEmojis = false;
   }
-
-/*   hideAllEmojis() {
-    this.showEmojis = false;
-  } */
 }

@@ -20,7 +20,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateChannelSectionComponent } from '../create-channel-section/create-channel-section.component';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription, timestamp } from 'rxjs';
+import { combineLatest, filter, firstValueFrom, Observable, Subscription, switchMap, take, timestamp } from 'rxjs';
 import { User } from '../../../models/user.class';
 import { Allchannels } from '../../../models/allchannels.class';
 import { ChannelService } from '../../services/channel.service';
@@ -89,11 +89,18 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.dataUser.showCurrentUserData();
     this.getUserData();
     this.getChannelData();
-    this.unsubChannels = this.channelService.channelsLoaded$.subscribe(loaded => {
-      if (loaded) {
-        this.loadSaveRoute();
-      }
-    });
+
+    combineLatest([
+      this.channelService.channelsLoaded$.pipe(filter(Boolean)),
+      this.channelService.showChannelByUser$
+    ])
+      .pipe(take(1))
+      .subscribe(([_, channels]) => {
+        if (channels?.length) {
+          const c = channels[0];
+          this.openChannel('channels', c.channelname, c.channelId, c.description ?? '');
+        }
+      });
   }
 
   getUserData() {
@@ -139,24 +146,26 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   loadSaveRoute() {
     const channelId = this.channelService.userSubcollectionChannelId;
     if (channelId) {
-      this.router.navigate(['mainpage', this.channelService.currentUserId, 'channel', channelId,]);
+      this.router.navigate(['mainpage', this.channelService.currentUserId, 'channels', channelId,]);
     } else {
       this.router.navigate(['mainpage', this.channelService.currentUserId]);
     }
   }
 
-  async openChannel(type: string, channelName: string, channelId: string, channelDescription: string) {
+  async openChannel(type: string, channelName: string, channelId: string, channelDescription: string,) {
+    this.chatService.chatMode = 'channels';
     this.dataUser.showChannel = true;
     this.dataUser.showChatPartnerHeader = false;
     this.activeUserId = '';
-    this.router.navigate(['mainpage', this.channelService.currentUserId, 'channel', channelId,]);
+    this.router.navigate(['mainpage', this.channelService.currentUserId, 'channels', channelId,]);
     this.userstorage.channelId = channelId;
     this.userstorage.showChannel = true;
     this.getChannelNameandId(channelName, channelId, channelDescription);
     this.channelService.updateUserStorage(this.channelService.currentUserId, this.channelService.userSubcollectionId, this.userstorage.toJSON(['channelId', 'showChannel']));
-    this.chatService.checkIfChatOrChannel(type);
+    this.chatService.checkIfChatOrChannel();
     this.chatService.listenToMessages(type);
-    /* await this.chatService.getOrCreateChatId(this.dataUser.usersIdsInChannel, this.channelService.currentUserId); */
+    this.chatService.getChannelMessages(channelId);
+    this.channelService.setCheckdValue(channelId);
   }
 
   getChannelNameandId(channelName: string, channelId: string, channelDescription: string) {

@@ -1,13 +1,13 @@
 <div class="messages-container standard-transition" (click)="hideAllEmojis()" [attr.data-message-id]="message.id" #reactBtn>
     <div class="users-message-container"
-        *ngIf="message.senderId === selectedUser.userId && message.senderId !== dataUser.currentUserId">
+        *ngIf="message.senderId !== channelService.currentUserId">
         <div class="message-container">
             <div>
-                <img class="user-logo" src="avatar/{{selectedUser.avatar}}" alt="">
+                <img class="user-logo" src="avatar/{{message.userAvatar}}" alt="">
             </div>
             <div class="message-info">
                 <div class="user-date-container">
-                    <span>{{selectedUser.name}}</span>
+                    <span>{{message.senderName}}</span>
                     <p>{{message.timestamp?.toDate() | date:'HH:mm'}}</p>
                 </div>
                 <div class="message-content standard-transition">
@@ -38,7 +38,7 @@
                         <p *ngIf="showAllMessageReactions" (click)="hideAllReactions()">Weniger anzeigen</p>
                     </div>
                 </div>
-                <div class="answer-date-container" (click)="chatService.answerOnMessage(mode, message.id, message.text)">
+                <div class="answer-date-container" (click)="chatService.answerOnMessage(chatService.chatMode, message.id, message.text, message.senderName, message.userAvatar)">
                     <div *ngIf="message.threadCount > 0">
                         <span *ngIf="getLastThreadReplyTime()" class="last-reply-time">Letzte Antwort
                             {{getLastThreadReplyTime() | date:'HH:mm'}}</span>
@@ -50,7 +50,7 @@
         </div>
     </div>
     <div class="message-hover-options">
-        <div *ngIf="mode !== 'thread'" (click)="chatService.answerOnMessage(mode, message.id, message.text)" (mouseover)="imgComment='chat-section/comment-color.png'"
+        <div *ngIf="mode !== 'thread'" (click)="chatService.answerOnMessage(chatService.chatMode, message.id, message.text, message.senderName, message.userAvatar)" (mouseover)="imgComment='chat-section/comment-color.png'"
                 (mouseout)="imgComment='chat-section/comment.png'">
             <img [src]="imgComment">
         </div>

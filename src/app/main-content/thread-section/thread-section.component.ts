@@ -125,6 +125,7 @@ export class ThreadSectionComponent implements AfterViewInit, OnInit, AfterViewC
   }
 
   openEmojiPicker(ev: { anchor: HTMLElement; side: 'left' | 'right'; message: any; index: number; context: 'chat' | 'thread' }) {
+    this.currentMessage = ev.message; 
     this.emojiPickerService.open(ev);
   }
 
@@ -135,7 +136,7 @@ export class ThreadSectionComponent implements AfterViewInit, OnInit, AfterViewC
     const msg = this.emojiPickerService.state.thread;
     if (!msg) return;
     const emoji = e?.emoji?.native ?? e?.emoji ?? e;
-    this.chatService.saveEmojisThreadInDatabase(emoji, this.currentMessage.id, this.chatService.parentMessageId);
+    this.chatService.saveEmojisThreadInDatabase(this.chatService.chatMode,emoji, this.currentMessage.id, this.chatService.parentMessageId);
     this.emojiPickerService.hide('thread');
     this.chatService.loadMostUsedEmojis();
   }
