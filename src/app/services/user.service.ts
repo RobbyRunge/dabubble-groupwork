@@ -43,9 +43,11 @@ export class UserService {
   onlineUser: string = 'status/online.png';
   offlineUser: string = 'status/offline.png';
 
-  showChannel = true;
-  showChatPartnerHeader = true;
-  showNewMessage = false;
+  showChannel = false;
+  showChatPartnerHeader = false;
+  showNewMessage = true;
+  
+  private freshLogin = false;
 
   usersIdsInChannel: any[] = [];
   userNamesInChannel: any[] = [];
@@ -121,6 +123,8 @@ export class UserService {
       this.channelService.userSubcollectionId = userStorage.id;
     }
     this.loginIsSucess = true;
+    // Set fresh login flag to prevent state restoration
+    this.freshLogin = true;
   }
 
   async signInWithGoogle() {
@@ -154,6 +158,8 @@ export class UserService {
       }
 
       this.loginIsSucess = true;
+      // Set fresh login flag to prevent state restoration
+      this.freshLogin = true;
       this.router.navigate(['mainpage', this.channelService.currentUserId]);
       return user;
     } catch (error) {
@@ -181,6 +187,8 @@ export class UserService {
           active: true,
         });
         this.loginIsSucess = true;
+        // Set fresh login flag to prevent state restoration
+        this.freshLogin = true;
       }
     } else {
       console.error('Guest user not found. Please create a guest user first.');
@@ -389,9 +397,13 @@ export class UserService {
         this.channelService.getChannelName(this.channelService.userSubcollectionChannelId);
       }
     });
-    if (this.channelService.userSubcollectionChannelId && 
-        this.channelService.userSubcollectionChannelId.trim() !== '') {
-      this.getUserIdsFromChannel(this.channelService.userSubcollectionChannelId);
+    if (!this.freshLogin) {
+      if (this.channelService.userSubcollectionChannelId && 
+          this.channelService.userSubcollectionChannelId.trim() !== '') {
+        this.getUserIdsFromChannel(this.channelService.userSubcollectionChannelId);
+      }
+    } else {
+      this.freshLogin = false;
     }
     
     this.channelService.showUserChannel();

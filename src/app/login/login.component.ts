@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
   private userService = inject(UserService);
   private channelService = inject(ChannelService);
   private router = inject(Router);
+  private dataUser = this.userService;
 
   get isFormValid(): boolean {
     return (
@@ -80,6 +81,10 @@ export class LoginComponent implements OnInit {
         setTimeout(() => {
           this.userId = this.channelService.currentUserId;
           this.resetLoginForm();
+          this.channelService.resetAllStates(this.userService);
+          this.userService.showChannel = false;
+          this.userService.showChatPartnerHeader = false;
+          this.userService.showNewMessage = true;
           this.router.navigate(['mainpage', this.userId, 'new-message']);
         }, 125);
       }, 2000);
@@ -123,6 +128,10 @@ export class LoginComponent implements OnInit {
       setTimeout(() => {
         backgroundOverlay.classList.remove('active');
         setTimeout(() => {
+          this.channelService.resetAllStates(this.dataUser);
+          this.dataUser.showChannel = false;
+          this.dataUser.showChatPartnerHeader = false;
+          this.dataUser.showNewMessage = true;
           this.router.navigate(['mainpage', this.userId, 'new-message']);
         }, 125);
       }, 2000);

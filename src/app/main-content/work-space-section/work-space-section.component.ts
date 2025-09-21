@@ -140,15 +140,6 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadSaveRoute() {
-    const channelId = this.channelService.userSubcollectionChannelId;
-    if (channelId) {
-      this.router.navigate(['mainpage', this.channelService.currentUserId, 'channels', channelId,]);
-    } else {
-      this.router.navigate(['mainpage', this.channelService.currentUserId]);
-    }
-  }
-
   async openChannel(type: string, channelName: string, channelId: string, channelDescription: string,) {
     this.chatService.chatMode = 'channels';
     this.dataUser.showChannel = true;

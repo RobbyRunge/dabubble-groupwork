@@ -25,7 +25,7 @@ export class EditLogoutUserComponent {
   readonly userService = inject(UserService);
   readonly channelService = inject(ChannelService);
   readonly chatService = inject(ChatService);
-
+  private dataUser = this.userService;
 
   openUserDialog() {
     this.userDialog.open(UserCardComponent, {
@@ -41,5 +41,8 @@ export class EditLogoutUserComponent {
     await this.userService.updateUserDocument(this.userService.channelService.currentUserId, { active: false });
     this.router.navigate(['']);
     this.dialogRef.close();
+    this.dataUser.showChannel = false;
+    this.dataUser.showChatPartnerHeader = false;
+    this.dataUser.showNewMessage = true;
   }
 }

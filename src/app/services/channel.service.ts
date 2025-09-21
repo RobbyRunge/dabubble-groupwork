@@ -251,6 +251,17 @@ export class ChannelService {
     })
   }
 
+  resetAllStates(userService?: any) {
+    this.isCheckedSubject.next(null);
+    this.activeChannelIdSubject.next('');
+    this.currentChannelId = '';
+    this.selectedUser = null;
+    this.userSubcollectionChannelId = '';
+    if (userService) {
+      userService.chatId = '';
+    }
+  }
+
   ngOnDestroy(): void {
     if (this.unsubscribeUserData) {
       this.unsubscribeUserData.unsubscribe();
