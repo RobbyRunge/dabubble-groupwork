@@ -1,19 +1,5 @@
 @use "./../../../styles.scss" as *;
 
-// .header {
-//     width: 100%;
-//     padding-top: 12px;
-//     @include dFlex();
-// }
-
-// .main-content {
-//     width: 100vw;
-//     max-width: 1920px;
-//     min-width: 0;
-//     position: relative;
-//     @include dFlex(center, flex-start);
-// }
-
 .chat-section {
     width: calc(100vw - 445px);
     max-width: 1920px;
@@ -28,14 +14,6 @@
     --mat-sys-primary: #686868;
     position: relative;
 }
-
-// .work-space-section {
-//     padding-left: 20px;
-//     padding-right: 20px;
-//     flex: 0 1 clamp(100px, 24vw, 400px);
-//     min-width: 300px;
-//     height: 100%;
-// }
 
 .thread-section {
     display: flex;
@@ -71,7 +49,7 @@
 .user-logo-name-container {
     @include dFlex(flex-start, flex-end);
     gap: 25px;
-    padding-left: 20px;
+    padding-left: 30px;
     padding-bottom: 25px;
 }
 
@@ -181,4 +159,16 @@ app-header-chat-section {
     100% {
         background-color: rgba(68, 77, 242, 0.1);
     }
+}
+
+.channel-text {
+    @include dFlex();
+    gap: 10px;
+    >span {
+        font-size: 24px;
+        font-weight: 700;
+    }
+}
+.channel-info-text{
+    color: black !important;
 }

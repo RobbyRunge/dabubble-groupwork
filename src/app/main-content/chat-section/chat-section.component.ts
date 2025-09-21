@@ -9,7 +9,7 @@ import { docData, onSnapshot } from '@angular/fire/firestore';
 import { User } from '../../../models/user.class';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { AsyncPipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
+import { AsyncPipe, NgClass, NgFor, NgIf, NgStyle, DatePipe } from '@angular/common';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { ReceivedMessageComponent } from './received-message/received-message.component';
 import { SentMessageComponent } from "./sent-message/sent-message.component";
@@ -23,13 +23,11 @@ import { EmojiPickerService } from '../../services/emojiPicker.service';
 @Component({
   selector: 'app-chat-section',
   imports: [
-    WorkSpaceSectionComponent,
-    ThreadSectionComponent,
-    HeaderComponent,
     NgIf,
     NgFor,
     AsyncPipe,
     NgClass,
+    DatePipe,
     ReceivedMessageComponent,
     SentMessageComponent,
     InputMessageComponent,

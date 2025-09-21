@@ -1,6 +1,4 @@
-<!-- <app-header class="header"></app-header> -->
 <div class="main-content" (click)="pickerService.hide('chat')" (scroll)="pickerService.reposition('chat')">
-    <!-- <app-work-space-section class="work-space-section"></app-work-space-section> -->
     <div #chatContainer class="chat-section">
         <app-header-chat-section></app-header-chat-section>
 
@@ -20,7 +18,7 @@
                 'other-user' :selectedUser.userId !== channelService.currentUserId
                     }">
             <div #messagesContainer class="chat-messages-container">
-                <div *ngIf="!chatService.hasMessages" class="user-logo-name-container">
+                <div *ngIf="!chatService.hasMessages && chatService.chatMode === 'chats'" class="user-logo-name-container">
                     <div class="user-logo-big" *ngIf="selectedUser">
                         <img src="avatar/{{selectedUser.avatar}}" alt="">
                     </div>
@@ -28,6 +26,12 @@
                         <h2>{{selectedUser.name}} <span
                                 *ngIf="selectedUser.userId === channelService.currentUserId">(Du)</span>
                         </h2>
+                    </div>
+                </div>
+                <div *ngIf="!chatService.hasMessages && chatService.chatMode === 'channels'" class="user-logo-name-container">
+                    <div class="channel-text">
+                        <span>#</span>
+                        <span>{{ channelService.currentChannelName }}</span>
                     </div>
                 </div>
                 <div class="chat-info-container"
@@ -39,9 +43,15 @@
                 </div>
                 <div class="chat-info-container">
                     <p class="standard-transition"
-                        *ngIf="selectedUser.userId !== channelService.currentUserId && !chatService.hasMessages">Diese
+                        *ngIf="selectedUser.userId !== channelService.currentUserId && !chatService.hasMessages && chatService.chatMode === 'chats'">Diese
                         Unterhaltung findet nur zwischen <span (click)="openUserDialog()">&#64;{{selectedUser.name}}
                         </span>und dir statt</p>
+                </div>
+                <div class="chat-info-container">
+                    <p class="channel-info-text" *ngIf="channelService.currentUserId && !chatService.hasMessages && chatService.chatMode === 'channels'">
+                        {{channelService.channelCreaterName}} hat diesen Channel am {{channelService.channelCreatedAt | date: 'longDate'}} erstellt. Das ist der Anfang des Channels <span
+                            (click)="openUserDialog()">#{{channelService.currentChannelName}}
+                        </span>
                 </div>
                 <div *ngFor="let msg of chatService.messages; let i = index">
                     <div *ngIf="chatService.isFirstMessageOfDay(msg.timestamp, i, chatService.messages)">
@@ -51,7 +61,7 @@
                         </div>
                     </div>
                     <div class="sent-message">
-                        <app-sent-message [mode]="'chats'"  *ngIf="msg.senderId === channelService.currentUserId"
+                        <app-sent-message [mode]="'chats'" *ngIf="msg.senderId === channelService.currentUserId"
                             [message]="msg" [index]="i" (emojiPickerRequested)="openEmojiPicker($event)">
                         </app-sent-message>
                     </div>
@@ -70,5 +80,4 @@
             <emoji-mart (emojiClick)="addEmoji($event)"></emoji-mart>
         </div>
     </div>
-    <!-- <app-thread-section class="thread-section"></app-thread-section> -->
 </div>

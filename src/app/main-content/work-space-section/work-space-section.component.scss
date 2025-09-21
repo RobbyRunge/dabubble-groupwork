@@ -370,8 +370,13 @@ button {
         display: none !important;
     }
 
+    .sidenav-toggle-btn {
+        display: none;
+    }
+
     .search-container {
         display: flex;
+        width: 100%;
     }
 
     .channel-container {
@@ -386,5 +391,9 @@ button {
 
     .useres-list-container{
         padding-left: 15px;
+    }
+    .mat-drawer {
+        width: 100%;
+        min-width: unset;
     }
 }
