@@ -53,7 +53,7 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
   showDropdown: boolean = false;
   dropdownType: 'channel' | 'user' | 'email' = 'channel';
 
-  @ViewChild('referenceButton') referenceButton!: ElementRef<HTMLButtonElement>;
+  @ViewChild('referenceButton') referenceButton?: ElementRef<HTMLButtonElement>;
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
@@ -70,8 +70,18 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
   }
 
   ngAfterViewInit() {
-    const rect = this.referenceButton.nativeElement.getBoundingClientRect();
-    this.channelService.setButtonRect(rect);
+    this.setButtonRectIfAvailable();
+  }
+
+  private setButtonRectIfAvailable() {
+    if (this.referenceButton?.nativeElement) {
+      try {
+        const rect = this.referenceButton.nativeElement.getBoundingClientRect();
+        this.channelService.setButtonRect(rect);
+      } catch (error) {
+        console.warn('Error getting button rect:', error);
+      }
+    }
   }
 
   getUserData() {
@@ -171,6 +181,7 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
     this.dataUser.showChannel = true;
     this.dataUser.showChatPartnerHeader = false;
     this.dataUser.showNewMessage = false;
+    setTimeout(() => this.setButtonRectIfAvailable(), 0);
   }
 
   selectUserResult(type: string, user: SearchResult) {

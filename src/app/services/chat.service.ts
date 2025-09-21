@@ -344,9 +344,19 @@ export class ChatService {
 
     checkIfChatOrChannel() {
         if (this.chatMode === 'chats') {
-            return this.chatId = this.dataUser.chatId;
+            const chatId = this.dataUser.chatId;
+            if (!chatId || chatId.trim() === '') {
+                console.warn('Chat ID is empty in chats mode');
+                return null;
+            }
+            return this.chatId = chatId;
         } else if (this.chatMode === 'channels') {
-            return this.chatId = this.channelService.currentChannelId;
+            const channelId = this.channelService.currentChannelId;
+            if (!channelId || channelId.trim() === '') {
+                console.warn('Channel ID is empty in channels mode');
+                return null;
+            }
+            return this.chatId = channelId;
         } else {
             return null;
         }

@@ -74,11 +74,15 @@ export class UserService {
   }
 
   getUserRefsByIds() {
-    return this.usersIdsInChannel.map((id) =>
-      runInInjectionContext(this.injector, () =>
+    return this.usersIdsInChannel.map((id) => {
+      if (!id || id.trim() === '') {
+        console.warn('Empty user ID found in usersIdsInChannel array');
+        return null;
+      }
+      return runInInjectionContext(this.injector, () =>
         doc(this.getUsersCollection(), id)
-      )
-    );
+      );
+    }).filter(ref => ref !== null);
   }
 
   getChatRef(docId: string) {
@@ -335,26 +339,30 @@ export class UserService {
 
   async getUserIdsFromChannel(docId: string) {
     this.clearUserInChannelsArray();
-    const snapshot = await runInInjectionContext(this.injector, () =>
-      getDoc(this.channelService.getSingleChannelRef(docId))
-    );
-    if (snapshot.exists()) {
-      const data = snapshot.data();
-      if (data && Array.isArray(data['userId'])) {
-        this.usersIdsInChannel.push(...data['userId']);
-        for (const id of this.usersIdsInChannel) {
-          const nameSnap = await runInInjectionContext(this.injector, () =>
-            getDoc(this.getSingleUserRef(id))
-          );
-          const dataName = nameSnap.data();
-          if (dataName) {
-            this.userAvatarInChannel$.next([
-              ...this.userAvatarInChannel$.value,
-              { avatar: dataName['avatar'], name: dataName['name'], userId: id, userActive: dataName['active'] }   
-            ]);
+    try {
+      const snapshot = await runInInjectionContext(this.injector, () =>
+        getDoc(this.channelService.getSingleChannelRef(docId))
+      );
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        if (data && Array.isArray(data['userId'])) {
+          this.usersIdsInChannel.push(...data['userId']);
+          for (const id of this.usersIdsInChannel) {
+            const nameSnap = await runInInjectionContext(this.injector, () =>
+              getDoc(this.getSingleUserRef(id))
+            );
+            const dataName = nameSnap.data();
+            if (dataName) {
+              this.userAvatarInChannel$.next([
+                ...this.userAvatarInChannel$.value,
+                { avatar: dataName['avatar'], name: dataName['name'], userId: id, userActive: dataName['active'] }   
+              ]);
+            }
           }
         }
       }
+    } catch (error) {
+      console.error('Error getting user IDs from channel:', error);
     }
   }
 
@@ -376,9 +384,16 @@ export class UserService {
       const data = doc.data();
       this.channelService.userSubcollectionChannelId = data['channelId'];
       this.channelService.userSubcollectionId = doc.id;
-      this.channelService.getChannelName(this.channelService.userSubcollectionChannelId);
+      if (this.channelService.userSubcollectionChannelId && 
+          this.channelService.userSubcollectionChannelId.trim() !== '') {
+        this.channelService.getChannelName(this.channelService.userSubcollectionChannelId);
+      }
     });
-    this.getUserIdsFromChannel(this.channelService.userSubcollectionChannelId);
+    if (this.channelService.userSubcollectionChannelId && 
+        this.channelService.userSubcollectionChannelId.trim() !== '') {
+      this.getUserIdsFromChannel(this.channelService.userSubcollectionChannelId);
+    }
+    
     this.channelService.showUserChannel();
   }
 
