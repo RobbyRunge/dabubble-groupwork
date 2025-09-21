@@ -36,7 +36,7 @@
                 </div>
                 <div class="chat-info-container">
                     <p class="channel-info-text" *ngIf="channelService.currentUserId && !chatService.hasMessages && chatService.chatMode === 'channels'">
-                        Du hast diesen Channel heute erstellt. Das ist der Anfang des Channels <span
+                        {{channelService.channelCreaterName}} hat diesen Channel am {{channelService.channelCreatedAt | date: 'longDate'}} erstellt. Das ist der Anfang des Channels <span
                             (click)="openUserDialog()">#{{channelService.currentChannelName}}
                         </span>
                 </div>

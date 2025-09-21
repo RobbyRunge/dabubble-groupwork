@@ -15,6 +15,7 @@ import {
   Firestore,
   onSnapshot,
   updateDoc,
+  Timestamp,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Allchannels } from '../../models/allchannels.class';
@@ -58,6 +59,7 @@ export class ChannelService {
   showChannelByUser: any[] = [];
   channelCreaterId!: string;
   channelCreaterName: string = '';
+  channelCreatedAt: Date = new Date();
   currentChannelId: string = '';
   currentChannelName: string = '';
   currentChannelDescription: string = '';
@@ -111,6 +113,7 @@ export class ChannelService {
       ...allChannels,
       userId: [...userId],
       createdBy: user,
+      createdAt: dateNow,
     };
     const docRef = await runInInjectionContext(this.injector, () =>
       addDoc(collection(this.firestore, 'channels'), channelWithUser)
@@ -132,6 +135,14 @@ export class ChannelService {
           const data = element.data();
           if (data) {
             this.channelCreaterId = data['createdBy'];
+            const createdAtValue = data['createdAt'] || data['timestamp'];
+            if (createdAtValue && createdAtValue instanceof Timestamp) {
+              this.channelCreatedAt = createdAtValue.toDate();
+            } else if (createdAtValue instanceof Date) {
+              this.channelCreatedAt = createdAtValue;
+            } else {
+              this.channelCreatedAt = new Date();
+            }
             this.getChannelUserName(this.channelCreaterId);
           }
         })
