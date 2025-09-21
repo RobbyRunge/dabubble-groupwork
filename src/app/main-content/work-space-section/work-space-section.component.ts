@@ -77,6 +77,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   activeChannelId!: string;
   activeUserId!: string;
   searchTerm: string = '';
+  routeSub: Subscription | undefined;
 
 
   onChange(user: any) {
@@ -84,9 +85,14 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.routeSub = this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.channelService.currentUserId = params['id'];
+        this.dataUser.showCurrentUserData();
+      }
+    });
     this.channels$ = this.channelService.showChannelByUser$;
     this.users$ = this.dataUser.getAllUsers();
-    this.dataUser.showCurrentUserData();
     this.getUserData();
     this.getChannelData();
   }
