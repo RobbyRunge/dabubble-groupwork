@@ -366,7 +366,8 @@ mat-icon {
     display: none;
   }
   header {
-    @include dFlex(space-around, center);
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .logo-container {
     padding-left: 0;
