@@ -110,6 +110,9 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
       this.activeUserId = user?.userId || '';
       if (user?.userId) {
         this.activeChannelId = '';
+        this.dataUser.showNewMessage = false;
+        this.dataUser.showChannel = false;
+        this.dataUser.showChatPartnerHeader = true;
       }
       this.cdr.detectChanges();
     })
@@ -156,6 +159,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.chatService.chatMode = 'channels';
     this.dataUser.showChannel = true;
     this.dataUser.showChatPartnerHeader = false;
+    this.dataUser.showNewMessage = false;
     this.activeUserId = '';
     this.router.navigate(['mainpage', this.channelService.currentUserId, 'channels', channelId,]);
     this.userstorage.channelId = channelId;
@@ -201,8 +205,11 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   }
 
   openNewMessage() {
+    this.dataUser.showNewMessage = true;
+    this.dataUser.showChannel = false;
+    this.dataUser.showChatPartnerHeader = false;
+    this.activeChannelId = '';
+    this.activeUserId = '';
     this.router.navigate(['mainpage', this.channelService.currentUserId, 'new-message']);
-    console.log('New message route opened');
-    
   }
 }

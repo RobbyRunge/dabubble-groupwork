@@ -45,6 +45,7 @@ export class UserService {
 
   showChannel = true;
   showChatPartnerHeader = true;
+  showNewMessage = false;
 
   usersIdsInChannel: any[] = [];
   userNamesInChannel: any[] = [];
