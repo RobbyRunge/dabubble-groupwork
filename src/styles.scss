@@ -549,3 +549,15 @@ app-main-content {
 .user-status {
     position: relative;
 }
+
+@media(max-width: 1000px) {
+    .d-none-responsive {
+        display: none;
+    }
+}
+
+@media(min-width: 1000px) {
+    .desktop {
+        display: none;
+    }
+}
