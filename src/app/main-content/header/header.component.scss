@@ -340,13 +340,47 @@ mat-icon {
 @media(max-width: 1030px) {
   .logo-container {
     >img {
-      height: 60px;
+      height: 45px;
+    }
+  }
+}
+
+@media(min-width: 1000px) {
+  .d-none-responsive {
+    @include dFlex();
+    gap: 20px;
+    padding-right: 35px;
+    min-width: 342px;
+    >div {
+      >span {
+        font-size: 32px;
+        color: black;
+        font-weight: 700;
+      }
     }
   }
 }
 
 @media(max-width: 1000px) {
   .search-container {
+    display: none;
+  }
+  header {
+    @include dFlex(space-around, center);
+  }
+  .logo-container {
+    padding-left: 0;
+  }
+  .user-container {
+    min-width: unset;
+  }
+  .avatar-container {
+    >img {
+      height: 55px;
+      width: 55px;
+    }
+  }
+  .d-none-responsive {
     display: none;
   }
 }

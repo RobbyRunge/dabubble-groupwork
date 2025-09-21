@@ -25,17 +25,6 @@
   <div class="desktop avatar-container">
         <img *ngIf="channelService?.currentUser?.avatar" [src]="'/avatar/' + channelService.currentUser?.avatar">
   </div>
-    <!-- <div>
-      <span class="standard-transition"> {{channelService.currentUser?.name}} </span>
-    </div>
-    <div class="avatar-container">
-      <img *ngIf="channelService?.currentUser?.avatar" [src]="'/avatar/' + channelService.currentUser?.avatar">
-      <img class="status-img" src="{{ channelService.currentUser?.active ? onlineUser : offlineUser }}" alt="">
-    </div>
-    <div>
-      <mat-icon class="arrow-down">keyboard_arrow_down</mat-icon>
-    </div>
-  </div> -->
 
   <div class="search-results" *ngIf="showDropdown">
 
