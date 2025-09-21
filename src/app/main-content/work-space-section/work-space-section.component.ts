@@ -20,7 +20,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateChannelSectionComponent } from '../create-channel-section/create-channel-section.component';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription, timestamp } from 'rxjs';
+import { combineLatest, filter, firstValueFrom, Observable, Subscription, switchMap, take, timestamp } from 'rxjs';
 import { User } from '../../../models/user.class';
 import { Allchannels } from '../../../models/allchannels.class';
 import { ChannelService } from '../../services/channel.service';
@@ -88,11 +88,18 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.dataUser.showCurrentUserData();
     this.getUserData();
     this.getChannelData();
-    this.unsubChannels = this.channelService.channelsLoaded$.subscribe(loaded => {
-      if (loaded) {
-        this.loadSaveRoute();
-      }
-    });
+
+    combineLatest([
+      this.channelService.channelsLoaded$.pipe(filter(Boolean)),
+      this.channelService.showChannelByUser$
+    ])
+      .pipe(take(1))
+      .subscribe(([_, channels]) => {
+        if (channels?.length) {
+          const c = channels[0];
+          this.openChannel('channels', c.channelname, c.channelId, c.description ?? '');
+        }
+      });
   }
 
   getUserData() {

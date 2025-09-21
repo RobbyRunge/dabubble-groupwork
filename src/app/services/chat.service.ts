@@ -122,35 +122,24 @@ export class ChatService {
         const existing = await getDocs(query(threadsCol, limit(1)));
         return existing.empty ? null : existing.docs[0].id;
     }
-    private createThreadDocument(
-        type: string,
-        batch: WriteBatch,
-        chatId: string,
-        parentMessageId: string,
-        senderId: string,
-        text: string,
-        senderName?: string,      // 👈 NEU
-        userAvatar?: string,      // 👈 NEU
-        threadId?: string,
-        parentTimestamp?: any
-    ): string {
+    private createThreadDocument(type: string, batch: WriteBatch, chatId: string, parentMessageId: string, senderId: string, text: string, threadId?: string, parentTimestamp?: any, senderName?: string, userAvatar?: string,): string {
         return runInInjectionContext(this.injector, () => {
             const threadsCol = collection(this.firestore, `${this.chatMode}/${chatId}/message/${parentMessageId}/threads`);
             const newThreadRef = threadId ? doc(threadsCol, threadId) : doc(threadsCol);
 
             batch.set(newThreadRef, {
                 senderId,
-                senderName,                 // 👈 speichern
-                senderAvatar: userAvatar,   // 👈 speichern
                 text,
                 timestamp: parentTimestamp || serverTimestamp(),
+                senderName,
+                userAvatar: userAvatar,
             });
 
             return newThreadRef.id;
         });
     }
 
-    async getOrCreateThread(type: string, chatId: string, parentMessageId: string, senderId: string, text: string, threadId?: string): Promise<string> {
+    async getOrCreateThread(type: string, chatId: string, parentMessageId: string, senderId: string, text: string, threadId?: string, name?: string, avatar?: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
             const existingId = await this.getExistingThreadId(this.chatMode, chatId, parentMessageId);
             if (existingId) return existingId;
@@ -160,7 +149,7 @@ export class ChatService {
             const parentTimestamp = parentMsgSnap.exists() ? parentMsgSnap.data()?.['timestamp'] : null;
 
             const batch = writeBatch(this.firestore);
-            const newThreadId = this.createThreadDocument(this.chatMode, batch, chatId, parentMessageId, senderId, text, threadId, parentTimestamp);
+            const newThreadId = this.createThreadDocument(this.chatMode, batch, chatId, parentMessageId, senderId, text, threadId, parentTimestamp, name, avatar);
             this.incrementThreadCount(this.chatMode, batch, chatId, parentMessageId, parentTimestamp);
 
             await batch.commit();
@@ -202,7 +191,18 @@ export class ChatService {
     ) {
         return runInInjectionContext(this.injector, async () => {
             const batch = writeBatch(this.firestore);
-            this.createThreadDocument(this.chatMode, batch, chatId, rootId, senderId, text, senderName, userAvatar);
+            this.createThreadDocument(
+                this.chatMode,
+                batch,
+                chatId,
+                rootId,
+                senderId,
+                text,
+                undefined,
+                undefined,
+                senderName,
+                userAvatar
+            );
             this.incrementThreadCount(this.chatMode, batch, chatId, rootId, serverTimestamp());
             await batch.commit();
         });
@@ -392,7 +392,7 @@ export class ChatService {
             return senderId;
         });
     }
-    async answerOnMessage(type: string, parentMessageId: string, parentText: string) {
+    async answerOnMessage(type: string, parentMessageId: string, parentText: string, name?: string, avatar?: string) {
         return runInInjectionContext(this.injector, async () => {
             this.checkIfChatOrChannel();
             this.parentMessageId = parentMessageId;
@@ -406,6 +406,8 @@ export class ChatService {
                 senderIdForThread,
                 parentText,
                 this.threadId,
+                name,
+                avatar
             );
 
             this.open();
