@@ -159,18 +159,64 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
 
   selectChannelResult(channel: SearchResult) {
     this.showDropdown = false;
-    this.newMessageSearchTerm = `#${channel.name}`;
+    this.newMessageSearchTerm = '';
+    this.navigateToChannel(channel);
+    
+  }
+
+  private navigateToChannel(channel: SearchResult) {
+    this.channelService.currentChannelId = channel.id;
+    this.channelService.currentChannelName = channel.name;
+    this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channels', channel.id]);
+    this.dataUser.showChannel = true;
+    this.dataUser.showChatPartnerHeader = false;
+    this.dataUser.showNewMessage = false;
   }
 
   selectUserResult(type: string, user: SearchResult) {
     this.showDropdown = false;
-    this.newMessageSearchTerm = `@${user.name}`;
+    this.newMessageSearchTerm = '';
+    this.navigateToPrivateChat(type, user);
+  }
+
+  private async navigateToPrivateChat(type: string, user: SearchResult) {
+    try {
+      const userForChat = {
+        userId: user.id,
+        name: user.name,
+        avatar: user.avatar,
+        active: user.description === 'Online'
+      };
+      await this.chatService.onUserClick(type, 0, userForChat);
+      this.dataUser.showChannel = false;
+      this.dataUser.showChatPartnerHeader = true;
+      this.dataUser.showNewMessage = false;
+    } catch (error) {
+      console.error('Error opening private chat:', error);
+    }
   }
 
   selectEmailResult(user: SearchResult) {
     this.showDropdown = false;
-    const userEmail = this.getUserEmail(user.id);
-    this.newMessageSearchTerm = userEmail || user.name;
+    this.newMessageSearchTerm = '';
+    this.navigateToPrivateChatByEmail(user);
+  }
+
+  private async navigateToPrivateChatByEmail(user: SearchResult) {
+    try {
+      const userForChat = {
+        userId: user.id,
+        name: user.name,
+        avatar: user.avatar,
+        active: user.description === 'Online'
+      };
+      await this.chatService.onUserClick('chats', 0, userForChat);
+      this.dataUser.showChannel = false;
+      this.dataUser.showChatPartnerHeader = true;
+      this.dataUser.showNewMessage = false;
+    } catch (error) {
+      console.error('Error opening private chat by email:', error);
+    }
   }
 
   getUserEmail(userId: string): string {
