@@ -80,7 +80,7 @@ export class LoginComponent implements OnInit {
         setTimeout(() => {
           this.userId = this.channelService.currentUserId;
           this.resetLoginForm();
-          this.router.navigate(['mainpage', this.userId]);
+          this.router.navigate(['mainpage', this.userId, 'new-message']);
         }, 125);
       }, 2000);
     }
@@ -123,7 +123,7 @@ export class LoginComponent implements OnInit {
       setTimeout(() => {
         backgroundOverlay.classList.remove('active');
         setTimeout(() => {
-          this.router.navigate(['mainpage', this.userId]);
+          this.router.navigate(['mainpage', this.userId, 'new-message']);
         }, 125);
       }, 2000);
     }

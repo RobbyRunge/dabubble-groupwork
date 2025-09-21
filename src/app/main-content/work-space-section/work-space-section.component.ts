@@ -89,18 +89,6 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.dataUser.showCurrentUserData();
     this.getUserData();
     this.getChannelData();
-
-    combineLatest([
-      this.channelService.channelsLoaded$.pipe(filter(Boolean)),
-      this.channelService.showChannelByUser$
-    ])
-      .pipe(take(1))
-      .subscribe(([_, channels]) => {
-        if (channels?.length) {
-          const c = channels[0];
-          this.openChannel('channels', c.channelname, c.channelId, c.description ?? '');
-        }
-      });
   }
 
   getUserData() {

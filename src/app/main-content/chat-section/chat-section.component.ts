@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, Injector, OnInit, runInInjectionContext, SimpleChanges, ViewChild, AfterViewInit, AfterViewChecked, OnDestroy, HostListener, ViewContainerRef } from '@angular/core';
+import { Component, ElementRef, inject, Injector, OnInit, runInInjectionContext, SimpleChanges, ViewChild, AfterViewInit, AfterViewChecked, OnDestroy, HostListener, ViewContainerRef, ChangeDetectorRef } from '@angular/core';
 import { WorkSpaceSectionComponent } from "../work-space-section/work-space-section.component";
 import { ThreadSectionComponent } from "../thread-section/thread-section.component";
 import { HeaderComponent } from "../header/header.component";
@@ -54,6 +54,7 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
   chatService = inject(ChatService);
   navigationService = inject(NavigationService);
   route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
   dialog = inject(MatDialog);
   readonly userDialog = inject(MatDialog);
   unsubscribeUserData!: Subscription;
@@ -76,6 +77,14 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
       this.channelService.currentUserId = params['id'];
+
+      // Check if this is the new-message route
+      if (this.route.snapshot.url.length > 0 && this.route.snapshot.url[0].path === 'new-message') {
+        this.dataUser.showNewMessage = true;
+        this.dataUser.showChannel = false;
+        this.dataUser.showChatPartnerHeader = false;
+      }
+
       this.showCurrentUserData();
       this.showUserChannel();
       this.getUserData();
