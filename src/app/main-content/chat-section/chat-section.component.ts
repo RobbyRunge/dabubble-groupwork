@@ -23,9 +23,6 @@ import { EmojiPickerService } from '../../services/emojiPicker.service';
 @Component({
   selector: 'app-chat-section',
   imports: [
-    WorkSpaceSectionComponent,
-    ThreadSectionComponent,
-    HeaderComponent,
     NgIf,
     NgFor,
     AsyncPipe,

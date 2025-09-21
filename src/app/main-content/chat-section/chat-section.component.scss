@@ -58,6 +58,7 @@
         padding-bottom: 16px;
         scroll-behavior: smooth;
         position: relative;
+        padding-left: 20px;
     }
 
     >div:not(.chat-messages-container) {
@@ -180,4 +181,16 @@ app-header-chat-section {
     100% {
         background-color: rgba(68, 77, 242, 0.1);
     }
+}
+
+.channel-text {
+    @include dFlex();
+    gap: 10px;
+    >span {
+        font-size: 24px;
+        font-weight: 700;
+    }
+}
+.channel-info-text{
+    color: black !important;
 }
