@@ -199,4 +199,10 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
         }
         this.showDropdown = term.length > 0; */
   }
+
+  openNewMessage() {
+    this.router.navigate(['mainpage', this.channelService.currentUserId, 'new-message']);
+    console.log('New message route opened');
+    
+  }
 }

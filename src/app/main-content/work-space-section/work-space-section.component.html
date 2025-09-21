@@ -21,8 +21,7 @@
                         <mat-icon>search</mat-icon>
                     </button>
                 </mat-form-field>
-                <div class="div-edit-square standard-transition" (mouseenter)="imgSrc = 'work-space/edit_square_color.png'"
-                        (mouseleave)="imgSrc = 'work-space/edit-square.png'">
+                <div class="div-edit-square standard-transition" (mouseenter)="imgSrc = 'work-space/edit_square_color.png'" (mouseleave)="imgSrc = 'work-space/edit-square.png'" (click)="openNewMessage()">
                     <img [src]="imgSrc">
                 </div>
             </div>

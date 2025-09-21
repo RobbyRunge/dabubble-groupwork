@@ -28,6 +28,7 @@ export const routes: Routes = [
       { path: 'chats/:chatId/threads/:threadId', component: ThreadSectionComponent },
       { path: 'channels/:channelId', component: UserChannelChatSectionComponent },
       { path: 'channels/:channelId/threads/:threadId', component: ThreadSectionComponent },
+      { path: 'new-message', component: ThreadSectionComponent },
     ],
   },
 ];
