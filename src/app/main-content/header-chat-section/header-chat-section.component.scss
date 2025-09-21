@@ -25,11 +25,13 @@
     @include dFlex(center, center);
     padding: 3px 10px 3px 10px;
     border-radius: 30px;
+
     &:hover {
         cursor: pointer;
         background: #ECEEFE;
+
         .number-of-users {
-            color: #535AF1; 
+            color: #535AF1;
         }
     }
 }
@@ -37,6 +39,30 @@
 .number-of-users {
     &:hover {
         cursor: pointer;
+    }
+}
+
+.header-new-message-content {
+    width: 100%;
+    padding: 20px;
+    .new-message-header {
+        cursor: default;
+    }
+
+    .new-message-input {
+        font-family: Nunito;
+        color: #686868;
+        width: calc(100% - 20px);
+        padding: 15px 20px;
+        border: 1px solid #ADB0D9;
+        border-radius: 30px;
+        font-size: 18px;
+        margin-top: 10px;
+
+        &:focus {
+            outline: none;
+            border-color: #535AF1;
+        }
     }
 }
 

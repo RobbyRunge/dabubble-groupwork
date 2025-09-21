@@ -14,7 +14,7 @@
         <div class="user-avatar-channels">
             <div #div class="show-users-avatar standard-transition" (click)="showUsersInChannel(div)">
                 @for (user of dataUser.userAvatarInChannel$ | async; track $index) {
-                <img class="avatar" [src]="'avatar/' + user.avatar"> 
+                <img class="avatar" [src]="'avatar/' + user.avatar">
                 }
                 <span class="number-of-users">{{ (dataUser.userAvatarInChannel$ | async)?.length }}</span>
             </div>
@@ -32,10 +32,8 @@
             </div>
         </div>
     </div>
-    <div *ngIf="dataUser.showNewMessage" class="header-user-content">
-        <div class="standard-transition">
-            <h2>Neue Nachricht</h2>
-            <input type="text" placeholder="An: #channel, oder @jemand oder E-Mail Adresse">
-        </div>
+    <div *ngIf="dataUser.showNewMessage" class="header-new-message-content">
+        <h2 class="new-message-header">Neue Nachricht</h2>
+        <input class="new-message-input" type="text" placeholder="An: #channel, oder @jemand oder E-Mail Adresse">
     </div>
 </div>
