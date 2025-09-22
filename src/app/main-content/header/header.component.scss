@@ -320,6 +320,10 @@ mat-icon {
   }
 }
 
+.devspace_logo_text {
+  cursor: pointer;
+}
+
 .arrow-down {
   @include dFlex(flex-start);
   cursor: pointer;

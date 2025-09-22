@@ -27,6 +27,8 @@ import { ChannelService } from '../../services/channel.service';
 import { ChatService } from '../../services/chat.service';
 import { Userstorage } from '../../../models/userStorage.class';
 import { FormsModule } from '@angular/forms';
+import { NavigationService } from '../../services/navigation.service';
+import { ChatSectionComponent } from '../chat-section/chat-section.component';
 
 @Component({
   selector: 'app-work-space-section',
@@ -42,7 +44,8 @@ import { FormsModule } from '@angular/forms';
     NgFor,
     AsyncPipe,
     CommonModule,
-    FormsModule
+    FormsModule,
+    ChatSectionComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './work-space-section.component.html',
@@ -53,6 +56,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
   chatService = inject(ChatService);
+  navigationService = inject(NavigationService);
   private router = inject(Router);
   route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
@@ -66,7 +70,6 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   urlUserId!: string;
   users$: Observable<User[]> | undefined;
   myPanel: any = true;
-  showChatSectionMobile = false;
 
   channels$: Observable<Allchannels[]> | undefined;
   onlineUser: string = 'status/online.png';
@@ -155,6 +158,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.chatService.listenToMessages(type);
     this.chatService.getChannelMessages(channelId);
     this.channelService.setCheckdValue(channelId);
+    this.navigationService.mobileHeaderDevspace = true;
   }
 
   getChannelNameandId(channelName: string, channelId: string, channelDescription: string) {

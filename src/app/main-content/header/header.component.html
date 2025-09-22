@@ -1,6 +1,13 @@
 <header>
-  <div class="logo-container">
-    <img src="logo/logo-with-text.png" alt="">
+  <div class="logo-container mobile">
+    <img src="logo/logo-with-text.png">
+  </div>
+  <div class="logo-container desktop">
+    @if (!navigationService.mobileHeaderDevspace) {
+      <img src="logo/logo-with-text.png">
+    } @else if (navigationService.mobileHeaderDevspace) {
+      <img class="devspace_logo_text" src="logo/devspace_logo_text.png" (click)="mobileHeader()">
+    }
   </div>
   <mat-form-field class="search-container">
     <input matInput type="text" placeholder="Devspace durchsuchen" [(ngModel)]="searchTerm" (input)="onSearchInput()">

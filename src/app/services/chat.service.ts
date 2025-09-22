@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChannelService } from './channel.service';
+import { NavigationService } from './navigation.service';
 
 @Injectable({
     providedIn: 'root',
@@ -20,6 +21,7 @@ export class ChatService {
     private drawer!: MatDrawer;
     selectedUser: any;
     channelService = inject(ChannelService);
+    navigationService = inject(NavigationService);
     private router = inject(Router);
     chatService: any;
     private unsubscribeMessages?: (() => void);
@@ -373,6 +375,7 @@ export class ChatService {
         this.listenToMessages(type);
         this.dataUser.showChannel = false;
         this.dataUser.showChatPartnerHeader = true;
+        this.navigationService.mobileHeaderDevspace = true;
     }
 
     ngOnDestroy() {

@@ -37,7 +37,7 @@ export class HeaderComponent {
   public channelService = inject(ChannelService);
   private searchService = inject(SearchService);
   private chatService = inject(ChatService);
-  private navigationService = inject(NavigationService);
+  navigationService = inject(NavigationService);
   private router = inject(Router);
   private firestore = inject(Firestore);
   private injector = inject(Injector);
@@ -50,6 +50,7 @@ export class HeaderComponent {
   userResults: SearchResult[] = [];
   showDropdown: boolean = false;
   dropdownType: 'normal' | 'channel' | 'user' = 'normal';
+  window = window.innerWidth;
 
   private searchSubject = new Subject<string>();
   private searchSub?: Subscription;
@@ -348,5 +349,9 @@ export class HeaderComponent {
       avatar: userData['avatar'],
       active: userData['active'] || false
     };
+  }
+
+  mobileHeader() {
+    this.navigationService.mobileHeaderDevspace = false;
   }
 }

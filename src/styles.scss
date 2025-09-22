@@ -555,3 +555,9 @@ app-main-content {
         display: none;
     }
 }
+
+@media(max-width: 1000px) {
+    .mobile {
+        display: none;
+    }
+}
