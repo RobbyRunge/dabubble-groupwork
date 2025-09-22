@@ -67,7 +67,8 @@ export class ChannelService {
   userSubcollectionChannelId: string = '';
   userSubcollectionChannelName: string = '';
   userSubcollectionDescription: string = '';
-  selectedUser: any
+  selectedUser: any;
+  channelCreatedAtFormatted: string = '';
 
   unsubscribeUserData!: Subscription;
   unsubscribeUserChannels!: Subscription;
@@ -119,10 +120,10 @@ export class ChannelService {
       addDoc(collection(this.firestore, 'channels'), channelWithUser)
     );
     const generatedChannelId = docRef.id;
-    await runInInjectionContext(this.injector, () => 
-     updateDoc(doc(this.firestore, 'channels', generatedChannelId), {
-      channelId: generatedChannelId,
-     })
+    await runInInjectionContext(this.injector, () =>
+      updateDoc(doc(this.firestore, 'channels', generatedChannelId), {
+        channelId: generatedChannelId,
+      })
     )
   }
 
@@ -144,9 +145,31 @@ export class ChannelService {
               this.channelCreatedAt = new Date();
             }
             this.getChannelUserName(this.channelCreaterId);
+            this.channelCreatedAtFormatted = this.formatChannelCreatedAt(this.channelCreatedAt);
           }
         })
     );
+  }
+
+  private formatChannelCreatedAt(date: Date): string {
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    const isToday = date.toDateString() === today.toDateString();
+    const isYesterday = date.toDateString() === yesterday.toDateString();
+
+    if (isToday) {
+      return 'heute';
+    } else if (isYesterday) {
+      return 'gestern';
+    } else {
+      return `am ${date.toLocaleDateString('de-DE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      })}`;
+    }
   }
 
   getChannelUserName(userId: string) {
@@ -169,7 +192,7 @@ export class ChannelService {
         if (data) {
           this.userSubcollectionChannelName = data['channelname'];
         }
-      }) 
+      })
     );
   }
 
@@ -214,24 +237,24 @@ export class ChannelService {
     const channelRef = this.getSingleChannelRef(channelId);
     this.unsubscribeDeleteUserFromCh = runInInjectionContext(
       this.injector, () =>
-        onSnapshot(channelRef, async (element) => {
-          const data = element.data();
-          if (data && Array.isArray(data['userId'])) {
-            const filteredUserIds = data['userId'].filter((channelUser: string) => channelUser !== this.currentUserId);
-            item.userId = filteredUserIds;
-            await runInInjectionContext(this.injector, () =>
-              updateDoc(channelRef, item)
-            );
-          }
-        })
+      onSnapshot(channelRef, async (element) => {
+        const data = element.data();
+        if (data && Array.isArray(data['userId'])) {
+          const filteredUserIds = data['userId'].filter((channelUser: string) => channelUser !== this.currentUserId);
+          item.userId = filteredUserIds;
+          await runInInjectionContext(this.injector, () =>
+            updateDoc(channelRef, item)
+          );
+        }
+      })
     );
   }
-  
+
   async addUserToCh(channelId: string, newUserId: string) {
     const channelRef = this.getSingleChannelRef(channelId);
     await runInInjectionContext(this.injector, () =>
-        updateDoc(channelRef, {
-          userId: arrayUnion(newUserId)
+      updateDoc(channelRef, {
+        userId: arrayUnion(newUserId)
       })
     );
   }
