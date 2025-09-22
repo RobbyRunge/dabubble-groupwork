@@ -148,16 +148,31 @@ export class UserService {
         newUser.email = user.email || '';
         newUser.name = user.displayName || user.email?.split('@')[0] || '';
         newUser.avatar = 'empty-avatar.png';
-        const { userId, userStorageId } =
-          await this.createUserBySignInWithGoogle(newUser);
+        newUser.active = true;
+        const { userId, userStorageId } = await this.createUserBySignInWithGoogle(newUser);
         this.channelService.currentUserId = userId;
         this.channelService.userSubcollectionId = userStorageId;
       } else {
         const userDoc = result.docs[0];
         this.channelService.currentUserId = userDoc.id;
+        await this.updateUserDocument(this.channelService.currentUserId, {
+          active: true,
+        });
+        
+        // Get user storage collection for existing user
+        const userStorageSnapshot = await runInInjectionContext(this.injector, () =>
+          getDocs(
+            this.channelService.getUserSubCol(this.channelService.currentUserId)
+          )
+        );
+        if (!userStorageSnapshot.empty) {
+          const userStorage = userStorageSnapshot.docs[0];
+          this.channelService.userSubcollectionId = userStorage.id;
+        }
       }
 
       this.loginIsSucess = true;
+
       // Set fresh login flag to prevent state restoration
       this.freshLogin = true;
       this.router.navigate(['mainpage', this.channelService.currentUserId]);
@@ -392,11 +407,18 @@ export class UserService {
       const data = doc.data();
       this.channelService.userSubcollectionChannelId = data['channelId'];
       this.channelService.userSubcollectionId = doc.id;
-      if (this.channelService.userSubcollectionChannelId && 
-          this.channelService.userSubcollectionChannelId.trim() !== '') {
-        this.channelService.getChannelName(this.channelService.userSubcollectionChannelId);
+      
+      if (!this.freshLogin) {
+        if (this.channelService.userSubcollectionChannelId && 
+            this.channelService.userSubcollectionChannelId.trim() !== '') {
+          this.channelService.getChannelName(this.channelService.userSubcollectionChannelId);
+        }
+        if (data['chatId'] && data['chatId'].trim() !== '') {
+          this.chatId = data['chatId'];
+        }
       }
     });
+    
     if (!this.freshLogin) {
       if (this.channelService.userSubcollectionChannelId && 
           this.channelService.userSubcollectionChannelId.trim() !== '') {
@@ -404,6 +426,10 @@ export class UserService {
       }
     } else {
       this.freshLogin = false;
+      this.showChannel = false;
+      this.showChatPartnerHeader = false;
+      this.showNewMessage = true;
+      this.chatId = '';
     }
     
     this.channelService.showUserChannel();

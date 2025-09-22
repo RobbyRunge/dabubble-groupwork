@@ -257,8 +257,12 @@ export class ChannelService {
     this.currentChannelId = '';
     this.selectedUser = null;
     this.userSubcollectionChannelId = '';
+    
     if (userService) {
       userService.chatId = '';
+      userService.showChannel = false;
+      userService.showChatPartnerHeader = false;
+      userService.showNewMessage = true;
     }
   }
 
