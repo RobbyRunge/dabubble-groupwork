@@ -27,7 +27,6 @@ import { EmojiPickerService } from '../../services/emojiPicker.service';
     NgFor,
     AsyncPipe,
     NgClass,
-    DatePipe,
     ReceivedMessageComponent,
     SentMessageComponent,
     InputMessageComponent,
