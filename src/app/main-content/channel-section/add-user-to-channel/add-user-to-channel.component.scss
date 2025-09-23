@@ -14,6 +14,12 @@
     color: #797EF3; 
 }
 
+.close-icon {
+    &:hover {
+        color: #535AF1;
+    }
+}
+
 .user-name-channel {
     width: 434px;
     height: 55px;
@@ -51,7 +57,7 @@
     flex-direction: row;
     border: 1px solid #ADB0D9;
     border-radius: 30px;
-    padding: 7.5px 20px 7.5px 20px;
+    padding: 7.5px 8px 7.5px 8px;
     box-sizing: border-box;
 }
 
@@ -64,21 +70,44 @@
 .selected-user {
     @include dFlex(flex-start, center);
     flex-direction: row;
-    gap: 15px;
+    gap: 8px;
     background: #ECEEFE;
     border-radius: 35px;
     box-sizing: border-box;
-    padding: 3px 10px 3px 10px;
+    padding: 3px 6px 3px 6px;
 }
 
-.btn-add-user {
-    color: whitesmoke;
+.selected-user-remove-icon {
+    border-radius: 100%;
+    padding: 4px;
+
+    &:hover {
+        background-color: white;
+        color: #535AF1;
+    }
+}
+
+.btn-add-user,
+.btn-enabled {
+    color: white;
     font-size: 18px;
     font-weight: 700;
     width: 147px;
     height: 49px;
     padding: 12px 25px 12px 25px;
     border-radius: 25px;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #797EF3;
+    }
+}
+
+.btn-disabled {
+    &:hover {
+        cursor: not-allowed;
+        background-color: #686868;
+    }
 }
 
 .user-status-on-off {
