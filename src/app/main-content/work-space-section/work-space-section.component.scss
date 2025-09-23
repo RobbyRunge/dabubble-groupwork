@@ -363,10 +363,29 @@ button {
     @include dFlex();
 }
 
+@media(min-width: 1000px) {
+    .chat-section-mobile {
+        display: none;
+    }
+    .work-space-mobile {
+        display: none;
+    }
+}
+
 @media(max-width: 1000px) {
     .channel-logo-name,
     .div-edit-square {
         display: none !important;
+    }
+
+     .chat-section-mobile {
+        @include dFlex(flex-start);
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .sidenav-wrapper-desktop {
+        display: none;
     }
 
     .sidenav-toggle-btn {

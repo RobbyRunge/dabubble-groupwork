@@ -50,7 +50,6 @@ export class HeaderComponent {
   userResults: SearchResult[] = [];
   showDropdown: boolean = false;
   dropdownType: 'normal' | 'channel' | 'user' = 'normal';
-  window = window.innerWidth;
 
   private searchSubject = new Subject<string>();
   private searchSub?: Subscription;

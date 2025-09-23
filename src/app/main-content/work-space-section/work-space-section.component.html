@@ -1,95 +1,283 @@
-<div class="sidenav-wrapper">
-    <button class="sidenav-toggle-btn" mat-icon-button (click)="toggleDrawer(drawer)">
-        <span class="standard-transition">
-            {{ isDrawerOpen ? 'Workspace-Menü schließen' : 'Workspace-Menü öffnen' }}
-        </span>
-        <img class="open-close-img standard-transition"
-            [src]="isDrawerOpen ? 'work-space/hide-menu.png' : 'work-space/show-menu.png'" alt="" />
-    </button>
+<div class="sidenav-wrapper-desktop">
+  <button
+    class="sidenav-toggle-btn"
+    mat-icon-button
+    (click)="toggleDrawer(drawer)"
+  >
+    <span class="standard-transition">
+      {{ isDrawerOpen ? "Workspace-Menü schließen" : "Workspace-Menü öffnen" }}
+    </span>
+    <img
+      class="open-close-img standard-transition"
+      [src]="
+        isDrawerOpen ? 'work-space/hide-menu.png' : 'work-space/show-menu.png'
+      "
+      alt=""
+    />
+  </button>
 
-    <mat-drawer-container class="example-container" autosize>
-        <mat-drawer #drawer class="example-sidenav" mode="side" opened>
-            <div class="channel-container">
-                <div class="channel-logo-name">
-                    <img src="work-space/devspace-logo.png" alt="">
-                    <h3>Devspace</h3>
+  <mat-drawer-container class="example-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side" opened>
+      <div class="channel-container">
+        <div class="channel-logo-name">
+          <img src="work-space/devspace-logo.png" alt="" />
+          <h3>Devspace</h3>
+        </div>
+        <mat-form-field class="search-container">
+          <input
+            matInput
+            type="text"
+            placeholder="Gehe zu..."
+            [(ngModel)]="searchTerm"
+            (input)="onSearchInput()"
+          />
+          <button matSuffix mat-icon-button aria-label="Clear">
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+        <div
+          class="div-edit-square standard-transition"
+          (mouseenter)="imgSrc = 'work-space/edit_square_color.png'"
+          (mouseleave)="imgSrc = 'work-space/edit-square.png'"
+          (click)="openNewMessage()"
+        >
+          <img [src]="imgSrc" />
+        </div>
+      </div>
+      <div class="add-channels-container">
+        <div>
+          <mat-accordion class="example-headers-align" multi="false">
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-description class="standard-transition">
+                  <mat-icon class="standard-transition channel-img"
+                    >workspaces_outline</mat-icon
+                  >
+                  Channels
+                </mat-panel-description>
+                <div class="add-channel standard-transition">
+                  <mat-icon (click)="createChannel(); $event.stopPropagation()"
+                    >add</mat-icon
+                  >
                 </div>
-                <mat-form-field class="search-container">
-                    <input matInput type="text" placeholder="Gehe zu..." [(ngModel)]="searchTerm"
-                        (input)="onSearchInput()">
-                    <button matSuffix mat-icon-button aria-label="Clear">
-                        <mat-icon>search</mat-icon>
-                    </button>
-                </mat-form-field>
-                <div class="div-edit-square standard-transition" (mouseenter)="imgSrc = 'work-space/edit_square_color.png'" (mouseleave)="imgSrc = 'work-space/edit-square.png'" (click)="openNewMessage()">
-                    <img [src]="imgSrc">
+              </mat-expansion-panel-header>
+              <div
+                class="list-channels-container"
+                *ngIf="channelService.showChannelByUser"
+              >
+                @for (channel of channelService.showChannelByUser$ | async;
+                track $index) {
+                <div
+                  class="current-channel-name standard-transition"
+                  (click)="
+                    openChannel(
+                      'channels',
+                      channel.channelname,
+                      channel.channelId,
+                      channel.description || ''
+                    )
+                  "
+                  [ngClass]="{
+                    'active-channel': activeChannelId === channel.channelId
+                  }"
+                >
+                  <span>#</span>
+                  <h2>{{ channel.channelname }}</h2>
                 </div>
-            </div>
-            <div class="add-channels-container">
+                }
+              </div>
+              <div>
+                <button (click)="createChannel()">
+                  <span class="add-user-channel">
+                    <mat-icon>add_circle_outline</mat-icon>
+                    Channel hinzufügen
+                  </span>
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+        <div></div>
+      </div>
+      <div class="useres-list-container">
+        <mat-accordion class="example-headers-align" multi>
+          <mat-expansion-panel #myPaneltwo="matExpansionPanel">
+            <mat-expansion-panel-header>
+              <mat-panel-description class="standard-transition">
+                <img
+                  class="account-img standard-transition"
+                  src="work-space/account-circle.png"
+                  alt=""
+                />
+                Direktnachrichten
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="users-message-container">
+              <div
+                [ngClass]="{
+                  'selected-user': user.userId === selectedUser?.userId,
+                  'active-user-channel': user.userId === activeUserId
+                }"
+                *ngFor="let user of users$ | async; let index = index"
+                class="users-container standard-transition"
+                (click)="chatService.onUserClick('chats', index, user)"
+              >
                 <div>
-                    <mat-accordion class="example-headers-align" multi="false">
-                        <mat-expansion-panel>
-                            <mat-expansion-panel-header>
-                                <mat-panel-description class="standard-transition">
-                                    <mat-icon class="standard-transition channel-img">workspaces_outline</mat-icon>
-                                    Channels
-                                </mat-panel-description>
-                                <div class="add-channel standard-transition">
-                                    <mat-icon (click)="createChannel(); $event.stopPropagation()">add</mat-icon>
-                                </div>
-                            </mat-expansion-panel-header>
-                            <div class="list-channels-container" *ngIf="channelService.showChannelByUser">
-                                @for (channel of channelService.showChannelByUser$ | async; track $index) {
-                                <div class="current-channel-name standard-transition"
-                                    (click)="openChannel('channels',channel.channelname, channel.channelId, channel.description || '')"
-                                    [ngClass]="{'active-channel': activeChannelId === channel.channelId}">
-                                    <span>#</span>
-                                    <h2>{{channel.channelname}}</h2>
-                                </div>
-                                }
-                            </div>
-                            <div>
-                                <button (click)="createChannel()">
-                                    <span class="add-user-channel">
-                                        <mat-icon>add_circle_outline</mat-icon>
-                                        Channel hinzufügen
-                                    </span>
-                                </button>
-                            </div>
-                        </mat-expansion-panel>
-                    </mat-accordion>
+                  <img
+                    class="avatar-small-img"
+                    src="avatar/{{ user.avatar }}"
+                    alt=""
+                  />
+                  <img
+                    class="status-img"
+                    src="{{
+                      user.active ? dataUser.onlineUser : dataUser.offlineUser
+                    }}"
+                    alt=""
+                  />
                 </div>
-                <div></div>
+                <div>
+                  <h2>
+                    {{ user.name }}
+                    <span *ngIf="user.userId === channelService.currentUserId"
+                      >(Du)</span
+                    >
+                  </h2>
+                </div>
+              </div>
             </div>
-            <div class="useres-list-container">
-                <mat-accordion class="example-headers-align" multi>
-                    <mat-expansion-panel #myPaneltwo="matExpansionPanel">
-                        <mat-expansion-panel-header>
-                            <mat-panel-description class="standard-transition">
-                                <img class="account-img standard-transition" src="work-space/account-circle.png" alt="">
-                                Direktnachrichten
-                            </mat-panel-description>
-                        </mat-expansion-panel-header>
-                        <div class="users-message-container">
-                            <div [ngClass]="{'selected-user': user.userId === selectedUser?.userId, 'active-user-channel': user.userId === activeUserId}"
-                                *ngFor="let user of users$ | async; let index = index"
-                                class="users-container standard-transition"
-                                (click)="chatService.onUserClick('chats',index, user)">
-                                <div>
-                                    <img class="avatar-small-img" src="avatar/{{user.avatar}}" alt="">
-                                    <img class="status-img" src="{{ user.active ? dataUser.onlineUser : dataUser.offlineUser }}" alt="">
-                                </div>
-                                <div>
-                                    <h2>{{ user.name }}
-                                        <span *ngIf="user.userId === channelService.currentUserId">(Du)</span>
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </div>
-        </mat-drawer>
-    </mat-drawer-container>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </mat-drawer>
+  </mat-drawer-container>
 </div>
-<app-chat-section class="chat-section desktop"></app-chat-section>
+<div *ngIf="!navigationService.mobileHeaderDevspace" class="work-space-mobile">
+  <div class="sidenav-wrapper">
+    <mat-drawer-container class="example-container" autosize>
+      <mat-drawer #drawer class="example-sidenav" mode="side" opened>
+        <div class="channel-container">
+          <mat-form-field class="search-container">
+            <input
+              matInput
+              type="text"
+              placeholder="Gehe zu..."
+              [(ngModel)]="searchTerm"
+              (input)="onSearchInput()"
+            />
+            <button matSuffix mat-icon-button aria-label="Clear">
+              <mat-icon>search</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <div class="add-channels-container">
+          <div>
+            <mat-accordion class="example-headers-align" multi="false">
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-description class="standard-transition">
+                    <mat-icon class="standard-transition channel-img"
+                      >workspaces_outline</mat-icon
+                    >
+                    Channels
+                  </mat-panel-description>
+                  <div class="add-channel standard-transition">
+                    <mat-icon
+                      (click)="createChannel(); $event.stopPropagation()"
+                      >add</mat-icon
+                    >
+                  </div>
+                </mat-expansion-panel-header>
+                <div
+                  class="list-channels-container"
+                  *ngIf="channelService.showChannelByUser"
+                >
+                  @for (channel of channelService.showChannelByUser$ | async;
+                  track $index) {
+                  <div
+                    class="current-channel-name standard-transition"
+                    (click)="
+                      openChannel(
+                        'channels',
+                        channel.channelname,
+                        channel.channelId,
+                        channel.description || ''
+                      )
+                    "
+                    [ngClass]="{
+                      'active-channel': activeChannelId === channel.channelId
+                    }"
+                  >
+                    <span>#</span>
+                    <h2>{{ channel.channelname }}</h2>
+                  </div>
+                  }
+                </div>
+                <div>
+                  <button (click)="createChannel()">
+                    <span class="add-user-channel">
+                      <mat-icon>add_circle_outline</mat-icon>
+                      Channel hinzufügen
+                    </span>
+                  </button>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+          <div></div>
+        </div>
+        <div class="useres-list-container">
+          <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel #myPaneltwo="matExpansionPanel">
+              <mat-expansion-panel-header>
+                <mat-panel-description class="standard-transition">
+                  <img
+                    class="account-img standard-transition"
+                    src="work-space/account-circle.png"
+                    alt=""
+                  />
+                  Direktnachrichten
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div class="users-message-container">
+                <div
+                  [ngClass]="{
+                    'selected-user': user.userId === selectedUser?.userId,
+                    'active-user-channel': user.userId === activeUserId
+                  }"
+                  *ngFor="let user of users$ | async; let index = index"
+                  class="users-container standard-transition"
+                  (click)="chatService.onUserClick('chats', index, user)"
+                >
+                  <div>
+                    <img
+                      class="avatar-small-img"
+                      src="avatar/{{ user.avatar }}"
+                      alt=""
+                    />
+                    <img
+                      class="status-img"
+                      src="{{
+                        user.active ? dataUser.onlineUser : dataUser.offlineUser
+                      }}"
+                      alt=""
+                    />
+                  </div>
+                  <div>
+                    <h2>
+                      {{ user.name }}
+                      <span *ngIf="user.userId === channelService.currentUserId"
+                        >(Du)</span
+                      >
+                    </h2>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-drawer>
+    </mat-drawer-container>
+  </div>
+</div>
+<app-chat-section class="chat-section-mobile"></app-chat-section>
