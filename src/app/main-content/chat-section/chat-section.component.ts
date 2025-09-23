@@ -20,6 +20,7 @@ import { HeaderChatSectionComponent } from "../header-chat-section/header-chat-s
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiPickerService } from '../../services/emojiPicker.service';
 
+
 @Component({
   selector: 'app-chat-section',
   imports: [
@@ -33,7 +34,8 @@ import { EmojiPickerService } from '../../services/emojiPicker.service';
     HeaderChatSectionComponent,
     SentMessageComponent,
     NgStyle,
-    PickerComponent
+    PickerComponent,
+    DatePipe
   ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
