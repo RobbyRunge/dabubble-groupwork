@@ -162,8 +162,9 @@ export class HeaderComponent {
       this.dataUser.getUserIdsFromChannel(channel.id);
       this.dataUser.showChannel = true;
       this.dataUser.showChatPartnerHeader = false;
+      this.dataUser.showNewMessage = false;
       this.channelService.setActiveChannelId(channel.id);
-      this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channel', channel.id]);
+      this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channels', channel.id]);
     } catch (error) {
       console.error('Fehler beim Öffnen des Channels:', error);
     }
