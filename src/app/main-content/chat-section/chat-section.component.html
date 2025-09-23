@@ -13,8 +13,8 @@
             </app-input-message>
         </div>
 
-        <!-- Chat Container -->
-        <div class="chat-container" *ngIf="!dataUser.showNewMessage && (channelService.isChecked$ | async) as selectedUser" [ngClass]="{
+        <!-- Chat Container (für private Chats) -->
+        <div class="chat-container" *ngIf="!dataUser.showNewMessage && dataUser.showChatPartnerHeader && (channelService.isChecked$ | async) as selectedUser" [ngClass]="{
                 'other-user' :selectedUser.userId !== channelService.currentUserId
                     }">
             <div #messagesContainer class="chat-messages-container">
@@ -26,12 +26,6 @@
                         <h2>{{selectedUser.name}} <span
                                 *ngIf="selectedUser.userId === channelService.currentUserId">(Du)</span>
                         </h2>
-                    </div>
-                </div>
-                <div *ngIf="!chatService.hasMessages && chatService.chatMode === 'channels'" class="user-logo-name-container">
-                    <div class="channel-text">
-                        <span>#</span>
-                        <span>{{ channelService.currentChannelName }}</span>
                     </div>
                 </div>
                 <div class="chat-info-container"
@@ -47,11 +41,42 @@
                         Unterhaltung findet nur zwischen <span (click)="openUserDialog()">&#64;{{selectedUser.name}}
                         </span>und dir statt</p>
                 </div>
+                <div *ngFor="let msg of chatService.messages; let i = index">
+                    <div *ngIf="chatService.isFirstMessageOfDay(msg.timestamp, i, chatService.messages)">
+                        <div class="date-divider">
+                            <span class="date-label">{{ chatService.getDateLabel(msg.timestamp, i, chatService.messages)
+                                }}</span>
+                        </div>
+                    </div>
+                    <div class="sent-message">
+                        <app-sent-message [mode]="'chats'" *ngIf="msg.senderId === channelService.currentUserId"
+                            [message]="msg" [index]="i" (emojiPickerRequested)="openEmojiPicker($event)">
+                        </app-sent-message>
+                    </div>
+                    <app-received-message [mode]="'chats'" *ngIf="msg.senderId !== channelService.currentUserId"
+                        [message]="msg" (emojiPickerRequested)="openEmojiPicker($event)">
+                    </app-received-message>
+                </div>
+            </div>
+            <app-input-message [mode]="'chats'">
+            </app-input-message>
+        </div>
+
+        <!-- Channel Container (für Channel-Chats) -->
+        <div class="chat-container" *ngIf="!dataUser.showNewMessage && dataUser.showChannel">
+            <div #messagesContainer class="chat-messages-container">
+                <div *ngIf="!chatService.hasMessages" class="user-logo-name-container">
+                    <div class="channel-text">
+                        <span>#</span>
+                        <span>{{ channelService.currentChannelName }}</span>
+                    </div>
+                </div>
                 <div class="chat-info-container">
-                    <p class="channel-info-text" *ngIf="channelService.currentUserId && !chatService.hasMessages && chatService.chatMode === 'channels'">
+                    <p class="channel-info-text" *ngIf="channelService.currentUserId && !chatService.hasMessages">
                         {{channelService.channelCreaterName}} hat diesen Channel am {{channelService.channelCreatedAt | date: 'longDate'}} erstellt. Das ist der Anfang des Channels <span
                             (click)="openUserDialog()">#{{channelService.currentChannelName}}
                         </span>
+                    </p>
                 </div>
                 <div *ngFor="let msg of chatService.messages; let i = index">
                     <div *ngIf="chatService.isFirstMessageOfDay(msg.timestamp, i, chatService.messages)">

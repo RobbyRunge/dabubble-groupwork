@@ -150,7 +150,7 @@ export class HeaderComponent {
 
   selectChannelResult(channel: SearchResult) {
     this.showDropdown = false;
-    this.dropdownType = 'normal';
+    this.dropdownType = 'channel';
     this.searchTerm = '';
     this.openChannel(channel);
   }
@@ -163,6 +163,10 @@ export class HeaderComponent {
       this.dataUser.showChannel = true;
       this.dataUser.showChatPartnerHeader = false;
       this.dataUser.showNewMessage = false;
+      this.chatService.chatMode = 'channels';
+      this.chatService.checkIfChatOrChannel();
+      this.chatService.listenToMessages('channels');
+      this.chatService.getChannelMessages(channel.id);
       this.channelService.setActiveChannelId(channel.id);
       this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channels', channel.id]);
     } catch (error) {
@@ -172,7 +176,7 @@ export class HeaderComponent {
 
   selectUserResult(type: string, user: SearchResult) {
     this.showDropdown = false;
-    this.dropdownType = 'normal';
+    this.dropdownType = 'user';
     this.searchTerm = '';
     this.openPrivateChat(type, user);
   }
