@@ -153,10 +153,10 @@ header {
   }
 
   .message-item & {
-    background-color: #444df2;
+    background-color: #f5f5f5;
 
     mat-icon {
-      color: #ADB0D9;
+      color: #444df2;
     }
   }
 }
@@ -202,12 +202,21 @@ header {
 
 .result-name {
   font-size: 16px;
-  font-weight: 500;
-  color: #333;
+  font-weight: bold;
+  color: #000000;
   margin-bottom: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.result-email {
+  font-size: 13px;
+  color: #686868;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
 }
 
 .result-description {

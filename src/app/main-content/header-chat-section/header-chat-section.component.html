@@ -54,7 +54,7 @@
                             <mat-icon>tag</mat-icon>
                         </div>
                         <div class="result-content">
-                            <div class="result-name"><strong>{{channel.name}}</strong></div>
+                            <div class="result-name">{{channel.name}}</div>
                             <div class="result-description">{{channel.description}}</div>
                         </div>
                     </div>
@@ -83,6 +83,7 @@
                         </div>
                         <div class="result-content">
                             <div class="result-name">{{user.name}}</div>
+                            <div class="result-email" *ngIf="user.email">{{user.email}}</div>
                         </div>
                     </div>
                     <div *ngIf="userResults.length === 0" class="no-results">

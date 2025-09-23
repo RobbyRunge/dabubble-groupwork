@@ -10,6 +10,7 @@ export interface SearchResult {
   type: 'channel' | 'user' | 'message';
   avatar?: string;
   description?: string;
+  email?: string;
   messageText?: string;
   senderName?: string;
   timestamp?: any;
@@ -329,7 +330,8 @@ export class SearchService {
       name: user.name,
       type: 'user' as const,
       avatar: user.avatar,
-      description: user.active ? 'Online' : 'Offline'
+      description: user.active ? 'Online' : 'Offline',
+      email: user.email
     };
   }
 

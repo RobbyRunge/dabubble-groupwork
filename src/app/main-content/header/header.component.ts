@@ -90,7 +90,7 @@ export class HeaderComponent {
     } else if (this.isUserSearch(term)) {
       this.dropdownType = 'user';
       const userKeyword = this.extractKeyword(term, '@');
-      this.searchUsers(userKeyword);
+      this.searchUsers(userKeyword);      
     } else {
       this.dropdownType = 'normal';
       this.searchSubject.next(term);
@@ -140,6 +140,8 @@ export class HeaderComponent {
     if (keyword) {
       this.searchService.searchUsers(keyword).subscribe(results => {
         this.userResults = results;
+        
+        
       });
     } else {
       this.searchService.searchUsers('').subscribe(results => {
