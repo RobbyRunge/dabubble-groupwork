@@ -72,14 +72,28 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
 
 
   ngOnInit(): void {
+    console.log('ChatSection: ngOnInit called');
+    console.log('ChatSection: Current URL:', window.location.href);
+    
     this.routeSub = this.route.params.subscribe(params => {
+      console.log('ChatSection: Route params:', params);
       this.channelService.currentUserId = params['id'];
 
       // Check if this is the new-message route
       if (this.route.snapshot.url.length > 0 && this.route.snapshot.url[0].path === 'new-message') {
+        console.log('ChatSection: New message route detected');
         this.dataUser.showNewMessage = true;
         this.dataUser.showChannel = false;
         this.dataUser.showChatPartnerHeader = false;
+      }
+
+      // Check if current URL contains channels route
+      const url = window.location.href;
+      const channelMatch = url.match(/\/channels\/([^\/\?#]+)/);
+      if (channelMatch) {
+        const channelId = channelMatch[1];
+        console.log('ChatSection: Channel route detected in URL:', channelId);
+        this.initializeChannelMode(channelId);
       }
 
       this.showCurrentUserData();
@@ -232,5 +246,69 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
     const emoji = e?.emoji?.native ?? e?.emoji ?? e;
     this.chatService.saveEmojisInDatabase('chats', emoji, s.currentMessage.id);
     this.pickerService.hide('chat');
+  }
+
+  private initializeChannelMode(channelId: string) {
+    this.chatService.chatMode = 'channels';
+    this.dataUser.showChannel = true;
+    this.dataUser.showChatPartnerHeader = false;
+    this.dataUser.showNewMessage = false;
+    this.channelService.currentChannelId = channelId;
+    this.loadChannelDetails(channelId);
+    this.chatService.checkIfChatOrChannel();
+    this.chatService.listenToMessages('channels');
+    this.chatService.getChannelMessages(channelId);
+    this.channelService.setActiveChannelId(channelId);
+    this.channelService.setCheckdValue(channelId);
+    this.cdr.detectChanges();
+  }
+
+  private loadChannelDetails(channelId: string) {
+    this.tryLoadChannelDetails(channelId);
+    setTimeout(() => {
+      this.tryLoadChannelDetails(channelId);
+    }, 500);
+    setTimeout(() => {
+      if (!this.channelService.currentChannelName || this.channelService.currentChannelName === 'Channel') {
+        this.tryLoadChannelDetails(channelId);
+      }
+    }, 1500);
+  }
+
+  private tryLoadChannelDetails(channelId: string) {
+    const channels = this.channelService.showChannelByUser;
+    const channel = this.findChannelById(channels, channelId);
+    if (channel) {
+      this.setChannelDetails(channel, channelId);
+      return true;
+    }
+    this.handleChannelNotFound(channels);
+    this.setFallbackChannelData();
+    return false;
+  }
+
+  private findChannelById(channels: any[], channelId: string) {
+    return channels?.find(c => c.channelId === channelId || c.id === channelId);
+  }
+
+  private setChannelDetails(channel: any, channelId: string) {
+    this.channelService.currentChannelName = channel.channelname;
+    this.channelService.currentChannelDescription = channel.description;
+    this.channelService.getChannelUserId(channelId);
+    this.dataUser.getUserIdsFromChannel(channelId);
+    this.cdr.detectChanges();
+  }
+
+  private handleChannelNotFound(channels: any[]) {
+    if (channels && channels.length > 0) {
+      console.warn('ChatSection: Channel not found in available channels (', channels.length, 'channels loaded)');
+    }
+  }
+
+  private setFallbackChannelData() {
+    if (!this.channelService.currentChannelName) {
+      this.channelService.channelCreaterName = 'Channel Creator';
+      this.channelService.currentChannelName = 'Channel';
+    }
   }
 }
