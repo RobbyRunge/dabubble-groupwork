@@ -19,6 +19,7 @@ import { InputMessageComponent } from '../input-message/input-message.component'
 import { HeaderChatSectionComponent } from "../header-chat-section/header-chat-section.component";
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiPickerService } from '../../services/emojiPicker.service';
+import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 
 @Component({
   selector: 'app-chat-section',
@@ -232,5 +233,30 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
     const emoji = e?.emoji?.native ?? e?.emoji ?? e;
     this.chatService.saveEmojisInDatabase('chats', emoji, s.currentMessage.id);
     this.pickerService.hide('chat');
+  }
+
+  openDialog(button: HTMLElement) {
+    (document.activeElement as HTMLElement)?.blur();
+    const rect = button.getBoundingClientRect();
+    const width = window.innerWidth < 1080 ? '800px' : '872px';
+    const height = window.innerHeight < 700 ? '500px' : '612px';
+
+    const dialogWidth = parseInt(width, 10);
+    const dialogHeight = parseInt(height, 10);
+
+    const top = rect.top - dialogHeight + window.scrollY;
+    const left = rect.left - dialogWidth / 2 + window.scrollX - 300;
+
+    const dialogRef = this.dialog.open(ChannelSectionComponent, {
+      position: {
+        top: `${top}px`,
+        left: `${left}px`,
+      },
+      width,
+      height,
+      maxWidth: '872px',
+      maxHeight: '612px',
+      panelClass: 'channel-dialog-container',
+    });
   }
 }

@@ -55,7 +55,7 @@
                         *ngIf="channelService.currentUserId && !chatService.hasMessages && chatService.chatMode === 'channels'">
                         {{channelService.channelCreaterName}} hat diesen Channel
                         {{channelService.channelCreatedAtFormatted }} erstellt. Das ist der Anfang des Channels
-                        <span>#{{channelService.currentChannelName}}
+                        <span #channelNameBtn (click)="openDialog(channelNameBtn)">#{{channelService.currentChannelName}}
                         </span>
                 </div>
                 <div *ngFor="let msg of chatService.messages; let i = index">
