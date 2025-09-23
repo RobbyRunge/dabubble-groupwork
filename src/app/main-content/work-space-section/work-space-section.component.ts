@@ -200,5 +200,5 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.activeChannelId = '';
     this.activeUserId = '';
     this.router.navigate(['mainpage', this.channelService.currentUserId, 'new-message']);
-  }
+    }
 }
