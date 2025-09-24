@@ -83,6 +83,7 @@ mat-icon {
     font-size: 24px;
     font-weight: 400;
     color: #535AF1; 
+    cursor: default;
 }
 
 .mat-mdc-unelevated-button {
@@ -125,4 +126,41 @@ input:focus {
     height: 248px;
     @include dFlex(space-between, unset);
     flex-direction: column;
+}
+
+.show-user-channel {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    @include dFlex(space-between, flex-start);
+    flex-direction: column;
+    padding: 20px 20px 20px 20px;
+}
+
+.users-avatar-and-name {
+    @include dFlex(unset, center);
+    flex-direction: row;
+    gap: 15px;
+    cursor: pointer;
+    padding: 5px 12px 5px 15px;
+    box-sizing: border-box;
+     &:hover {
+        background-color: #ECEEFE;
+        border-radius: 100px;
+        color: #535AF1;
+    }
+}
+
+.user-status-on-off {
+    position: absolute;
+    top: 30px;
+    left: 20px;
+    width: 14px;
+    height: 14px;
+}
+
+.text-mitglieder {
+    font-size: 24px;
+    font-weight: 700;
+    padding-bottom: 8px;
 }

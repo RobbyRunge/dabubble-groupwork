@@ -561,4 +561,8 @@ app-main-content {
     .mobile {
         display: none;
     }
+    .channel-dialog-container .mat-mdc-dialog-surface {
+        padding: 25px;
+        border-radius: 0;
+    }
 }

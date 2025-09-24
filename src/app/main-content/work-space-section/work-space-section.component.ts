@@ -35,6 +35,7 @@ import { ChatSectionComponent } from '../chat-section/chat-section.component';
 import { SearchService, SearchResult } from '../../services/search.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
+import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 
 @Component({
   selector: 'app-work-space-section',
@@ -52,7 +53,7 @@ import { Firestore, doc, getDoc } from '@angular/fire/firestore';
     CommonModule,
     FormsModule,
     ChatSectionComponent,
-    DatePipe
+    DatePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './work-space-section.component.html',
