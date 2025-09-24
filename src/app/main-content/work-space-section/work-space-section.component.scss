@@ -605,6 +605,14 @@ button {
 }
 
 @media(max-width: 1000px) {
+    .example-container {
+        border-radius: 0;
+    }
+
+    .mat-drawer.mat-drawer-opened.mat-drawer-opened {
+        border-radius: 0;
+    }
+
     .channel-logo-name,
     .div-edit-square {
         display: none !important;
