@@ -72,39 +72,50 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
   currentMessageIndex?: number;
   anchorSide: 'left' | 'right' = 'left';
 
+  ngOnInit(): void {    
+    this.setupRouteSubscription();
+    this.setupNavigationSubscription();
+  }
 
-  ngOnInit(): void {
-    console.log('ChatSection: ngOnInit called');
-    console.log('ChatSection: Current URL:', window.location.href);
-    
+  private setupRouteSubscription(): void {
     this.routeSub = this.route.params.subscribe(params => {
-      console.log('ChatSection: Route params:', params);
       this.channelService.currentUserId = params['id'];
-
-      // Check if this is the new-message route
-      if (this.route.snapshot.url.length > 0 && this.route.snapshot.url[0].path === 'new-message') {
-        console.log('ChatSection: New message route detected');
-        this.dataUser.showNewMessage = true;
-        this.dataUser.showChannel = false;
-        this.dataUser.showChatPartnerHeader = false;
-      }
-
-      // Check if current URL contains channels route
-      const url = window.location.href;
-      const channelMatch = url.match(/\/channels\/([^\/\?#]+)/);
-      if (channelMatch) {
-        const channelId = channelMatch[1];
-        console.log('ChatSection: Channel route detected in URL:', channelId);
-        this.initializeChannelMode(channelId);
-      }
-
-      this.showCurrentUserData();
-      this.showUserChannel();
-      this.getUserData();
-      this.shouldScrollToBottom = true;
+      this.handleRouteNavigation();
+      this.handleChannelRoute();
+      this.initializeComponent();
     });
+  }
 
-    // Subscribe to navigation service for message scrolling
+  private handleRouteNavigation(): void {
+    const isNewMessageRoute = this.route.snapshot.url.length > 0 && this.route.snapshot.url[0].path === 'new-message';
+    if (isNewMessageRoute) {
+      this.setNewMessageMode();
+    }
+  }
+
+  private setNewMessageMode(): void {
+    this.dataUser.showNewMessage = true;
+    this.dataUser.showChannel = false;
+    this.dataUser.showChatPartnerHeader = false;
+  }
+
+  private handleChannelRoute(): void {
+    const url = window.location.href;
+    const channelMatch = url.match(/\/channels\/([^\/\?#]+)/);
+    if (channelMatch) {
+      const channelId = channelMatch[1];
+      this.initializeChannelMode(channelId);
+    }
+  }
+
+  private initializeComponent(): void {
+    this.showCurrentUserData();
+    this.showUserChannel();
+    this.getUserData();
+    this.shouldScrollToBottom = true;
+  }
+
+  private setupNavigationSubscription(): void {
     this.navigationSub = this.navigationService.scrollToMessage$.subscribe(scrollTarget => {
       if (scrollTarget) {
         setTimeout(() => {
@@ -191,38 +202,14 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
     }
   }
 
-  // Method to scroll to a specific message and optionally highlight it
   private scrollToMessage(messageId: string, highlight: boolean = true): void {
     try {
-      // Find the message element by looking for elements with data-message-id attribute
-      const messageElements = document.querySelectorAll('[data-message-id]');
-      let targetElement: Element | null = null;
-
-      for (const element of messageElements) {
-        if (element.getAttribute('data-message-id') === messageId) {
-          targetElement = element;
-          break;
-        }
-      }
-
+      const targetElement = this.findMessageElement(messageId);
       if (targetElement) {
-        // Scroll to the message
-        targetElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
-
-        // Highlight the message if requested
+        this.scrollToElement(targetElement);
         if (highlight) {
-          targetElement.classList.add('highlighted-message');
-
-          // Remove highlight after 3 seconds
-          setTimeout(() => {
-            targetElement?.classList.remove('highlighted-message');
-          }, 3000);
+          this.highlightMessage(targetElement);
         }
-
-        // Clear the navigation target
         this.navigationService.clearScrollTarget();
       } else {
         console.log('Message not found:', messageId);
@@ -232,9 +219,34 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
     }
   }
 
+  private findMessageElement(messageId: string): Element | null {
+    const messageElements = document.querySelectorAll('[data-message-id]');
+    for (const element of messageElements) {
+      if (element.getAttribute('data-message-id') === messageId) {
+        return element;
+      }
+    }
+    return null;
+  }
+
+  private scrollToElement(element: Element): void {
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
+  }
+
+  private highlightMessage(element: Element): void {
+    element.classList.add('highlighted-message');
+    setTimeout(() => {
+      element.classList.remove('highlighted-message');
+    }, 3000);
+  }
+
   hideAllEmojis() {
     this.showEmojis = false;
   }
+  
   openEmojiPicker(ev: { anchor: HTMLElement; side: 'left' | 'right'; message: any; index: number; context: 'chat' | 'thread' }) {
     this.pickerService.open(ev);
   }
