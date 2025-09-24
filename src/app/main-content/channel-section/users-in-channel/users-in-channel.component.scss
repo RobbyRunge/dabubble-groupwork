@@ -2,7 +2,7 @@
 
 .users-in-channel-main-cont {
     height: 100%;
-    @include dFlex(space-between, unset);
+    @include dFlex(center, unset);
     flex-direction: column;
 }
 
@@ -37,7 +37,7 @@
 
 .add-user-to-channel-span {
     display: flex;
-    background-image: url('/chat-section/add-user-black.png');   
+    background-image: url('/chat-section/add-user-black.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -47,11 +47,14 @@
 
 .add-user-to-channel-cont {
     &:hover {
-        background-color: #ECEEFE;  
+        background-color: #ECEEFE;
         border-radius: 100px;
         color: #535AF1;
+
         .add-user-to-channel-span {
-            background-image: url('/chat-section/add-user-purple.png');  
+            height: 32px;
+            width: 32px;
+            background-image: url('/chat-section/add-user-purple.png');
         }
     }
 }
