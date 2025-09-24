@@ -146,9 +146,7 @@ export class SearchService {
   ): Promise<SearchResult> {
     const senderName = await this.getSenderName(messageData['senderId']);
     const prefix = isDirectMessage ? 'chat' : 'channel';
-    const displayName = isDirectMessage
-      ? `von ${senderName}`
-      : `Nachricht in #${containerName}`;
+    const displayName = isDirectMessage ? `von ${senderName}` : `Nachricht in #${containerName}`;
     return {
       id: `${prefix}-${containerId}-${messageDoc.id}`,
       name: displayName,
