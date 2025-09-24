@@ -375,7 +375,7 @@ export class ChatService {
         this.listenToMessages(type);
         this.dataUser.showChannel = false;
         this.dataUser.showChatPartnerHeader = true;
-        this.navigationService.mobileHeaderDevspace = true;
+        this.navigationService._mobileHeaderDevspace.next(true);
     }
 
     ngOnDestroy() {

@@ -1,7 +1,4 @@
 import { Component, ElementRef, inject, Injector, OnInit, runInInjectionContext, SimpleChanges, ViewChild, AfterViewInit, AfterViewChecked, OnDestroy, HostListener, ViewContainerRef, ChangeDetectorRef } from '@angular/core';
-import { WorkSpaceSectionComponent } from "../work-space-section/work-space-section.component";
-import { ThreadSectionComponent } from "../thread-section/thread-section.component";
-import { HeaderComponent } from "../header/header.component";
 import { UserService } from '../../services/user.service';
 import { NavigationService } from '../../services/navigation.service';
 import { ActivatedRoute } from '@angular/router';

@@ -8,6 +8,9 @@ import { BehaviorSubject } from 'rxjs';
 export class NavigationService {
   private location = inject(Location);
   mobileHeaderDevspace = false;
+
+  public _mobileHeaderDevspace = new BehaviorSubject<boolean>(false);
+  mobileHeaderDevspace$ = this._mobileHeaderDevspace.asObservable();
   
   private scrollToMessageSubject = new BehaviorSubject<{ messageId: string, highlight: boolean } | null>(null);
   public scrollToMessage$ = this.scrollToMessageSubject.asObservable();

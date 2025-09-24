@@ -3,9 +3,9 @@
     <img src="logo/logo-with-text.png">
   </div>
   <div class="logo-container desktop">
-    @if (!navigationService.mobileHeaderDevspace) {
+    @if (!(navigationService.mobileHeaderDevspace$ | async)) {
       <img src="logo/logo-with-text.png">
-    } @else if (navigationService.mobileHeaderDevspace) {
+    } @else if ((navigationService.mobileHeaderDevspace$ | async)) {
       <img class="devspace_logo_text" src="logo/devspace_logo_text.png" (click)="mobileHeader()">
     }
   </div>

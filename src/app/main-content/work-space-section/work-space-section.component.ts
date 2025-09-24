@@ -198,7 +198,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.chatService.listenToMessages(type);
     this.chatService.getChannelMessages(channelId);
     this.channelService.setCheckdValue(channelId);
-    this.navigationService.mobileHeaderDevspace = true;
+    this.navigationService._mobileHeaderDevspace.next(true);
   }
 
   getChannelNameandId(channelName: string, channelId: string, channelDescription: string) {
