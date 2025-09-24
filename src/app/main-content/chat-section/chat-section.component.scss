@@ -172,3 +172,10 @@ app-header-chat-section {
 .channel-info-text{
     color: black !important;
 }
+
+@media(max-width: 1000px) {
+    .chat-section {
+        width: 100%;
+        margin-right: 0;
+    }
+}

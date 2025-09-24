@@ -611,9 +611,7 @@ button {
     }
 
      .chat-section-mobile {
-        @include dFlex(flex-start);
-        flex-direction: column;
-        gap: 12px;
+        display: unset;
     }
 
     .sidenav-wrapper-desktop {
