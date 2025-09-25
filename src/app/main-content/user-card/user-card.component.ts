@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ChannelService } from '../../services/channel.service';
 import { Observable } from 'rxjs';
 import { ChatService } from '../../services/chat.service';
+import { SearchResult } from '../../services/search.service';
 
 
 @Component({
@@ -106,6 +107,24 @@ export class UserCardComponent implements OnInit {
     } catch (err) {
       console.error('Fehler beim Aktualisieren des Avatars:', err);
       throw err;
+    }
+  }
+
+  selectUserResult(type: string, user: SearchResult) {
+    this.openPrivateChat(type, user);
+  }
+
+  private async openPrivateChat(type: string, user: SearchResult) {
+    try {
+      const userForChat = {
+        userId: user.id,
+        name: user.name,
+        avatar: user.avatar,
+        active: user.description === 'Online'
+      };
+      await this.chatService.onUserClick(type, 0, userForChat);
+    } catch (error) {
+      console.log('Fehler beim Öffnen des privaten Chats:', error);
     }
   }
 }

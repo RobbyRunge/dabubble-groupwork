@@ -5,7 +5,7 @@
     </div>
     <div class="users-in-channel">
         @for (user of dataUser.userAvatarInChannel$ | async; track $index) {
-            <div class="users-avatar-and-name">
+            <div class="users-avatar-and-name" (click)="openUserDialog(user)">
                 <div class="user-status">
                     <img class="avatar" [src]="'avatar/' + user.avatar">
                     <img class="user-status-on-off" src="{{ user.userActive ? dataUser.onlineUser : dataUser.offlineUser }}">

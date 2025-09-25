@@ -82,11 +82,6 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   searchTerm: string = '';
   routeSub: Subscription | undefined;
 
-
-  onChange(user: any) {
-    console.log(user);
-  }
-
   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe(params => {
       if (params['id']) {
@@ -102,7 +97,6 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
 
   getUserData() {
     this.userDataSub = this.channelService.isChecked$.subscribe(user => {
-      console.log('WorkSpace: User selection changed:', user);
       this.selectedUser = user;
       this.activeUserId = user?.userId || '';
       if (user?.userId) {

@@ -7,9 +7,7 @@ import {
   OnInit,
   ViewChild,
   HostListener,
-  runInInjectionContext,
-  Injector,
-  OnDestroy
+  OnDestroy,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
@@ -22,7 +20,6 @@ import { AddUserToChannelComponent } from '../channel-section/add-user-to-channe
 import { UsersInChannelComponent } from '../channel-section/users-in-channel/users-in-channel.component';
 import { SearchService, SearchResult } from '../../services/search.service';
 import { Router } from '@angular/router';
-import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -40,9 +37,7 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
 
   private searchService = inject(SearchService);
   private router = inject(Router);
-  private firestore = inject(Firestore);
-  private injector = inject(Injector);
-  
+
   onlineUser: string = 'status/online.png';
   offlineUser: string = 'status/offline.png';
 
@@ -64,6 +59,7 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
       this.showDropdown = false;
     }
   }
+
 
   ngOnInit(): void {
     this.getUserData();
@@ -91,7 +87,7 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
   }
 
   onNewMessageSearchInput() {
-    const term = this.newMessageSearchTerm;    
+    const term = this.newMessageSearchTerm;
     if (this.isChannelSearch(term)) {
       this.dropdownType = 'channel';
       const channelKeyword = this.extractKeyword(term, '#');
@@ -171,7 +167,7 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
     this.showDropdown = false;
     this.newMessageSearchTerm = '';
     this.navigateToChannel(channel);
-    
+
   }
 
   private navigateToChannel(channel: SearchResult) {

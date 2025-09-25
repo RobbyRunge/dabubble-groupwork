@@ -187,7 +187,7 @@ export class HeaderComponent {
       };
       await this.chatService.onUserClick(type, 0, userForChat);
     } catch (error) {
-      console.error('Fehler beim Öffnen des privaten Chats:', error);
+      console.log('Fehler beim Öffnen des privaten Chats:', error);
     }
   }
 
