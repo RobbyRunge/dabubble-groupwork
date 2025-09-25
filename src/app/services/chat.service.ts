@@ -44,16 +44,13 @@ export class ChatService {
     async getOrCreateChatId(userId1: string, userId2: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
             const chatsRef = collection(this.firestore, 'chats');
-
             if (userId1 === userId2) {
                 return await this.getOrCreateSelfChat(chatsRef, userId1);
             }
-
             const existingChatId = await this.findExistingChatBetweenUsers(chatsRef, userId1, userId2);
             if (existingChatId) {
                 return existingChatId;
             }
-
             return await this.createNewChat(chatsRef, [userId1, userId2]);
         });
     }
@@ -61,11 +58,9 @@ export class ChatService {
     private async getOrCreateSelfChat(chatsRef: CollectionReference, userId: string): Promise<string> {
         const selfQuery = query(chatsRef, where('userId', '==', [userId]));
         const selfSnapshot = await getDocs(selfQuery);
-
         if (!selfSnapshot.empty) {
             return selfSnapshot.docs[0].id;
         }
-
         const newSelfChat = await addDoc(chatsRef, { userId: [userId] });
         return newSelfChat.id;
     }
@@ -73,14 +68,12 @@ export class ChatService {
     private async findExistingChatBetweenUsers(chatsRef: CollectionReference, userId1: string, userId2: string): Promise<string | null> {
         const q = query(chatsRef, where('userId', 'array-contains', userId1));
         const snapshot = await getDocs(q);
-
         for (const doc of snapshot.docs) {
             const users = doc.data()['userId'];
             if (Array.isArray(users) && users.includes(userId2) && users.length === 2) {
                 return doc.id;
             }
         }
-
         return null;
     }
 
@@ -109,9 +102,7 @@ export class ChatService {
         return runInInjectionContext(this.injector, async () => {
             const messagesRef = collection(this.firestore, `channels/${channelId}/message`);
             const q = query(messagesRef, orderBy('createdAt', 'asc'));
-
             const snapshot = await getDocs(q);
-
             return snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
@@ -124,11 +115,11 @@ export class ChatService {
         const existing = await getDocs(query(threadsCol, limit(1)));
         return existing.empty ? null : existing.docs[0].id;
     }
+
     private createThreadDocument(type: string, batch: WriteBatch, chatId: string, parentMessageId: string, senderId: string, text: string, threadId?: string, parentTimestamp?: any, senderName?: string, userAvatar?: string,): string {
         return runInInjectionContext(this.injector, () => {
             const threadsCol = collection(this.firestore, `${this.chatMode}/${chatId}/message/${parentMessageId}/threads`);
             const newThreadRef = threadId ? doc(threadsCol, threadId) : doc(threadsCol);
-
             batch.set(newThreadRef, {
                 senderId,
                 text,
@@ -136,7 +127,6 @@ export class ChatService {
                 senderName,
                 userAvatar: userAvatar,
             });
-
             return newThreadRef.id;
         });
     }
@@ -145,15 +135,18 @@ export class ChatService {
         return runInInjectionContext(this.injector, async () => {
             const existingId = await this.getExistingThreadId(this.chatMode, chatId, parentMessageId);
             if (existingId) return existingId;
-
-            const parentMsgRef = doc(this.firestore, `${this.chatMode}/${chatId}/message/${parentMessageId}`);
-            const parentMsgSnap = await getDoc(parentMsgRef);
+            const parentMsgRef = runInInjectionContext(this.injector, () =>
+                doc(this.firestore, `${this.chatMode}/${chatId}/message/${parentMessageId}`)
+            );
+            const parentMsgSnap = await runInInjectionContext(this.injector, () =>
+                getDoc(parentMsgRef)
+            );
             const parentTimestamp = parentMsgSnap.exists() ? parentMsgSnap.data()?.['timestamp'] : null;
-
-            const batch = writeBatch(this.firestore);
+            const batch = runInInjectionContext(this.injector, () =>
+                writeBatch(this.firestore)
+            );
             const newThreadId = this.createThreadDocument(this.chatMode, batch, chatId, parentMessageId, senderId, text, threadId, parentTimestamp, name, avatar);
             this.incrementThreadCount(this.chatMode, batch, chatId, parentMessageId, parentTimestamp);
-
             await batch.commit();
             return newThreadId;
         });
@@ -229,7 +222,6 @@ export class ChatService {
             this.firestore,
             `${this.chatMode}/${this.chatId}/message/${parentMessageId}/threads`
         );
-
         const threadsSnap = await getDocs(threadsRef);
         return !threadsSnap.empty;
     }
@@ -238,11 +230,9 @@ export class ChatService {
         if (this.unsubscribeMessages) {
             this.unsubscribeMessages();
         }
-
         return runInInjectionContext(this.injector, async () => {
             const messagesRef = collection(this.firestore, `${this.chatMode}/${this.chatId}/message`);
             const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
-
             this.unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
                 this.messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 this.hasMessages = this.messages.length !== 0;
@@ -253,16 +243,12 @@ export class ChatService {
     isFirstMessageOfDay(timestamp: any, index: number, messageArray?: any[]): boolean {
         const currentDate = this.getDateWithoutTime(timestamp?.toDate());
         if (!currentDate) return false;
-
         if (index === 0) return true;
-
         const messages = messageArray || this.messages;
         if (!messages || index >= messages.length || index < 1) return true;
-
         const prevMsg = messages[index - 1];
         const prevDate = this.getDateWithoutTime(prevMsg?.timestamp?.toDate());
         if (!prevDate) return true;
-
         return currentDate.getTime() !== prevDate.getTime();
     }
 
@@ -274,20 +260,15 @@ export class ChatService {
     getDateLabel(timestamp: any, messageIndex: number, messageArray?: any[]): string {
         const date = timestamp?.toDate ? timestamp.toDate() : null;
         if (!date) return '';
-
         if (!this.isFirstMessageOfDay(timestamp, messageIndex, messageArray)) return '';
-
         const today = new Date();
         const yesterday = new Date();
         yesterday.setDate(today.getDate() - 1);
-
         const msgDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         const yesterdayDate = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate());
-
         if (msgDate.getTime() === todayDate.getTime()) return 'Heute';
         if (msgDate.getTime() === yesterdayDate.getTime()) return 'Gestern';
-
         return date.toLocaleDateString('de-DE', {
             weekday: 'long',
             day: '2-digit',
@@ -317,7 +298,6 @@ export class ChatService {
     loadMostUsedEmojis() {
         const stored = localStorage.getItem('frequently');
         if (!stored) return;
-
         const recent = JSON.parse(stored) as Record<string, number>;
         this.mostUsedEmojis = Object.entries(recent)
             .sort((a, b) => b[1] - a[1])
@@ -392,16 +372,12 @@ export class ChatService {
         return runInInjectionContext(this.injector, async () => {
             const parentMsgRef = doc(this.firestore, `${this.chatMode}/${this.chatId}/message/${parentMessageId}`);
             const snap = await getDoc(parentMsgRef);
-
             if (!snap.exists()) return this.channelService.currentUserId;
-
             const data = snap.data() as any;
-
             const senderId = data?.senderId ??
                 data?.userId ??
                 data?.sender?.id ??
                 this.channelService.currentUserId;
-
             return senderId;
         });
     }
@@ -409,29 +385,10 @@ export class ChatService {
         return runInInjectionContext(this.injector, async () => {
             this.checkIfChatOrChannel();
             this.parentMessageId = parentMessageId;
-
             const senderIdForThread = await this.resolveThreadSenderId(parentMessageId);
-
-            this.threadId = await this.getOrCreateThread(
-                this.chatMode,
-                this.chatId,
-                parentMessageId,
-                senderIdForThread,
-                parentText,
-                this.threadId,
-                name,
-                avatar
-            );
-
+            this.threadId = await this.getOrCreateThread(this.chatMode, this.chatId, parentMessageId, senderIdForThread,parentText, this.threadId, name, avatar);
             this.open();
-            this.router.navigate([
-                '/mainpage',
-                this.channelService.currentUserId,
-                this.chatMode,
-                this.chatId,
-                'threads',
-                this.threadId
-            ]);
+            this.router.navigate(['/mainpage', this.channelService.currentUserId, this.chatMode, this.chatId, 'threads', this.threadId]);
             this.listenToMessagesThread(this.chatMode);
         });
     }
@@ -468,7 +425,6 @@ export class ChatService {
                 const existingReactionIndex = reactions.findIndex(
                     (r: any) => r.emoji === selectedEmoji
                 );
-
                 if (existingReactionIndex > -1) {
                     reactions[existingReactionIndex].emojiCounter += 1;
                 } else {
@@ -492,7 +448,6 @@ export class ChatService {
             `${this.chatMode}/${chatId}/message/${messageId}/reactions`
         );
         const q = query(reactionsRef, orderBy('createdAt', 'asc'));
-
         return onSnapshot(q, (snapshot) => {
             const emojis = snapshot.docs.map(doc => doc.data());
         });
