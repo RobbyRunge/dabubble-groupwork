@@ -42,7 +42,6 @@ export class PasswordResetComponent implements OnInit {
   async ngOnInit() {
     this.token = this.route.snapshot.queryParamMap.get('token') || '';
     this.userId = this.route.snapshot.queryParamMap.get('userId') || '';
-
     if (this.token && this.userId) {
       await this.validateToken();
     }
