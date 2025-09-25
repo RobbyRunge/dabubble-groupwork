@@ -2,7 +2,6 @@ import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { ChatService } from '../../../services/chat.service';
 import { ChannelService } from '../../../services/channel.service';
-import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiPickerService } from '../../../services/emojiPicker.service';
 type PickerSide = 'left' | 'right';
 @Component({

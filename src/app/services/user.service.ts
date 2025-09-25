@@ -1,33 +1,11 @@
-import {
-  Injectable,
-  inject,
-  Injector,
-  runInInjectionContext,
-  OnInit,
-} from '@angular/core';
-import {
-  Firestore,
-  collection,
-  query,
-  where,
-  getDocs,
-  addDoc,
-  onSnapshot,
-  doc,
-  CollectionReference,
-  collectionData,
-  getDoc,
-  updateDoc,
-  deleteDoc,
-  docData,
-} from '@angular/fire/firestore';
+import { Injectable, inject, Injector, runInInjectionContext} from '@angular/core';
+import { Firestore, collection, query, where, getDocs, addDoc, doc, CollectionReference, collectionData, getDoc, updateDoc, deleteDoc, docData, } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { map, Observable } from 'rxjs';
 import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ChannelService } from './channel.service';
-import { SearchService } from './search.service';
 
 @Injectable({
   providedIn: 'root',
@@ -38,28 +16,19 @@ export class UserService {
   private router = inject(Router);
   private auth = inject(Auth);
   private injector = inject(Injector);
-  private searchService = inject(SearchService);
-
   onlineUser: string = 'status/online.png';
   offlineUser: string = 'status/offline.png';
-
   showChannel = false;
   showChatPartnerHeader = false;
   showNewMessage = true;
-  
   private freshLogin = false;
-
   usersIdsInChannel: any[] = [];
   userNamesInChannel: any[] = [];
   userAvatarInChannel: any[] = [];
-
   private pendingRegistrationId = new BehaviorSubject<string | null>(null);
   pendingRegistrationId$ = this.pendingRegistrationId.asObservable();
-
-  userAvatarInChannel$ = new BehaviorSubject<{ name: string; avatar: string; userId: string, userActive: boolean }[]>([]);
-
+  userAvatarInChannel$ = new BehaviorSubject<{ name: string; avatar: string; userId: string, userActive: boolean, email: string, active: boolean }[]>([]);
   pendingUser: User | null = null;
-
   loginIsSucess = false;
   chatId: any = '';
 
@@ -78,7 +47,6 @@ export class UserService {
   getUserRefsByIds() {
     return this.usersIdsInChannel.map((id) => {
       if (!id || id.trim() === '') {
-        console.warn('Empty user ID found in usersIdsInChannel array');
         return null;
       }
       return runInInjectionContext(this.injector, () =>
@@ -123,7 +91,6 @@ export class UserService {
       this.channelService.userSubcollectionId = userStorage.id;
     }
     this.loginIsSucess = true;
-    // Set fresh login flag to prevent state restoration
     this.freshLogin = true;
   }
 
@@ -159,7 +126,6 @@ export class UserService {
           active: true,
         });
         
-        // Get user storage collection for existing user
         const userStorageSnapshot = await runInInjectionContext(this.injector, () =>
           getDocs(
             this.channelService.getUserSubCol(this.channelService.currentUserId)
@@ -170,15 +136,12 @@ export class UserService {
           this.channelService.userSubcollectionId = userStorage.id;
         }
       }
-
       this.loginIsSucess = true;
-
-      // Set fresh login flag to prevent state restoration
       this.freshLogin = true;
       this.router.navigate(['mainpage', this.channelService.currentUserId]);
       return user;
     } catch (error) {
-      console.error('Error during Google sign in', error);
+      console.log('Error during Google sign in', error);
       throw error;
     }
   }
@@ -202,11 +165,10 @@ export class UserService {
           active: true,
         });
         this.loginIsSucess = true;
-        // Set fresh login flag to prevent state restoration
         this.freshLogin = true;
       }
     } else {
-      console.error('Guest user not found. Please create a guest user first.');
+      console.log('Guest user not found. Please create a guest user first.');
     }
   }
 
@@ -270,7 +232,6 @@ export class UserService {
         addDoc(collection(this.firestore, 'users'), userData)
       );
       const userId = userRef.id;
-
       const userStorageColRef = runInInjectionContext(this.injector, () =>
         collection(userRef, 'userstorage')
       );
@@ -286,7 +247,7 @@ export class UserService {
         userStorageId,
       };
     } catch (error) {
-      console.error('Error creating initial user:', error);
+      console.log('Error creating initial user:', error);
       throw error;
     }
   }
@@ -298,7 +259,6 @@ export class UserService {
   async completeUserRegistration(avatarPath: string): Promise<boolean> {
     const userId = this.pendingRegistrationId.getValue();
     if (!userId) {
-      console.error('No user ID for registration');
       return false;
     }
     try {
@@ -311,7 +271,7 @@ export class UserService {
       this.pendingRegistrationId.next(null);
       return true;
     } catch (error) {
-      console.error('Update failed:', error);
+      console.log('Update failed:', error);
       return false;
     }
   }
@@ -377,14 +337,14 @@ export class UserService {
             if (dataName) {
               this.userAvatarInChannel$.next([
                 ...this.userAvatarInChannel$.value,
-                { avatar: dataName['avatar'], name: dataName['name'], userId: id, userActive: dataName['active'] }   
+                { avatar: dataName['avatar'], name: dataName['name'], userId: id, userActive: dataName['active'], email: dataName['email'], active: dataName['active'] }
               ]);
             }
           }
         }
       }
     } catch (error) {
-      console.error('Error getting user IDs from channel:', error);
+      console.log('Error getting user IDs from channel:', error);
     }
   }
 
@@ -430,7 +390,6 @@ export class UserService {
       this.showNewMessage = true;
       this.chatId = '';
     }
-    
     this.channelService.showUserChannel();
   }
 

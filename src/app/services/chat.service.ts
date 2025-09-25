@@ -2,7 +2,7 @@ import { Injectable, inject, Injector, runInInjectionContext } from '@angular/co
 import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc, CollectionReference, getDoc, limit, increment, writeBatch, WriteBatch, arrayUnion } from '@angular/fire/firestore';
 import { UserService } from './user.service';
 import { MatDrawer } from '@angular/material/sidenav';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ChannelService } from './channel.service';
 import { NavigationService } from './navigation.service';
 
@@ -97,7 +97,6 @@ export class ChatService {
         })
     }
 
-
     async getChannelMessages(channelId: string): Promise<any[]> {
         return runInInjectionContext(this.injector, async () => {
             const messagesRef = collection(this.firestore, `channels/${channelId}/message`);
@@ -152,7 +151,6 @@ export class ChatService {
         });
     }
 
-
     private incrementThreadCount(type: string, batch: WriteBatch, chatId: string, parentMessageId: string, lastReplyTimestamp?: any): void {
         return runInInjectionContext(this.injector, () => {
             const parentMsgRef = doc(this.firestore, `${this.chatMode}/${chatId}/message/${parentMessageId}`);
@@ -162,7 +160,6 @@ export class ChatService {
             });
         });
     }
-
 
     async getParrentMessageId(type: string) {
         return runInInjectionContext(this.injector, async () => {
@@ -175,29 +172,10 @@ export class ChatService {
         });
     }
 
-    async sendThreadMessage(
-        type: string,
-        chatId: string,
-        rootId: string,
-        senderId: string,
-        text: string,
-        senderName: string | undefined,
-        userAvatar: string | undefined
-    ) {
+    async sendThreadMessage(type: string, chatId: string, rootId: string, senderId: string, text: string, senderName: string | undefined,  userAvatar: string | undefined) {
         return runInInjectionContext(this.injector, async () => {
             const batch = writeBatch(this.firestore);
-            this.createThreadDocument(
-                this.chatMode,
-                batch,
-                chatId,
-                rootId,
-                senderId,
-                text,
-                undefined,
-                undefined,
-                senderName,
-                userAvatar
-            );
+            this.createThreadDocument(this.chatMode, batch, chatId, rootId, senderId, text, undefined, undefined, senderName, userAvatar);
             this.incrementThreadCount(this.chatMode, batch, chatId, rootId, serverTimestamp());
             await batch.commit();
         });
@@ -218,10 +196,7 @@ export class ChatService {
     }
 
     async checkIfMessageHasThreads(type: string, parentMessageId: string) {
-        const threadsRef = collection(
-            this.firestore,
-            `${this.chatMode}/${this.chatId}/message/${parentMessageId}/threads`
-        );
+        const threadsRef = collection(this.firestore,`${this.chatMode}/${this.chatId}/message/${parentMessageId}/threads`);
         const threadsSnap = await getDocs(threadsRef);
         return !threadsSnap.empty;
     }
@@ -386,7 +361,7 @@ export class ChatService {
             this.checkIfChatOrChannel();
             this.parentMessageId = parentMessageId;
             const senderIdForThread = await this.resolveThreadSenderId(parentMessageId);
-            this.threadId = await this.getOrCreateThread(this.chatMode, this.chatId, parentMessageId, senderIdForThread,parentText, this.threadId, name, avatar);
+            this.threadId = await this.getOrCreateThread(this.chatMode, this.chatId, parentMessageId, senderIdForThread,  parentText, this.threadId, name, avatar);
             this.open();
             this.router.navigate(['/mainpage', this.channelService.currentUserId, this.chatMode, this.chatId, 'threads', this.threadId]);
             this.listenToMessagesThread(this.chatMode);

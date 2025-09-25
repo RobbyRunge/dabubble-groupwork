@@ -1,15 +1,13 @@
-import { Component, EventEmitter, inject, Inject, Input, OnInit, Output, } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { User } from '../../../models/user.class';
 import { MatIcon } from '@angular/material/icon';
 import { NgClass, NgIf } from '@angular/common';
 import { UserService } from './../../services/user.service'
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule, } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ChannelService } from '../../services/channel.service';
-import { Observable } from 'rxjs';
 import { ChatService } from '../../services/chat.service';
-
 
 @Component({
   selector: 'app-user-card',
@@ -38,7 +36,9 @@ export class UserCardComponent implements OnInit {
     '/avatar/men4.png',
   ];
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { user: User, urlUserId: string }, private dialogRef: MatDialogRef<UserCardComponent>,
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { user: User, urlUserId: string, parentDialogRef?: MatDialogRef<any> },
+    private dialogRef: MatDialogRef<UserCardComponent>,
     private userService: UserService,
     private route: ActivatedRoute
   ) {
@@ -106,6 +106,28 @@ export class UserCardComponent implements OnInit {
     } catch (err) {
       console.error('Fehler beim Aktualisieren des Avatars:', err);
       throw err;
+    }
+  }
+
+  selectUserResult(type: string, user: User) {
+    this.closeDialog();
+    if (this.data.parentDialogRef) {
+      this.data.parentDialogRef.close();
+    }
+    this.openPrivateChat(type, user);
+  }
+
+  private async openPrivateChat(type: string, user: User) {
+    try {
+      const userForChat = {
+        userId: user.userId,
+        name: user.name,
+        avatar: user.avatar,
+        active: user.active || false,
+      };
+      await this.chatService.onUserClick(type, 0, userForChat);
+    } catch (error) {
+      console.log('Fehler beim Öffnen des privaten Chats:', error);
     }
   }
 }

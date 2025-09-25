@@ -1,10 +1,4 @@
-import {
-  inject,
-  Injectable,
-  Injector,
-  runInInjectionContext,
-  OnDestroy,
-} from '@angular/core';
+import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
 import {
   addDoc,
   arrayUnion,
@@ -17,7 +11,7 @@ import {
   updateDoc,
   Timestamp,
 } from '@angular/fire/firestore';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { Allchannels } from '../../models/allchannels.class';
 import { User } from '../../models/user.class';
 
@@ -280,7 +274,7 @@ export class ChannelService {
     this.currentChannelId = '';
     this.selectedUser = null;
     this.userSubcollectionChannelId = '';
-    
+
     if (userService) {
       userService.chatId = '';
       userService.showChannel = false;

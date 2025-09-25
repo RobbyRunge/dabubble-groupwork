@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute } from '@angular/router';
-import { MatDialog, MatDialogActions } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';

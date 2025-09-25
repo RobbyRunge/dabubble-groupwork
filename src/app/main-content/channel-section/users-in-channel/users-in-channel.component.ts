@@ -5,6 +5,8 @@ import { UserService } from '../../../services/user.service';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { ChannelService } from '../../../services/channel.service';
 import { AddUserToChannelComponent } from '../add-user-to-channel/add-user-to-channel.component';
+import { UserCardComponent } from '../../user-card/user-card.component';
+import { ChatService } from '../../../services/chat.service';
 
 @Component({
   selector: 'app-users-in-channel',
@@ -15,8 +17,10 @@ import { AddUserToChannelComponent } from '../add-user-to-channel/add-user-to-ch
 export class UsersInChannelComponent {
   dialog = inject(MatDialogRef<UsersInChannelComponent>);
   dataUser = inject(UserService);
+  chatService = inject(ChatService);
   channelService = inject(ChannelService);
   openDialog = inject(MatDialog);
+  userDialog = inject(MatDialog);
 
   addUserToChannel(div: HTMLElement) {
     (document.activeElement as HTMLElement)?.blur();
@@ -35,5 +39,14 @@ export class UsersInChannelComponent {
     panelClass: 'add-user'
     });
     this.dialog.close()
+  }
+
+  openUserDialog(user: any) {
+    this.userDialog.open(UserCardComponent, {
+      data: { 
+        user: user,
+        parentDialogRef: this.dialog
+       },
+    });
   }
 }

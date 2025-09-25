@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, Injector, OnInit, runInInjectionContext, SimpleChanges, ViewChild, AfterViewInit, AfterViewChecked, OnDestroy, HostListener, ViewContainerRef, ChangeDetectorRef } from '@angular/core';
+import { Component, ElementRef, inject, Injector, OnInit, runInInjectionContext, ViewChild, AfterViewInit, AfterViewChecked, OnDestroy, HostListener, ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { NavigationService } from '../../services/navigation.service';
 import { ActivatedRoute } from '@angular/router';
@@ -6,7 +6,7 @@ import { docData, onSnapshot } from '@angular/fire/firestore';
 import { User } from '../../../models/user.class';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { AsyncPipe, NgClass, NgFor, NgIf, NgStyle, DatePipe } from '@angular/common';
+import { AsyncPipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { ReceivedMessageComponent } from './received-message/received-message.component';
 import { SentMessageComponent } from "./sent-message/sent-message.component";
@@ -16,7 +16,7 @@ import { InputMessageComponent } from '../input-message/input-message.component'
 import { HeaderChatSectionComponent } from "../header-chat-section/header-chat-section.component";
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiPickerService } from '../../services/emojiPicker.service';
-
+import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 
 @Component({
   selector: 'app-chat-section',
@@ -32,7 +32,6 @@ import { EmojiPickerService } from '../../services/emojiPicker.service';
     SentMessageComponent,
     NgStyle,
     PickerComponent,
-    DatePipe
   ],
   templateUrl: './chat-section.component.html',
   styleUrl: './chat-section.component.scss'
@@ -99,10 +98,10 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
   private handleChannelRoute(): void {
     const url = window.location.href;
     const channelMatch = url.match(/\/channels\/([^\/\?#]+)/);
-    if (channelMatch) {
+/*     if (channelMatch) {
       const channelId = channelMatch[1];
       this.initializeChannelMode(channelId);
-    }
+    } */
   }
 
   private initializeComponent(): void {
@@ -259,67 +258,28 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
     this.pickerService.hide('chat');
   }
 
-  private initializeChannelMode(channelId: string) {
-    this.chatService.chatMode = 'channels';
-    this.dataUser.showChannel = true;
-    this.dataUser.showChatPartnerHeader = false;
-    this.dataUser.showNewMessage = false;
-    this.channelService.currentChannelId = channelId;
-    this.loadChannelDetails(channelId);
-    this.chatService.checkIfChatOrChannel();
-    this.chatService.listenToMessages('channels');
-    this.chatService.getChannelMessages(channelId);
-    this.channelService.setActiveChannelId(channelId);
-    this.channelService.setCheckdValue(channelId);
-    this.cdr.detectChanges();
-  }
+  openDialog(button: HTMLElement) {
+    (document.activeElement as HTMLElement)?.blur();
+    const rect = button.getBoundingClientRect();
+    const width = window.innerWidth < 1080 ? '800px' : '872px';
+    const height = window.innerHeight < 700 ? '500px' : '612px';
 
-  private loadChannelDetails(channelId: string) {
-    this.tryLoadChannelDetails(channelId);
-    setTimeout(() => {
-      this.tryLoadChannelDetails(channelId);
-    }, 500);
-    setTimeout(() => {
-      if (!this.channelService.currentChannelName || this.channelService.currentChannelName === 'Channel') {
-        this.tryLoadChannelDetails(channelId);
-      }
-    }, 1500);
-  }
+    const dialogWidth = parseInt(width, 10);
+    const dialogHeight = parseInt(height, 10);
 
-  private tryLoadChannelDetails(channelId: string) {
-    const channels = this.channelService.showChannelByUser;
-    const channel = this.findChannelById(channels, channelId);
-    if (channel) {
-      this.setChannelDetails(channel, channelId);
-      return true;
-    }
-    this.handleChannelNotFound(channels);
-    this.setFallbackChannelData();
-    return false;
-  }
+    const top = rect.top - dialogHeight + window.scrollY;
+    const left = rect.left - dialogWidth / 2 + window.scrollX - 300;
 
-  private findChannelById(channels: any[], channelId: string) {
-    return channels?.find(c => c.channelId === channelId || c.id === channelId);
-  }
-
-  private setChannelDetails(channel: any, channelId: string) {
-    this.channelService.currentChannelName = channel.channelname;
-    this.channelService.currentChannelDescription = channel.description;
-    this.channelService.getChannelUserId(channelId);
-    this.dataUser.getUserIdsFromChannel(channelId);
-    this.cdr.detectChanges();
-  }
-
-  private handleChannelNotFound(channels: any[]) {
-    if (channels && channels.length > 0) {
-      console.warn('ChatSection: Channel not found in available channels (', channels.length, 'channels loaded)');
-    }
-  }
-
-  private setFallbackChannelData() {
-    if (!this.channelService.currentChannelName) {
-      this.channelService.channelCreaterName = 'Channel Creator';
-      this.channelService.currentChannelName = 'Channel';
-    }
+    const dialogRef = this.dialog.open(ChannelSectionComponent, {
+      position: {
+        top: `${top}px`,
+        left: `${left}px`,
+      },
+      width,
+      height,
+      maxWidth: '872px',
+      maxHeight: '612px',
+      panelClass: 'channel-dialog-container',
+    });
   }
 }
