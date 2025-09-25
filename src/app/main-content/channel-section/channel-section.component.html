@@ -55,7 +55,8 @@
             <span class="channel-name">Erstellt von</span>
             <span class="channel-user-name" *ngIf="channelService.channelCreaterName"> {{channelService.channelCreaterName}} </span>
     </div>
-    <mat-card class="show-user-channel">
+    <div class="show-user-mobile">
+        <mat-card class="show-user-channel">
         <p class="text-mitglieder">Mitglieder</p>
          @for (user of dataUser.userAvatarInChannel$ | async; track $index) {
             <div class="users-avatar-and-name">
@@ -68,7 +69,27 @@
                 </span>
             </div>
             }
+            <div #div class="add-user-to-channel-cont standard-transition" (click)="addUserToChannel(div)">
+                <span class="add-user-to-channel-span"></span>
+            <p>Mitglieder hinzufügen</p>
+        </div>
     </mat-card>
+    </div>
+
+    <!-- <mat-card class="show-user-channel">
+        <p class="text-mitglieder">Mitglieder</p>
+         @for (user of dataUser.userAvatarInChannel$ | async; track $index) {
+            <div class="users-avatar-and-name">
+                <div class="user-status">
+                    <img class="avatar" [src]="'avatar/' + user.avatar">
+                    <img class="user-status-on-off" src="{{ user.userActive ? dataUser.onlineUser : dataUser.offlineUser }}">
+                </div>
+                <span class="user-name"> {{user.name}} 
+                    <span *ngIf="user.userId === channelService.currentUserId">(Du)</span>
+                </span>
+            </div>
+            }
+    </mat-card> -->
     <div class="leave-channel-btn">
         <button mat-flat-button primary (click)="deleteUserFromChannel()">Channel verlassen</button>
     </div>

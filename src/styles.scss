@@ -551,6 +551,41 @@ app-main-content {
     position: relative;
 }
 
+.add-user-to-channel-cont {
+    @include dFlex(unset, center);
+    flex-direction: row;
+    gap: 20px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 400;
+    box-sizing: border-box;
+    padding: 8px 6px;
+}
+
+.add-user-to-channel-span {
+    display: flex;
+    background-image: url('/chat-section/add-user-black.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 32px;
+    width: 32px;
+}
+
+.add-user-to-channel-cont {
+    &:hover {
+        background-color: #ECEEFE;
+        border-radius: 100px;
+        color: #535AF1;
+
+        .add-user-to-channel-span {
+            height: 32px;
+            width: 32px;
+            background-image: url('/chat-section/add-user-purple.png');
+        }
+    }
+}
+
 @media(min-width: 1000px) {
     .desktop {
         display: none;

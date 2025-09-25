@@ -11,51 +11,18 @@
     flex-direction: column;
     gap: 13px;
     padding: 16px 8px;
+    font-size: 18px;
+    font-weight: 400;
 }
 
 .users-avatar-and-name {
     @include dFlex(unset, center);
     flex-direction: row;
     gap: 15px;
-}
-
-.user-name {
-    font-size: 18px;
-    font-weight: 400;
-}
-
-.add-user-to-channel-cont {
-    @include dFlex(unset, center);
-    flex-direction: row;
-    gap: 20px;
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: 400;
-    padding: 12px 20px;
-    box-sizing: border-box;
-}
-
-.add-user-to-channel-span {
-    display: flex;
-    background-image: url('/chat-section/add-user-black.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 32px;
-    width: 32px;
-}
-
-.add-user-to-channel-cont {
     &:hover {
         background-color: #ECEEFE;
         border-radius: 100px;
-        color: #535AF1;
-
-        .add-user-to-channel-span {
-            height: 32px;
-            width: 32px;
-            background-image: url('/chat-section/add-user-purple.png');
-        }
+        cursor: pointer;
     }
 }
 

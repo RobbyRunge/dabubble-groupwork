@@ -75,4 +75,8 @@ export class ChannelSectionComponent implements OnInit {
     this.channelService.deleteUserFromCh(this.channelService.currentChannelId, this.newChannel.toJSON(['userId']));
     this.dialogRef.close()
   }
+
+  addUserToChannel(div: HTMLElement) {
+
+  }
 }
