@@ -601,3 +601,17 @@ app-main-content {
         border-radius: 0;
     }
 }
+
+mat-icon.edit {
+  color: gray; 
+  cursor: pointer;
+  transition: color 0.3s ease;
+  background-color: #ECEEFE;  
+  border-radius: 50%;
+  padding: 5px;
+}
+
+mat-icon.edit:active,
+mat-icon.edit:focus-visible {
+  color: blue !important;
+}
