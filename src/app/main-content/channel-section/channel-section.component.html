@@ -12,7 +12,10 @@
     <mat-card *ngIf="!showEditChannelName" class="channel-headline mat-card-class">
         <div class="channel-name-description-edit">
             <span class="channel-name">Channel - Name</span>
-            <span (click)="editChannelName()" class="channel-edit standard-transition">Bearbeiten</span>
+            <span (click)="editChannelName()" class="channel-edit standard-transition">
+                <mat-icon class="desktop edit">edit</mat-icon>
+                <p class="mobile">Bearbeiten</p> 
+            </span>
         </div>
             <div class="created-channel"># @if (channelService.currentChannelName) {
                 {{ channelService.currentChannelName }}
@@ -31,7 +34,10 @@
     <mat-card *ngIf="!showEditChannelDescription" class="channel-description mat-card-class">
         <div class="channel-name-description-edit">
             <span class="channel-name">Beschreibung</span>
-            <span (click)="editChannelDescription()" class="channel-edit standard-transition">Bearbeiten</span>
+            <span (click)="editChannelDescription()" class="channel-edit standard-transition">
+                <mat-icon class="desktop edit">edit</mat-icon>
+                <p class="mobile">Bearbeiten</p>
+            </span> 
         </div>
         <div class="channel-description-by-user">
             @if (channelService.currentChannelDescription) {
