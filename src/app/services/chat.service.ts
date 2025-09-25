@@ -61,7 +61,9 @@ export class ChatService {
         if (!selfSnapshot.empty) {
             return selfSnapshot.docs[0].id;
         }
-        const newSelfChat = await addDoc(chatsRef, { userId: [userId] });
+        const newSelfChat = await runInInjectionContext(this.injector, () =>
+            addDoc(chatsRef, { userId: [userId] })
+        );
         return newSelfChat.id;
     }
 
@@ -172,7 +174,7 @@ export class ChatService {
         });
     }
 
-    async sendThreadMessage(type: string, chatId: string, rootId: string, senderId: string, text: string, senderName: string | undefined,  userAvatar: string | undefined) {
+    async sendThreadMessage(type: string, chatId: string, rootId: string, senderId: string, text: string, senderName: string | undefined, userAvatar: string | undefined) {
         return runInInjectionContext(this.injector, async () => {
             const batch = writeBatch(this.firestore);
             this.createThreadDocument(this.chatMode, batch, chatId, rootId, senderId, text, undefined, undefined, senderName, userAvatar);
@@ -196,7 +198,7 @@ export class ChatService {
     }
 
     async checkIfMessageHasThreads(type: string, parentMessageId: string) {
-        const threadsRef = collection(this.firestore,`${this.chatMode}/${this.chatId}/message/${parentMessageId}/threads`);
+        const threadsRef = collection(this.firestore, `${this.chatMode}/${this.chatId}/message/${parentMessageId}/threads`);
         const threadsSnap = await getDocs(threadsRef);
         return !threadsSnap.empty;
     }
@@ -361,7 +363,7 @@ export class ChatService {
             this.checkIfChatOrChannel();
             this.parentMessageId = parentMessageId;
             const senderIdForThread = await this.resolveThreadSenderId(parentMessageId);
-            this.threadId = await this.getOrCreateThread(this.chatMode, this.chatId, parentMessageId, senderIdForThread,  parentText, this.threadId, name, avatar);
+            this.threadId = await this.getOrCreateThread(this.chatMode, this.chatId, parentMessageId, senderIdForThread, parentText, this.threadId, name, avatar);
             this.open();
             this.router.navigate(['/mainpage', this.channelService.currentUserId, this.chatMode, this.chatId, 'threads', this.threadId]);
             this.listenToMessagesThread(this.chatMode);
