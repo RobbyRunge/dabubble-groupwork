@@ -18,25 +18,22 @@ export class UsersInChannelComponent {
   channelService = inject(ChannelService);
   openDialog = inject(MatDialog);
 
-  addUserToChannel() {
+  addUserToChannel(div: HTMLElement) {
     (document.activeElement as HTMLElement)?.blur();
-    this.channelService.buttonRect$.subscribe(rect => { 
-    if (!rect) return; 
-      const dialogWidth = 514;
-      this.openDialog.open(AddUserToChannelComponent, {
-        autoFocus: false,
-        position: {
-          top: `${rect.bottom + window.scrollY}px`,
-          left: `${rect.right + window.scrollX - dialogWidth}px`,
+    const rect = div.getBoundingClientRect();
+    const dialogWidth = 514;
+    this.openDialog.open(AddUserToChannelComponent, {
+      autoFocus: false,
+      position: {
+        top: `${rect.bottom + window.scrollY - 340}px`,   
+        left: `${rect.right + window.scrollX - dialogWidth}px`, 
         },
-      width: '514px',
-      height: '294px',
-      maxWidth: '514px',
-      maxHeight: '294px',
-      panelClass: 'add-user'
-      });
+    width: '514px',
+    height: '294px',
+    maxWidth: '514px',
+    maxHeight: '294px',
+    panelClass: 'add-user'
     });
     this.dialog.close()
   }
-
 }

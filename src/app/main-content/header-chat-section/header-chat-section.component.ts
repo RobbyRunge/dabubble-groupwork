@@ -270,23 +270,21 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
     });
   }
 
-  addUserToChannel() {
+  addUserToChannel(div: HTMLElement) {
     (document.activeElement as HTMLElement)?.blur();
-    this.channelService.buttonRect$.subscribe((rect) => {
-      if (!rect) return;
-      const dialogWidth = 514;
-      this.dialog.open(AddUserToChannelComponent, {
-        autoFocus: false,
-        position: {
-          top: `${rect.bottom + window.scrollY}px`,
-          left: `${rect.right + window.scrollX - dialogWidth}px`,
-        },
-        width: '514px',
-        height: '294px',
-        maxWidth: '514px',
-        maxHeight: '294px',
-        panelClass: 'add-user',
-      });
+    const rect = div.getBoundingClientRect();
+    const dialogWidth = 514;
+    this.dialog.open(AddUserToChannelComponent, {
+    autoFocus: false,
+    position: {
+      top: `${rect.bottom + window.scrollY}px`,
+      left: `${rect.right + window.scrollX - dialogWidth}px`,
+      },
+    width: '514px',
+    height: '294px',
+    maxWidth: '514px',
+    maxHeight: '294px',
+    panelClass: 'add-user',
     });
   }
 
@@ -297,7 +295,7 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
     this.dialog.open(UsersInChannelComponent, {
       autoFocus: false,
       position: {
-        top: `${rect.bottom + window.scrollY}px`,
+        top: `${rect.bottom + window.scrollY - 12}px`,
         left: `${rect.right + window.scrollX - dialogWidth}px`,
       },
       width: '415px',
