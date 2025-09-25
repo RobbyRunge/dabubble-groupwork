@@ -105,7 +105,6 @@ export class LoginComponent implements OnInit {
       });
   }
 
-
   loginWithGuest() {
     const backgroundOverlay = document.getElementById('background-overlay');
     if (backgroundOverlay) {

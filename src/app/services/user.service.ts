@@ -309,7 +309,6 @@ export class UserService {
         })
       );
       this.pendingRegistrationId.next(null);
-      console.log('User registration completed successfully');
       return true;
     } catch (error) {
       console.error('Update failed:', error);
