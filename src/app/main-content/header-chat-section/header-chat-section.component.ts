@@ -247,18 +247,21 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
 
   openDialog(button: HTMLElement) {
     (document.activeElement as HTMLElement)?.blur();
-    const mobileScreen = window.innerWidth < 1000;
-    const width = mobileScreen ? '100vw' : '872px';
-    const height = mobileScreen ? '100vh' : '612px';
-    const position = mobileScreen ? { top: '0', left: '0' } : {
+    const mobileScreenWidth = window.innerWidth < 1000;
+    let width = mobileScreenWidth ? '100vw' : '872px';
+    let height = mobileScreenWidth ? '100vh' : '612px';
+    if (window.innerHeight <= 1200 && !mobileScreenWidth) {
+     height = '500px';
+    }
+    const position = mobileScreenWidth ? { top: '0', left: '0' } : {
         top: `${button.getBoundingClientRect().bottom + window.scrollY}px`,
         left: `${button.getBoundingClientRect().left + window.scrollX}px`,
       };
     this.dialog.open(ChannelSectionComponent, {
     width,
     height,
-    maxWidth: mobileScreen ? '100vw' : '872px',
-    maxHeight: mobileScreen ? '100vh' : '612px',
+    maxWidth: mobileScreenWidth ? '100vw' : '872px',
+    maxHeight: mobileScreenWidth ? '100vh' : height,
     position,
     panelClass: 'channel-dialog-container',
     });
