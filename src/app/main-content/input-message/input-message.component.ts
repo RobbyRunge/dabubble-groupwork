@@ -1,6 +1,6 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatFormField, MatLabel } from '@angular/material/select';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { Observable } from 'rxjs';

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { ChatSectionComponent } from "./chat-section/chat-section.component";
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
