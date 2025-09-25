@@ -10,8 +10,6 @@ import { ChannelService } from '../../services/channel.service';
 import { Observable } from 'rxjs';
 import { ChatService } from '../../services/chat.service';
 import { SearchResult } from '../../services/search.service';
-import { UsersInChannelComponent } from '../channel-section/users-in-channel/users-in-channel.component';
-
 
 @Component({
   selector: 'app-user-card',
@@ -40,7 +38,9 @@ export class UserCardComponent implements OnInit {
     '/avatar/men4.png',
   ];
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { user: User, urlUserId: string }, private dialogRef: MatDialogRef<UserCardComponent>,private dialogService: ChannelService,
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { user: User, urlUserId: string, parentDialogRef?: MatDialogRef<any> },
+    private dialogRef: MatDialogRef<UserCardComponent>,
     private userService: UserService,
     private route: ActivatedRoute
   ) {
@@ -111,8 +111,11 @@ export class UserCardComponent implements OnInit {
     }
   }
 
-  selectUserResult(type: string, user: User) {
+  selectUserResult(type: string, user: SearchResult) {
     this.closeDialog();
+    if (this.data.parentDialogRef) {
+      this.data.parentDialogRef.close();
+    }
     this.openPrivateChat(type, user);
   }
 

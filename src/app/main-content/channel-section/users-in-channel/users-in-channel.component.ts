@@ -45,7 +45,10 @@ export class UsersInChannelComponent {
 
   openUserDialog(user: any) {
     this.userDialog.open(UserCardComponent, {
-      data: { user: user },
+      data: { 
+        user: user,
+        parentDialogRef: this.dialog
+       },
     });
   }
 }
