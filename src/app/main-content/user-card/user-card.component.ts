@@ -111,7 +111,7 @@ export class UserCardComponent implements OnInit {
     }
   }
 
-  selectUserResult(type: string, user: SearchResult) {
+  selectUserResult(type: string, user: User) {
     this.closeDialog();
     if (this.data.parentDialogRef) {
       this.data.parentDialogRef.close();
