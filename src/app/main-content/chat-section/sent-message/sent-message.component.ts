@@ -4,7 +4,7 @@ import { ChatService } from '../../../services/chat.service';
 import { UserService } from '../../../services/user.service';
 import { ChannelService } from '../../../services/channel.service';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatFormField, MatLabel } from '@angular/material/select';
+import { MatFormField } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { FormsModule } from '@angular/forms';

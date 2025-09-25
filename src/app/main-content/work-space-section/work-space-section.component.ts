@@ -14,13 +14,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
-import { UserCardComponent } from '../user-card/user-card.component';
 import { AsyncPipe, CommonModule, NgFor } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateChannelSectionComponent } from '../create-channel-section/create-channel-section.component';
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, filter, firstValueFrom, Observable, Subscription, switchMap, take, timestamp } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { User } from '../../../models/user.class';
 import { Allchannels } from '../../../models/allchannels.class';
 import { ChannelService } from '../../services/channel.service';
@@ -168,23 +167,6 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.unsubChannels?.unsubscribe();
     this.userDataSub?.unsubscribe();
     this.channelDataSub?.unsubscribe();
-  }
-
-  onSearchInput() {
-    const term = this.searchTerm;
-    /*     if (this.isChannelSearch(term)) {
-          this.dropdownType = 'channel';
-          const channelKeyword = this.extractKeyword(term, '#');
-          this.searchChannels(channelKeyword);
-        } else if (this.isUserSearch(term)) {
-          this.dropdownType = 'user';
-          const userKeyword = this.extractKeyword(term, '@');
-          this.searchUsers(userKeyword);
-        } else {
-          this.dropdownType = 'normal';
-          this.searchSubject.next(term);
-        }
-        this.showDropdown = term.length > 0; */
   }
 
   openNewMessage() {

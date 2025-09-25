@@ -1,5 +1,4 @@
-import { Component, inject, Injector, OnInit } from '@angular/core';
-import { User } from '../../../models/user.class';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { MatDialogRef } from '@angular/material/dialog';

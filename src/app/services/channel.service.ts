@@ -1,9 +1,4 @@
-import {
-  inject,
-  Injectable,
-  Injector,
-  runInInjectionContext,
-} from '@angular/core';
+import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
 import {
   addDoc,
   arrayUnion,

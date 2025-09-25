@@ -1,15 +1,13 @@
-import { Component, EventEmitter, inject, Inject, Input, OnInit, Output, } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { User } from '../../../models/user.class';
 import { MatIcon } from '@angular/material/icon';
 import { NgClass, NgIf } from '@angular/common';
 import { UserService } from './../../services/user.service'
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule, } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ChannelService } from '../../services/channel.service';
-import { Observable } from 'rxjs';
 import { ChatService } from '../../services/chat.service';
-import { SearchResult } from '../../services/search.service';
 
 @Component({
   selector: 'app-user-card',

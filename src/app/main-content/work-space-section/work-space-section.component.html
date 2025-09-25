@@ -15,13 +15,14 @@
                     <h3>Devspace</h3>
                 </div>
                 <mat-form-field class="search-container">
-                    <input matInput type="text" placeholder="Gehe zu..." [(ngModel)]="searchTerm"
-                        (input)="onSearchInput()">
+                    <input matInput type="text" placeholder="Gehe zu..." [(ngModel)]="searchTerm">
                     <button matSuffix mat-icon-button aria-label="Clear">
                         <mat-icon>search</mat-icon>
                     </button>
                 </mat-form-field>
-                <div class="div-edit-square standard-transition" (mouseenter)="imgSrc = 'work-space/edit_square_color.png'" (mouseleave)="imgSrc = 'work-space/edit-square.png'" (click)="openNewMessage()">
+                <div class="div-edit-square standard-transition"
+                    (mouseenter)="imgSrc = 'work-space/edit_square_color.png'"
+                    (mouseleave)="imgSrc = 'work-space/edit-square.png'" (click)="openNewMessage()">
                     <img [src]="imgSrc">
                 </div>
             </div>
@@ -77,7 +78,8 @@
                                 (click)="chatService.onUserClick('chats',index, user)">
                                 <div>
                                     <img class="avatar-small-img" src="avatar/{{user.avatar}}" alt="">
-                                    <img class="status-img" src="{{ user.active ? dataUser.onlineUser : dataUser.offlineUser }}" alt="">
+                                    <img class="status-img"
+                                        src="{{ user.active ? dataUser.onlineUser : dataUser.offlineUser }}" alt="">
                                 </div>
                                 <div>
                                     <h2>{{ user.name }}

@@ -1,7 +1,4 @@
-import { Component, ElementRef, inject, Injector, OnInit, runInInjectionContext, SimpleChanges, ViewChild, AfterViewInit, AfterViewChecked, OnDestroy, HostListener, ViewContainerRef, ChangeDetectorRef } from '@angular/core';
-import { WorkSpaceSectionComponent } from "../work-space-section/work-space-section.component";
-import { ThreadSectionComponent } from "../thread-section/thread-section.component";
-import { HeaderComponent } from "../header/header.component";
+import { Component, ElementRef, inject, Injector, OnInit, runInInjectionContext, ViewChild, AfterViewInit, AfterViewChecked, OnDestroy, HostListener, ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { NavigationService } from '../../services/navigation.service';
 import { ActivatedRoute } from '@angular/router';
@@ -9,7 +6,7 @@ import { docData, onSnapshot } from '@angular/fire/firestore';
 import { User } from '../../../models/user.class';
 import { Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { AsyncPipe, NgClass, NgFor, NgIf, NgStyle, DatePipe } from '@angular/common';
+import { AsyncPipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { ReceivedMessageComponent } from './received-message/received-message.component';
 import { SentMessageComponent } from "./sent-message/sent-message.component";
