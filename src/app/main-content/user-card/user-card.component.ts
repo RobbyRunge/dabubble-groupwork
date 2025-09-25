@@ -10,6 +10,7 @@ import { ChannelService } from '../../services/channel.service';
 import { Observable } from 'rxjs';
 import { ChatService } from '../../services/chat.service';
 import { SearchResult } from '../../services/search.service';
+import { UsersInChannelComponent } from '../channel-section/users-in-channel/users-in-channel.component';
 
 
 @Component({
@@ -39,7 +40,7 @@ export class UserCardComponent implements OnInit {
     '/avatar/men4.png',
   ];
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { user: User, urlUserId: string }, private dialogRef: MatDialogRef<UserCardComponent>,
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { user: User, urlUserId: string }, private dialogRef: MatDialogRef<UserCardComponent>,private dialogService: ChannelService,
     private userService: UserService,
     private route: ActivatedRoute
   ) {
@@ -110,17 +111,18 @@ export class UserCardComponent implements OnInit {
     }
   }
 
-  selectUserResult(type: string, user: SearchResult) {
+  selectUserResult(type: string, user: User) {
+    this.closeDialog();
     this.openPrivateChat(type, user);
   }
 
-  private async openPrivateChat(type: string, user: SearchResult) {
+  private async openPrivateChat(type: string, user: User) {
     try {
       const userForChat = {
-        userId: user.id,
+        userId: user.userId,
         name: user.name,
         avatar: user.avatar,
-        active: user.description === 'Online'
+        active: user.active || false,
       };
       await this.chatService.onUserClick(type, 0, userForChat);
     } catch (error) {
