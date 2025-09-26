@@ -186,6 +186,7 @@
 }
 
 .message-content {
+    cursor: default;
     >mat-form-field {
         width: calc(50vw - 100px) !important;
     }
