@@ -67,6 +67,7 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
   currentMessage?: any;
   currentMessageIndex?: number;
   anchorSide: 'left' | 'right' = 'left';
+  trackById = (_: number, m: any) => m?.id ?? _;
 
   ngOnInit(): void {    
     this.setupRouteSubscription();
