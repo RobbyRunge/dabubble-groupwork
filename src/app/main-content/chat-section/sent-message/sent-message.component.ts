@@ -124,7 +124,22 @@ export class SentMessageComponent implements OnInit {
   }
 
   getLastThreadReplyTime(): Date | null {
-    return this.chatService.getLastThreadReplyTime(this.message.id);
+    if (this.message && this.message.lastThreadReply) {
+      try {
+        if (typeof this.message.lastThreadReply.toDate === 'function') {
+          return this.message.lastThreadReply.toDate();
+        }
+        if (this.message.lastThreadReply instanceof Date) {
+          return this.message.lastThreadReply;
+        }
+        if (typeof this.message.lastThreadReply === 'number') {
+          return new Date(this.message.lastThreadReply);
+        }
+      } catch (error) {
+        console.error('Error converting lastThreadReply to Date:', error, this.message.lastThreadReply);
+      }
+    }
+    return null;
   }
 
   showAllReactions() {

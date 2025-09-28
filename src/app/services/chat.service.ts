@@ -387,8 +387,19 @@ export class ChatService {
     getLastThreadReplyTime(messageId: string): Date | null {
         const message = this.messages.find(msg => msg.id === messageId);
         if (message && message.lastThreadReply) {
-            console.log(message.lastThreadReply);
-            return message.lastThreadReply.toDate();
+            try {
+                if (typeof message.lastThreadReply.toDate === 'function') {
+                    return message.lastThreadReply.toDate();
+                }
+                if (message.lastThreadReply instanceof Date) {
+                    return message.lastThreadReply;
+                }
+                if (typeof message.lastThreadReply === 'number') {
+                    return new Date(message.lastThreadReply);
+                }
+            } catch (error) {
+                console.error('Error converting lastThreadReply to Date:', error, message.lastThreadReply);
+            }
         }
         return null;
     }
