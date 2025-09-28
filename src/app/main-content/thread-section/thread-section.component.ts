@@ -124,7 +124,7 @@ export class ThreadSectionComponent implements AfterViewInit, OnInit, AfterViewC
     });
   }
 
-  openEmojiPicker(ev: { anchor: HTMLElement; side: 'left' | 'right'; message: any; index: number; context: 'chat' | 'thread' }) {
+  openEmojiPicker(ev: { anchor: HTMLElement; side: 'left' | 'right'; message: any; index: number; context: 'chat' | 'thread' | 'channel' }) {
     this.currentMessage = ev.message; 
     this.emojiPickerService.open(ev);
   }

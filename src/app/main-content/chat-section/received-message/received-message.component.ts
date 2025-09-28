@@ -62,7 +62,7 @@ export class ReceivedMessageComponent implements OnInit {
     }, 300);
   }
 
-    addMostUsedEmojiMessage(emoji: any, index: number) {
+  addMostUsedEmojiMessage(emoji: any, index: number) {
     this.messageReacton += emoji;
     if (this.mode === 'thread') {
       this.chatService.saveEmojisThreadInDatabase(this.chatService.chatMode, emoji, this.message.id, this.chatService.parentMessageId)
@@ -70,7 +70,7 @@ export class ReceivedMessageComponent implements OnInit {
       this.chatService.saveEmojisInDatabase(this.chatService.chatMode, emoji, this.message.id)
     }
   }
-  
+
   hideAllEmojis() {
     this.showEmojisMessage = false;
   }
@@ -96,13 +96,15 @@ export class ReceivedMessageComponent implements OnInit {
 
   openEmojiPicker(btn: HTMLElement, e: MouseEvent) {
     e.stopPropagation();
+    // Only allow 'chat' or 'thread' as context
+    const context: 'chat' | 'thread' = this.mode === 'thread' ? 'thread' : 'chat';
 
     this.emojiPickerRequested.emit({
       anchor: btn,
-      side: 'right',
+      side: 'right',         // empfangen -> rechts
       message: this.message,
       index: this.index,
-      context: this.mode === 'thread' ? 'thread' : 'chat',
+      context,
     });
   }
 }

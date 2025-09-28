@@ -44,7 +44,7 @@
                     <div *ngFor="let reaction of message.reactions; let i = index" class="reaction-wrapper"
                         (mouseenter)="showReactionUserName(i)" (mouseleave)="hideReactionUserName()">
 
-                        <div class="reaction-container" *ngIf="i < 20 && mode === 'chats' || showAllMessageReactions">
+                        <div class="reaction-container" *ngIf="i < 20 && mode === 'chats' || mode === 'channels' || showAllMessageReactions">
                             <span>{{ reaction.emoji }}</span>
                             <span>{{reaction.emojiCounter}}</span>
                         </div>
