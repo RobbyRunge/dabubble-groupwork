@@ -8,7 +8,7 @@ import { MatFormField } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { FormsModule } from '@angular/forms';
-import { EmojiPickerService } from '../../../services/emojiPicker.service';
+import { EmojiPickerService, PickerContext } from '../../../services/emojiPicker.service';
 type PickerSide = 'left' | 'right';
 
 @Component({
@@ -141,12 +141,20 @@ export class SentMessageComponent implements OnInit {
 
   openEmojiPicker(btn: HTMLElement, e: MouseEvent) {
     e.stopPropagation();
+
+    // Kontext ableiten
+    const context: 'chat' | 'thread' = this.mode === 'thread' ? 'thread' : 'chat';
+
+    // STRIKT: eigene Nachricht -> links, empfangene -> rechts
+    const isOwn = this.message?.senderId === this.channelService.currentUserId;
+    const side: 'left' | 'right' = isOwn ? 'left' : 'right';
+
     this.emojiPickerRequested.emit({
       anchor: btn,
-      side: 'left',
+      side,
       message: this.message,
       index: this.index,
-      context: this.mode === 'thread' ? 'thread' : 'chat',
+      context,
     });
   }
 

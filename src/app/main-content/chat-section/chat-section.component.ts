@@ -244,9 +244,9 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
     this.showEmojis = false;
   }
   
-  openEmojiPicker(ev: { anchor: HTMLElement; side: 'left' | 'right'; message: any; index: number; context: 'chat' | 'thread' }) {
-    this.pickerService.open(ev);
-  }
+openEmojiPicker(ev: { anchor: HTMLElement; side: 'left'|'right'; message: any; index: number; context: 'chat'|'thread'; }) {
+  this.pickerService.open(ev);
+}
 
   @HostListener('window:resize')
   onResize() { this.pickerService.reposition('chat'); }
