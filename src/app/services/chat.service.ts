@@ -5,7 +5,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { ChannelService } from './channel.service';
 import { NavigationService } from './navigation.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, last } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -218,10 +218,9 @@ export class ChatService {
                 this.ngZone.run(() => {
                     const msgs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                     this._messages$.next(msgs);
-                    this.hasMessages = msgs.length > 0;   
+                    this.hasMessages = msgs.length > 0;
                 });
             });
-            console.log(this._messages$);
         });
     }
 
@@ -313,14 +312,12 @@ export class ChatService {
         if (this.chatMode === 'chats') {
             const chatId = this.dataUser.chatId;
             if (!chatId || chatId.trim() === '') {
-                console.warn('Chat ID is empty in chats mode');
                 return null;
             }
             return this.chatId = chatId;
         } else if (this.chatMode === 'channels') {
             const channelId = this.channelService.currentChannelId;
             if (!channelId || channelId.trim() === '') {
-                console.warn('Channel ID is empty in channels mode');
                 return null;
             }
             return this.chatId = channelId;
@@ -334,21 +331,11 @@ export class ChatService {
         this.selectedUser = user;
         this.channelService.setCheckdValue(user);
         this.close();
-
-        // 1) Chat-ID holen
         const chatId = await this.getOrCreateChatId(this.channelService.currentUserId, user.userId);
-
-        // 2) IDs setzen (Service + globaler State)
         this.chatId = chatId;
         this.dataUser.chatId = chatId;
-
-        // 3) mit der KORREKTEN ID navigieren
         await this.router.navigate(['/mainpage', this.channelService.currentUserId, 'chats', chatId]);
-
-        // 4) jetzt Listener starten – MIT chatId!
         this.listenToMessages(chatId);
-
-        // 5) UI-Flags
         this.dataUser.showChannel = false;
         this.dataUser.showChatPartnerHeader = true;
         this.navigationService._mobileHeaderDevspace.next(true);
@@ -400,6 +387,7 @@ export class ChatService {
     getLastThreadReplyTime(messageId: string): Date | null {
         const message = this.messages.find(msg => msg.id === messageId);
         if (message && message.lastThreadReply) {
+            console.log(message.lastThreadReply);
             return message.lastThreadReply.toDate();
         }
         return null;
