@@ -166,3 +166,9 @@ input:focus {
     font-weight: 700;
     padding-bottom: 8px;
 }
+
+@media(max-width: 1000px) {
+    .leave-channel-btn {
+     padding-bottom: 15px;
+}
+}

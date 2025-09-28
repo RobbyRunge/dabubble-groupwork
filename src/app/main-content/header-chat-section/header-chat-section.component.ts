@@ -40,6 +40,7 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
 
   onlineUser: string = 'status/online.png';
   offlineUser: string = 'status/offline.png';
+  mobileScreenWidth = window.innerWidth < 1000;
 
   newMessageSearchTerm: string = '';
   channelResults: SearchResult[] = [];
@@ -243,21 +244,21 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
 
   openDialog(button: HTMLElement) {
     (document.activeElement as HTMLElement)?.blur();
-    const mobileScreenWidth = window.innerWidth < 1000;
-    let width = mobileScreenWidth ? '100vw' : '872px';
-    let height = mobileScreenWidth ? '100vh' : '612px';
-    if (window.innerHeight <= 1200 && !mobileScreenWidth) {
+    let width = this.mobileScreenWidth ? '100vw' : '872px';
+    let height = this.mobileScreenWidth ? '100vh' : '612px';
+    if (window.innerHeight <= 1200 && !this.mobileScreenWidth) {
      height = '500px';
     }
-    const position = mobileScreenWidth ? { top: '0', left: '0' } : {
+    const position = this.mobileScreenWidth ? { top: '0', left: '0' } : {
         top: `${button.getBoundingClientRect().bottom + window.scrollY}px`,
         left: `${button.getBoundingClientRect().left + window.scrollX}px`,
       };
     this.dialog.open(ChannelSectionComponent, {
+    autoFocus: false,
     width,
     height,
-    maxWidth: mobileScreenWidth ? '100vw' : '872px',
-    maxHeight: mobileScreenWidth ? '100vh' : height,
+    maxWidth: this.mobileScreenWidth ? '100vw' : '872px',
+    maxHeight: this.mobileScreenWidth ? '100vh' : height,
     position,
     panelClass: 'channel-dialog-container',
     });
@@ -303,6 +304,23 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
       maxHeight: '415px',
       panelClass: 'user-in-channel',
     });
+  }
+
+  showUsersInChannelMobile(div: HTMLElement) {
+    (document.activeElement as HTMLElement)?.blur();
+    const rect = div.getBoundingClientRect();
+    let config: any = {
+    autoFocus: false,
+    panelClass: 'user-in-channel',
+    };
+    if (this.mobileScreenWidth) {
+    config.width = '90vw';
+    config.maxWidth = '90vw';
+    config.position = {
+      top: `${rect.bottom + window.scrollY + 150}px`,
+    };
+  }
+  this.dialog.open(UsersInChannelComponent, config);
   }
 
   ngOnDestroy() {

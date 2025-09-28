@@ -21,23 +21,37 @@ export class UsersInChannelComponent {
   channelService = inject(ChannelService);
   openDialog = inject(MatDialog);
   userDialog = inject(MatDialog);
+  viewportWidth = window.innerWidth;
+
+  dialogPosition(div: HTMLElement,config: any) {
+    const rect = div.getBoundingClientRect();
+    const dialogWidth = 514;
+    if (this.viewportWidth >= 1000) {
+    config.width = '514px';
+    config.maxWidth = '514px';
+    config.position = {
+      top: `${rect.bottom + window.scrollY - 340}px`,
+      left: `${rect.right + window.scrollX - dialogWidth}px`,
+      };
+    } else {
+    config.width = '90vw';   
+    config.maxWidth = '90vw';
+    config.position = {
+      top: `${rect.bottom + window.scrollY - 340}px`,
+      };
+    }
+  }
 
   addUserToChannel(div: HTMLElement) {
     (document.activeElement as HTMLElement)?.blur();
-    const rect = div.getBoundingClientRect();
-    const dialogWidth = 514;
-    this.openDialog.open(AddUserToChannelComponent, {
-      autoFocus: false,
-      position: {
-        top: `${rect.bottom + window.scrollY - 340}px`,   
-        left: `${rect.right + window.scrollX - dialogWidth}px`, 
-        },
-    width: '514px',
+    let config: any = {
+    autoFocus: false,
     height: '294px',
-    maxWidth: '514px',
     maxHeight: '294px',
     panelClass: 'add-user'
-    });
+  };
+  this.dialogPosition(div,config);
+  this.openDialog.open(AddUserToChannelComponent, config);
     this.dialog.close()
   }
 

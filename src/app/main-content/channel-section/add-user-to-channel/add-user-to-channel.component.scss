@@ -117,3 +117,9 @@
     width: 14px;
     height: 14px;
 }
+
+@media(max-width: 1000px) {
+    .user-name-channel {
+        width: 100%;
+    }
+}
