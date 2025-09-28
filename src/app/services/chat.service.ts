@@ -1,10 +1,11 @@
-import { Injectable, inject, Injector, runInInjectionContext } from '@angular/core';
+import { Injectable, inject, Injector, runInInjectionContext, NgZone } from '@angular/core';
 import { Firestore, collection, query, where, getDocs, addDoc, onSnapshot, serverTimestamp, orderBy, DocumentReference, doc, updateDoc, CollectionReference, getDoc, limit, increment, writeBatch, WriteBatch, arrayUnion } from '@angular/fire/firestore';
 import { UserService } from './user.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { ChannelService } from './channel.service';
 import { NavigationService } from './navigation.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -13,6 +14,7 @@ export class ChatService {
 
     private firestore = inject(Firestore);
     private injector = inject(Injector);
+    private ngZone = inject(NgZone);
     dataUser = inject(UserService);
     messages: any[] = [];
     hasMessages: boolean = false;
@@ -26,6 +28,8 @@ export class ChatService {
     chatService: any;
     private unsubscribeMessages?: (() => void);
     private unsubscribeMessagesThread?: (() => void);
+    private _messages$ = new BehaviorSubject<any[]>([]);
+    messages$ = this._messages$.asObservable();
     messageDocRef: any;
     threadRef: any
     isThreadAktiv: boolean = false;
@@ -204,16 +208,20 @@ export class ChatService {
     }
 
     listenToMessages(type: string) {
-        if (this.unsubscribeMessages) {
-            this.unsubscribeMessages();
-        }
+        if (this.unsubscribeMessages) this.unsubscribeMessages();
+
         return runInInjectionContext(this.injector, async () => {
-            const messagesRef = collection(this.firestore, `${this.chatMode}/${this.chatId}/message`);
-            const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
-            this.unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
-                this.messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                this.hasMessages = this.messages.length !== 0;
+            const ref = collection(this.firestore, `${this.chatMode}/${this.chatId}/message`);
+            const qy = query(ref, orderBy('timestamp', 'asc'));
+
+            this.unsubscribeMessages = onSnapshot(qy, (snap) => {
+                this.ngZone.run(() => {
+                    const msgs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                    this._messages$.next(msgs);
+                    this.hasMessages = msgs.length > 0;   
+                });
             });
+            console.log(this._messages$);
         });
     }
 
@@ -326,10 +334,21 @@ export class ChatService {
         this.selectedUser = user;
         this.channelService.setCheckdValue(user);
         this.close();
-        this.dataUser.chatId = await this.getOrCreateChatId(this.channelService.currentUserId, user.userId);
-        this.router.navigate(['/mainpage', this.channelService.currentUserId, 'chats', this.chatId]);
-        this.checkIfChatOrChannel();
-        this.listenToMessages(type);
+
+        // 1) Chat-ID holen
+        const chatId = await this.getOrCreateChatId(this.channelService.currentUserId, user.userId);
+
+        // 2) IDs setzen (Service + globaler State)
+        this.chatId = chatId;
+        this.dataUser.chatId = chatId;
+
+        // 3) mit der KORREKTEN ID navigieren
+        await this.router.navigate(['/mainpage', this.channelService.currentUserId, 'chats', chatId]);
+
+        // 4) jetzt Listener starten – MIT chatId!
+        this.listenToMessages(chatId);
+
+        // 5) UI-Flags
         this.dataUser.showChannel = false;
         this.dataUser.showChatPartnerHeader = true;
         this.navigationService._mobileHeaderDevspace.next(true);
