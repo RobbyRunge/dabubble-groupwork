@@ -47,7 +47,6 @@ export class InputMessageComponent implements OnInit {
   @Input() chatMode: 'chats' | 'channel' = 'chats';
   showEmojis: boolean = false;
 
-
   ngOnInit(): void {
     this.users$ = this.dataUser.getAllUsers();
   }
@@ -58,14 +57,10 @@ export class InputMessageComponent implements OnInit {
     this.onInputChange();
   }
 
-
-
   onInputChange(): void {
     this.checkInputFieldForUserMention();
     this.checkInputFieldForChannelMention();
   }
-
-
 
   checkInputFieldForUserMention() {
     const cursorPosition = this.messageText.lastIndexOf('@');
@@ -73,9 +68,7 @@ export class InputMessageComponent implements OnInit {
       this.showUserList = false;
       return;
     }
-
     const afterAt = this.messageText.substring(cursorPosition + 1);
-
     if (afterAt.length === 0 || /^[a-zA-ZäöüÄÖÜß]*$/.test(afterAt)) {
       this.showUserList = true;
     } else {
@@ -89,9 +82,7 @@ export class InputMessageComponent implements OnInit {
       this.showChanelList = false;
       return;
     }
-
     const afterAt = this.messageText.substring(cursorPosition + 1);
-
     if (afterAt.length === 0 || /^[a-zA-ZäöüÄÖÜß]*$/.test(afterAt)) {
       this.showChanelList = true;
     } else {
@@ -103,6 +94,7 @@ export class InputMessageComponent implements OnInit {
     this.messageText += user.name;
     this.showUserList = false;
   }
+
   selecetedChannelMention(channel: Allchannels, index: number) {
     this.messageText += channel.channelname;
     this.showChanelList = false;
@@ -110,14 +102,45 @@ export class InputMessageComponent implements OnInit {
 
   sendMessage() {
     if (!this.messageText.trim()) return;
-    const name = this.channelService.currentUser?.name;
-    const avatar = this.channelService.currentUser?.avatar;
+    const { name, avatar } = this.channelService.currentUser || {};
     if (this.mode === 'thread') {
-      this.chatService.sendThreadMessage(this.chatService.chatMode, this.chatService.chatId, this.chatService.parentMessageId, this.channelService.currentUserId, this.messageText, name, avatar);
+      this.sendThreadMessage(name, avatar);
     } else {
-      this.chatService.sendChatMessage(this.chatService.chatMode, this.messageText, this.channelService.currentUserId, name, avatar);
+      this.sendChatMessage(name, avatar);
     }
-    this.messageText = ''
+    this.messageText = '';
+    this.scrollToBottom();
+  }
+
+  private sendThreadMessage(name?: string, avatar?: string) {
+    this.chatService.sendThreadMessage(
+      this.chatService.chatMode, 
+      this.chatService.chatId, 
+      this.chatService.parentMessageId, 
+      this.channelService.currentUserId, 
+      this.messageText, 
+      name, 
+      avatar
+    );
+  }
+
+  private sendChatMessage(name?: string, avatar?: string) {
+    this.chatService.sendChatMessage(
+      this.chatService.chatMode, 
+      this.messageText, 
+      this.channelService.currentUserId, 
+      name, 
+      avatar
+    );
+  }
+
+  private scrollToBottom() {
+    setTimeout(() => {
+      document.querySelectorAll('.chat-messages-container').forEach(container => {
+        const el = container as HTMLElement;
+        if (el.offsetHeight > 0) el.scrollTop = el.scrollHeight;
+      });
+    }, 300);
   }
 
   addEmoji($event: any) {
