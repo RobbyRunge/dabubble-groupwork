@@ -96,12 +96,11 @@ export class ReceivedMessageComponent implements OnInit {
 
   openEmojiPicker(btn: HTMLElement, e: MouseEvent) {
     e.stopPropagation();
-    // Only allow 'chat' or 'thread' as context
     const context: 'chat' | 'thread' = this.mode === 'thread' ? 'thread' : 'chat';
 
     this.emojiPickerRequested.emit({
       anchor: btn,
-      side: 'right',         // empfangen -> rechts
+      side: 'right',     
       message: this.message,
       index: this.index,
       context,
