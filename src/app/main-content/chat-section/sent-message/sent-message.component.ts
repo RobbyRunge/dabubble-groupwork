@@ -142,11 +142,7 @@ export class SentMessageComponent implements OnInit {
 
   openEmojiPicker(btn: HTMLElement, e: MouseEvent) {
     e.stopPropagation();
-
-    // Kontext ableiten
     const context: 'chat' | 'thread' = this.mode === 'thread' ? 'thread' : 'chat';
-
-    // STRIKT: eigene Nachricht -> links, empfangene -> rechts
     const isOwn = this.message?.senderId === this.channelService.currentUserId;
     const side: 'left' | 'right' = isOwn ? 'left' : 'right';
 
