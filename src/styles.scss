@@ -67,7 +67,6 @@ body {
 .channel-dialog-container .mat-mdc-dialog-surface {
     background-color: #FFFFFF;
     padding: 25px;
-    border-top-left-radius: 0;
     box-shadow: 0px 6px 10px 0px #00000033;
 }
 
@@ -584,6 +583,14 @@ app-main-content {
             background-image: url('/chat-section/add-user-purple.png');
         }
     }
+}
+
+.select-user-bottomsheet .mat-bottom-sheet-container {
+    background-color: white !important;
+    color: #000000;
+    border-top-right-radius: 30px;
+    border-top-left-radius: 30px;
+    padding: 40px 20px 40px 20px;
 }
 
 @media(min-width: 1000px) {

@@ -10,6 +10,11 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
 import { ChannelService } from '../../../services/channel.service';
 import { Allchannels } from '../../../../models/allchannels.class';
+import {
+  MatBottomSheet,
+  MatBottomSheetModule,
+  MatBottomSheetRef,
+} from '@angular/material/bottom-sheet';
 
 @Component({
   selector: 'app-select-user-to-add',
@@ -18,7 +23,8 @@ import { Allchannels } from '../../../../models/allchannels.class';
   styleUrl: './select-user-to-add.component.scss'
 })
 export class SelectUserToAddComponent {
-  dialog = inject(MatDialogRef<SelectUserToAddComponent>);
+  dialogRef = inject(MatDialogRef<SelectUserToAddComponent>, { optional: true });
+  bottomSheetRef = inject(MatBottomSheetRef<SelectUserToAddComponent>, { optional: true });
   userService = inject(UserService);
   channelService = inject(ChannelService);
   newChannel = new Allchannels();
@@ -47,10 +53,15 @@ export class SelectUserToAddComponent {
       this.createChannelWithUsersInChannel();
     }
     await this.channelService.addNewChannel(this.newChannel.toJSON(),this.addUserId,this.channelService.currentUserId).then(() => {
-      this.dialog.close();
+      this.close();
       this.addUserId = [];
       this.filteredUsers = [];
     });
+  }
+
+  close() {
+    this.dialogRef?.close();
+    this.bottomSheetRef?.dismiss();
   }
 
   setFocusInput() {

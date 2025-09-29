@@ -10,27 +10,39 @@ import { FormsModule } from '@angular/forms';
 import { Allchannels } from '../../../models/allchannels.class';
 import { ChannelService } from '../../services/channel.service';
 import { SelectUserToAddComponent } from '../channel-section/select-user-to-add/select-user-to-add.component';
+import {
+  MatBottomSheet,
+  MatBottomSheetModule,
+  MatBottomSheetRef,
+} from '@angular/material/bottom-sheet';
 
 @Component({
   selector: 'app-create-channel-section',
-  imports: [MatIcon, MatInputModule, MatButtonModule, MatFormFieldModule, MatDialogActions, CommonModule, FormsModule],
+  imports: [MatIcon, MatInputModule, MatButtonModule, MatFormFieldModule, MatDialogActions, CommonModule, FormsModule, MatBottomSheetModule],
   templateUrl: './create-channel-section.component.html',
   styleUrl: './create-channel-section.component.scss'
 })
 export class CreateChannelSectionComponent {
 
-  dialogRef = inject(MatDialogRef<CreateChannelSectionComponent>);
+  dialogRef = inject(MatDialogRef<SelectUserToAddComponent>, { optional: true });
+  bottomSheetRef = inject(MatBottomSheetRef<SelectUserToAddComponent>, { optional: true });
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
   newChannel = new Allchannels();
   currentUserId = this.channelService.currentUserId;
   selectUserDialog = inject(MatDialog);
+  private bottomSheet = inject(MatBottomSheet);
   isEnabled = false;
 
   checkChannelName() {
-  const value = this.newChannel.channelname || '';
-  this.isEnabled = /[a-zA-Z]/.test(value);
-}
+    const value = this.newChannel.channelname || '';
+    this.isEnabled = /[a-zA-Z]/.test(value);
+  }
+
+  close() {
+    this.dialogRef?.close();
+    this.bottomSheetRef?.dismiss();
+  }
 
   async createChannel() { 
     (document.activeElement as HTMLElement)?.blur();
@@ -43,6 +55,15 @@ export class CreateChannelSectionComponent {
     });
     dialogRef.componentInstance.channelName = this.newChannel.channelname;
     dialogRef.componentInstance.channelDescription = this.newChannel.description
-    this.dialogRef.close();
+    this.close();
+  }
+
+  createChannelMobile() {
+    const bottomSheetRef = this.bottomSheet.open(SelectUserToAddComponent, {
+    panelClass: 'select-user-bottomsheet',
+    });
+    bottomSheetRef.instance.channelName = this.newChannel.channelname;
+    bottomSheetRef.instance.channelDescription = this.newChannel.description;
+    this.close();
   }
 }

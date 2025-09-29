@@ -35,6 +35,7 @@ import { SearchService, SearchResult } from '../../services/search.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-work-space-section',
@@ -70,6 +71,8 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   private searchService = inject(SearchService);
   private firestore = inject(Firestore);
   private injector = inject(Injector);
+  readonly dialog = inject(MatDialog);
+  private breakpointObserver = inject(BreakpointObserver);
   
   unsubChannels!: Subscription;
   private userDataSub?: Subscription;
@@ -112,7 +115,6 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
       this.showDropdown = false;
     }
   }
-
 
   onChange(user: any) {
     console.log(user);
@@ -170,18 +172,31 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     drawer.toggle();
   }
 
-  readonly dialog = inject(MatDialog);
+  private getDialogDimensions() {
+    if (this.breakpointObserver.isMatched(Breakpoints.Handset)) {
+    return { width: '100vw', height: '100vh' };
+    } else if (this.breakpointObserver.isMatched(Breakpoints.Tablet)) {
+    return { width: '90vw', height: '90vh' };
+    } else {
+    let height = window.innerHeight <= 1200 ? '500px' : '539px';
+    return { width: '872px', height };
+    }
+  }
 
   createChannel() {
     (document.activeElement as HTMLElement)?.blur();
+    const { width, height } = this.getDialogDimensions();
     this.dialog.open(CreateChannelSectionComponent, {
-      width: '872px',
-      height: '539px',
-      maxWidth: '872px',
-      maxHeight: '539px',
-      panelClass: 'channel-dialog-container',
+    width,
+    height,
+    maxWidth: width,
+    maxHeight: height,
+    panelClass: 'channel-dialog-container',
+    autoFocus: false,
+    restoreFocus: false,
     });
   }
+
 
   async openChannel(type: string, channelName: string, channelId: string, channelDescription: string,) {
     this.chatService.chatMode = 'channels';

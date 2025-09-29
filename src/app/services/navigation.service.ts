@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 export class NavigationService {
   private location = inject(Location);
   mobileHeaderDevspace = false;
+  mobileScreenWidth = window.innerWidth < 1000;
 
   public _mobileHeaderDevspace = new BehaviorSubject<boolean>(false);
   mobileHeaderDevspace$ = this._mobileHeaderDevspace.asObservable();

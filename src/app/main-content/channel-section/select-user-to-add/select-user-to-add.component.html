@@ -1,7 +1,10 @@
 <div class="select-user-main-cont">
+    <div class="rect-cont">
+        <span class="rect"></span>
+    </div>
     <div class="add-user-header marg-bot">
         <p>Leute hinzufügen</p>
-            <mat-icon class="close-icon" (click)="dialog.close()">close</mat-icon>
+            <mat-icon class="close-icon" (click)="close()">close</mat-icon>
     </div>
     <div class="selector">
         <mat-radio-group aria-label="Select an option"  [(ngModel)]="selectAllUsersInChannel" (change)="checkboxValue()">

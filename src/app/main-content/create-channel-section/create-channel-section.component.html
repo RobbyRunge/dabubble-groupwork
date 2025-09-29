@@ -2,7 +2,7 @@
     <div class="create-channel-header">
         <span>Channel erstellen</span>
         <div class="close-icon">
-           <mat-icon (click)="dialogRef.close()">close</mat-icon> 
+           <mat-icon (click)="close()">close</mat-icon> 
         </div>
     </div>
     <p>
@@ -13,10 +13,17 @@
     <p>Beschreibung<span class="text-optional"> (optional)</span></p>
         <input class="input-channel-name" [(ngModel)]="newChannel.description" placeholder="Dein Text hier"/>
     <mat-dialog-actions>
-        <div class="create-channel-btn-cont">
+        <div class="create-channel-btn-cont mobile">
             <button 
                 class="create-channel-btn"
                 (click)="createChannel()"  
+                [disabled]="!isEnabled" 
+                [ngClass]="{'btn-enabled': isEnabled, 'btn-disabled': !isEnabled}">Erstellen</button>
+        </div>
+         <div class="create-channel-btn-cont desktop">
+            <button 
+                class="create-channel-btn"
+                (click)="createChannelMobile()"  
                 [disabled]="!isEnabled" 
                 [ngClass]="{'btn-enabled': isEnabled, 'btn-disabled': !isEnabled}">Erstellen</button>
         </div>

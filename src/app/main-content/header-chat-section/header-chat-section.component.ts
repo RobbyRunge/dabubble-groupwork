@@ -21,6 +21,7 @@ import { UsersInChannelComponent } from '../channel-section/users-in-channel/use
 import { SearchService, SearchResult } from '../../services/search.service';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { NavigationService } from '../../services/navigation.service';
 
 @Component({
   selector: 'app-header-chat-section',
@@ -34,13 +35,13 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
   chatService = inject(ChatService);
   dialog = inject(MatDialog);
   userDialog = inject(MatDialog);
+  navigationService = inject(NavigationService);
 
   private searchService = inject(SearchService);
   private router = inject(Router);
 
   onlineUser: string = 'status/online.png';
   offlineUser: string = 'status/offline.png';
-  mobileScreenWidth = window.innerWidth < 1000;
 
   newMessageSearchTerm: string = '';
   channelResults: SearchResult[] = [];
@@ -244,12 +245,12 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
 
   openDialog(button: HTMLElement) {
     (document.activeElement as HTMLElement)?.blur();
-    let width = this.mobileScreenWidth ? '100vw' : '872px';
-    let height = this.mobileScreenWidth ? '100vh' : '612px';
-    if (window.innerHeight <= 1200 && !this.mobileScreenWidth) {
+    let width = this.navigationService.mobileScreenWidth ? '100vw' : '872px';
+    let height = this.navigationService.mobileScreenWidth ? '100vh' : '612px';
+    if (window.innerHeight <= 1200 && !this.navigationService.mobileScreenWidth) {
      height = '500px';
     }
-    const position = this.mobileScreenWidth ? { top: '0', left: '0' } : {
+    const position = this.navigationService.mobileScreenWidth ? { top: '0', left: '0' } : {
         top: `${button.getBoundingClientRect().bottom + window.scrollY}px`,
         left: `${button.getBoundingClientRect().left + window.scrollX}px`,
       };
@@ -257,8 +258,8 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
     autoFocus: false,
     width,
     height,
-    maxWidth: this.mobileScreenWidth ? '100vw' : '872px',
-    maxHeight: this.mobileScreenWidth ? '100vh' : height,
+    maxWidth: this.navigationService.mobileScreenWidth ? '100vw' : '872px',
+    maxHeight: this.navigationService.mobileScreenWidth ? '100vh' : height,
     position,
     panelClass: 'channel-dialog-container',
     });
@@ -313,7 +314,7 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
     autoFocus: false,
     panelClass: 'user-in-channel',
     };
-    if (this.mobileScreenWidth) {
+    if (this.navigationService.mobileScreenWidth) {
     config.width = '90vw';
     config.maxWidth = '90vw';
     config.position = {
