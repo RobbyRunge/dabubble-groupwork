@@ -398,14 +398,26 @@ app-input-message {
     }
 }
 
-.cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) div.mat-mdc-autocomplete-panel {
-    background-color: white;
-    width: 335px;
-    height: 171px;
-    border-radius: 20px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 20px !important;
-    border: 1px solid #ADB0D9 !important;
+// .cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) div.mat-mdc-autocomplete-panel {
+//     background-color: white;
+//     width: 335px;
+//     height: 171px;
+//     border-radius: 20px;
+//     border-top-left-radius: 0;
+//     border-top-right-radius: 20px !important;
+//     border: 1px solid #ADB0D9 !important;
+// }
+
+.cdk-overlay-pane .mat-mdc-autocomplete-panel {
+  background-color: white !important;
+  width: 335px !important;
+  height: 171px !important;
+  border-radius: 20px;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 20px !important;
+  border: 1px solid #ADB0D9 !important;
+   transform: translateX(-50%) !important; /* Verschiebung */
+  left: 50% !important; /* wird inline vom Overlay gesetzt, ggf. !important */
 }
 
 mat-option {
@@ -591,6 +603,15 @@ app-main-content {
     border-top-right-radius: 30px;
     border-top-left-radius: 30px;
     padding: 40px 20px 40px 20px;
+}
+
+:root {
+  --mat-autocomplete-background-color: #fff; 
+  --mat-sys-surface-container: #fff;
+}
+
+.mat-mdc-autocomplete-panel {
+    border-radius: 0 30px 30px 30px !important;
 }
 
 @media(min-width: 1000px) {
