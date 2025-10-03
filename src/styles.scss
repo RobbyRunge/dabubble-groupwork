@@ -416,7 +416,7 @@ app-input-message {
   border-top-left-radius: 0 !important;
   border-top-right-radius: 20px !important;
   border: 1px solid #ADB0D9 !important;
-   transform: translateX(-50%) !important; /* Verschiebung */
+   transform: translateX(-50%) !important; 
   left: 50% !important; /* wird inline vom Overlay gesetzt, ggf. !important */
 }
 
@@ -597,12 +597,18 @@ app-main-content {
     }
 }
 
-.select-user-bottomsheet .mat-bottom-sheet-container {
+.mat-bottom-sheet-container {
     background-color: white !important;
-    color: #000000;
-    border-top-right-radius: 30px;
-    border-top-left-radius: 30px;
-    padding: 40px 20px 40px 20px;
+    border-top-right-radius: 30px !important;
+    border-top-left-radius: 30px !important;
+    padding: 40px 20px 40px 20px !important;
+}
+
+.mat-bottom-sheet-container-medium {   
+    min-width: unset !important;
+    max-width: unset !important;
+    width: 100% !important;
+    background-color: white !important;
 }
 
 :root {
