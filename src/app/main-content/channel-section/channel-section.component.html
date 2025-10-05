@@ -13,7 +13,7 @@
         <div class="channel-name-description-edit">
             <span class="channel-name">Channel - Name</span>
             <span (click)="editChannelName()" class="channel-edit standard-transition">
-                <mat-icon class="desktop edit">edit</mat-icon>
+                <mat-icon class="desktop edit">edit</mat-icon>  
                 <p class="mobile">Bearbeiten</p> 
             </span>
         </div>
@@ -26,7 +26,10 @@
     <div *ngIf="showEditChannelName" class="edit-channel-name">
         <div class="channel-name-description-edit">
             <span class="channel-name">Channel - Name</span>
-            <span (click)="saveEditedChannelName()" class="channel-edit standard-transition">Speichern</span>
+            <span (click)="saveEditedChannelName()" class="channel-edit standard-transition">
+                <mat-icon class="desktop edit">check_circle</mat-icon>
+                <p class="mobile">Speichern</p>
+            </span>
         </div>
         <input class="input-edit" type="text" 
             [(ngModel)]="newChannel.channelname">
@@ -53,7 +56,10 @@
     <div *ngIf="showEditChannelDescription" class="edit-channel-description">
         <div class="channel-name-description-edit">
             <span class="channel-name">Beschreibung</span>
-            <span (click)="saveEditedChannelDescription()" class="channel-edit standard-transition">Speichern</span>
+            <span (click)="saveEditedChannelDescription()" class="channel-edit standard-transition">
+                <mat-icon class="desktop edit">check_circle</mat-icon>
+                <p class="mobile">Speichern</p>
+            </span>
         </div>
         <input class="input-edit" type="text"    
             [(ngModel)]="newChannel.description">
