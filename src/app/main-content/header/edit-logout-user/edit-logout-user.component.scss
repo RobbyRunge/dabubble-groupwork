@@ -35,3 +35,14 @@ mat-dialog-actions {
     height: unset;
     width: unset;
 }
+
+@media(max-width: 1000px) {
+    mat-dialog-actions {
+    >button {
+        &:hover {
+            background-color: white;
+            color: black;
+        }
+    }
+}
+}
