@@ -404,6 +404,7 @@ app-input-message {
     border-top-left-radius: 0 !important;
     border-top-right-radius: 20px !important;
     border: 1px solid #ADB0D9 !important;
+    overflow-y: auto !important;
 }
 
 .cdk-overlay-pane.mat-mdc-autocomplete-panel-above {

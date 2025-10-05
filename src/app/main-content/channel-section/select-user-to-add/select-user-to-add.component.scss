@@ -93,6 +93,7 @@
 .rect-cont {
   width: 100%;
   @include dFlex(center, center);
+  margin-bottom: 5px;
 }
 
 .rect {
@@ -107,7 +108,7 @@
     width: 100%;
   }
   .select-user-main-cont {
-    gap: 25px;
+    gap: 2px;
   }
 }
 
