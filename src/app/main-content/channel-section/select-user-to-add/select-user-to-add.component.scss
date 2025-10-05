@@ -63,6 +63,7 @@
 }  
 
 .selected-users {
+  color: black;
   height: 40px;
   @include dFlex(unset, center);
   flex-direction: row;

@@ -387,8 +387,6 @@ app-input-message {
     border-bottom-left-radius: 30px;
     border-top-left-radius: 30px;
     border-bottom-right-radius: 30px;
-    /*     max-width: 95%; */
-
     >h3 {
         font-family: 'Nunito';
         font-size: 18px;
@@ -398,26 +396,19 @@ app-input-message {
     }
 }
 
-// .cdk-overlay-pane:not(.mat-mdc-autocomplete-panel-above) div.mat-mdc-autocomplete-panel {
-//     background-color: white;
-//     width: 335px;
-//     height: 171px;
-//     border-radius: 20px;
-//     border-top-left-radius: 0;
-//     border-top-right-radius: 20px !important;
-//     border: 1px solid #ADB0D9 !important;
-// }
-
 .cdk-overlay-pane .mat-mdc-autocomplete-panel {
-  background-color: white !important;
-  width: 335px !important;
-  height: 171px !important;
-  border-radius: 20px;
-  border-top-left-radius: 0 !important;
-  border-top-right-radius: 20px !important;
-  border: 1px solid #ADB0D9 !important;
-   transform: translateX(-50%) !important; 
-  left: 50% !important; /* wird inline vom Overlay gesetzt, ggf. !important */
+    background-color: white !important;
+    width: 335px !important;
+    height: 171px !important;
+    border-radius: 20px;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 20px !important;
+    border: 1px solid #ADB0D9 !important;
+}
+
+.cdk-overlay-pane.mat-mdc-autocomplete-panel-above {
+    position: absolute !important;
+    transform: translate(5%, 115%) !important; 
 }
 
 mat-option {
@@ -624,6 +615,10 @@ app-main-content {
     .desktop {
         display: none;
     }
+    .mat-mdc-autocomplete-panel {
+        left: 32% !important;   
+        transform: translate(-50%, -11%) !important; 
+    }
 }
 
 @media(max-width: 1000px) {
@@ -633,6 +628,21 @@ app-main-content {
     .channel-dialog-container .mat-mdc-dialog-surface {
         padding: 25px;
         border-radius: 0;
+    }
+}
+
+@media (min-width: 960px) {
+    .select-user-bottomsheet {
+    width: 100% !important;
+    max-width: 100vw;         
+    border-top-right-radius: 30px !important;
+    border-top-left-radius: 30px !important;
+    }
+    .mat-bottom-sheet-container-medium {   
+    min-width: unset !important;
+    max-width: unset !important;
+    width: 100% !important;
+    background-color: white !important;
     }
 }
 

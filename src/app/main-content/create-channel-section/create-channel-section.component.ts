@@ -58,9 +58,9 @@ export class CreateChannelSectionComponent {
     this.close();
   }
 
-  createChannelMobile() {
+  async createChannelMobile() {
     const bottomSheetRef = this.bottomSheet.open(SelectUserToAddComponent, {
-    panelClass: 'select-user-bottomsheet',
+    panelClass: 'select-user-bottomsheet'
     });
     bottomSheetRef.instance.channelName = this.newChannel.channelname;
     bottomSheetRef.instance.channelDescription = this.newChannel.description;
