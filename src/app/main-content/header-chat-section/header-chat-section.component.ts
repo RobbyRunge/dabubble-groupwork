@@ -175,12 +175,16 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
   private navigateToChannel(channel: SearchResult) {
     this.channelService.currentChannelId = channel.id;
     this.channelService.currentChannelName = channel.name;
-    this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channels', channel.id]);
+    this.dataUser.getUserIdsFromChannel(channel.id);
     this.dataUser.showChannel = true;
     this.dataUser.showChatPartnerHeader = false;
     this.dataUser.showNewMessage = false;
+    this.chatService.chatMode = 'channels';
+    this.chatService.checkIfChatOrChannel();
+    this.chatService.listenToMessages('channels');
+    this.chatService.getChannelMessages(channel.id);
     this.channelService.setActiveChannelId(channel.id);
-    setTimeout(() => this.setButtonRectIfAvailable(), 0);
+    this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channels', channel.id]);
     setTimeout(() => {
       this.navigationService.triggerScrollToBottom();
     }, 500);

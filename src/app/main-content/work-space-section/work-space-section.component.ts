@@ -322,7 +322,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
       this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channels', channel.id]);
       setTimeout(() => {
         this.navigationService.triggerScrollToBottom();
-      }, 300);
+      }, 500);
     } catch (error) {
       console.error('Fehler beim Öffnen des Channels:', error);
     }
