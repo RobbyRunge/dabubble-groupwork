@@ -173,12 +173,11 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   }
 
   private getDialogDimensions() {
-    if (this.breakpointObserver.isMatched(Breakpoints.Handset)) {
+    const width = window.innerWidth;
+    if (width < 1000) {
     return { width: '100vw', height: '100vh' };
-    } else if (this.breakpointObserver.isMatched(Breakpoints.Tablet)) {
-    return { width: '90vw', height: '90vh' };
     } else {
-    let height = window.innerHeight <= 1200 ? '500px' : '539px';
+    const height = window.innerHeight <= 1200 ? '500px' : '539px';
     return { width: '872px', height };
     }
   }

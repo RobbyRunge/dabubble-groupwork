@@ -326,7 +326,7 @@ mat-icon {
 
 .avatar-container {
   position: relative;
-
+  cursor: pointer;
 
   >img {
     height: 70px;
@@ -383,7 +383,6 @@ mat-icon {
   .d-none-responsive {
     @include dFlex();
     gap: 20px;
-    // padding-right: 35px;
     min-width: 342px;
 
     >div {

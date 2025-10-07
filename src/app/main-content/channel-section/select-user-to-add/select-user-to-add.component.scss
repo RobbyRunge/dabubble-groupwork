@@ -63,6 +63,7 @@
 }  
 
 .selected-users {
+  color: black;
   height: 40px;
   @include dFlex(unset, center);
   flex-direction: row;
@@ -89,29 +90,11 @@
     height: 14px;
 }
 
-.rect-cont {
-  width: 100%;
-  @include dFlex(center, center);
-}
-
-.rect {
-  width: 63px;
-  height: 6px;
-  border-radius: 23px;
-  background-color: #D9D9D9;
-}
-
 @media(max-width: 1000px) {
   .search-user-cont {
     width: 100%;
   }
   .select-user-main-cont {
-    gap: 25px;
-  }
-}
-
-@media(min-width: 1000px) {
-  .rect-cont {
-    display: none;
+    gap: 2px;
   }
 }

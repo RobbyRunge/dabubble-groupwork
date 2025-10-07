@@ -7,31 +7,62 @@ mat-dialog-actions {
     padding: 30px;
     border-top-right-radius: unset;
     background-color: white;
+}
 
-    >button {
-        border: unset;
-        background-color: unset;
-        font-size: 24px;
-        font-family: 'Nunito';
-        font-weight: 600;
-        width: 100%;
-        height: 53px;
-        border-radius: 30px;
+.mobile-logout {
+    width: 100%;
+}
 
-        &:hover {
+.logout-button {
+    border: none;
+    background-color: unset;
+    font-size: 24px;
+    font-family: 'Nunito';
+    font-weight: 600;
+    width: 100%;
+    height: 53px;
+    border-radius: 30px;
+    &:hover {
             background-color: #ECEEFE;
             color: #535AF1;
         }
-    }
+}
+
+.logout-logo-text {
+    @include dFlex(start, center);
+    flex-direction: row;
+    gap: 15px;
+    cursor: pointer;
 }
 
 ::ng-deep.mat-mdc-dialog-surface {
     border-top-right-radius: unset;
     box-shadow: 0px 6px 10px 0px #00000033;
     position: absolute;
-    top: 110px;
+    top: 90px;
     right: 30px;
     background-color: unset;
     height: unset;
     width: unset;
+}
+
+@media(max-width: 1000px) {
+    .desktop-logout {
+        display: none;
+    }
+    .logout-button {
+        width: unset;
+    }
+    .logout-button {
+        &:hover {
+            background-color: initial;
+            color: initial;
+        }
+    }
+}
+
+@media(min-width: 1000px) {
+    .mobile-logout {
+        display: none;
+    }
 }

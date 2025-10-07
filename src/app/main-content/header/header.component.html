@@ -29,7 +29,7 @@
       </div>
     </div>
   </div>
-  <div class="desktop avatar-container">
+  <div class="desktop avatar-container" (click)="openDialogMobile()">
         <img *ngIf="channelService?.currentUser?.avatar" [src]="'/avatar/' + channelService.currentUser?.avatar">
   </div>
 

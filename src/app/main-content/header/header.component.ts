@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { UserService } from '../../services/user.service';
 import { CommonModule, DatePipe } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { EditLogoutUserComponent } from './edit-logout-user/edit-logout-user.component';
 import { ChannelService } from '../../services/channel.service';
 import { SearchService, SearchResult } from '../../services/search.service';
@@ -16,6 +16,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
+import { MatBottomSheet, MatBottomSheetRef, MatBottomSheetModule } from '@angular/material/bottom-sheet';
 
 @Component({
   selector: 'app-header',
@@ -26,13 +27,14 @@ import { Firestore, doc, getDoc } from '@angular/fire/firestore';
     MatInputModule,
     MatFormFieldModule,
     CommonModule,
-    DatePipe
+    DatePipe,
+    MatBottomSheetModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  readonly dialog = inject(MatDialog);
+  readonly dialog = inject(MatDialog); 
   private dataUser = inject(UserService);
   public channelService = inject(ChannelService);
   private searchService = inject(SearchService);
@@ -41,6 +43,10 @@ export class HeaderComponent {
   private router = inject(Router);
   private firestore = inject(Firestore);
   private injector = inject(Injector);
+  dialogRef = inject(MatDialogRef<EditLogoutUserComponent>, { optional: true });
+  bottomSheetRef = inject(MatBottomSheetRef<EditLogoutUserComponent>, { optional: true });
+
+  private bottomSheet = inject(MatBottomSheet);
 
   onlineUser: string = 'status/online.png';
   offlineUser: string = 'status/offline.png';
@@ -65,10 +71,16 @@ export class HeaderComponent {
   }
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    this.dialog.open(EditLogoutUserComponent, {
+    const dialogRef =  this.dialog.open(EditLogoutUserComponent, {
       width: '250px',
       enterAnimationDuration,
       exitAnimationDuration,
+    });
+  }
+
+  openDialogMobile(): void {
+    const bottomSheetRef = this.bottomSheet.open(EditLogoutUserComponent, {
+    panelClass: 'select-user-bottomsheet',
     });
   }
 

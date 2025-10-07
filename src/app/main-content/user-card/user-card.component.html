@@ -9,7 +9,12 @@
   <div class="user-name-online-container">
     <div class="user-name standard-transition">
       <h3>{{data.user.name}}</h3>
-      <span *ngIf="isCurrentUser()" (click)="changeName()">Bearbeiten</span>
+      <span *ngIf="isCurrentUser()" (click)="changeName()">
+        <span class="desktop">
+          <mat-icon class="edit">check_circle</mat-icon>
+        </span>
+        <p class="mobile">Bearbeiten</p>
+      </span>
     </div>
     <div [ngClass]="data.user.active ? 'online' : 'offline'">
       <mat-icon>fiber_manual_record</mat-icon>
