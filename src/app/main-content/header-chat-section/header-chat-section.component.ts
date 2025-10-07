@@ -183,7 +183,7 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
     setTimeout(() => this.setButtonRectIfAvailable(), 0);
     setTimeout(() => {
       this.navigationService.triggerScrollToBottom();
-    }, 300);
+    }, 500);
   }
 
   selectUserResult(type: string, user: SearchResult) {

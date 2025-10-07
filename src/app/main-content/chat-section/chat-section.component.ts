@@ -117,7 +117,7 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
       if (scrollTarget) {
         setTimeout(() => {
           this.scrollToMessage(scrollTarget.messageId, scrollTarget.highlight);
-        }, 100);
+        }, 500);
       }
     });
     
@@ -125,7 +125,7 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
       if (shouldScroll) {
         setTimeout(() => {
           this.scrollToBottom();
-        }, 300);
+        }, 500);
       }
     });
   }
@@ -183,7 +183,7 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
         setTimeout(() => {
           const element = this.messagesContainer.nativeElement;
           element.scrollTop = element.scrollHeight;
-        }, 200);
+        }, 500);
       }
     } catch (err) {
       console.error('Error scrolling to bottom:', err);
