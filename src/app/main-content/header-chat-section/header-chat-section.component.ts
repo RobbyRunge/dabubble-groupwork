@@ -179,7 +179,11 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
     this.dataUser.showChannel = true;
     this.dataUser.showChatPartnerHeader = false;
     this.dataUser.showNewMessage = false;
+    this.channelService.setActiveChannelId(channel.id);
     setTimeout(() => this.setButtonRectIfAvailable(), 0);
+    setTimeout(() => {
+      this.navigationService.triggerScrollToBottom();
+    }, 300);
   }
 
   selectUserResult(type: string, user: SearchResult) {

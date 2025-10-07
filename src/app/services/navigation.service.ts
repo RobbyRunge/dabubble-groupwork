@@ -15,6 +15,9 @@ export class NavigationService {
   
   private scrollToMessageSubject = new BehaviorSubject<{ messageId: string, highlight: boolean } | null>(null);
   public scrollToMessage$ = this.scrollToMessageSubject.asObservable();
+  
+  private scrollToBottomSubject = new BehaviorSubject<boolean>(false);
+  public scrollToBottom$ = this.scrollToBottomSubject.asObservable();
 
   goBack() {
     this.location.back();
@@ -26,5 +29,9 @@ export class NavigationService {
   
   clearScrollTarget() {
     this.scrollToMessageSubject.next(null);
+  }
+  
+  triggerScrollToBottom() {
+    this.scrollToBottomSubject.next(true);
   }
 }

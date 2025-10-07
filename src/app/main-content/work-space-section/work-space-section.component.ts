@@ -321,6 +321,9 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
       this.chatService.getChannelMessages(channel.id);
       this.channelService.setActiveChannelId(channel.id);
       this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channels', channel.id]);
+      setTimeout(() => {
+        this.navigationService.triggerScrollToBottom();
+      }, 300);
     } catch (error) {
       console.error('Fehler beim Öffnen des Channels:', error);
     }

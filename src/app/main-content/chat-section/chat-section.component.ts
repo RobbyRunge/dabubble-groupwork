@@ -120,6 +120,14 @@ export class ChatSectionComponent implements OnInit, AfterViewInit, AfterViewChe
         }, 100);
       }
     });
+    
+    this.navigationService.scrollToBottom$.subscribe(shouldScroll => {
+      if (shouldScroll) {
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 300);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
