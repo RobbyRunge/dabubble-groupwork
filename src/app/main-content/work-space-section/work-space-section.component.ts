@@ -319,6 +319,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
       this.chatService.listenToMessages('channels');
       this.chatService.getChannelMessages(channel.id);
       this.channelService.setActiveChannelId(channel.id);
+      this.navigationService._mobileHeaderDevspace.next(true);
       this.router.navigate(['/mainpage', this.channelService.currentUserId, 'channels', channel.id]);
       setTimeout(() => {
         this.navigationService.triggerScrollToBottom();
