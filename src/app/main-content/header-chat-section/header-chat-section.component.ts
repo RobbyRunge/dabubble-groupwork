@@ -216,24 +216,19 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
   selectEmailResult(user: SearchResult) {
     this.showDropdown = false;
     this.newMessageSearchTerm = '';
-    this.navigateToPrivateChatByEmail(user);
+    this.openUserDialogByEmail(user);
   }
 
-  private async navigateToPrivateChatByEmail(user: SearchResult) {
-    try {
-      const userForChat = {
-        userId: user.id,
-        name: user.name,
-        avatar: user.avatar,
-        active: user.description === 'Online'
-      };
-      await this.chatService.onUserClick('chats', 0, userForChat);
-      this.dataUser.showChannel = false;
-      this.dataUser.showChatPartnerHeader = true;
-      this.dataUser.showNewMessage = false;
-    } catch (error) {
-      console.error('Error opening private chat by email:', error);
-    }
+  private openUserDialogByEmail(user: SearchResult) {
+    const userForDialog = {
+      userId: user.id,
+      name: user.name,
+      avatar: user.avatar,
+      active: user.description === 'Online'
+    };
+    this.userDialog.open(UserCardComponent, {
+      data: { user: userForDialog },
+    });
   }
 
   getUserEmail(userId: string): string {
