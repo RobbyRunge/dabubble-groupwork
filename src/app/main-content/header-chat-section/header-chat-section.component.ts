@@ -224,7 +224,8 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
       userId: user.id,
       name: user.name,
       avatar: user.avatar,
-      active: user.description === 'Online'
+      active: user.description === 'Online',
+      email: user.email || this.getUserEmail(user.id)
     };
     this.userDialog.open(UserCardComponent, {
       data: { user: userForDialog },
