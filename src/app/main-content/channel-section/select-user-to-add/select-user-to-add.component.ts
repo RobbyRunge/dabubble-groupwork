@@ -40,6 +40,7 @@ export class SelectUserToAddComponent {
   currentChannelId?: string;   
   channelName?: string;
   channelDescription?: string;
+  placeHolderActive = false;
   @ViewChild('searchUserInput') searchUserInput!: ElementRef<HTMLInputElement>;
 
   async createChannel() {
@@ -57,11 +58,13 @@ export class SelectUserToAddComponent {
       this.addUserId = [];
       this.filteredUsers = [];
     });
+    this.placeHolderActive = false;
   }
 
   close() {
     this.dialogRef?.close();
     this.bottomSheetRef?.dismiss();
+    this.placeHolderActive = false;
   }
 
   setFocusInput() {
@@ -87,10 +90,12 @@ export class SelectUserToAddComponent {
     if (this.searchInput === '') {
       this.filteredUsers = [];
       this.isEnabled = false;
+      this.placeHolderActive = false;
       return;
     }
       this.userService.showFilteredUsers(this.searchInput).subscribe((users) => {
       this.filteredUsers = users;
+      this.placeHolderActive = true;
     });
   }
 
@@ -105,6 +110,7 @@ export class SelectUserToAddComponent {
     this.showSelectedUser = true;
     this.isEnabled = true;
     this.filteredUsers = [];
+    this.placeHolderActive = false;
   }
 
    private updateBtnStatus() {
