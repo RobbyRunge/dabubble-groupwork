@@ -595,6 +595,26 @@ button {
     @include dFlex();
 }
 
+.edit-icon {
+    position: sticky;
+    bottom: 20px;
+    z-index: 3000;
+    display: flex;
+    justify-content: end;
+    padding-right: 10px;
+}
+
+.write-message-icon {
+    height: 60px;
+    width: 60px;
+    cursor: pointer;
+ }
+
+ .write-message-icon:active {
+    transform: scale(1.01);  
+    opacity: 0.8;           
+}
+
 @media(min-width: 1000px) {
     .chat-section-mobile {
         display: none;
