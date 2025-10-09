@@ -50,8 +50,8 @@
 .mat-drawer {
     background-color: white;
     display: flex;
-    width: clamp(300px, 24vw, 100%);
-    min-width: 300px;
+    flex: 0 1 clamp(100px, 24vw, 400px);
+    /* min-width: 300px; */
 }
 
 .channel-container {
@@ -593,6 +593,12 @@ button {
     padding-left: 24px;
     height: 48px;
     @include dFlex();
+}
+
+@media (max-width: 1100px) {
+    .mat-drawer {
+        width: 300px;
+    }
 }
 
 @media(min-width: 1000px) {

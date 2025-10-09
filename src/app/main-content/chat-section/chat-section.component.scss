@@ -1,8 +1,8 @@
 @use "./../../../styles.scss" as *;
 
 .chat-section {
-    width: calc(100vw - 445px);
-    max-width: 1920px;
+    width: 100%;
+    /* max-width: 1480px; */
     margin-right: 20px;
     flex: 1 1 0%;
     min-width: 0;
@@ -13,6 +13,10 @@
     flex-direction: column;
     --mat-sys-primary: #686868;
     position: relative;
+}
+
+.main-content{
+    width: 100%;
 }
 
 .thread-section {

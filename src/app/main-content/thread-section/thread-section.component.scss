@@ -23,13 +23,7 @@
 .mat-drawer {
     background-color: white;
     width: 100%;
-}
-
-@media (max-width: 1920px) {
-    .mat-drawer {
-        width: 100%;
-        min-width: 350px;
-    }
+    min-width: 450px;
 }
 
 :host ::ng-deep .mat-drawer-inner-container {
@@ -69,7 +63,7 @@ mat-icon {
 .close-button {
     @include dFlex();
     position: absolute;
-    top: 40px;
+    top: 25px;
     right: 40px;
     padding: 5px;
 
@@ -80,9 +74,27 @@ mat-icon {
     }
 }
 
-/* @media (max-width: 1370px) {
+@media (max-width: 1300px) {
     .mat-drawer {
-        width: 100%;
-        min-width: 400px;
+        width: 400px;
+        min-width: unset;
     }
-} */
+}
+
+@media (max-width: 1200px) {
+    .mat-drawer {
+        width: 350px;
+    }
+    .close-button{
+        right: 15px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .mat-drawer {
+        width: 325px;
+    }
+/*     .close-button{
+        right: 15px;
+    } */
+}

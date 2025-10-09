@@ -196,9 +196,8 @@
     }
 }
 
-/* .emoji-mart-container {
-    position: absolute;
-    top: -380px;
-    left: 150px;
-    z-index: 1000;
-} */
+@media (max-width: 1100px) {
+    .message-reaction-container{
+        gap: 1px;
+    }
+}

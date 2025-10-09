@@ -128,7 +128,7 @@
     font-family: 'Nunito';
     cursor: pointer;
     border-radius: 100px;
-    
+
     &:hover {
         background-color: #ECEEFE;
         font-weight: 700;
@@ -187,6 +187,7 @@
 
 .message-content {
     cursor: default;
+
     >mat-form-field {
         width: calc(50vw - 100px) !important;
     }
@@ -350,4 +351,10 @@ input {
         }
     }
 
+}
+
+@media (max-width: 1100px) {
+    .message-reaction-container {
+        gap: 1px;
+    }
 }
