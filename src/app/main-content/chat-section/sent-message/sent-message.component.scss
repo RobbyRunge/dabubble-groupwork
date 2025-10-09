@@ -19,7 +19,6 @@
     @include dFlex(center, flex-end);
     flex-direction: column;
     gap: 8px;
-    padding-left: 50px
 }
 
 .message-container {
@@ -189,7 +188,8 @@
     cursor: default;
 
     >mat-form-field {
-        width: calc(50vw - 100px) !important;
+        width: calc(50vw - 350px) !important;
+        max-width: 850px !important;
     }
 }
 
@@ -203,7 +203,7 @@
 
     >div {
         >button {
-            padding: 12px 25px;
+            padding: 10px 20px;
             font-size: 18px;
         }
     }
@@ -342,6 +342,31 @@ input {
 }
 
 
+@media (max-width: 1430px) {
+    .buttons-container {
+        flex-direction: column;
+
+        >div {
+            >button {
+                padding: 5px 10px;
+                font-size: 16px;
+            }
+        }
+    }
+
+    .message-content {
+        >mat-form-field {
+            width: calc(50vw - 415px) !important;
+        }
+    }
+}
+
+/* @media (max-width: 1300px) {
+    .buttons-container {
+        flex-direction: column;
+    }
+} */
+
 @media (max-width: 1280px) {
     .answer-date-container {
         >div {
@@ -353,8 +378,21 @@ input {
 
 }
 
+@media (max-width: 1200px) {
+    .icons-container {
+        flex-direction: column;
+    }
+}
+
 @media (max-width: 1100px) {
     .message-reaction-container {
+
         gap: 1px;
+    }
+
+    .message-content {
+        >mat-form-field {
+            width: calc(50vw - 350px) !important;
+        }
     }
 }
