@@ -31,13 +31,16 @@ export class EditLogoutUserComponent {
   readonly chatService = inject(ChatService);
   private dataUser = this.userService;
 
+
   openUserDialog() {
     this.userDialog.open(UserCardComponent, {
+      panelClass: 'user-profil',
       data: { 
         user: this.channelService.currentUser, 
         urlUserId: this.channelService.currentUserId 
       }
     })
+    this.close();
   }
 
   close(): void {
