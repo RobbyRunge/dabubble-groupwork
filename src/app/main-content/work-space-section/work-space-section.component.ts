@@ -36,6 +36,8 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { ChannelSectionComponent } from '../channel-section/channel-section.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BehaviorSubject } from 'rxjs';
+import { ThreadSectionComponent } from '../thread-section/thread-section.component';
 
 @Component({
   selector: 'app-work-space-section',
@@ -54,6 +56,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
     FormsModule,
     ChatSectionComponent,
     DatePipe,
+    ThreadSectionComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './work-space-section.component.html',
@@ -513,5 +516,6 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.activeChannelId = '';
     this.activeUserId = '';
     this.router.navigate(['mainpage', this.channelService.currentUserId, 'new-message']);
+    this.navigationService.setMobileHeaderDevspace(true);
     }
 }

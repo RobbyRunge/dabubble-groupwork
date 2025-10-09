@@ -373,6 +373,6 @@ export class HeaderComponent {
   }
 
   mobileHeader() {
-    this.navigationService._mobileHeaderDevspace.next(false);
+    this.navigationService.setMobileHeaderDevspace(false);
   }
 }

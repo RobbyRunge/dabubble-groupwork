@@ -44,6 +44,7 @@ export class ChatService {
     parentMessagesRef: any;
     batch: any;
     chatMode: 'chats' | 'channels' = 'chats';
+    mobileMode: 'chats' | 'threads' = 'chats';
 
     async getOrCreateChatId(userId1: string, userId2: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
@@ -338,7 +339,8 @@ export class ChatService {
         this.listenToMessages(chatId);
         this.dataUser.showChannel = false;
         this.dataUser.showChatPartnerHeader = true;
-        this.navigationService._mobileHeaderDevspace.next(true);
+        this.navigationService.setMobileHeaderDevspace(true);
+        this.mobileMode  = 'chats';
     }
 
     ngOnDestroy() {
@@ -349,7 +351,6 @@ export class ChatService {
             this.unsubscribeMessagesThread();
         }
     }
-
 
     private async resolveThreadSenderId(parentMessageId: string): Promise<string> {
         return runInInjectionContext(this.injector, async () => {
@@ -373,6 +374,8 @@ export class ChatService {
             this.open();
             this.router.navigate(['/mainpage', this.channelService.currentUserId, this.chatMode, this.chatId, 'threads', this.threadId]);
             this.listenToMessagesThread(this.chatMode);
+            this.navigationService.setMobileHeaderDevspace(true);
+            this.mobileMode  = 'threads';
         });
     }
 

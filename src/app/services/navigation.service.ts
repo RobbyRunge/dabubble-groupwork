@@ -19,6 +19,10 @@ export class NavigationService {
   private scrollToBottomSubject = new BehaviorSubject<boolean>(false);
   public scrollToBottom$ = this.scrollToBottomSubject.asObservable();
 
+  setMobileHeaderDevspace(value: boolean): void {
+    this._mobileHeaderDevspace.next(value);
+  }
+
   goBack() {
     this.location.back();
   }
