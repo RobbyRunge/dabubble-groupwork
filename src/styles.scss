@@ -646,6 +646,11 @@ mat-icon.edit:focus-visible {
             padding-left: 15px;
         }
     }
+    emoji-mart{
+        >section{
+            width: 280px !important;
+        }
+    }
 }
 
 @media(min-width: 1000px) {
