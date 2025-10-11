@@ -1,16 +1,19 @@
 <div class="add-user-to-channel-main-cont">
     <div>
-        <div class="add-user-header">
-            <p>Leute hinzufügen</p>
-            <mat-icon class="close-icon" (click)="dialog.close()">close</mat-icon>
-        </div>
-        <div class="current-channel-name-headline">
-            # @if (channelService.currentChannelName) {
-                {{ channelService.currentChannelName }}
-            } @else {
-                {{ channelService.userSubcollectionChannelName }}
-            }
-        </div>
+      <div class="rect-cont">
+        <span class="rect"></span>
+      </div>
+      <div class="add-user-header">
+          <p class="text">Leute hinzufügen</p>
+          <mat-icon class="close-icon" (click)="close()">close</mat-icon>
+      </div>
+      <div class="current-channel-name-headline">
+          # @if (channelService.currentChannelName) {
+              {{ channelService.currentChannelName }}
+          } @else {
+              {{ channelService.userSubcollectionChannelName }}
+          }
+      </div>
     </div>
     @if (!showSelectedUser) {
       <div>

@@ -8,6 +8,7 @@ import { UserService } from '../../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
+import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 
 @Component({
   selector: 'app-add-user-to-channel',
@@ -19,7 +20,8 @@ export class AddUserToChannelComponent {
 
   channelService = inject(ChannelService);
   userService = inject(UserService);
-  dialog = inject(MatDialogRef<AddUserToChannelComponent>);
+  dialogRef = inject(MatDialogRef<AddUserToChannelComponent>, { optional: true });
+  bottomSheetRef = inject(MatBottomSheetRef<AddUserToChannelComponent>, { optional: true });
   router = inject(Router);
   searchInput: string = '';
   selectedUser: any;
@@ -33,7 +35,12 @@ export class AddUserToChannelComponent {
       this.channelService.addUserToCh(this.currentChannelId, this.selectedUser.userId);
       this.userService.getUserIdsFromChannel(this.currentChannelId);
     }
-    this.dialog.close();
+    this.close();
+  }
+
+   close() {
+    this.dialogRef?.close();
+    this.bottomSheetRef?.dismiss();
   }
 
  filterUsers() {
@@ -66,6 +73,5 @@ removeSelectedUser() {
   this.filteredUsers = [];
   this.showSelectedUser = false;
   this.isEnabled = false;
-}
-
+  } 
 }

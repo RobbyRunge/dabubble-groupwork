@@ -9,6 +9,8 @@ import { UserService } from '../../services/user.service';
 import { Allchannels } from '../../../models/allchannels.class';
 import { FormsModule } from '@angular/forms';
 import { ChannelService } from '../../services/channel.service';
+import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
+import { AddUserToChannelComponent } from './add-user-to-channel/add-user-to-channel.component';
 
 @Component({
   selector: 'app-channel-section',
@@ -25,6 +27,8 @@ export class ChannelSectionComponent implements OnInit {
   showEditChannelName = false;
   showEditChannelDescription = false;
   showChannels = false;
+  // bottomSheet = inject(MatBottomSheetRef<AddUserToChannelComponent>, { optional: true });
+  bottomSheet = inject(MatBottomSheet);
 
   newChannel = new Allchannels();
 
@@ -75,7 +79,9 @@ export class ChannelSectionComponent implements OnInit {
     this.dialogRef.close()
   }
 
-  addUserToChannel(div: HTMLElement) {
-
+  addUserToChannel() {
+    const bottomSheetRef = this.bottomSheet.open(AddUserToChannelComponent, {
+        panelClass: 'select-user-bottomsheet',
+      });
   }
 }

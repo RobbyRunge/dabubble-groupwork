@@ -15,6 +15,7 @@
 }
 
 .close-icon {
+    color: black;
     &:hover {
         color: #535AF1;
     }
@@ -118,8 +119,16 @@
     height: 14px;
 }
 
+.text {
+    color: black;
+}
+
 @media(max-width: 1000px) {
     .user-name-channel {
         width: 100%;
+    }
+    .add-user-to-channel-main-cont {
+        padding: 10px;
+        height: 300px;
     }
 }
