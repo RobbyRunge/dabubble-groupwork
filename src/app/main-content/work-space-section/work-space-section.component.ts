@@ -54,9 +54,7 @@ import { ThreadSectionComponent } from '../thread-section/thread-section.compone
     AsyncPipe,
     CommonModule,
     FormsModule,
-    ChatSectionComponent,
     DatePipe,
-    ThreadSectionComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './work-space-section.component.html',

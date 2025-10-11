@@ -95,3 +95,12 @@ mat-icon {
         width: 325px;
     }
 }
+
+@media (max-width: 1000px) {
+    .mat-drawer {
+        width: 100%;
+    }
+    .close-button {
+        display: none;
+    }
+}

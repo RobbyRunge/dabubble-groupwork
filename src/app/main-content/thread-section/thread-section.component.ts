@@ -55,8 +55,11 @@ export class ThreadSectionComponent implements AfterViewInit, OnInit, AfterViewC
 
   constructor(private chatServices: ChatService, public emojiPickerService: EmojiPickerService) { }
 
+  @ViewChild(MatDrawer) drawerT!: MatDrawer;
+
   ngAfterViewInit() {
     this.chatServices.setDrawer(this.drawer);
+    this.drawerT?.open();
     this.scrollToBottom();
     setTimeout(() => this.emojiPickerService.bindElements('thread', this.threadContainer, this.emojiPickerThread));
   }
