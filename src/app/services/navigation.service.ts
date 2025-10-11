@@ -1,6 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription, fromEvent } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,20 @@ export class NavigationService {
   
   private scrollToBottomSubject = new BehaviorSubject<boolean>(false);
   public scrollToBottom$ = this.scrollToBottomSubject.asObservable();
+
+  isMobile = window.innerWidth < 1000; 
+  private resizeSubscription: Subscription | undefined;
+
+  private_ = (() => {
+    this.resizeSubscription = fromEvent(window, 'resize')
+      .pipe(
+        map(() => window.innerWidth),       
+        startWith(window.innerWidth)       
+      )
+      .subscribe(width => {
+        this.isMobile = width < 1000;     
+      });
+  })();
 
   setMobileHeaderDevspace(value: boolean): void {
     this._mobileHeaderDevspace.next(value);
@@ -37,5 +52,9 @@ export class NavigationService {
   
   triggerScrollToBottom() {
     this.scrollToBottomSubject.next(true);
+  }
+
+   ngOnDestroy(): void {
+    this.resizeSubscription?.unsubscribe();
   }
 }

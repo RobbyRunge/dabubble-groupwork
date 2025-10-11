@@ -101,7 +101,6 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   searchTerm: string = '';
   routeSub: Subscription | undefined;
 
-  // Search functionality properties
   searchResults: any[] = [];
   channelResults: SearchResult[] = [];
   userResults: SearchResult[] = [];
@@ -120,7 +119,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   }
 
   onChange(user: any) {
-    console.log(user);
+    
   }
 
   ngOnInit(): void {
@@ -175,19 +174,9 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     drawer.toggle();
   }
 
-  private getDialogDimensions() {
-    const width = window.innerWidth;
-    if (width < 1000) {
-    return { width: '100vw', height: '100vh' };
-    } else {
-    const height = window.innerHeight <= 1200 ? '500px' : '539px';
-    return { width: '872px', height };
-    }
-  }
-
   createChannel() {
     (document.activeElement as HTMLElement)?.blur();
-    const { width, height } = this.getDialogDimensions();
+    const { width, height } = this.channelService.getDialogDimensions();
     this.dialog.open(CreateChannelSectionComponent, {
     width,
     height,
@@ -199,12 +188,18 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     });
   }
 
-
-  async openChannel(type: string, channelName: string, channelId: string, channelDescription: string,) {
-    this.chatService.chatMode = 'channels';
+  mobileMode() {
+    if(this.navigationService.isMobile) {
+            this.chatService.showThread = false;
+    }
+    this.navigationService._mobileHeaderDevspace.next(true);
     this.dataUser.showChannel = true;
     this.dataUser.showChatPartnerHeader = false;
     this.dataUser.showNewMessage = false;
+  }
+
+  async openChannel(type: string, channelName: string, channelId: string, channelDescription: string,) {
+    this.chatService.chatMode = 'channels';
     this.activeUserId = '';
     this.router.navigate(['mainpage', this.channelService.currentUserId, 'channels', channelId,]);
     this.userstorage.channelId = channelId;
@@ -215,7 +210,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.chatService.listenToMessages(type);
     this.chatService.getChannelMessages(channelId);
     this.channelService.setCheckdValue(channelId);
-    this.navigationService._mobileHeaderDevspace.next(true);
+    this.mobileMode();
   }
 
   getChannelNameandId(channelName: string, channelId: string, channelDescription: string) {
@@ -225,14 +220,6 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.channelService.currentChannelDescription = channelDescription;
     this.channelService.getChannelUserId(this.activeChannelId);
     this.dataUser.getUserIdsFromChannel(channelId);
-  }
-
-  ngOnDestroy(): void {
-    this.unsubChannels?.unsubscribe();
-    this.userDataSub?.unsubscribe();
-    this.channelDataSub?.unsubscribe();
-    this.searchSub?.unsubscribe();
-    this.routeSub?.unsubscribe();
   }
 
   onSearchInput() {
@@ -518,4 +505,12 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.router.navigate(['mainpage', this.channelService.currentUserId, 'new-message']);
     this.navigationService.setMobileHeaderDevspace(true);
     }
+
+     ngOnDestroy(): void {
+    this.unsubChannels?.unsubscribe();
+    this.userDataSub?.unsubscribe();
+    this.channelDataSub?.unsubscribe();
+    this.searchSub?.unsubscribe();
+    this.routeSub?.unsubscribe();
+  }
 }

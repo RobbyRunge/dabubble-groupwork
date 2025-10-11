@@ -101,6 +101,16 @@ export class ChannelService {
     );
   }
 
+  getDialogDimensions() {
+    const width = window.innerWidth;
+    if (width < 1000) {
+    return { width: '100vw', height: '100vh' };
+    } else {
+    const height = window.innerHeight <= 1200 ? '500px' : '539px';
+    return { width: '872px', height };
+    }
+  }
+
   async addNewChannel(allChannels: {}, userId: string[], user: string) {
     const dateNow = new Date();
     dateNow.setHours(0, 0, 0, 0);

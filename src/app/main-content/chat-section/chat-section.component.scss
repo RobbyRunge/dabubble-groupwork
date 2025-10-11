@@ -2,7 +2,6 @@
 
 .chat-section {
     width: 100%;
-    /* max-width: 1480px; */
     margin-right: 20px;
     flex: 1 1 0%;
     min-width: 0;
@@ -181,5 +180,6 @@ app-header-chat-section {
     .chat-section {
         width: 100%;
         margin-right: 0;
+        border-radius: 0;
     }
 }

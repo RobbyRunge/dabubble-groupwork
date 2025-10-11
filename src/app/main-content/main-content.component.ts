@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ChatSectionComponent } from "./chat-section/chat-section.component";
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
 import { WorkSpaceSectionComponent } from './work-space-section/work-space-section.component';
 import { ThreadSectionComponent } from './thread-section/thread-section.component';
+import { ChatService } from '../services/chat.service';
+import { NavigationService } from '../services/navigation.service';
 
 @Component({
   selector: 'app-main-content',
@@ -12,5 +14,6 @@ import { ThreadSectionComponent } from './thread-section/thread-section.componen
   styleUrl: './main-content.component.scss'
 })
 export class MainContentComponent {
-
+  chatService = inject(ChatService);
+  navigationService = inject(NavigationService);
 }

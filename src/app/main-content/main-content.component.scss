@@ -3,7 +3,6 @@
 .chat-section {
     @include dFlex(flex-start);
     flex-direction: column;
-    /* max-width: 1920px; */
     gap: 12px;
     background-color: #ECEEFE;
     flex: 1;
@@ -58,12 +57,13 @@
 
     @media(max-width: 1000px) {
         .chat-section {
-            display: none;
+            // display: none;
+            padding-left: 0;
         }
 
-        .thread-section {
-            display: none;
-        }
+        // .thread-section {
+        //     display: none;
+        // }
 
         .main-content {
             background-color: white;

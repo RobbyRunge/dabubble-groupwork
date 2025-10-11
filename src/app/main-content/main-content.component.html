@@ -2,7 +2,25 @@
     <app-header class="header"></app-header>
     <div class="main-content">
         <app-work-space-section class="work-space-section"></app-work-space-section>
-        <app-chat-section class="chat-section"></app-chat-section>
-        <app-thread-section class="thread-section"></app-thread-section>
+        <!-- <app-chat-section class="chat-section"></app-chat-section>
+        <app-thread-section class="thread-section"></app-thread-section> -->
+         <!-- @if (!this.navigationService.isMobile) {
+            <app-chat-section class="chat-section"></app-chat-section>
+         } @else if (!this.chatService.showThread) {
+            <app-chat-section class="chat-section"></app-chat-section>
+         }
+         @if (!this.navigationService.isMobile) {
+            <app-thread-section class="thread-section"></app-thread-section>
+         } @else if (this.chatService.showThread) {
+            <app-thread-section class="thread-section"></app-thread-section>
+         } -->
+        <app-chat-section
+            class="chat-section"
+            *ngIf="!navigationService.isMobile || (navigationService.isMobile && !chatService.showThread)">
+        </app-chat-section>
+        <app-thread-section
+            class="thread-section"
+            *ngIf="!navigationService.isMobile || (navigationService.isMobile && chatService.showThread)">
+        </app-thread-section>
     </div>
 </div>
