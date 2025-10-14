@@ -361,12 +361,6 @@ input {
     }
 }
 
-/* @media (max-width: 1300px) {
-    .buttons-container {
-        flex-direction: column;
-    }
-} */
-
 @media (max-width: 1280px) {
     .answer-date-container {
         >div {
@@ -393,6 +387,46 @@ input {
     .message-content {
         >mat-form-field {
             width: calc(50vw - 350px) !important;
+        }
+    }
+}
+
+@media (max-width: 1000px) {
+    .message-content {
+        >mat-form-field {
+            width: 70vw !important;
+        }
+    }
+
+    .buttons-container {
+        flex-direction: row;
+    }
+
+    .icons-container {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 500px) {
+    .message-content {
+        >mat-form-field {
+            width: 60vw !important;
+        }
+    }
+
+    .buttons-container {
+        flex-direction: column;
+    }
+
+    .icons-container {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 350px) {
+    .message-content {
+        >mat-form-field {
+            width: 50vw !important;
         }
     }
 }
