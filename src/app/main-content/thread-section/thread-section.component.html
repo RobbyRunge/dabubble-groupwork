@@ -30,7 +30,7 @@
         </div>
       </div>
       <div>
-        <app-input-message [mode]="'thread'">
+        <app-input-message *ngIf="!dataUser.showNewMessage" [mode]="'thread'">
         </app-input-message>
       </div>
       <div #emojiPickerThread class="emoji-mart-container" [style.display]="emojiPickerService.state.thread.visible ? 'block' : 'none'"

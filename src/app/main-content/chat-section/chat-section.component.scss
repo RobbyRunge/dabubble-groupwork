@@ -14,7 +14,7 @@
     position: relative;
 }
 
-.main-content{
+.main-content {
     width: 100%;
 }
 
@@ -167,13 +167,22 @@ app-header-chat-section {
 .channel-text {
     @include dFlex();
     gap: 10px;
+
     >span {
         font-size: 24px;
         font-weight: 700;
     }
 }
-.channel-info-text{
+
+.channel-info-text {
     color: black !important;
+}
+
+.new-message-info-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
 @media(max-width: 1000px) {

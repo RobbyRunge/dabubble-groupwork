@@ -1,13 +1,13 @@
 <div class="main-content" (click)="pickerService.hide('chat')">
   <div #chatContainer class="chat-section">
     <app-header-chat-section></app-header-chat-section>
-    <div class="chat-container" *ngIf="dataUser.showNewMessage">
+    <div class="new-message-info-container" *ngIf="dataUser.showNewMessage">
       <div #messagesContainer class="chat-messages-container" (scroll)="pickerService.reposition('chat')">
         <div class="new-message-info">
           <p>Wähle einen Channel, Benutzer oder Email Adresse in der Suchleiste oben aus, um eine neue Unterhaltung zu beginnen.</p>
         </div>
       </div>
-      <app-input-message [mode]="'chats'"></app-input-message>
+      <app-input-message *ngIf="!dataUser.showNewMessage" [mode]="'chats'"></app-input-message>
     </div>
     <ng-container *ngIf="!dataUser.showNewMessage && dataUser.showChatPartnerHeader && (channelService.isChecked$ | async) as selectedUser">
       <div class="chat-container" [ngClass]="{ 'other-user': selectedUser.userId !== channelService.currentUserId }">
