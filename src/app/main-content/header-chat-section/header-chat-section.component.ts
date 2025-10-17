@@ -62,7 +62,6 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-
   ngOnInit(): void {
     this.getUserData();
   }
@@ -329,6 +328,5 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
   }
 
   ngOnDestroy() {
-    // Cleanup if needed
   }
 }

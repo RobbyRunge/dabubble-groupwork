@@ -12,10 +12,6 @@ p {
     width: 500px;
 }
 
-::ng-deep.cdk-global-overlay-wrapper {
-    max-width: 1920px;
-}
-
 .header-container {
     @include dFlex(space-between);
     padding: 40px;

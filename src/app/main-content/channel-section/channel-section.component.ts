@@ -27,7 +27,6 @@ export class ChannelSectionComponent implements OnInit {
   showEditChannelName = false;
   showEditChannelDescription = false;
   showChannels = false;
-  // bottomSheet = inject(MatBottomSheetRef<AddUserToChannelComponent>, { optional: true });
   bottomSheet = inject(MatBottomSheet);
 
   newChannel = new Allchannels();

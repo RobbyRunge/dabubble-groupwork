@@ -70,9 +70,18 @@ export class HeaderComponent {
     }
   }
 
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string, div: HTMLElement): void {
+    (document.activeElement as HTMLElement)?.blur();
+    const rect = div.getBoundingClientRect();
+    const dialogWidth = 270;
     const dialogRef =  this.dialog.open(EditLogoutUserComponent, {
-      width: '250px',
+      autoFocus: false,
+        position: {
+          top: `${rect.bottom + window.scrollY + 8}px`,
+          left: `${rect.right + window.scrollX - dialogWidth}px`,
+        },
+        width: '250px',
+        maxWidth: '250px',
       enterAnimationDuration,
       exitAnimationDuration,
     });

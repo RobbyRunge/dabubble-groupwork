@@ -21,6 +21,10 @@
     filter: brightness(0) saturate(100%) invert(34%) sepia(68%) saturate(3151%) hue-rotate(225deg) brightness(96%) contrast(91%);
 }
 
+::ng-deep .mat-mdc-dialog-surface {
+    border-top-left-radius: 0 !important; 
+}
+
 .show-users-avatar {
     @include dFlex(center, center);
     padding: 3px 10px 3px 10px;

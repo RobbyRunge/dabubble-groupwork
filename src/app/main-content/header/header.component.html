@@ -15,7 +15,7 @@
       <mat-icon>search</mat-icon>
     </button>
   </mat-form-field>
-  <div class="user-container" (click)="openDialog('0ms', '0ms')">
+  <div class="user-container" #div (click)="openDialog('0ms', '0ms', div)">
     <div class="d-none-responsive standard-transition">
       <div>
         <span class="standard-transition name"> {{channelService.currentUser?.name}} </span>
