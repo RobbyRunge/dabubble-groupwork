@@ -340,7 +340,7 @@ export class ChatService {
         this.dataUser.showChannel = false;
         this.dataUser.showChatPartnerHeader = true;
         this.navigationService.setMobileHeaderDevspace(true);
-        if(this.navigationService.isMobile) {
+        if (this.navigationService.isMobile) {
             this.showThread = false;
         }
     }
@@ -376,7 +376,7 @@ export class ChatService {
             this.open();
             this.router.navigate(['/mainpage', this.channelService.currentUserId, this.chatMode, this.chatId, 'threads', this.threadId]);
             this.listenToMessagesThread(this.chatMode);
-            if(this.navigationService.isMobile) {
+            if (this.navigationService.isMobile) {
                 this.showThread = true;
             }
             this.navigationService.setMobileHeaderDevspace(true);
@@ -421,27 +421,24 @@ export class ChatService {
 
     async checkIfEmojiExists(selectedEmoji: any, messageSnap: any, messagesRef: any) {
         return runInInjectionContext(this.injector, async () => {
-            if (messageSnap.exists()) {
-                const data = messageSnap.data();
-                const reactions = data['reactions'] || [];
-                const existingReactionIndex = reactions.findIndex(
-                    (r: any) => r.emoji === selectedEmoji
-                );
-                if (existingReactionIndex > -1) {
-                    reactions[existingReactionIndex].emojiCounter += 1;
-                } else {
-                    reactions.push({
-                        emoji: selectedEmoji,
-                        user: this.channelService.currentUser?.name,
-                        emojiCounter: 1,
-                    });
-                }
-                await updateDoc(messagesRef, {
-                    reactions: reactions
-                });
-            }
-        })
+            if (!messageSnap.exists()) return;
 
+            const data = messageSnap.data();
+            const reactions = data['reactions'] || [];
+            const exists = reactions.some((r: any) => r.emoji === selectedEmoji && r.user === this.channelService.currentUser?.name);
+
+            if (exists) {
+                const next = reactions.filter((r: any) => !(r.emoji === selectedEmoji && r.user === this.channelService.currentUser?.name));
+                await updateDoc(messagesRef, { reactions: next });
+            } else {
+                reactions.push({
+                    emoji: selectedEmoji,
+                    user: this.channelService.currentUser?.name,
+                    emojiCounter: 1,
+                });
+                await updateDoc(messagesRef, { reactions });
+            }
+        });
     }
 
     listenToEmojis(type: string, chatId: string, messageId: string) {

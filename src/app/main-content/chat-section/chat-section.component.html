@@ -7,7 +7,6 @@
           <p>Wähle einen Channel, Benutzer oder Email Adresse in der Suchleiste oben aus, um eine neue Unterhaltung zu beginnen.</p>
         </div>
       </div>
-      <app-input-message *ngIf="!dataUser.showNewMessage" [mode]="'chats'"></app-input-message>
     </div>
     <ng-container *ngIf="!dataUser.showNewMessage && dataUser.showChatPartnerHeader && (channelService.isChecked$ | async) as selectedUser">
       <div class="chat-container" [ngClass]="{ 'other-user': selectedUser.userId !== channelService.currentUserId }">
