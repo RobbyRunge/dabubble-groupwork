@@ -167,8 +167,20 @@ input:focus {
     padding-bottom: 8px;
 }
 
+::ng-deep .open-channel-dialog-container .mat-mdc-dialog-surface {
+    border-top-left-radius: 0 !important; 
+    background-color: white !important;
+    box-shadow: 0px 6px 10px 0px #00000033;
+    padding: 25px;
+}
+
 @media(max-width: 1000px) {
     .leave-channel-btn {
         padding-bottom: 15px;
     }
+    ::ng-deep .open-channel-dialog-container .mat-mdc-dialog-surface {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 0 !important;
+}
 }
