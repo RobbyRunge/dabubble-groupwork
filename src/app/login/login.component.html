@@ -24,23 +24,29 @@
         <p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
 
         <form class="form">
-          <input [(ngModel)]="email" 
-                 [ngClass]="{'input-error': loginError}" 
-                 name="email"
-                 class="email-input standard-transition" 
-                 type="email" 
-                 placeholder="beispielname@email.com" 
-                 autocomplete="on"
-                 (keydown)="onEnterKey($event)">
+          <div class="input-wrapper">
+            <img src="login/mail.png" alt="mail icon" class="input-icon mail-icon">
+            <input [(ngModel)]="email" 
+                   [ngClass]="{'input-error': loginError}" 
+                   name="email"
+                   class="email-input standard-transition" 
+                   type="email" 
+                   placeholder="beispielname@email.com" 
+                   autocomplete="on"
+                   (keydown)="onEnterKey($event)">
+          </div>
           <small class="error-message">{{ loginError }}</small>
-          <input [(ngModel)]="password" 
-                 [ngClass]="{'input-error': loginError}" 
-                 name="password"
-                 class="password-input standard-transition" 
-                 type="password" 
-                 placeholder="Passwort" 
-                 autocomplete="on"
-                 (keydown)="onEnterKey($event)">
+          <div class="input-wrapper">
+            <img src="login/lock.png" alt="lock icon" class="input-icon lock-icon">
+            <input [(ngModel)]="password" 
+                   [ngClass]="{'input-error': loginError}" 
+                   name="password"
+                   class="password-input standard-transition" 
+                   type="password" 
+                   placeholder="Passwort" 
+                   autocomplete="on"
+                   (keydown)="onEnterKey($event)">
+          </div>
         </form>
 
         <a class="standard-transition" routerLink="/password-send-mail">Passwort vergessen?</a>
