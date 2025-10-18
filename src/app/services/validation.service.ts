@@ -1,4 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { collection, getDocs, query, where } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
 
 export function isValidPassword(password: string) {
   if (!password || password.length < 8) {
@@ -10,7 +12,8 @@ export function isValidPassword(password: string) {
 @Injectable({
   providedIn: 'root'
 })
-export class PasswordValidationService {
+export class ValidationService {
+  private firestore = inject(Firestore);
 
   isValidPassword(password: string): boolean {
     return isValidPassword(password);
@@ -26,5 +29,12 @@ export class PasswordValidationService {
       return 'Das Passwort muss mindestens 8 Zeichen lang sein.';
     }
     return '';
+  }
+
+  async checkEmailExists(email: string): Promise<boolean> {
+    const usersRef = collection(this.firestore, 'users');
+    const q = query(usersRef, where('email', '==', email));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
   }
 }

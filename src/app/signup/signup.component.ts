@@ -6,7 +6,7 @@ import { User } from '../../models/user.class';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../services/user.service';
 import { NgClass } from '@angular/common';
-import { isValidPassword, PasswordValidationService } from '../services/password-validation.service';
+import { ValidationService } from '../services/validation.service';
 
 @Component({
   selector: 'app-signup',
@@ -23,7 +23,7 @@ import { isValidPassword, PasswordValidationService } from '../services/password
 export class SignupComponent {
   public userService = inject(UserService);
   private router = inject(Router);
-  private passwordValidationService = inject(PasswordValidationService);
+  private validationService = inject(ValidationService);
 
   isPolicyAccepted = false;
   isHovering = false;
@@ -32,6 +32,7 @@ export class SignupComponent {
   nameTouched = false;
   passwordTouched: boolean = false;
   policyTouched = false;
+  emailExists: boolean = false;
 
   private isValidEmail(email: string): boolean {
     const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -39,15 +40,25 @@ export class SignupComponent {
   }
 
   get showPasswordError(): boolean {
-    return this.passwordValidationService.showPasswordError(this.user.password, this.passwordTouched);
+    return this.validationService.showPasswordError(this.user.password, this.passwordTouched);
   }
 
   get passwordErrorMessage(): string {
-    return this.passwordValidationService.getPasswordErrorMessage(this.user.password);
+    return this.validationService.getPasswordErrorMessage(this.user.password);
   }
 
   get showEmailError(): boolean {
-    return this.emailTouched && !!this.user.email && !this.isValidEmail(this.user.email);
+    return this.emailTouched && !!this.user.email && (!this.isValidEmail(this.user.email) || this.emailExists);
+  }
+
+  get emailErrorMessage(): string {
+    if (!this.isValidEmail(this.user.email)) {
+      return 'Bitte geben Sie eine gültige E-Mail-Adresse ein';
+    }
+    if (this.emailExists) {
+      return 'Diese E-Mail-Adresse ist bereits registriert';
+    }
+    return 'Bitte geben Sie eine gültige E-Mail-Adresse ein';
   }
 
   get showNameError(): boolean {
@@ -62,15 +73,20 @@ export class SignupComponent {
     return (
       this.isPolicyAccepted &&
       !!this.user.name &&
-      !!this.user.email &&
       this.isValidEmail(this.user.email) &&
+      this.emailErrorMessage !== 'Diese E-Mail-Adresse ist bereits registriert' &&
       !!this.user.password &&
-      this.passwordValidationService.isValidPassword(this.user.password)
+      this.validationService.isValidPassword(this.user.password)
     );
   }
 
-  markEmailTouched() {
+  async markEmailTouched() {
     this.emailTouched = true;
+    if (this.isValidEmail(this.user.email)) {
+      this.emailExists = await this.validationService.checkEmailExists(this.user.email);
+    } else {
+      this.emailExists = false;
+    }
   }
 
   markNameTouched() {

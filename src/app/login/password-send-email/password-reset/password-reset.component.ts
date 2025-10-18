@@ -6,7 +6,7 @@ import { HeaderStartComponent } from '../../../shared/header-start/header-start.
 import { FooterStartComponent } from '../../../shared/footer-start/footer-start.component';
 import { getDoc, doc, updateDoc } from '@angular/fire/firestore';
 import { MatDialogModule } from "@angular/material/dialog";
-import { isValidPassword, PasswordValidationService } from '../../../services/password-validation.service';
+import { ValidationService } from '../../../services/validation.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -27,7 +27,7 @@ export class PasswordResetComponent implements OnInit {
   private router = inject(Router);
   private userService = inject(UserService);
   private injector = inject(Injector);
-  private passwordValidationService = inject(PasswordValidationService);
+  private validationService = inject(ValidationService);
 
   token: string = '';
   userId: string = '';
@@ -68,11 +68,11 @@ export class PasswordResetComponent implements OnInit {
   }
 
   get showPasswordError(): boolean {
-    return this.passwordValidationService.showPasswordError(this.newPassword, this.passwordTouched);
+    return this.validationService.showPasswordError(this.newPassword, this.passwordTouched);
   }
 
   get passwordErrorMessage(): string {
-    return this.passwordValidationService.getPasswordErrorMessage(this.newPassword);
+    return this.validationService.getPasswordErrorMessage(this.newPassword);
   }
 
   get showConfirmPasswordError(): boolean {
@@ -81,7 +81,7 @@ export class PasswordResetComponent implements OnInit {
 
   isFormValid(): boolean {
     return this.newPassword.length >= 8 &&
-      this.passwordValidationService.isValidPassword(this.newPassword) &&
+      this.validationService.isValidPassword(this.newPassword) &&
       this.newPassword === this.confirmPassword
       && this.tokenValid;
   }
