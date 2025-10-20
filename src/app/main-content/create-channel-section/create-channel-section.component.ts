@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogActions, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,7 +22,7 @@ import {
   templateUrl: './create-channel-section.component.html',
   styleUrl: './create-channel-section.component.scss'
 })
-export class CreateChannelSectionComponent {
+export class CreateChannelSectionComponent implements OnInit {
 
   dialogRef = inject(MatDialogRef<SelectUserToAddComponent>, { optional: true });
   bottomSheetRef = inject(MatBottomSheetRef<SelectUserToAddComponent>, { optional: true });
@@ -34,9 +34,16 @@ export class CreateChannelSectionComponent {
   private bottomSheet = inject(MatBottomSheet);
   isEnabled = false;
 
+  ngOnInit() {
+    this.channelService.showAllChannels();
+  }
+
   checkChannelName() {
-    const value = this.newChannel.channelname || '';
-    this.isEnabled = /[a-zA-Z]/.test(value);
+    const channelName = this.newChannel.channelname.trim();
+    const inputHasLetter = /[a-zA-Z]/.test(channelName);
+    const nameExists = this.channelService.allChannelsName
+    .some(n => n.toLowerCase() === channelName.toLowerCase()); 
+    this.isEnabled = inputHasLetter && !nameExists;;
   }
 
   close() {
@@ -65,5 +72,9 @@ export class CreateChannelSectionComponent {
     bottomSheetRef.instance.channelName = this.newChannel.channelname;
     bottomSheetRef.instance.channelDescription = this.newChannel.description;
     this.close();
+  }
+
+   ngOnDestroy() {
+    this.channelService.unsubscribeAllChannels();
   }
 }

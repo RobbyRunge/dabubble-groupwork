@@ -30,6 +30,7 @@ export class AddUserToChannelComponent {
   showSelectedUser = false;
   isEnabled = false;
 
+
   addUserToChannel() {
     if (this.currentChannelId && this.selectedUser?.userId) {
       this.channelService.addUserToCh(this.currentChannelId, this.selectedUser.userId);
@@ -38,40 +39,40 @@ export class AddUserToChannelComponent {
     this.close();
   }
 
-   close() {
+  close() {
     this.dialogRef?.close();
     this.bottomSheetRef?.dismiss();
   }
 
- filterUsers() {
-  if (this.searchInput === '') {
-    this.filteredUsers = [];
-    this.isEnabled = false;
-    return;
-  }
-  this.isEnabled = true;
-  this.userService.showFilteredUsers(this.searchInput).subscribe((users) => {
+  filterUsers() {
+    if (this.searchInput === '') {
+      this.filteredUsers = [];
+      this.isEnabled = false;
+      return;
+    }
+    this.isEnabled = true;
+    this.userService.showFilteredUsers(this.searchInput).subscribe((users) => {
     this.filteredUsers = users;
-  });
-}
+    });
+  }
 
-displayUser(user: any): string {
+  displayUser(user: any): string {
   return user && user.name ? user.name : '';
-}
+  }
 
-selectUser(user: any) {
-  this.selectedUser = user;
-  this.showSelectedUser = true;
-  const parts = this.router.url.split('/').filter(Boolean);
-  const channelId = parts[3];
-  this.currentChannelId = channelId;
-}
+  selectUser(user: any) {
+    this.selectedUser = user;
+    this.showSelectedUser = true;
+    const parts = this.router.url.split('/').filter(Boolean);
+    const channelId = parts[3];
+    this.currentChannelId = channelId;
+  }
 
-removeSelectedUser() {
-  this.selectedUser = null;
-  this.searchInput = '';
-  this.filteredUsers = [];
-  this.showSelectedUser = false;
-  this.isEnabled = false;
+  removeSelectedUser() {
+    this.selectedUser = null;
+    this.searchInput = '';
+    this.filteredUsers = [];
+    this.showSelectedUser = false;
+    this.isEnabled = false;
   } 
 }

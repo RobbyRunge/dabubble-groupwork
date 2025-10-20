@@ -63,9 +63,11 @@ export class ChannelService {
   userSubcollectionDescription: string = '';
   selectedUser: any;
   channelCreatedAtFormatted: string = '';
+  allChannelsName: any[] = [];
 
   unsubscribeUserData!: Subscription;
   unsubscribeUserChannels!: Subscription;
+  unsubscribeAllChannels!: () => void;
   unsubscribeDeleteUserFromCh!: () => void;
   unsubscribeChannelCreater!: () => void;
   unsubscribeChannelCreaterName!: () => void;
@@ -293,6 +295,19 @@ export class ChannelService {
     }
   }
 
+  showAllChannels() {
+    const channelRef = this.getChannelRef();
+    this.unsubscribeAllChannels = runInInjectionContext(this.injector, () =>
+    onSnapshot(channelRef, (snapshot) => {
+      this.allChannelsName = []; 
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        this.allChannelsName.push(data['channelname']); 
+      });
+    })
+  );
+  }
+
   ngOnDestroy(): void {
     if (this.unsubscribeUserData) {
       this.unsubscribeUserData.unsubscribe();
@@ -312,5 +327,6 @@ export class ChannelService {
     if (this.unsubscribeDeleteUserFromCh) {
       this.unsubscribeDeleteUserFromCh();
     }
+    this.unsubscribeAllChannels?.();
   }
 }

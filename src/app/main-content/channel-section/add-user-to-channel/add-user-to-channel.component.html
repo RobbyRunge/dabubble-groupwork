@@ -23,7 +23,11 @@
           (input)="filterUsers()" 
           class="user-name-channel" type="text" 
           placeholder="Name eingeben">
-        <mat-autocomplete #auto="matAutocomplete" panelClass="user-name-avatar" [displayWith]="displayUser" (optionSelected)="selectUser($event.option.value)">
+        <mat-autocomplete 
+          #auto="matAutocomplete" 
+          panelClass="user-name-avatar" 
+          [displayWith]="displayUser" 
+          (optionSelected)="selectUser($event.option.value)">
           @for (user of filteredUsers; track $index) {
             <mat-option [value]="user">
               <div class="user-avatar-name">

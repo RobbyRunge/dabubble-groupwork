@@ -37,6 +37,11 @@ export class ChannelSectionComponent implements OnInit {
 
   editChannelName() {
     this.showEditChannelName = true;
+    // const channelName = this.newChannel.channelname.trim();
+    // const inputHasLetter = /[a-zA-Z]/.test(channelName);
+    // const nameExists = this.channelService.allChannelsName
+    // .some(n => n.toLowerCase() === channelName.toLowerCase()); 
+    // inputHasLetter && !nameExists;
     let baseName = this.channelService.currentChannelName ? this.dataUser.channelService.currentChannelName : this.channelService.userSubcollectionChannelName;
     this.newChannel.channelname = '# ' + baseName;
   }

@@ -20,21 +20,6 @@ header {
   padding-left: 45px
 }
 
-/* .search-container {
-  @include dFlex(unset, center);
-  color: black;
-
-  ::ng-deep input {
-    color: black !important;
-    font-size: 20px;
-  }
-
-  ::ng-deep ::placeholder {
-    color: #686868 !important;
-    font-size: 20px;
-  }
-} */
-
 .search-results {
   position: absolute;
   top: 76%;
