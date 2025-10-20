@@ -27,13 +27,13 @@ export class UserCardComponent implements OnInit {
 
   selectedAvatar: string;
   items = [
-    '/avatar/empty-avatar.png',
-    '/avatar/woman1.png',
-    '/avatar/men1.png',
-    '/avatar/men2.png',
-    '/avatar/men3.png',
-    '/avatar/woman2.png',
-    '/avatar/men4.png',
+    'avatar/empty-avatar.png',
+    'avatar/woman1.png',
+    'avatar/men1.png',
+    'avatar/men2.png',
+    'avatar/men3.png',
+    'avatar/woman2.png',
+    'avatar/men4.png',
   ];
 
   constructor(
@@ -43,7 +43,7 @@ export class UserCardComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.urlUserId = data.urlUserId;
-    this.selectedAvatar = `/avatar/${data.user.avatar || 'empty-avatar.png'}`;
+    this.selectedAvatar = `avatar/${data.user.avatar || 'empty-avatar.png'}`;
   }
 
   ngOnInit(): void {
@@ -77,7 +77,7 @@ export class UserCardComponent implements OnInit {
 
   discardChangeName() {
     this.userUpdateNameAktiv = false;
-    this.selectedAvatar = `/avatar/${this.data.user.avatar || 'empty-avatar.png'}`;
+    this.selectedAvatar = `avatar/${this.data.user.avatar || 'empty-avatar.png'}`;
     this.newName = '';
   }
 
@@ -100,7 +100,7 @@ export class UserCardComponent implements OnInit {
 
   async updateAvatar() {
     try {
-      const avatarFileName = this.selectedAvatar.replace('/avatar/', '');
+      const avatarFileName = this.selectedAvatar.replace('avatar/', '');
       await this.userService.updateUserAvatar(avatarFileName);
       this.data.user.avatar = avatarFileName;
     } catch (err) {

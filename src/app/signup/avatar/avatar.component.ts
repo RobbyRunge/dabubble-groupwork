@@ -21,16 +21,16 @@ export class AvatarComponent implements OnInit, OnDestroy {
   public userService = inject(UserService);
   private registrationCompleted = false;
 
-  selectedAvatar = '/avatar/empty-avatar.png';
+  selectedAvatar = 'avatar/empty-avatar.png';
   user: User = new User();
 
   items = [
-    '/avatar/woman1.png',
-    '/avatar/men1.png',
-    '/avatar/men2.png',
-    '/avatar/men3.png',
-    '/avatar/woman2.png',
-    '/avatar/men4.png',
+    'avatar/woman1.png',
+    'avatar/men1.png',
+    'avatar/men2.png',
+    'avatar/men3.png',
+    'avatar/woman2.png',
+    'avatar/men4.png',
   ];
 
   ngOnInit() {
@@ -43,12 +43,12 @@ export class AvatarComponent implements OnInit, OnDestroy {
 
   selectAvatar(avatarSrc: string) {
     this.selectedAvatar = avatarSrc;
-    const filename = avatarSrc.replace('/avatar/', '');
+    const filename = avatarSrc.replace('avatar/', '');
     this.user.avatar = filename;
   }
 
   removeAvatar() {
-    this.selectedAvatar = '/avatar/empty-avatar.png';
+    this.selectedAvatar = 'avatar/empty-avatar.png';
   }
 
   async showSuccessfullyCreateContactOverlay() {
@@ -64,7 +64,7 @@ export class AvatarComponent implements OnInit, OnDestroy {
   }
 
   private getAvatarFilename(): string {
-    return this.selectedAvatar.replace('/avatar/', '');
+    return this.selectedAvatar.replace('avatar/', '');
   }
 
   private async completeRegistration(avatarFilename: string): Promise<boolean> {

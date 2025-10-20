@@ -112,7 +112,7 @@ export class SignupComponent {
 
   navigateToAvatar() {
     this.userService.createInitialUser(this.user).then(() => {
-      this.router.navigate(['/avatar']);
+      this.router.navigate(['avatar']);
     }).catch(error => {
       console.error('Error during user creation:', error);
     });
