@@ -357,7 +357,7 @@ mat-dialog-content {
 }
 
 .add-user-to-channel {
-    background-image: url('/chat-section/person-add-black.png');
+    background-image: url('./app/assets/chat-section/person-add-black.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -367,7 +367,7 @@ mat-dialog-content {
     cursor: pointer;
 
     &:hover {
-        background-image: url('/chat-section/person-add-purple.png');
+        background-image: url('./app/assets/chat-section/person-add-purple.png');
         transform: scale(1.05);
     }
 }
@@ -566,7 +566,7 @@ app-main-content {
 
 .add-user-to-channel-span {
     display: flex;
-    background-image: url('/chat-section/add-user-black.png');
+    background-image: url('./app/assets/chat-section/add-user-black.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -583,7 +583,7 @@ app-main-content {
         .add-user-to-channel-span {
             height: 32px;
             width: 32px;
-            background-image: url('/chat-section/add-user-purple.png');
+            background-image: url('./app/assets/chat-section/add-user-purple.png');
         }
     }
 }
