@@ -34,6 +34,9 @@
             color: #535AF1;
         }
     }
+    >span{
+        color: black;
+    }
 }
 
 .number-of-users {
@@ -274,6 +277,14 @@
         color: #686868;
         font-style: italic;
         font-size: 14px;
+    }
+}
+
+@media(max-width: 1260px) {
+    .show-users-avatar {
+        >.avatar{
+            display: none;
+        }
     }
 }
 
