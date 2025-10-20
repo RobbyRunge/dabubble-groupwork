@@ -8,6 +8,7 @@ import {
   ViewChild,
   HostListener,
   OnDestroy,
+  Input,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
@@ -49,6 +50,7 @@ export class HeaderChatSectionComponent implements OnInit, AfterViewInit, OnDest
   emailResults: SearchResult[] = [];
   showDropdown: boolean = false;
   dropdownType: 'channel' | 'user' | 'email' = 'channel';
+  @Input() mode: 'chats' | 'thread' = 'chats';
 
   @ViewChild('referenceButton') referenceButton?: ElementRef<HTMLButtonElement>;
 

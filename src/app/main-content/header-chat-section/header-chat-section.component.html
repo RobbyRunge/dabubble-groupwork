@@ -11,7 +11,7 @@
                 <img class="standard-transition" src="chat-section/arrow-down.png">
             </button>
         </div>
-        <div class="user-avatar-channels">
+        <div class="user-avatar-channels" *ngIf="mode === 'chats'">
             <div #div class="show-users-avatar standard-transition" (click)="showUsersInChannel(div)">
                 @for (user of dataUser.userAvatarInChannel$ | async; track $index) {
                 <img class="avatar" [src]="'avatar/' + user.avatar">
