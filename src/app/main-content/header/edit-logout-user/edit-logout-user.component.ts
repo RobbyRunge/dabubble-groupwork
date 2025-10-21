@@ -55,5 +55,6 @@ export class EditLogoutUserComponent {
     this.dataUser.showChannel = false;
     this.dataUser.showChatPartnerHeader = false;
     this.dataUser.showNewMessage = true;
+    this.chatService.showThread = false;
   }
 }

@@ -383,5 +383,6 @@ export class HeaderComponent {
 
   mobileHeader() {
     this.navigationService.setMobileHeaderDevspace(false);
+    this.chatService.showThread = false;
   }
 }

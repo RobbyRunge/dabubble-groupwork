@@ -373,12 +373,10 @@ export class ChatService {
             this.parentMessageId = parentMessageId;
             const senderIdForThread = await this.resolveThreadSenderId(parentMessageId);
             this.threadId = await this.getOrCreateThread(this.chatMode, this.chatId, parentMessageId, senderIdForThread, parentText, this.threadId, name, avatar);
+            this.showThread = true;
             this.open();
             this.router.navigate(['/mainpage', this.channelService.currentUserId, this.chatMode, this.chatId, 'threads', this.threadId]);
             this.listenToMessagesThread(this.chatMode);
-            if (this.navigationService.isMobile) {
-                this.showThread = true;
-            }
             this.navigationService.setMobileHeaderDevspace(true);
         });
     }
