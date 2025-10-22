@@ -14,7 +14,7 @@
             <span class="channel-name">Channel - Name</span>
             <span (click)="editChannelName()" class="channel-edit standard-transition">
                 <mat-icon class="desktop edit">edit</mat-icon>  
-                <p class="mobile">Bearbeiten</p> 
+                <button class="save-button">Bearbeiten</button> 
             </span>
         </div>
             <div class="created-channel"># @if (channelService.currentChannelName) {
@@ -26,20 +26,21 @@
     <div *ngIf="showEditChannelName" class="edit-channel-name">
         <div class="channel-name-description-edit">
             <span class="channel-name">Channel - Name</span>
-            <span (click)="saveEditedChannelName()" class="channel-edit standard-transition">
-                <mat-icon class="desktop edit">check_circle</mat-icon>
-                <p class="mobile">Speichern</p>
+            <span class="channel-edit standard-transition">
+                <mat-icon (click)="saveEditedChannelName()" class="desktop edit">check_circle</mat-icon>
+                <button (click)="saveEditedChannelName()" class="save-button" [disabled]="!isEnabled" [ngClass]="{'btn-enabled': isEnabled, 'btn-disabled': !isEnabled}">Speichern</button>
             </span>
         </div>
         <input class="input-edit" type="text" 
-            [(ngModel)]="newChannel.channelname">
+            [(ngModel)]="newChannel.channelname" (input)="checkEditedChannelName()">
+            <div class="exist-text" *ngIf="nameExist">Der Channel existiert bereits. Wähle bitte einen anderen Namen.</div>
     </div>
     <mat-card *ngIf="!showEditChannelDescription" class="channel-description mat-card-class">
         <div class="channel-name-description-edit">
             <span class="channel-name">Beschreibung</span>
             <span (click)="editChannelDescription()" class="channel-edit standard-transition">
                 <mat-icon class="desktop edit">edit</mat-icon>
-                <p class="mobile">Bearbeiten</p>
+                <button class="save-button">Bearbeiten</button>
             </span> 
         </div>
         <div class="channel-description-by-user">
@@ -58,7 +59,7 @@
             <span class="channel-name">Beschreibung</span>
             <span (click)="saveEditedChannelDescription()" class="channel-edit standard-transition">
                 <mat-icon class="desktop edit">check_circle</mat-icon>
-                <p class="mobile">Speichern</p>
+                <button class="save-button">Speichern</button>
             </span>
         </div>
         <input class="input-edit" type="text"    

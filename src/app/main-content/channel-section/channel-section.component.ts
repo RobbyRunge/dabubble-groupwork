@@ -23,6 +23,8 @@ export class ChannelSectionComponent implements OnInit {
   dialogRef = inject(MatDialogRef<ChannelSectionComponent>);
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
+  isEnabled = false;
+  nameExist = false;
 
   showEditChannelName = false;
   showEditChannelDescription = false;
@@ -37,13 +39,21 @@ export class ChannelSectionComponent implements OnInit {
 
   editChannelName() {
     this.showEditChannelName = true;
-    // const channelName = this.newChannel.channelname.trim();
-    // const inputHasLetter = /[a-zA-Z]/.test(channelName);
-    // const nameExists = this.channelService.allChannelsName
-    // .some(n => n.toLowerCase() === channelName.toLowerCase()); 
-    // inputHasLetter && !nameExists;
     let baseName = this.channelService.currentChannelName ? this.dataUser.channelService.currentChannelName : this.channelService.userSubcollectionChannelName;
     this.newChannel.channelname = '# ' + baseName;
+  }
+
+  checkEditedChannelName() {
+    const channelName = this.newChannel.channelname.trim();
+    const inputHasLetter = /[a-zA-Z]/.test(channelName);
+    const nameExists = this.channelService.allChannelsName.some(n => n.toLowerCase() === channelName.toLowerCase()); 
+    if(inputHasLetter && !nameExists) {
+      this.isEnabled = true;
+      this.nameExist = false;
+    } else {
+      this.isEnabled = false;
+      this.nameExist = true;
+    }
   }
 
   saveEditedChannelName() {

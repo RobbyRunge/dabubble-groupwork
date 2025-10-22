@@ -33,6 +33,7 @@ export class CreateChannelSectionComponent implements OnInit {
   selectUserDialog = inject(MatDialog);
   private bottomSheet = inject(MatBottomSheet);
   isEnabled = false;
+  nameExist = false;
 
   ngOnInit() {
     this.channelService.showAllChannels();
@@ -41,9 +42,14 @@ export class CreateChannelSectionComponent implements OnInit {
   checkChannelName() {
     const channelName = this.newChannel.channelname.trim();
     const inputHasLetter = /[a-zA-Z]/.test(channelName);
-    const nameExists = this.channelService.allChannelsName
-    .some(n => n.toLowerCase() === channelName.toLowerCase()); 
-    this.isEnabled = inputHasLetter && !nameExists;;
+    const nameExists = this.channelService.allChannelsName.some(n => n.toLowerCase() === channelName.toLowerCase()); 
+    if(inputHasLetter && nameExists) {
+      this.nameExist = true;
+      this.isEnabled = false;
+    } else {
+      this.nameExist = false;
+      this.isEnabled = true;
+    }
   }
 
   close() {

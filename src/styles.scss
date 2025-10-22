@@ -638,6 +638,14 @@ mat-icon.edit:focus-visible {
     color: blue !important;
 }
 
+.exist-text {
+    color: rgb(185, 8, 8);
+}
+
+.nameExist {
+    border-color: rgb(185, 8, 8);
+}
+
 @media (max-width: 1100px) {
     .header-user-content {
         >div {
