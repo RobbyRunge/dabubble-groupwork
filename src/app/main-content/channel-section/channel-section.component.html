@@ -31,9 +31,14 @@
                 <button (click)="saveEditedChannelName()" class="save-button" [disabled]="!isEnabled" [ngClass]="{'btn-enabled': isEnabled, 'btn-disabled': !isEnabled}">Speichern</button>
             </span>
         </div>
-        <input class="input-edit" type="text" 
-            [(ngModel)]="newChannel.channelname" (input)="checkEditedChannelName()">
-            <div class="exist-text" *ngIf="nameExist">Der Channel existiert bereits. Wähle bitte einen anderen Namen.</div>
+        <div class="edit-name-input-cont">
+            <span class="prefix">#</span>
+             <input class="input-edit" type="text" 
+                [(ngModel)]="newChannel.channelname" 
+                (input)="checkEditedChannelName()"
+                [ngClass]="{'nameExist': nameExist}">
+        </div>
+        <div class="exist-text" *ngIf="nameExist">Der Channel existiert bereits. Wähle bitte einen anderen Namen.</div>
     </div>
     <mat-card *ngIf="!showEditChannelDescription" class="channel-description mat-card-class">
         <div class="channel-name-description-edit">

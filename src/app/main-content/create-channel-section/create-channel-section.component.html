@@ -9,8 +9,11 @@
         Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein <br> #marketing zum Beispiel.
     </p>
     <p class="margin-24">Channel Name</p>
-    <input class="input-channel-name" (input)="checkChannelName()" [(ngModel)]="newChannel.channelname" placeholder="# z.B Kooperationsprojekte" required [ngClass]="{'nameExist': nameExist}"/>
-    <!-- <div class="exist-text" *ngIf="nameExist">Der Channel existiert bereits. Wähle bitte einen anderen Namen.</div> -->
+    <input class="input-channel-name" (input)="checkChannelName()" [(ngModel)]="newChannel.channelname" 
+        placeholder="# z.B Kooperationsprojekte" 
+        required 
+        [ngClass]="{'nameExist': nameExist}"/>
+    <div class="exist-text" *ngIf="nameExist">Der Channel existiert bereits. Wähle bitte einen anderen Namen.</div>
     <p>Beschreibung<span class="text-optional"> (optional)</span></p>
     <input class="input-channel-name" [(ngModel)]="newChannel.description" placeholder="Dein Text hier"/>
     <mat-dialog-actions>

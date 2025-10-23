@@ -34,25 +34,28 @@ export class ChannelSectionComponent implements OnInit {
   newChannel = new Allchannels();
 
    ngOnInit(): void {
-    
+    this.channelService.showAllChannels();
   }
 
   editChannelName() {
     this.showEditChannelName = true;
     let baseName = this.channelService.currentChannelName ? this.dataUser.channelService.currentChannelName : this.channelService.userSubcollectionChannelName;
-    this.newChannel.channelname = '# ' + baseName;
+    this.newChannel.channelname = baseName;
   }
 
   checkEditedChannelName() {
-    const channelName = this.newChannel.channelname.trim();
-    const inputHasLetter = /[a-zA-Z]/.test(channelName);
+    const channelName = this.newChannel.channelname?.trim() || '';
+    const inputHasLetter = /[a-zA-ZäöüÄÖÜß]/.test(channelName);
     const nameExists = this.channelService.allChannelsName.some(n => n.toLowerCase() === channelName.toLowerCase()); 
-    if(inputHasLetter && !nameExists) {
-      this.isEnabled = true;
+     if (!inputHasLetter || channelName.length === 0) {
+      this.isEnabled = false;
       this.nameExist = false;
-    } else {
+    } else if (nameExists) {
       this.isEnabled = false;
       this.nameExist = true;
+    } else {
+      this.isEnabled = true;
+      this.nameExist = false;
     }
   }
 
