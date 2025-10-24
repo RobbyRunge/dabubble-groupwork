@@ -64,11 +64,13 @@ export class ChannelService {
   selectedUser: any;
   channelCreatedAtFormatted: string = '';
   allChannelsName: any[] = [];
+  usersInChannel: any[] = [];
 
   unsubscribeUserData!: Subscription;
   unsubscribeUserChannels!: Subscription;
   unsubscribeAllChannels!: () => void;
   unsubscribeDeleteUserFromCh!: () => void;
+  unsubscribeAddedUserInChannel! :  () => void;
   unsubscribeChannelCreater!: () => void;
   unsubscribeChannelCreaterName!: () => void;
   unsubscribeUserStorage!: Subscription;
@@ -221,6 +223,22 @@ export class ChannelService {
         channel.userId.includes(this.currentUserId)
     );
     this.updateChannelByUser.next(this.showChannelByUser);
+  }
+
+  checkAddedUserInChannel() {
+    const channelRef = this.getSingleChannelRef(this.currentChannelId);
+    this.usersInChannel = [];
+    this.unsubscribeAddedUserInChannel = runInInjectionContext(
+      this.injector, () =>
+      onSnapshot(channelRef, (element) => {
+        const data = element.data();
+        if (data && data['userId']) {
+          if (!this.usersInChannel.includes(data['userId'])) {
+            this.usersInChannel.push(data['userId']);
+          }
+        }
+      })
+    );
   }
 
   async updateUserStorage(userId: string, storageId: string, item: {}) {

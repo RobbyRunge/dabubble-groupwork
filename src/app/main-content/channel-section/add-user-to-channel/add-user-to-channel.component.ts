@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
@@ -16,7 +16,7 @@ import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
   templateUrl: './add-user-to-channel.component.html',
   styleUrl: './add-user-to-channel.component.scss'
 })
-export class AddUserToChannelComponent {
+export class AddUserToChannelComponent implements OnInit {
 
   channelService = inject(ChannelService);
   userService = inject(UserService);
@@ -30,6 +30,9 @@ export class AddUserToChannelComponent {
   showSelectedUser = false;
   isEnabled = false;
 
+  ngOnInit() {
+  // this.channelService.checkAddedUserInChannel(); 
+  }
 
   addUserToChannel() {
     if (this.currentChannelId && this.selectedUser?.userId) {
@@ -50,9 +53,14 @@ export class AddUserToChannelComponent {
       this.isEnabled = false;
       return;
     }
+    this.channelService.checkAddedUserInChannel();
     this.isEnabled = true;
     this.userService.showFilteredUsers(this.searchInput).subscribe((users) => {
-    this.filteredUsers = users;
+      this.filteredUsers = users.filter(user => 
+      !this.channelService.usersInChannel.includes(user.userId)
+
+    );
+      console.log('User nach Ausschluss der Channel-User:', this.filteredUsers);
     });
   }
 
