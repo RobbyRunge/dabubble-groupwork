@@ -29,9 +29,10 @@ export class AddUserToChannelComponent implements OnInit {
   currentChannelId?: string;
   showSelectedUser = false;
   isEnabled = false;
+  addedUsers: string | undefined;
 
   ngOnInit() {
-  // this.channelService.checkAddedUserInChannel(); 
+  
   }
 
   addUserToChannel() {
@@ -53,14 +54,11 @@ export class AddUserToChannelComponent implements OnInit {
       this.isEnabled = false;
       return;
     }
-    this.channelService.checkAddedUserInChannel();
     this.isEnabled = true;
     this.userService.showFilteredUsers(this.searchInput).subscribe((users) => {
-      this.filteredUsers = users.filter(user => 
-      !this.channelService.usersInChannel.includes(user.userId)
-
-    );
-      console.log('User nach Ausschluss der Channel-User:', this.filteredUsers);
+    this.filteredUsers = users.filter(
+      (user) => !this.userService.usersIdsInChannel.includes(user.userId)
+      );
     });
   }
 

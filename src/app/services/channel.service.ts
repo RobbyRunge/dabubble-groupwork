@@ -225,22 +225,6 @@ export class ChannelService {
     this.updateChannelByUser.next(this.showChannelByUser);
   }
 
-  checkAddedUserInChannel() {
-    const channelRef = this.getSingleChannelRef(this.currentChannelId);
-    this.usersInChannel = [];
-    this.unsubscribeAddedUserInChannel = runInInjectionContext(
-      this.injector, () =>
-      onSnapshot(channelRef, (element) => {
-        const data = element.data();
-        if (data && data['userId']) {
-          if (!this.usersInChannel.includes(data['userId'])) {
-            this.usersInChannel.push(data['userId']);
-          }
-        }
-      })
-    );
-  }
-
   async updateUserStorage(userId: string, storageId: string, item: {}) {
     const storageDocRef = runInInjectionContext(this.injector, () =>
       doc(this.getUserSubCol(userId), storageId)
