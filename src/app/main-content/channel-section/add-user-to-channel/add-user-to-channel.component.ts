@@ -59,6 +59,7 @@ export class AddUserToChannelComponent implements OnInit {
     this.filteredUsers = users.filter(
       (user) => !this.userService.usersIdsInChannel.includes(user.userId)
       );
+      this.isEnabled = this.filteredUsers.length > 0;
     });
   }
 
