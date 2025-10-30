@@ -147,7 +147,7 @@ export class UserService {
   }
 
   async signInWithGuest() {
-    const guestEmail = 'guestemail@gmail.com';
+    const guestEmail = 'guestemail@beispiel.com';
     const userQuery = runInInjectionContext(this.injector, () =>
       query(this.getUsersCollection(), where('email', '==', guestEmail))
     );
