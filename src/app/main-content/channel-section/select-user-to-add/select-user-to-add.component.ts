@@ -10,9 +10,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
 import { ChannelService } from '../../../services/channel.service';
 import { Allchannels } from '../../../../models/allchannels.class';
+import { firstValueFrom } from 'rxjs';
 import {
-  MatBottomSheet,
-  MatBottomSheetModule,
   MatBottomSheetRef,
 } from '@angular/material/bottom-sheet';
 
@@ -37,7 +36,6 @@ export class SelectUserToAddComponent {
   addUserId: string[] = [];
   searchInput: string = '';
   router = inject(Router);
-  currentChannelId?: string;   
   channelName?: string;
   channelDescription?: string;
   placeHolderActive = false;
@@ -51,7 +49,7 @@ export class SelectUserToAddComponent {
     if(!this.selectAllUsersInChannel) {
       this.createChannelWithNewUsernames();
     } else if (this.selectAllUsersInChannel) {
-      this.createChannelWithUsersInChannel();
+      await this.createChannelWithUsersInChannel();
     }
     await this.channelService.addNewChannel(this.newChannel.toJSON(),this.addUserId,this.channelService.currentUserId).then(() => {
       this.close();
@@ -144,13 +142,11 @@ export class SelectUserToAddComponent {
     });
   }
 
-  createChannelWithUsersInChannel() {
+  async createChannelWithUsersInChannel() {
     this.addUserId = [];
-    this.userService.userAvatarInChannel$.subscribe(users => {
-        users.forEach(element => {
-            this.addUserId.push(element.userId);
-        });
+    const users = await firstValueFrom(this.userService.getAllUsers());
+    users.forEach(user => {
+        this.addUserId.push(user.userId);
     });
   }
-
 }
