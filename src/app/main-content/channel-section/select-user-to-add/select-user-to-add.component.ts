@@ -30,7 +30,6 @@ export class SelectUserToAddComponent {
   selectAllUsersInChannel: boolean | null = null;
   isEnabled = false;
   showUserSearchBar = false;
-  showSelectedUser = false;
   filteredUsers: { name: string; avatar: string; userId: string; active: boolean }[] = [];
   selectedUsers: { name: string; avatar: string; userId: string }[] = [];
   addUserId: string[] = [];
@@ -102,19 +101,19 @@ export class SelectUserToAddComponent {
   }
 
   selectUser(user: any) {
-    if (!this.selectedUsers.some(u => u.userId === user.userId) && this.selectedUsers.length < 2 ) {
+    if (!this.selectedUsers.some(u => u.userId === user.userId)) {
       this.selectedUsers.push(user);
     }
-    this.showSelectedUser = true;
+    this.searchInput = '';
     this.isEnabled = true;
     this.filteredUsers = [];
     this.placeHolderActive = false;
+    this.setFocusInput();
   }
 
    private updateBtnStatus() {
     if(!this.selectAllUsersInChannel) {
        const count = this.selectedUsers.length;
-    this.showSelectedUser = count > 0;
     this.isEnabled = count > 0;
     }
   }
@@ -125,12 +124,6 @@ export class SelectUserToAddComponent {
     this.searchInput = '';
     this.filteredUsers = [];
     this.updateBtnStatus();
-  }
-
-  showSearchBar() {
-    this.searchInput = '';
-    this.filteredUsers = [];
-    this.showSelectedUser = false;
     this.setFocusInput();
   }
 

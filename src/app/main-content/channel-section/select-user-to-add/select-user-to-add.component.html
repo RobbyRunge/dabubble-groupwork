@@ -14,41 +14,40 @@
         </mat-radio-group>
     </div>
     @if (showUserSearchBar) {
-        @if (!showSelectedUser) {
-            <div class="search-user-cont">
-                <input 
-                    type="text" 
-                    #searchUserInput
-                    class="search-user"
-                    (input)="showfilterUsers()"
-                    [(ngModel)]="searchInput"
-                    [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete" panelClass="user-name-avatar" [displayWith]="displayUser" (optionSelected)="selectUser($event.option.value)">
-                @for (user of filteredUsers; track $index) {
-                    <mat-option [value]="user">
-                        <div class="user-avatar-name">
-                            <div class="user-status">
-                                <img class="user-avatar" src="avatar/{{user.avatar}}">
-                                <img class="user-status-on-off" src="{{ user.active ? userService.onlineUser : userService.offlineUser }}">
-                            </div>
-                            <span>{{ user.name }}</span> 
+        <div class="search-user-cont">
+            @if (selectedUsers.length > 0) {
+                <div class="selected-users-wrapper">
+                    @for (user of selectedUsers; track $index) {
+                        <div class="selected-users">
+                            <img class="user-avatar" src="avatar/{{user.avatar}}">
+                            <span>{{ user.name }}</span>
+                            <mat-icon class="selected-user-remove-icon" (click)="removeSelectedUser(user.userId, $event); $event.stopPropagation()">close</mat-icon>
                         </div>
-                    </mat-option>
                     }
-                    </mat-autocomplete>
                 </div>
             }
-         @else if (showSelectedUser) {
-            <div class="selected-users-cont" (click)="showSearchBar()">
-                @for (user of selectedUsers; track $index) {
-                    <div class="selected-users">
-                        <img class="user-avatar" src="avatar/{{user.avatar}}">
-                        <span>{{ user.name }}</span>
-                        <mat-icon class="selected-user-remove-icon" (click)="removeSelectedUser(user.userId, $event); $event.stopPropagation()">close</mat-icon>
+            <input 
+                type="text" 
+                #searchUserInput
+                class="search-user"
+                (input)="showfilterUsers()"
+                [(ngModel)]="searchInput"
+                [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" panelClass="user-name-avatar" [displayWith]="displayUser" (optionSelected)="selectUser($event.option.value)">
+            @for (user of filteredUsers; track $index) {
+                <mat-option [value]="user">
+                    <div class="user-avatar-name">
+                        <div class="user-status">
+                            <img class="user-avatar" src="avatar/{{user.avatar}}">
+                            <img class="user-status-on-off" src="{{ user.active ? userService.onlineUser : userService.offlineUser }}">
+                        </div>
+                        <span>{{ user.name }}</span> 
                     </div>
-                    }
-            </div>
-        }}
+                </mat-option>
+            }
+            </mat-autocomplete>
+        </div>
+     }
     <div class="placeholder" *ngIf="placeHolderActive"></div>
     <div class="create-channel-btn-cont">
         <button 
