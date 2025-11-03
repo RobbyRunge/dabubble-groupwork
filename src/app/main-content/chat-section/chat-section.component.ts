@@ -269,26 +269,29 @@ openEmojiPicker(ev: { anchor: HTMLElement; side: 'left'|'right'; message: any; i
 
   openDialog(button: HTMLElement) {
     (document.activeElement as HTMLElement)?.blur();
-    const rect = button.getBoundingClientRect();
-    const width = window.innerWidth < 1080 ? '800px' : '872px';
-    const height = window.innerHeight < 700 ? '500px' : '612px';
+    const isSmallScreen = window.innerWidth < 1000;
 
-    const dialogWidth = parseInt(width, 10);
-    const dialogHeight = parseInt(height, 10);
+    if (isSmallScreen) {
+      // Fullscreen dialog for screens under 1000px
+      const dialogRef = this.dialog.open(ChannelSectionComponent, {
+        width: '100vw',
+        height: '100vh',
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        panelClass: 'channel-dialog-container',
+      });
+    } else {
+      // Centered dialog for larger screens
+      const width = window.innerWidth < 1080 ? '800px' : '872px';
+      const height = window.innerHeight < 700 ? '500px' : '612px';
 
-    const top = rect.top - dialogHeight + window.scrollY;
-    const left = rect.left - dialogWidth / 2 + window.scrollX - 300;
-
-    const dialogRef = this.dialog.open(ChannelSectionComponent, {
-      position: {
-        top: `${top}px`,
-        left: `${left}px`,
-      },
-      width,
-      height,
-      maxWidth: '872px',
-      maxHeight: '612px',
-      panelClass: 'channel-dialog-container',
-    });
+      const dialogRef = this.dialog.open(ChannelSectionComponent, {
+        width,
+        height,
+        maxWidth: '872px',
+        maxHeight: '612px',
+        panelClass: 'channel-dialog-container',
+      });
+    }
   }
 }
