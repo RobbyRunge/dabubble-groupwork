@@ -271,8 +271,9 @@ openEmojiPicker(ev: { anchor: HTMLElement; side: 'left'|'right'; message: any; i
     (document.activeElement as HTMLElement)?.blur();
     const isSmallScreen = window.innerWidth < 1000;
 
+    this.navigationService.setDialogOpen(true);
+
     if (isSmallScreen) {
-      // Fullscreen dialog for screens under 1000px
       const dialogRef = this.dialog.open(ChannelSectionComponent, {
         width: '100vw',
         height: '100vh',
@@ -280,8 +281,11 @@ openEmojiPicker(ev: { anchor: HTMLElement; side: 'left'|'right'; message: any; i
         maxHeight: '100vh',
         panelClass: 'channel-dialog-container',
       });
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.navigationService.setDialogOpen(false);
+      });
     } else {
-      // Centered dialog for larger screens
       const width = window.innerWidth < 1080 ? '800px' : '872px';
       const height = window.innerHeight < 700 ? '500px' : '612px';
 
@@ -291,6 +295,10 @@ openEmojiPicker(ev: { anchor: HTMLElement; side: 'left'|'right'; message: any; i
         maxWidth: '872px',
         maxHeight: '612px',
         panelClass: 'channel-dialog-container',
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.navigationService.setDialogOpen(false);
       });
     }
   }

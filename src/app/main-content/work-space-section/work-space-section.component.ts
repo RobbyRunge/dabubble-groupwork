@@ -79,6 +79,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   private userDataSub?: Subscription;
   private channelDataSub?: Subscription;
   private searchSub?: Subscription;
+  private dialogOpenSub?: Subscription;
   
   newChannel = new Allchannels();
   userstorage = new Userstorage();
@@ -87,6 +88,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   urlUserId!: string;
   users$: Observable<User[]> | undefined;
   myPanel: any = true;
+  isDialogOpen: boolean = false;
 
   channels$: Observable<Allchannels[]> | undefined;
   onlineUser: string = 'status/online.png';
@@ -132,6 +134,11 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.getUserData();
     this.getChannelData();
     this.initializeSearch();
+    
+    this.dialogOpenSub = this.navigationService.dialogOpen$.subscribe(isOpen => {
+      this.isDialogOpen = isOpen;
+      this.cdr.markForCheck();
+    });
   }
 
   initializeSearch() {
@@ -173,6 +180,7 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
   }
 
   createChannel() {
+    this.navigationService.setDialogOpen(true);
     (document.activeElement as HTMLElement)?.blur();
     const { width, height } = this.channelService.getDialogDimensions();
     this.dialog.open(CreateChannelSectionComponent, {
@@ -510,5 +518,6 @@ export class WorkSpaceSectionComponent implements OnInit, OnDestroy {
     this.channelDataSub?.unsubscribe();
     this.searchSub?.unsubscribe();
     this.routeSub?.unsubscribe();
+    this.dialogOpenSub?.unsubscribe();
   }
 }

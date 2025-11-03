@@ -20,6 +20,9 @@ export class NavigationService {
   private scrollToBottomSubject = new BehaviorSubject<boolean>(false);
   public scrollToBottom$ = this.scrollToBottomSubject.asObservable();
 
+  private dialogOpenSubject = new BehaviorSubject<boolean>(false);
+  public dialogOpen$ = this.dialogOpenSubject.asObservable();
+
   isMobile = window.innerWidth < 1000; 
   private resizeSubscription: Subscription | undefined;
 
@@ -52,6 +55,10 @@ export class NavigationService {
   
   triggerScrollToBottom() {
     this.scrollToBottomSubject.next(true);
+  }
+
+  setDialogOpen(isOpen: boolean) {
+    this.dialogOpenSubject.next(isOpen);
   }
 
    ngOnDestroy(): void {

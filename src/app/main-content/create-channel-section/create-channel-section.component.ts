@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Allchannels } from '../../../models/allchannels.class';
 import { ChannelService } from '../../services/channel.service';
+import { NavigationService } from '../../services/navigation.service';
 import { SelectUserToAddComponent } from '../channel-section/select-user-to-add/select-user-to-add.component';
 import {
   MatBottomSheet,
@@ -28,6 +29,7 @@ export class CreateChannelSectionComponent implements OnInit {
   bottomSheetRef = inject(MatBottomSheetRef<SelectUserToAddComponent>, { optional: true });
   dataUser = inject(UserService);
   channelService = inject(ChannelService);
+  navigationService = inject(NavigationService);
   newChannel = new Allchannels();
   currentUserId = this.channelService.currentUserId;
   selectUserDialog = inject(MatDialog);
@@ -57,8 +59,15 @@ export class CreateChannelSectionComponent implements OnInit {
     this.bottomSheetRef?.dismiss();
   }
 
-  async createChannel() { 
+  closeAndResetDialog() {
+    this.dialogRef?.close();
+    this.bottomSheetRef?.dismiss();
+    this.navigationService.setDialogOpen(false);
+  }
+
+  async createChannel() {
     (document.activeElement as HTMLElement)?.blur();
+    this.close();
     const dialogRef = this.selectUserDialog.open(SelectUserToAddComponent, {
       width: '710px',
       height: '',
@@ -67,17 +76,22 @@ export class CreateChannelSectionComponent implements OnInit {
       panelClass: 'select-user-dialog-container',
     });
     dialogRef.componentInstance.channelName = this.newChannel.channelname;
-    dialogRef.componentInstance.channelDescription = this.newChannel.description
-    this.close();
+    dialogRef.componentInstance.channelDescription = this.newChannel.description;
+    dialogRef.afterClosed().subscribe(() => {
+      this.navigationService.setDialogOpen(false);
+    });
   }
 
   async createChannelMobile() {
+    this.close();
     const bottomSheetRef = this.bottomSheet.open(SelectUserToAddComponent, {
-    panelClass: 'select-user-bottomsheet'
+      panelClass: 'select-user-bottomsheet'
     });
     bottomSheetRef.instance.channelName = this.newChannel.channelname;
     bottomSheetRef.instance.channelDescription = this.newChannel.description;
-    this.close();
+    bottomSheetRef.afterDismissed().subscribe(() => {
+      this.navigationService.setDialogOpen(false);
+    });
   }
 
    ngOnDestroy() {

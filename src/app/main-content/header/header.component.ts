@@ -88,6 +88,7 @@ export class HeaderComponent {
   }
 
   openDialogMobile(): void {
+    this.navigationService.setDialogOpen(true);
     const bottomSheetRef = this.bottomSheet.open(EditLogoutUserComponent, {
     panelClass: 'select-user-bottomsheet',
     });
