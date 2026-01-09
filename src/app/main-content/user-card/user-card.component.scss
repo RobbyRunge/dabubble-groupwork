@@ -291,3 +291,23 @@ p {
         }
     }
 }
+
+@media(max-width: 500px) {
+    .header-container {
+        padding: 20px;
+
+        >p {
+            font-size: 20px;
+        }
+    }
+
+    .avatar-img {
+        width: 150px !important;
+        height: 150px !important;
+    }
+
+    .avatar-list-imgs {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}
