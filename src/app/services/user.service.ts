@@ -80,18 +80,18 @@ export class UserService {
       await this.updateUserDocument(this.channelService.currentUserId, {
         active: true,
       });
+      const userStorageSnapshot = await runInInjectionContext(this.injector, () =>
+        getDocs(
+          this.channelService.getUserSubCol(this.channelService.currentUserId)
+        )
+      );
+      if (!userStorageSnapshot.empty) {
+        const userStorage = userStorageSnapshot.docs[0];
+        this.channelService.userSubcollectionId = userStorage.id;
+      }
+      this.loginIsSucess = true;
+      this.freshLogin = true;
     }
-    const userStorageSnapshot = await runInInjectionContext(this.injector, () =>
-      getDocs(
-        this.channelService.getUserSubCol(this.channelService.currentUserId)
-      )
-    );
-    if (!userStorageSnapshot.empty) {
-      const userStorage = userStorageSnapshot.docs[0];
-      this.channelService.userSubcollectionId = userStorage.id;
-    }
-    this.loginIsSucess = true;
-    this.freshLogin = true;
   }
 
   async signInWithGoogle() {
