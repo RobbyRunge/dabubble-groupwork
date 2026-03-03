@@ -157,16 +157,14 @@ export class UserService {
     );
 
     if (!result.empty) {
-      if (!result.empty) {
-        const userDoc = result.docs[0];
-        this.channelService.currentUserId = userDoc.id;
-        this.channelService.currentUser = new User(userDoc.data());
-        await this.updateUserDocument(this.channelService.currentUserId, {
-          active: true,
-        });
-        this.loginIsSucess = true;
-        this.freshLogin = true;
-      }
+      const userDoc = result.docs[0];
+      this.channelService.currentUserId = userDoc.id;
+      this.channelService.currentUser = new User(userDoc.data());
+      await this.updateUserDocument(this.channelService.currentUserId, {
+        active: true,
+      });
+      this.loginIsSucess = true;
+      this.freshLogin = true;
     } else {
       console.log('Guest user not found. Please create a guest user first.');
     }
